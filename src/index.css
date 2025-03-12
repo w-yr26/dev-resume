@@ -1,3 +1,25 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* 明亮风格自定义主题色 */
+  --color-light-primary: '#18181b';
+  --color-light-secondary: '#3f3f46';
+  --color-light-accent: '#71717a';
+  --color-light-bg: '#fafafa';
+  --color-light-text: '#18181b';
+  --color-light-muted: '#f4f4f5';
+  --color-light-border: '#e4e4e7';
+  --color-light-cardBg: '#ffffff';
+
+  /* 暗黑风格自定义主题色 */
+  --color-dark-primary: '#e4e4e7';
+  --color-dark-secondary: '#a1a1aa';
+  --color-dark-accent: '#71717a';
+  --color-dark-bg: '#18181b';
+  --color-dark-text: '#fafafa';
+  --color-dark-muted: '#27272a';
+  --color-dark-border: '#3f3f46';
+  --color-dark-cardBg: '#27272a';
+}
