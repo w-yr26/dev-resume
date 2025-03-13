@@ -48,7 +48,7 @@ const iconMenu = [
 
 const LeftMenu: React.FC = () => {
   return (
-    <div className="w-14 h-full flex flex-col justify-between items-center py-4 bg-light-primary border-r border-[#e4e4e7]">
+    <div className="w-14 h-full box-border flex flex-col justify-between items-center py-4 bg-light-primary border-r border-[#e4e4e7]">
       <div>Logo</div>
       <ul className="menu-list flex flex-col justify-around">
         {iconMenu.map((item) => {
