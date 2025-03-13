@@ -7,6 +7,7 @@ import App from '../App'
 import Layout from '@/pages/Layout'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
+import Dev from '@/pages/Dev'
 
 // const router = createBrowserRouter([
 //   {
@@ -28,6 +29,7 @@ const routes = createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />}></Route>
     </Route>
+    <Route path="/dev/:id" element={<Dev />}></Route>
     <Route path="login" element={<Login />}></Route>
   </Route>
 )
