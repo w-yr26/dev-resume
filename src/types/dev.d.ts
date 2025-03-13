@@ -4,6 +4,7 @@ export type HeaderType = {
   icon: React.ForwardRefExoticComponent<
     Omit<AntdIconProps, 'ref'> & React.RefAttributes<HTMLSpanElement>
   >
+  opMenu?: false
 }
 
 export type CustomIptType = {

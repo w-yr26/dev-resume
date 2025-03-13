@@ -31,8 +31,12 @@ const BaseInfo = () => {
   }
 
   return (
-    <div className="base-info-container border-b-1 border-[#e4e4e7]">
-      <Header icon={InfoCircleOutlined} label="基础信息"></Header>
+    <div className="base-info-container border-b-1 border-[#e4e4e7] py-6">
+      <Header
+        icon={InfoCircleOutlined}
+        label="基础信息"
+        opMenu={false}
+      ></Header>
       <div className="flex items-center h-[64px]">
         <div className="avatar-img">
           <Avatar shape="circle" size={54} icon={<UserOutlined />} />
