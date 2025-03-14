@@ -2,12 +2,7 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import {
-  IDomEditor,
-  IEditorConfig,
-  IToolbarConfig,
-  DomEditor,
-} from '@wangeditor/editor'
+import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 
 const RichInput = () => {
   // editor 实例
@@ -47,11 +42,6 @@ const RichInput = () => {
 
   // 及时销毁 editor ，重要！
   useEffect(() => {
-    if (editor) {
-      const toolbar = DomEditor.getToolbar(editor)
-      console.log('toolBar', toolbar?.getConfig())
-    }
-
     return () => {
       if (editor == null) return
       editor.destroy()

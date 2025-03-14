@@ -1,5 +1,5 @@
 import { Avatar, Input } from 'antd'
-import Header from './Header'
+import Header from './components/Header'
 import {
   CheckSquareOutlined,
   CloseOutlined,
@@ -8,7 +8,7 @@ import {
   PlusOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import CustomInput from './CustomInput'
+import CustomInput from './components/CustomInput'
 import { useState } from 'react'
 import { AddItemType } from '@/types/dev'
 
