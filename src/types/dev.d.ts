@@ -17,3 +17,12 @@ export type AddItemType = {
   label: string
   id: number
 }
+
+export type WorkExpItemType = {
+  company: string
+  position: string
+  date: string
+  overview: string
+  output: string
+  tecStack: string
+}

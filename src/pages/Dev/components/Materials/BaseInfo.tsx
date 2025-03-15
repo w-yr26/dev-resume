@@ -9,6 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import CustomInput from './components/CustomInput'
+import CustomLayout from './components/CustomLayout'
 import { useState } from 'react'
 import { AddItemType } from '@/types/dev'
 
@@ -31,7 +32,7 @@ const BaseInfo = () => {
   }
 
   return (
-    <div className="base-info-container border-b-1 border-[#e4e4e7] py-6">
+    <CustomLayout>
       <Header
         icon={InfoCircleOutlined}
         label="基础信息"
@@ -122,7 +123,7 @@ const BaseInfo = () => {
           添加自定义字段
         </span>
       </div>
-    </div>
+    </CustomLayout>
   )
 }
 
