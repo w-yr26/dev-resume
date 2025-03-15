@@ -2,39 +2,22 @@ import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
 import type { ExperienceItemType } from '@/types/dev'
 import { BranchesOutlined } from '@ant-design/icons'
-import { useState } from 'react'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
 import RichInput from './components/RichInput'
 import List from './components/List'
+import { useModalForm } from '@/hooks/useModalForm'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
-  const [experienceList, setExperienceList] = useState<ExperienceItemType[]>([])
-  const [opend, setOpend] = useState(false)
-  const [formRef] = Form.useForm()
-
-  const handleAdd = () => {
-    setOpend(true)
-  }
-
-  const handleOk = async () => {
-    const values = await formRef.validateFields()
-    console.log(values, 'values')
-    setExperienceList([
-      ...experienceList,
-      {
-        ...values,
-        id: new Date().getTime(),
-        output: '富文本内容(待换成状态)',
-      },
-    ])
-    setOpend(false)
-  }
-
-  const handleCancel = () => {
-    setOpend(false)
-  }
+  const {
+    list: experienceList,
+    formRef,
+    opened,
+    handleAdd,
+    handleCancel,
+    handleOk,
+  } = useModalForm<ExperienceItemType>([])
 
   return (
     <CustomLayout>
@@ -64,7 +47,7 @@ const ProjectExperience = () => {
           </Button>,
         ]}
         centered={true}
-        open={opend}
+        open={opened}
         onCancel={handleCancel}
       >
         <Form

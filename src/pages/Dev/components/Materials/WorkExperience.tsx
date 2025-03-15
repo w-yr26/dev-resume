@@ -1,44 +1,23 @@
 import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header'
 import CustomLayout from '../../../../components/CustomLayout'
-import { useState } from 'react'
-import { WorkExpItemType } from '@/types/dev'
+import type { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
+import { useModalForm } from '@/hooks/useModalForm'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
-  const [workList, setWorkList] = useState<WorkExpItemType[]>([])
-  const [opend, setOpend] = useState(false)
-  const [formRef] = Form.useForm()
-
-  const handleAdd = () => {
-    setOpend(true)
-  }
-  const handleOk = async () => {
-    try {
-      const values = await formRef.validateFields()
-      console.log('values', values)
-      setWorkList([
-        ...workList,
-        {
-          ...values,
-          output: 'new output',
-          id: new Date().getTime(),
-        },
-      ])
-      // const addItem =
-      setOpend(false)
-    } catch (err) {
-      console.log('校验失败', err)
-    }
-  }
-
-  const handleCancel = () => {
-    setOpend(false)
-  }
+  const {
+    list: workList,
+    opened,
+    formRef,
+    handleAdd,
+    handleCancel,
+    handleOk,
+  } = useModalForm<WorkExpItemType>([])
 
   return (
     <>
@@ -70,7 +49,7 @@ const WorkExperience = () => {
           </Button>,
         ]}
         centered={true}
-        open={opend}
+        open={opened}
         onCancel={handleCancel}
       >
         <Form
