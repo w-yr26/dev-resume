@@ -6,7 +6,7 @@ const EduBg = () => {
   return (
     <CustomLayout>
       <Header label="教育背景" icon={IdcardOutlined}></Header>
-      <RichInput></RichInput>
+      <RichInput value="<p>test edu</p>"></RichInput>
     </CustomLayout>
   )
 }

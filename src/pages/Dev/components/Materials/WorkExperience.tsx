@@ -1,4 +1,8 @@
-import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons'
+import {
+  CalculatorOutlined,
+  HolderOutlined,
+  PlusOutlined,
+} from '@ant-design/icons'
 import Header from '@/components/Header'
 import CustomLayout from '../../../../components/CustomLayout'
 import { useState } from 'react'
@@ -10,14 +14,24 @@ const { RangePicker } = DatePicker
 const WorkExperience = () => {
   const [workList, setWorkList] = useState<WorkExpItemType[]>([])
   const [opend, setOpend] = useState(false)
+  const [formRef] = Form.useForm()
+
   const handleAdd = () => {
     setOpend(true)
   }
   const handleOk = async () => {
     try {
-      const values = await form.validateFields()
+      const values = await formRef.validateFields()
       console.log('values', values)
-
+      setWorkList([
+        ...workList,
+        {
+          ...values,
+          output: 'new output',
+          id: new Date().getTime(),
+        },
+      ])
+      // const addItem =
       setOpend(false)
     } catch (err) {
       console.log('校验失败', err)
@@ -28,12 +42,11 @@ const WorkExperience = () => {
     setOpend(false)
   }
 
-  const [form] = Form.useForm()
   return (
     <>
       <CustomLayout>
         <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
-        {workList.length === 0 && (
+        {workList.length === 0 ? (
           <div
             className="flex justify-center items-center mt-4 w-full h-[48px] box-border border-1 border-dashed border-[#e4e4e7] bg-[#f8f8f9] hover:bg-[#f4f4f5] hover:cursor-help"
             onClick={handleAdd}
@@ -41,6 +54,32 @@ const WorkExperience = () => {
             <PlusOutlined />
             <span className="ml-4  text-sm">添加一项</span>
           </div>
+        ) : (
+          <>
+            <div className="border-1 border-b-0 border-[#e4e4e7]">
+              {workList.map((item) => {
+                return (
+                  <div
+                    key={item.id}
+                    className="p-2 flex items-center box-border border-b-1 border-[#e4e4e7] hover:bg-[#f6f6f7] hover:cursor-help "
+                  >
+                    <HolderOutlined />
+                    <div className="ml-4">
+                      <p className="text-[#3f3f46] text-sm">{item.company}</p>
+                      <p className="text-[#71717a] text-[12px]">
+                        {item.position}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="flex justify-end mt-6">
+              <Button icon={<PlusOutlined />} onClick={handleAdd}>
+                添加一项
+              </Button>
+            </div>
+          </>
         )}
       </CustomLayout>
       <Modal
@@ -62,7 +101,7 @@ const WorkExperience = () => {
           name="layout-multiple-horizontal"
           layout="vertical"
           requiredMark={false}
-          form={form}
+          form={formRef}
         >
           <div className="flex justify-between items-center gap-[10px]">
             <Form.Item
@@ -104,11 +143,17 @@ const WorkExperience = () => {
             </Form.Item>
           </div>
           <Form.Item label="项目概述" name="overview" layout="vertical">
-            <Input />
+            <Input.TextArea />
           </Form.Item>
-          <Form.Item label="实习产出" name="output" layout="vertical">
-            <RichInput></RichInput>
-          </Form.Item>
+          <div>
+            <div className="h-[22px] mb-[8px]">实习产出</div>
+            <RichInput
+              value="<p>form test msg</p>"
+              onChange={(value) => {
+                console.log('form value', value)
+              }}
+            ></RichInput>
+          </div>
         </Form>
       </Modal>
     </>

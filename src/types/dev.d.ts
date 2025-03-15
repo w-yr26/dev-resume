@@ -25,4 +25,5 @@ export type WorkExpItemType = {
   overview: string
   output: string
   tecStack: string
+  id: string
 }
