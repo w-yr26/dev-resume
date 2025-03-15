@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import CustomInput from './components/CustomInput'
-import CustomLayout from './components/CustomLayout'
+import CustomLayout from '../../../../components/CustomLayout'
 import { useState } from 'react'
 import { AddItemType } from '@/types/dev'
 

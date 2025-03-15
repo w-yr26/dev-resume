@@ -1,6 +1,6 @@
 import { CalculatorOutlined, PlusOutlined } from '@ant-design/icons'
 import Header from './components/Header'
-import CustomLayout from './components/CustomLayout'
+import CustomLayout from '../../../../components/CustomLayout'
 import { useState } from 'react'
 import { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'

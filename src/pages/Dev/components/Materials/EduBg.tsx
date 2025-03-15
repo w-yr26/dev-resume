@@ -1,7 +1,7 @@
 import { IdcardOutlined } from '@ant-design/icons'
 import Header from './components/Header'
 import RichInput from './components/RichInput'
-import CustomLayout from './components/CustomLayout'
+import CustomLayout from '../../../../components/CustomLayout'
 const EduBg = () => {
   return (
     <CustomLayout>
