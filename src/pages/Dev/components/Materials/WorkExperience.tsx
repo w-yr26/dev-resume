@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
+import AddBtn from './components/AddBtn'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
@@ -47,13 +48,7 @@ const WorkExperience = () => {
       <CustomLayout>
         <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
         {workList.length === 0 ? (
-          <div
-            className="flex justify-center items-center mt-4 w-full h-[48px] box-border border-1 border-dashed border-[#e4e4e7] bg-[#f8f8f9] hover:bg-[#f4f4f5] hover:cursor-help"
-            onClick={handleAdd}
-          >
-            <PlusOutlined />
-            <span className="ml-4  text-sm">添加一项</span>
-          </div>
+          <AddBtn handleAdd={handleAdd} />
         ) : (
           <>
             <div className="border-1 border-b-0 border-[#e4e4e7]">
