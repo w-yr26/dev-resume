@@ -34,3 +34,10 @@ export type ExperienceItemType = Pick<
 > & {
   name: string
 }
+
+export type AwardItemType = {
+  id: string
+  award: string
+  date: string
+  describe: string
+}
