@@ -1,5 +1,5 @@
 import type { HeaderType } from '@/types/dev'
-import CtxMenu from './CtxMenu'
+import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
 
 const Header: React.FC<HeaderType> = (props) => {
   const { label, icon: Icon, opMenu = true } = props

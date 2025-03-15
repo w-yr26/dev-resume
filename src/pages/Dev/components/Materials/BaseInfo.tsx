@@ -1,5 +1,5 @@
 import { Avatar, Input } from 'antd'
-import Header from './components/Header'
+import Header from '@/components/Header'
 import {
   CheckSquareOutlined,
   CloseOutlined,

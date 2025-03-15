@@ -1,5 +1,6 @@
 import BaseInfo from './BaseInfo'
 import EduBg from './EduBg'
+import ProjectExperience from './ProjectExperience'
 import WorkExperience from './WorkExperience'
 const Materials = () => {
   return (
@@ -7,6 +8,7 @@ const Materials = () => {
       <BaseInfo></BaseInfo>
       <EduBg></EduBg>
       <WorkExperience></WorkExperience>
+      <ProjectExperience></ProjectExperience>
     </div>
   )
 }
