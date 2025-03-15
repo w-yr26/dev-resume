@@ -1,8 +1,4 @@
-import {
-  CalculatorOutlined,
-  HolderOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
+import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header'
 import CustomLayout from '../../../../components/CustomLayout'
 import { useState } from 'react'
@@ -10,6 +6,7 @@ import { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
+import List from './components/List'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
@@ -50,31 +47,15 @@ const WorkExperience = () => {
         {workList.length === 0 ? (
           <AddBtn handleAdd={handleAdd} />
         ) : (
-          <>
-            <div className="border-1 border-b-0 border-[#e4e4e7]">
-              {workList.map((item) => {
-                return (
-                  <div
-                    key={item.id}
-                    className="p-2 flex items-center box-border border-b-1 border-[#e4e4e7] hover:bg-[#f6f6f7] hover:cursor-help "
-                  >
-                    <HolderOutlined />
-                    <div className="ml-4">
-                      <p className="text-[#3f3f46] text-sm">{item.company}</p>
-                      <p className="text-[#71717a] text-[12px]">
-                        {item.position}
-                      </p>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            <div className="flex justify-end mt-6">
-              <Button icon={<PlusOutlined />} onClick={handleAdd}>
-                添加一项
-              </Button>
-            </div>
-          </>
+          <List
+            data={workList}
+            handleAdd={handleAdd}
+            fieldMap={{
+              id: 'id',
+              title: 'company',
+              subTitle: 'position',
+            }}
+          ></List>
         )}
       </CustomLayout>
       <Modal

@@ -27,3 +27,10 @@ export type WorkExpItemType = {
   tecStack: string
   id: string
 }
+
+export type ExperienceItemType = Pick<
+  WorkExpItemType,
+  'id' | 'date' | 'position' | 'overview' | 'output'
+> & {
+  name: string
+}
