@@ -1,6 +1,6 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
-import type { ExperienceItemType } from '@/types/dev'
+import type { PeojectExpItemType } from '@/types/dev'
 import { BranchesOutlined } from '@ant-design/icons'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
@@ -17,7 +17,7 @@ const ProjectExperience = () => {
     handleAdd,
     handleCancel,
     handleOk,
-  } = useModalForm<ExperienceItemType>([])
+  } = useModalForm<PeojectExpItemType>([])
 
   return (
     <CustomLayout>

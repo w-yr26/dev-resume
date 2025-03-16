@@ -4,6 +4,8 @@ import Materials from './components/Materials'
 import { useAppDispatch, useAppSelector } from '@/hooks'
 import { addNum } from '@/store/slices/devSlice'
 import { Button } from 'antd'
+import configStyle from '@/config/templates'
+
 const Dev = () => {
   const count = useAppSelector((state) => state.dev.num)
   const dispatch = useAppDispatch()
@@ -14,7 +16,10 @@ const Dev = () => {
       <main className="main-container flex-1 bg-[#fafafa] flex">
         <Materials></Materials>
         <div className="flex-1 preview-container relative w-full h-full">
-          <div className="resume-container absolute w-[476px] h-[673px] top-0 bottom-0 left-0 right-0 m-auto border-1 border-[red]">
+          <div
+            className="resume-container absolute w-[476px] h-[673px] top-0 bottom-0 left-0 right-0 m-auto border-1 border-[red]"
+            style={configStyle['commonStyle']}
+          >
             {count}
             <Button onClick={() => dispatch(addNum(10))}>click</Button>
           </div>
