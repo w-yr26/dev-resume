@@ -41,3 +41,8 @@ export type AwardItemType = {
   date: string
   describe: string
 }
+
+// 以下是dev模块和store相关的数据类型声明
+export type devInitType = {
+  num: number
+}

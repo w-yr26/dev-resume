@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
+    "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.13",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
     "antd": "^5.24.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^6.22.3",
     "tailwindcss": "^4.0.13"
   },
