@@ -7,9 +7,14 @@ import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
 import { useModalForm } from '@/hooks/useModalForm'
+import { useAppSelector } from '@/hooks'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
+  const storeWorkList = useAppSelector(
+    (state) => state.dev.dataSource.WORK_EXP.info
+  )
+
   const {
     list: workList,
     opened,
@@ -17,7 +22,7 @@ const WorkExperience = () => {
     handleAdd,
     handleCancel,
     handleOk,
-  } = useModalForm<WorkExpItemType>([])
+  } = useModalForm<WorkExpItemType>(storeWorkList)
 
   return (
     <>

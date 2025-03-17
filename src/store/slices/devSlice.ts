@@ -21,7 +21,17 @@ const initialState: devInitType = {
       visible: true,
     },
     WORK_EXP: {
-      info: [],
+      info: [
+        {
+          company: '腾讯',
+          position: '前端开发实习生',
+          tecStack: 'Vue2、Vue3',
+          id: '001',
+          output: '实习产出',
+          overview: '项目总结',
+          date: '2025-03-16',
+        },
+      ],
       visible: true,
     },
     PROJECT_EXP: {
@@ -34,11 +44,11 @@ const initialState: devInitType = {
     },
     SKILL_LIST: {
       info: '',
-      visible: true
+      visible: true,
     },
     HEART_LIST: {
       info: '',
-      visible: true
+      visible: true,
     },
   },
   componentList: [

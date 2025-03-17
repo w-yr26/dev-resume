@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import devSliceReducer from './slices/devSlice'
+import globalSliceReducer from './slices/globalSlice'
+
 const store = configureStore({
   reducer: {
     dev: devSliceReducer,
+    global: globalSliceReducer,
   },
 })
 
