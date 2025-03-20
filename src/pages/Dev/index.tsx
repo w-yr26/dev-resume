@@ -1,27 +1,103 @@
 import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
-import { useAppDispatch, useAppSelector } from '@/hooks'
-import { addNum } from '@/store/slices/devSlice'
-import { Button } from 'antd'
 import configStyle from '@/config/templates'
+import { useAppSelector } from '@/hooks'
+import React, { useEffect, useRef, useState } from 'react'
 
 const Dev = () => {
-  const count = useAppSelector((state) => state.dev.num)
-  const dispatch = useAppDispatch()
+  const comList = useAppSelector((state) => state.dev.componentList)
+  const comMap = useAppSelector((state) => state.global.keyToComponentMap)
+
+  const resumeRef = useRef<HTMLDivElement>(null)
+  const pageWidth = 794
+  const pageHeight = 1120
+  const [dragging, setDragging] = useState(false)
+  const [wheel, setWheel] = useState(0.6)
+  const [translateX, setTranslateX] = useState(pageWidth / 2)
+  const [translateY, setTranslateY] = useState(pageHeight / 2)
+
+  const startX = useRef(0)
+  const startY = useRef(0)
+  const startTranslateX = useRef(translateX)
+  const startTranslateY = useRef(translateY)
+
+  const startDrag = (e: React.MouseEvent<Element>) => {
+    e.preventDefault()
+    setDragging(true)
+
+    startX.current = e.pageX
+    startY.current = e.pageY
+    startTranslateX.current = translateX
+    startTranslateY.current = translateY
+  }
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    const zoomSpeed = 0.1
+    // const oldWheel = wheel
+    // 放大
+    if (e.deltaY < 0) {
+      setWheel(Math.min(wheel + zoomSpeed, 1))
+    } else {
+      // 缩小
+      setWheel(Math.max(wheel - zoomSpeed, 0.3))
+    }
+  }
+
+  useEffect(() => {
+    const onDragging = (e: MouseEvent) => {
+      if (!dragging) return
+
+      const delayX = e.pageX - startX.current
+      const delayY = e.pageY - startY.current
+      setTranslateX(startTranslateX.current - delayX)
+      setTranslateY(startTranslateY.current - delayY)
+    }
+
+    const endDrag = () => {
+      setDragging(false)
+    }
+
+    if (dragging) {
+      window.addEventListener('mousemove', onDragging)
+      window.addEventListener('mouseup', endDrag)
+    } else {
+      window.removeEventListener('mousemove', onDragging)
+      window.removeEventListener('mouseup', endDrag)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', onDragging)
+      window.removeEventListener('mouseup', endDrag)
+    }
+  }, [dragging])
 
   return (
     <div className="h-screen flex justify-between">
       <LeftMenu />
       <main className="main-container flex-1 bg-[#fafafa] flex">
         <Materials></Materials>
-        <div className="flex-1 preview-container relative w-full h-full">
+        <div
+          className="overflow-hidden flex-1 relative w-full h-full"
+          onWheel={(e) => handleWheel(e)}
+          onMouseDown={(e) => startDrag(e)}
+        >
           <div
-            className="resume-container absolute w-[476px] h-[673px] top-0 bottom-0 left-0 right-0 m-auto border-1 border-[red]"
-            style={configStyle['commonStyle']}
+            className="resume-container"
+            style={{
+              ...configStyle['commonStyle'],
+              width: pageWidth,
+              height: pageHeight,
+              transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
+            }}
+            ref={resumeRef}
           >
-            {count}
-            <Button onClick={() => dispatch(addNum(10))}>click</Button>
+            <div className="preview-content">
+              {comList.map((item, index) => {
+                const Com = comMap[item]
+                return Com ? <Com key={index}></Com> : <p key={index}>null</p>
+              })}
+            </div>
           </div>
         </div>
       </main>
