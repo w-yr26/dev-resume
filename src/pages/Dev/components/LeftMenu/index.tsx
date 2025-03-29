@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Tooltip } from 'antd'
 import React from 'react'
+import styles from './index.module.scss'
 
 const iconMenu = [
   {
@@ -48,15 +49,12 @@ const iconMenu = [
 
 const LeftMenu: React.FC = () => {
   return (
-    <div className="w-14 h-full box-border flex flex-col justify-between items-center py-4 bg-light-primary">
+    <div className={styles['left-container']}>
       <div>Logo</div>
-      <ul className="menu-list flex flex-col justify-around">
+      <ul className={styles['menu-list']}>
         {iconMenu.map((item) => {
           return (
-            <li
-              key={item.label}
-              className="p-2 hover:rounded-sm hover:border hover:border-transparent hover:bg-[#f4f4f5] dark:hover:bg-[#18181b]"
-            >
+            <li key={item.label} className={styles['icon-item']}>
               <Tooltip placement="right" title={item.label}>
                 {item.icon}
               </Tooltip>

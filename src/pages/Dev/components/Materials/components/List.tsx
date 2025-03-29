@@ -1,5 +1,6 @@
 import { HolderOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
+import styles from './index.module.scss'
 
 type ListProps<T> = {
   data: T[]
@@ -14,19 +15,16 @@ type ListProps<T> = {
 const List = <T,>({ data, fieldMap, handleAdd }: ListProps<T>) => {
   return (
     <>
-      <div className="border-1 border-b-0 border-[#e4e4e7]">
+      <div className={styles['list-box']}>
         {data.map((item) => {
           return (
-            <div
-              key={String(item[fieldMap.id])}
-              className="p-2 flex items-center box-border border-b-1 border-[#e4e4e7] hover:bg-[#f6f6f7] hover:cursor-help "
-            >
+            <div key={String(item[fieldMap.id])} className={styles['item-box']}>
               <HolderOutlined />
-              <div className="ml-4">
-                <p className="text-[#3f3f46] text-sm">
+              <div className={styles['msg-box']}>
+                <p className={styles['label-primary']}>
                   {String(item[fieldMap.title])}
                 </p>
-                <p className="text-[#71717a] text-[12px]">
+                <p className={styles['label-sub']}>
                   {String(item[fieldMap.subTitle])}
                 </p>
               </div>
@@ -34,7 +32,7 @@ const List = <T,>({ data, fieldMap, handleAdd }: ListProps<T>) => {
           )
         })}
       </div>
-      <div className="flex justify-end mt-6">
+      <div className={styles['more-btn-box']}>
         <Button icon={<PlusOutlined />} onClick={handleAdd}>
           添加一项
         </Button>

@@ -5,6 +5,7 @@ import { useModalForm } from '@/hooks/useModalForm'
 import type { AwardItemType } from '@/types/dev'
 import List from './components/List'
 import AddBtn from './components/AddBtn'
+import styles from './index.module.scss'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
 const { RangePicker } = DatePicker
 
@@ -55,7 +56,7 @@ const Award = () => {
           requiredMark={false}
           form={formRef}
         >
-          <div className="flex justify-between items-center gap-[10px]">
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="荣誉名称"
               name="award"

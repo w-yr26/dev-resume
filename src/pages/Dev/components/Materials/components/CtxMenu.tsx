@@ -56,7 +56,6 @@ const CtxMenu = () => {
       content={content}
       trigger="hover"
       placement="bottom"
-      className="hover:cursor-help"
     >
       <MenuOutlined size={14} />
     </Popover>

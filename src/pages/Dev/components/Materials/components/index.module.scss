@@ -1,0 +1,74 @@
+$light-primary-color: #18181b;
+$light-secondary-color: #3f3f46;
+$light-accent-color: #71717a;
+$light-bg-color: #fafafa;
+$light-text-color: #18181b;
+$light-muted-color: #f4f4f5;
+$light-border-color: #e4e4e7;
+$light-cardBg-color: #ffffff;
+
+.add-btn-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
+  height: 48px;
+  border: 1px dashed $light-border-color;
+  background-color: #f8f8f9;
+
+  &:hover {
+    background-color: $light-bg-color;
+    cursor: help;
+  }
+}
+
+.custom-input-box {
+  margin-top: 0.5rem;
+  font-size: 12px;
+
+  .label {
+    // font-size: ;
+    color: #18181b;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 每一列表项的样式 */
+.list-box {
+  border: 1px solid $light-border-color;
+  border-bottom: 0;
+}
+
+.item-box {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 1px solid $light-border-color;
+
+  &:hover {
+    background-color: #f6f6f7;
+    cursor: help;
+  }
+
+  .msg-box {
+    margin-left: 1rem;
+
+    .label-primary {
+      font-size: 14px;
+      color: $light-secondary-color;
+    }
+
+    .label-sub {
+      font-size: 12px;
+      color: $light-accent-color;
+    }
+  }
+}
+
+.more-btn-box {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}

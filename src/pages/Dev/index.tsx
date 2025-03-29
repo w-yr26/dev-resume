@@ -4,6 +4,7 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import { useAppSelector } from '@/hooks'
 import React, { useEffect, useRef, useState } from 'react'
+import styles from './index.module.scss'
 
 const Dev = () => {
   const comList = useAppSelector((state) => state.dev.componentList)
@@ -73,12 +74,12 @@ const Dev = () => {
   }, [dragging])
 
   return (
-    <div className="h-screen flex justify-between">
+    <div className={styles['dev-container']}>
       <LeftMenu />
-      <main className="main-container flex-1 bg-[#fafafa] flex">
+      <main className={styles['main-container']}>
         <Materials></Materials>
         <div
-          className="overflow-hidden flex-1 relative w-full h-full"
+          className={styles['preview-container']}
           onWheel={(e) => handleWheel(e)}
           onMouseDown={(e) => startDrag(e)}
         >

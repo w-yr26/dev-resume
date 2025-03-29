@@ -6,6 +6,7 @@ import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
 import RichInput from './components/RichInput'
 import List from './components/List'
+import styles from './index.module.scss'
 import { useModalForm } from '@/hooks/useModalForm'
 const { RangePicker } = DatePicker
 
@@ -62,7 +63,9 @@ const ProjectExperience = () => {
               name="name"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
@@ -71,7 +74,9 @@ const ProjectExperience = () => {
               name="position"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
@@ -80,7 +85,9 @@ const ProjectExperience = () => {
               name="date"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <RangePicker />
             </Form.Item>
@@ -89,7 +96,7 @@ const ProjectExperience = () => {
             <Input.TextArea />
           </Form.Item>
           <div>
-            <div className="h-[22px] mb-[8px]">项目产出</div>
+            <div className={styles['rich-text-field']}>项目产出</div>
             <RichInput
               value="<p>请输入项目产出</p>"
               onChange={(value) => {

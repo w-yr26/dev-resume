@@ -7,6 +7,7 @@ import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
 import { useModalForm } from '@/hooks/useModalForm'
+import styles from './index.module.scss'
 import { useAppSelector } from '@/hooks'
 const { RangePicker } = DatePicker
 
@@ -63,13 +64,15 @@ const WorkExperience = () => {
           requiredMark={false}
           form={formRef}
         >
-          <div className="flex justify-between items-center gap-[10px]">
+          <div className={styles['row-form-item ']}>
             <Form.Item
               label="公司"
               name="company"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
@@ -78,18 +81,22 @@ const WorkExperience = () => {
               name="position"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
           </div>
-          <div className="flex justify-between items-center gap-[10px]">
+          <div className={styles['row-form-item ']}>
             <Form.Item
               label="时间"
               name="date"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <RangePicker />
             </Form.Item>
@@ -97,7 +104,9 @@ const WorkExperience = () => {
               label="技术栈"
               name="tecStack"
               layout="vertical"
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
@@ -106,7 +115,7 @@ const WorkExperience = () => {
             <Input.TextArea />
           </Form.Item>
           <div>
-            <div className="h-[22px] mb-[8px]">实习产出</div>
+            <div className={styles['rich-text-field']}>实习产出</div>
             <RichInput
               value="<p>form test msg</p>"
               onChange={(value) => {

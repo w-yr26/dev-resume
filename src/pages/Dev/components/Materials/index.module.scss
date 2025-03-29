@@ -1,0 +1,50 @@
+.materials-contaienr {
+  min-width: 25%;
+  width: 40%;
+  height: 100%;
+  padding: 0 1rem;
+  background-color: #fff;
+  overflow-y: scroll;
+}
+
+/* 水平多表单项排列 */
+.row-form-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 基础信息 */
+.avatar-name-box {
+  display: flex;
+  align-items: center;
+  height: 64px;
+
+  .img-url-box {
+    margin-left: 1rem;
+    flex: 1;
+  }
+}
+
+.custom-field-box {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  margin-top: 0.5rem;
+
+  .custom-label {
+    color: #3f3f46;
+
+    &:hover {
+      cursor: help;
+      text-decoration: underline;
+    }
+  }
+}
+
+/* 项目经历 */
+.rich-text-field {
+  height: 22px;
+  margin-bottom: 8px;
+}

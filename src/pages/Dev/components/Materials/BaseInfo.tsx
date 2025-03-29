@@ -12,6 +12,7 @@ import CustomInput from './components/CustomInput'
 import CustomLayout from '../../../../components/CustomLayout'
 import { useState } from 'react'
 import { AddItemType } from '@/types/dev'
+import styles from './index.module.scss'
 
 const BaseInfo = () => {
   const [itemList, setItemList] = useState<AddItemType[]>([])
@@ -38,11 +39,11 @@ const BaseInfo = () => {
         label="基础信息"
         opMenu={false}
       ></Header>
-      <div className="flex items-center h-[64px]">
+      <div className={styles['avatar-name-box']}>
         <div className="avatar-img">
           <Avatar shape="circle" size={54} icon={<UserOutlined />} />
         </div>
-        <div className="ml-4 flex-1">
+        <div className={styles['img-url-box']}>
           <p className="text-sm text-[#18181b] mb-2">头像</p>
           <Input
             placeholder="https://..."
@@ -54,35 +55,51 @@ const BaseInfo = () => {
       </div>
       <CustomInput label="姓名" placeholder="请输入您的姓名"></CustomInput>
       <CustomInput label="求职岗位" placeholder="请输入求职岗位"></CustomInput>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex-1 mr-4">
+      <div className={styles['row-form-item']}>
+        <div
+          style={{
+            flex: 1,
+          }}
+        >
           <CustomInput
             label="电话"
             placeholder="请输入您的联系方式"
           ></CustomInput>
         </div>
-        <div className="flex-1">
+        <div
+          style={{
+            flex: 1,
+          }}
+        >
           <CustomInput
             label="电子邮件"
             placeholder="请输入您的邮件"
           ></CustomInput>
-          {/* <CustomInput
-            label="个人博客"
-            placeholder="https://example.com"
-          ></CustomInput> */}
         </div>
       </div>
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="flex-2 mr-4">
+      <div className={styles['row-form-item']}>
+        <div
+          style={{
+            flex: 2,
+          }}
+        >
           <CustomInput
             label="个人博客"
             placeholder="https://example.com"
           ></CustomInput>
         </div>
-        <div className="flex-1 mr-2">
+        <div
+          style={{
+            flex: 1,
+          }}
+        >
           <CustomInput label="性别" placeholder="请输入您的性别"></CustomInput>
         </div>
-        <div className="flex-1">
+        <div
+          style={{
+            flex: 1,
+          }}
+        >
           <CustomInput label="年龄" placeholder="请输入您的年龄"></CustomInput>
         </div>
       </div>
@@ -114,12 +131,9 @@ const BaseInfo = () => {
           </div>
         )
       })}
-      <div className="flex items-center h-[48px]">
+      <div className={styles['custom-field-box']}>
         <PlusOutlined color="#3f3f46" />
-        <span
-          className="ml-4 text-[#3f3f46] hover:underline hover:cursor-help"
-          onClick={handleAddItem}
-        >
+        <span className={styles['custom-label']} onClick={handleAddItem}>
           添加自定义字段
         </span>
       </div>

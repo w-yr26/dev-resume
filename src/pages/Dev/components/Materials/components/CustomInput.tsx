@@ -1,11 +1,12 @@
 import { CustomIptType } from '@/types/dev'
 import { Input } from 'antd'
+import styles from './index.module.scss'
 
 const CustomInput: React.FC<CustomIptType> = (props) => {
   const { label, placeholder } = props
   return (
-    <div className="mt-2">
-      <p className="text-sm text-[#18181b] mb-2">{label}</p>
+    <div className={styles['custom-input-box']}>
+      <p className={styles['label']}>{label}</p>
       <Input
         placeholder={placeholder}
         style={{

@@ -8,6 +8,7 @@ import {
   LayoutOutlined,
 } from '@ant-design/icons'
 import { Tooltip } from 'antd'
+import styles from './index.module.scss'
 
 const toolMenu = [
   {
@@ -42,14 +43,11 @@ const toolMenu = [
 
 const RightMenu = () => {
   return (
-    <div className="w-12 h-full py-4 box-border flex flex-col justify-center items-center border-l border-[#e4e4e7]">
-      <ul className="menu-right-list flex flex-col justify-center">
+    <div className={styles['right-container']}>
+      <ul className={styles['list-box']}>
         {toolMenu.map((item) => {
           return (
-            <li
-              key={item.label}
-              className="p-2 hover:rounded-sm hover:border hover:border-transparent hover:bg-[#f4f4f5] dark:hover:bg-[#18181b]"
-            >
+            <li key={item.label} className={styles['item-box']}>
               <Tooltip placement="right" title={item.label}>
                 {item.icon}
               </Tooltip>

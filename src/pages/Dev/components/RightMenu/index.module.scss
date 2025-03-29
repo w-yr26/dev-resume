@@ -1,0 +1,38 @@
+$light-primary-color: #18181b;
+$light-secondary-color: #3f3f46;
+$light-accent-color: #71717a;
+$light-bg-color: #fafafa;
+$light-text-color: #18181b;
+$light-muted-color: #f4f4f5;
+$light-border-color: #e4e4e7;
+$light-cardBg-color: #ffffff;
+
+.right-container {
+  // w-12 h-full py-4 box-border flex flex-col justify-center items-center border-l border-[#e4e4e7]
+  width: 3rem;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $light-border-color;
+
+  .list-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .item-box {
+      padding: 0.5rem;
+
+      &:hover {
+        cursor: help;
+        border: 1px solid transparent;
+        background-color: $light-muted-color;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+}
