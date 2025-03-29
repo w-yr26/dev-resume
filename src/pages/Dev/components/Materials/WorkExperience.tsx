@@ -8,14 +8,13 @@ import AddBtn from './components/AddBtn'
 import List from './components/List'
 import { useModalForm } from '@/hooks/useModalForm'
 import styles from './index.module.scss'
-import { useAppSelector } from '@/hooks'
+import { useDevStore } from '@/store'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
-  const storeWorkList = useAppSelector(
-    (state) => state.dev.dataSource.WORK_EXP.info
+  const storeWorkList = useDevStore(
+    (state) => state.devSchema.dataSource.WORK_EXP.info
   )
-
   const {
     list: workList,
     opened,

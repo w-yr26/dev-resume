@@ -1,6 +1,6 @@
-import { useAppSelector } from '@/hooks'
 import { Image } from 'antd'
 import './index.css'
+import { useDevStore } from '@/store'
 
 const labelMap = {
   user_name: '姓名',
@@ -13,8 +13,8 @@ const labelMap = {
 }
 
 const BaseInfoTem = () => {
-  const baseInfo = useAppSelector(
-    (state) => state.dev.dataSource.BASE_INFO.info
+  const baseInfo = useDevStore(
+    (state) => state.devSchema.dataSource.BASE_INFO.info
   )
 
   return (
@@ -27,7 +27,7 @@ const BaseInfoTem = () => {
           if (key === 'avatar') return ''
           return (
             <li key={key} className="info-item">
-              <span>{labelMap[key]}：</span>
+              <span>{labelMap[key as keyof typeof labelMap]}：</span>
               <span>{value}</span>
             </li>
           )

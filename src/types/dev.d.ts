@@ -110,3 +110,7 @@ export type devInitType = {
   curTemplate: string // 当前使用的简历模板id
   num: number
 }
+
+export type devState = {
+  devSchema: devInitType
+}

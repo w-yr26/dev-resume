@@ -2,14 +2,13 @@ import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
 import configStyle from '@/config/templates'
-import { useAppSelector } from '@/hooks'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
+import { useDevStore, useGlobalStore } from '@/store'
 
 const Dev = () => {
-  const comList = useAppSelector((state) => state.dev.componentList)
-  const comMap = useAppSelector((state) => state.global.keyToComponentMap)
-
+  const comList = useDevStore((state) => state.devSchema.componentList)
+  const comMap = useGlobalStore((state) => state.keyToComponentMap)
   const resumeRef = useRef<HTMLDivElement>(null)
   const pageWidth = 794
   const pageHeight = 1120

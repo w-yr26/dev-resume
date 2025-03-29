@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { devInitType } from '@/types/dev'
+import { create } from 'zustand'
+import type { devInitType, devState } from '@/types/dev'
 
-const initialState: devInitType = {
+const initialData: devInitType = {
   dataSource: {
     BASE_INFO: {
       info: {
@@ -65,16 +65,10 @@ const initialState: devInitType = {
   num: 10,
 }
 
-const devSlice = createSlice({
-  name: 'dev',
-  initialState,
-  reducers: {
-    addNum(state, action: PayloadAction<number>) {
-      state.num += action.payload
-    },
-  },
+const useDevStore = create<devState>(() => {
+  return {
+    devSchema: initialData,
+  }
 })
 
-export const { addNum } = devSlice.actions
-
-export default devSlice.reducer
+export default useDevStore

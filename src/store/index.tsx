@@ -1,20 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
-import devSliceReducer from './slices/devSlice'
-import globalSliceReducer from './slices/globalSlice'
+import useDevStore from './DevStore'
+import useGlobalStore from './GlobalStore'
 
-const store = configureStore({
-  reducer: {
-    dev: devSliceReducer,
-    global: globalSliceReducer,
-  },
-})
-
-// 从 store 本身推断 `RootState` 和 `AppDispatch` 类型
-export type RootState = ReturnType<typeof store.getState>
-// 推断类型：{posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch
-
-// console.log('getState', store.getState)
-// console.log('dispatch', store.dispatch)
-
-export default store
+export { useDevStore, useGlobalStore }
