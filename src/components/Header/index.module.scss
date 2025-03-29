@@ -1,0 +1,19 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3rem;
+  margin-bottom: 1rem;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+
+    .label {
+      color: #09090b;
+      font-weight: bold;
+      font-size: 24px;
+      margin-left: 1rem;
+    }
+  }
+}

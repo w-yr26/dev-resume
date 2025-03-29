@@ -1,5 +1,5 @@
-import CustomLayout from '@/components/CustomLayout'
-import Header from '@/components/Header'
+import CustomLayout from '@/components/CustomLayout/index'
+import Header from '@/components/Header/index'
 import { BulbOutlined } from '@ant-design/icons'
 import { useModalForm } from '@/hooks/useModalForm'
 import type { AwardItemType } from '@/types/dev'

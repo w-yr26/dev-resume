@@ -1,5 +1,5 @@
-import CustomLayout from '@/components/CustomLayout'
-import Header from '@/components/Header'
+import CustomLayout from '@/components/CustomLayout/index'
+import Header from '@/components/Header/index'
 import type { PeojectExpItemType } from '@/types/dev'
 import { BranchesOutlined } from '@ant-design/icons'
 import AddBtn from './components/AddBtn'
