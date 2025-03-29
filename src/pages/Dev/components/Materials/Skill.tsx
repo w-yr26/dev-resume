@@ -1,5 +1,5 @@
-import CustomLayout from '@/components/CustomLayout'
-import Header from '@/components/Header'
+import CustomLayout from '@/components/CustomLayout/index'
+import Header from '@/components/Header/index'
 import { CompressOutlined } from '@ant-design/icons'
 import RichInput from './components/RichInput'
 

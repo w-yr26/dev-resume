@@ -1,5 +1,5 @@
 import { Avatar, Input } from 'antd'
-import Header from '@/components/Header'
+import Header from '@/components/Header/index'
 import {
   CheckSquareOutlined,
   CloseOutlined,
@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import CustomInput from './components/CustomInput'
-import CustomLayout from '../../../../components/CustomLayout'
+import CustomLayout from '../../../../components/CustomLayout/index'
 import { useState } from 'react'
 import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
@@ -44,7 +44,7 @@ const BaseInfo = () => {
           <Avatar shape="circle" size={54} icon={<UserOutlined />} />
         </div>
         <div className={styles['img-url-box']}>
-          <p className="text-sm text-[#18181b] mb-2">头像</p>
+          <p className={styles['label']}>头像</p>
           <Input
             placeholder="https://..."
             style={{

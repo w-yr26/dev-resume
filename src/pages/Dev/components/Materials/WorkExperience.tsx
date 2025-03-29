@@ -1,6 +1,6 @@
 import { CalculatorOutlined } from '@ant-design/icons'
-import Header from '@/components/Header'
-import CustomLayout from '../../../../components/CustomLayout'
+import Header from '@/components/Header/index'
+import CustomLayout from '../../../../components/CustomLayout/index'
 import type { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'

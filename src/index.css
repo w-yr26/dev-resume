@@ -1,6 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 /* @theme { */
-  /* 明亮风格自定义主题色 */
-  /* --color-light-primary: '#18181b';
+/* 明亮风格自定义主题色 */
+/* --color-light-primary: '#18181b';
   --color-light-secondary: '#3f3f46';
   --color-light-accent: '#71717a';
   --color-light-bg: '#fafafa';
@@ -9,8 +15,8 @@
   --color-light-border: '#e4e4e7';
   --color-light-cardBg: '#ffffff'; */
 
-  /* 暗黑风格自定义主题色 */
-  /* --color-dark-primary: '#e4e4e7';
+/* 暗黑风格自定义主题色 */
+/* --color-dark-primary: '#e4e4e7';
   --color-dark-secondary: '#a1a1aa';
   --color-dark-accent: '#71717a';
   --color-dark-bg: '#18181b';
