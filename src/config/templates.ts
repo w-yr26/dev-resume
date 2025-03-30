@@ -2,8 +2,8 @@ import React from 'react'
 
 const templatesStyle = {
   template1: {
-    BASE_INFO: {
-      layout: 'py-2',
+    EDU_BG: {
+      wrapper: 'template1-edu-bg-wrapper',
     },
   },
 }
