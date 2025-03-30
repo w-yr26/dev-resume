@@ -8,6 +8,7 @@ import Layout from '@/pages/Layout'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Dev from '@/pages/Dev'
+import Register from '@/pages/Register'
 
 // const router = createBrowserRouter([
 //   {
@@ -31,6 +32,7 @@ const routes = createRoutesFromElements(
     </Route>
     <Route path="/dev/:id" element={<Dev />}></Route>
     <Route path="login" element={<Login />}></Route>
+    <Route path="register" element={<Register />}></Route>
   </Route>
 )
 
