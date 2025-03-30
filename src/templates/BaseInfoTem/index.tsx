@@ -17,10 +17,11 @@ const BaseInfoTem = () => {
     (state) => state.devSchema.dataSource.BASE_INFO.info
   )
 
+  // 逻辑：以BaseInfo这个模块为例，此时的布局是写死的，后面应该根据模板选择不同，替换成不同的布局样式
   return (
     <div className="layout">
       <div className="avatar-container">
-        <Image width={120} height={150} src={baseInfo.avatar} />
+        <Image width={100} height={130} src={baseInfo.avatar} />
       </div>
       <ul className="info-container">
         {Object.entries(baseInfo).map(([key, value]) => {

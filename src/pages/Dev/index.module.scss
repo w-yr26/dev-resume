@@ -26,3 +26,26 @@ $light-cardBg-color: #ffffff;
     height: 100%;
   }
 }
+
+.resume-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  transform-origin: center;
+  cursor: grab;
+  will-change: transform;
+  transition: transform 0.2s;
+  /* width: 794px;
+  min-height: 1127px; */
+  border: 1px solid red;
+  font-size: 1rem;
+}
+
+.preview-content {
+  max-width: 210mm;
+  min-height: 297mm;
+  padding: 14px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}

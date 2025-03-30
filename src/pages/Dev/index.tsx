@@ -83,7 +83,7 @@ const Dev = () => {
           onMouseDown={(e) => startDrag(e)}
         >
           <div
-            className="resume-container"
+            className={styles['resume-container']}
             style={{
               ...configStyle['commonStyle'],
               width: pageWidth,
@@ -92,7 +92,7 @@ const Dev = () => {
             }}
             ref={resumeRef}
           >
-            <div className="preview-content">
+            <div className={styles['preview-content']}>
               {comList.map((item, index) => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : <p key={index}>null</p>
