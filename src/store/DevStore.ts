@@ -57,7 +57,7 @@ const initialData: devInitType = {
       visible: true,
     },
     SKILL_LIST: {
-      info: '',
+      info: '<ul><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li></ul>',
       visible: true,
     },
     HEART_LIST: {
