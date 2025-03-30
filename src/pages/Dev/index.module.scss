@@ -39,7 +39,6 @@ $light-cardBg-color: #ffffff;
   /* width: 794px;
   min-height: 1127px; */
   font-size: 1rem;
-  box-shadow: 0px 0px 21px 6px rgba(0, 0, 0, 0.1);
 }
 
 .preview-content {
@@ -49,8 +48,25 @@ $light-cardBg-color: #ffffff;
   box-sizing: border-box;
   font-size: 1rem;
   background-color: #fff;
+  box-shadow: 0px 0px 21px 6px rgba(0, 0, 0, 0.1);
 
   & > *:last-child {
     border-bottom: 0;
   }
+}
+
+.page-line {
+  position: absolute;
+  top: 297mm;
+  left: 0;
+  width: 100%;
+  height: 32px;
+  font-size: 12px;
+  color: $light-secondary-color;
+  border-bottom: 1px dashed red;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 8px;
+  box-sizing: border-box;
 }

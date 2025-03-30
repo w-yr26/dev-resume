@@ -5,17 +5,20 @@ import configStyle from '@/config/templates'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useGlobalStore } from '@/store'
+import { pxToMm } from '@/utils'
 
 const Dev = () => {
   const comList = useDevStore((state) => state.devSchema.componentList)
   const comMap = useGlobalStore((state) => state.keyToComponentMap)
   const resumeRef = useRef<HTMLDivElement>(null)
+  const mainRef = useRef<HTMLDivElement>(null)
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
   const [wheel, setWheel] = useState(0.6)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
+  const [lineShow, setLineShow] = useState(false)
 
   const startX = useRef(0)
   const startY = useRef(0)
@@ -72,6 +75,25 @@ const Dev = () => {
     }
   }, [dragging])
 
+  // 监听分页线
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const { height } = entry.contentRect
+        const mmHeight = pxToMm(height)
+        if (mmHeight > 297) {
+          setLineShow(true)
+        }
+      })
+    })
+
+    if (mainRef.current) {
+      observer.observe(mainRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className={styles['dev-container']}>
       <LeftMenu />
@@ -92,12 +114,17 @@ const Dev = () => {
             }}
             ref={resumeRef}
           >
-            <div className={styles['preview-content']}>
+            <div className={styles['preview-content']} ref={mainRef}>
               {comList.map((item, index) => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : ''
               })}
             </div>
+            {lineShow && (
+              <div className={styles['page-line']}>
+                <span>分页线</span>
+              </div>
+            )}
           </div>
         </div>
       </main>
