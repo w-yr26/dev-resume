@@ -95,7 +95,7 @@ const Dev = () => {
             <div className={styles['preview-content']}>
               {comList.map((item, index) => {
                 const Com = comMap[item]
-                return Com ? <Com key={index}></Com> : <p key={index}>null</p>
+                return Com ? <Com key={index}></Com> : ''
               })}
             </div>
           </div>

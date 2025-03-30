@@ -1,25 +1,21 @@
-import { memo } from 'react'
-
 import { useDevStore } from '@/store'
 import styles from './index.module.scss'
 
-const EduBgTem = memo(() => {
-  const { info: projectInfo } = useDevStore(
-    (state) => state.devSchema.dataSource.PROJECT_EXP
+const WorkTem = () => {
+  const { info: workInfo } = useDevStore(
+    (state) => state.devSchema.dataSource.WORK_EXP
   )
-
   return (
-    <div className={styles['edu-bg-wrapper']}>
-      <div className={styles['left-wrapper']}>项目经历</div>
+    <div className={styles['work-wrapper']}>
+      <div className={styles['left-wrapper']}>工作经历</div>
       <div className={styles['right-wrapper']}>
-        {projectInfo.map((infoItem) => {
+        {workInfo.map((infoItem) => {
           return (
             <div key={infoItem.id}>
               <div className={styles['content-head']}>
-                <span className="project-name">{infoItem.name}</span>
+                <span className="project-name">{infoItem.company}</span>
                 <span className="date">{infoItem.date}</span>
               </div>
-              <div className={styles['link-box']}>https://baidu.com</div>
               <div className="overview-box">
                 <div className={styles['module-head']}>项目概述：</div>
                 <div className={styles['content-box']}>
@@ -41,6 +37,6 @@ const EduBgTem = memo(() => {
       </div>
     </div>
   )
-})
+}
 
-export default EduBgTem
+export default WorkTem
