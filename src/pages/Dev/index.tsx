@@ -6,6 +6,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useGlobalStore } from '@/store'
 import { pxToMm } from '@/utils'
+import Setting from './components/Setting'
+import BottomBar from './components/BottomBar'
 
 const Dev = () => {
   const comList = useDevStore((state) => state.devSchema.componentList)
@@ -15,7 +17,7 @@ const Dev = () => {
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
-  const [wheel, setWheel] = useState(0.6)
+  const [wheel, setWheel] = useState(0.7)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   const [lineShow, setLineShow] = useState(false)
@@ -96,9 +98,16 @@ const Dev = () => {
 
   return (
     <div className={styles['dev-container']}>
-      <LeftMenu />
-      <main className={styles['main-container']}>
+      <div
+        style={{
+          display: 'flex',
+          width: '30%',
+        }}
+      >
+        <LeftMenu />
         <Materials></Materials>
+      </div>
+      <main className={styles['main-container']}>
         <div
           className={styles['preview-container']}
           onWheel={(e) => handleWheel(e)}
@@ -129,7 +138,16 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <RightMenu></RightMenu>
+      <div
+        style={{
+          display: 'flex',
+          width: '30%',
+        }}
+      >
+        <Setting></Setting>
+        <RightMenu></RightMenu>
+      </div>
+      <BottomBar></BottomBar>
     </div>
   )
 }
