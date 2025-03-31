@@ -111,6 +111,7 @@ const Dev = () => {
               width: pageWidth,
               height: pageHeight,
               transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
+              cursor: dragging ? 'grabbing' : 'grab',
             }}
             ref={resumeRef}
           >
