@@ -8,7 +8,12 @@ import {
 import styles from './index.module.scss'
 import { Tooltip } from 'antd'
 
-const BottomBar = () => {
+type barType = {
+  upWheel: () => void
+  reduceWheel: () => void
+}
+
+const BottomBar = ({ reduceWheel, upWheel }: barType) => {
   const iconArr = [
     {
       icon: FullscreenExitOutlined,
@@ -18,12 +23,12 @@ const BottomBar = () => {
     {
       icon: ZoomInOutlined,
       label: '放大',
-      callback: () => {},
+      callback: upWheel,
     },
     {
       icon: ZoomOutOutlined,
       label: '缩小',
-      callback: () => {},
+      callback: reduceWheel,
     },
     {
       icon: AimOutlined,
@@ -43,7 +48,9 @@ const BottomBar = () => {
         return (
           <div key={item.label} className={styles['utile-box']}>
             <Tooltip title={item.label}>
-              <item.icon />
+              <div onClick={item.callback}>
+                <item.icon />
+              </div>
             </Tooltip>
           </div>
         )

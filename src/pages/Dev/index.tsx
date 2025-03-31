@@ -27,6 +27,16 @@ const Dev = () => {
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
 
+  const upWheel = () => {
+    if (wheel >= 1) return
+    setWheel((prev) => prev + 0.1)
+  }
+
+  const reduceWheel = () => {
+    if (wheel <= 0.3) return
+    setWheel((prev) => prev - 0.1)
+  }
+
   const startDrag = (e: React.MouseEvent<Element>) => {
     e.preventDefault()
     setDragging(true)
@@ -147,7 +157,7 @@ const Dev = () => {
         <Setting></Setting>
         <RightMenu></RightMenu>
       </div>
-      <BottomBar></BottomBar>
+      <BottomBar upWheel={upWheel} reduceWheel={reduceWheel}></BottomBar>
     </div>
   )
 }
