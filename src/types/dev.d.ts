@@ -10,6 +10,8 @@ export type HeaderType = {
 export type CustomIptType = {
   placeholder: string
   label: string
+  value?: any
+  onChange?: (val: any) => void
 }
 
 export type AddItemType = {
@@ -113,4 +115,5 @@ export type devInitType = {
 
 export type devState = {
   devSchema: devInitType
+  changeBaseInfo: (newVal: string, key: string) => void
 }

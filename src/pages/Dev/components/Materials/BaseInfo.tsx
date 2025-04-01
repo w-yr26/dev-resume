@@ -9,13 +9,25 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import CustomInput from './components/CustomInput'
-import CustomLayout from '../../../../components/CustomLayout/index'
+import CustomLayout from '@/components/CustomLayout/index'
 import { useState } from 'react'
 import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
+import { useDevStore } from '@/store'
 
 const BaseInfo = () => {
+  const { info } = useDevStore((state) => state.devSchema.dataSource.BASE_INFO)
+  const changeBaseInfo = useDevStore((state) => state.changeBaseInfo)
+  // console.log(info)
+
   const [itemList, setItemList] = useState<AddItemType[]>([])
+
+  const handleFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: string
+  ) => {
+    changeBaseInfo(e.target.value, key)
+  }
 
   const handleAddItem = () => {
     setItemList([
@@ -50,11 +62,27 @@ const BaseInfo = () => {
             style={{
               height: '36px',
             }}
+            disabled
+            value={info.avatar}
           />
         </div>
       </div>
-      <CustomInput label="姓名" placeholder="请输入您的姓名"></CustomInput>
-      <CustomInput label="求职岗位" placeholder="请输入求职岗位"></CustomInput>
+      <CustomInput
+        label="姓名"
+        placeholder="请输入您的姓名"
+        value={info.user_name}
+        onChange={(e) => {
+          handleFieldChange(e, 'user_name')
+        }}
+      ></CustomInput>
+      <CustomInput
+        label="求职岗位"
+        placeholder="请输入求职岗位"
+        value={info.position}
+        onChange={(e) => {
+          handleFieldChange(e, 'position')
+        }}
+      ></CustomInput>
       <div className={styles['row-form-item']}>
         <div
           style={{
@@ -64,6 +92,10 @@ const BaseInfo = () => {
           <CustomInput
             label="电话"
             placeholder="请输入您的联系方式"
+            value={info.phone}
+            onChange={(e) => {
+              handleFieldChange(e, 'phone')
+            }}
           ></CustomInput>
         </div>
         <div
@@ -74,6 +106,10 @@ const BaseInfo = () => {
           <CustomInput
             label="电子邮件"
             placeholder="请输入您的邮件"
+            value={info.email}
+            onChange={(e) => {
+              handleFieldChange(e, 'email')
+            }}
           ></CustomInput>
         </div>
       </div>
@@ -86,6 +122,10 @@ const BaseInfo = () => {
           <CustomInput
             label="个人博客"
             placeholder="https://example.com"
+            value={info.blob}
+            onChange={(e) => {
+              handleFieldChange(e, 'blob')
+            }}
           ></CustomInput>
         </div>
         <div
@@ -93,19 +133,33 @@ const BaseInfo = () => {
             flex: 1,
           }}
         >
-          <CustomInput label="性别" placeholder="请输入您的性别"></CustomInput>
+          <CustomInput
+            label="性别"
+            placeholder="请输入您的性别"
+            value={info.gender}
+            onChange={(e) => {
+              handleFieldChange(e, 'gender')
+            }}
+          ></CustomInput>
         </div>
         <div
           style={{
             flex: 1,
           }}
         >
-          <CustomInput label="年龄" placeholder="请输入您的年龄"></CustomInput>
+          <CustomInput
+            label="年龄"
+            placeholder="请输入您的年龄"
+            value={info.age}
+            onChange={(e) => {
+              handleFieldChange(e, 'age')
+            }}
+          ></CustomInput>
         </div>
       </div>
       {itemList.map((item) => {
         return (
-          <div className="flex items-center justify-around mt-4" key={item.id}>
+          <div className={styles['info-list-item']} key={item.id}>
             <HolderOutlined className="hover:cursor-help" />
             <CheckSquareOutlined />
             <Input

@@ -50,6 +50,13 @@
   }
 }
 
+.info-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
 /* 项目经历 */
 .rich-text-field {
   height: 22px;
