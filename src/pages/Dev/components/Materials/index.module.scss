@@ -1,6 +1,7 @@
 .materials-contaienr {
-  min-width: 25%;
-  width: 40%;
+  // min-width: 25%;
+  // width: 30%;
+  flex: 1;
   height: 100%;
   padding: 0 1rem;
   background-color: #fff;
@@ -47,6 +48,13 @@
       text-decoration: underline;
     }
   }
+}
+
+.info-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 1rem;
 }
 
 /* 项目经历 */

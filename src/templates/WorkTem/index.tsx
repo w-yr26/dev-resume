@@ -1,15 +1,27 @@
 import { useDevStore } from '@/store'
 import styles from './index.module.scss'
+import { useMemo } from 'react'
 
 const WorkTem = () => {
   const { info: workInfo } = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP
   )
+
+  const hideHead = useMemo(() => {
+    return workInfo.findIndex((item) => item.visible) === -1
+  }, [workInfo])
+
   return (
-    <div className={styles['work-wrapper']}>
-      <div className={styles['left-wrapper']}>工作经历</div>
+    <div
+      className={styles['work-wrapper']}
+      style={{
+        borderBottom: hideHead ? 'none' : '1px',
+      }}
+    >
+      {hideHead ? '' : <div className={styles['left-wrapper']}>工作经历</div>}
       <div className={styles['right-wrapper']}>
         {workInfo.map((infoItem) => {
+          if (!infoItem.visible) return null
           return (
             <div key={infoItem.id}>
               <div className={styles['content-head']}>
