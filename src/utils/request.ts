@@ -43,7 +43,6 @@ instance.interceptors.response.use(
     if (code !== 1) {
       message.error('请求出错, 请稍后再试')
     }
-    console.log(response)
 
     // 数据剥离
     return response.data
