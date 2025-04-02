@@ -10,6 +10,8 @@ export type HeaderType = {
 export type CustomIptType = {
   placeholder: string
   label: string
+  value?: any
+  onChange?: (val: any) => void
 }
 
 export type AddItemType = {
@@ -41,6 +43,7 @@ export type WorkExpItemType = {
   output: string
   tecStack: string
   id: string
+  visible: boolean
 }
 
 export type PeojectExpItemType = Pick<
@@ -113,4 +116,9 @@ export type devInitType = {
 
 export type devState = {
   devSchema: devInitType
+  changeBaseInfo: (newVal: string, key: string) => void
+  setVisible: (id: string, key: keyType) => void
+  handleDel: (id: string, key: keyType) => void
 }
+
+export type keyType = 'WORK_EXP'

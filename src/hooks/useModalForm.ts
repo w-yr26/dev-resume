@@ -32,6 +32,10 @@ export function useModalForm<T>(defaultValues: T[]) {
     setOpend(false)
   }
 
+  const resetForm = () => {
+    formRef.resetFields()
+  }
+
   return {
     list,
     opened,
@@ -39,5 +43,6 @@ export function useModalForm<T>(defaultValues: T[]) {
     handleAdd,
     handleCancel,
     handleOk,
+    resetForm,
   }
 }

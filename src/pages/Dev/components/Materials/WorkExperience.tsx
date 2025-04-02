@@ -1,6 +1,6 @@
 import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header/index'
-import CustomLayout from '../../../../components/CustomLayout/index'
+import CustomLayout from '@/components/CustomLayout/index'
 import type { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
@@ -15,29 +15,44 @@ const WorkExperience = () => {
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
+  const setVisible = useDevStore((state) => state.setVisible)
+  const handleDel = useDevStore((state) => state.handleDel)
   const {
-    list: workList,
+    // list: workList,
     opened,
     formRef,
     handleAdd,
     handleCancel,
     handleOk,
+    resetForm,
   } = useModalForm<WorkExpItemType>(storeWorkList)
+
+  const handleVisible = (id: string) => {
+    // storeWorkList
+    setVisible(id, 'WORK_EXP')
+  }
+
+  const handleDelItem = (id: string) => {
+    handleDel(id, 'WORK_EXP')
+  }
 
   return (
     <>
       <CustomLayout>
         <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
-        {workList.length === 0 ? (
+        {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={handleAdd} />
         ) : (
           <List
-            data={workList}
+            data={storeWorkList}
             handleAdd={handleAdd}
+            handleVisible={handleVisible}
+            handleDel={handleDelItem}
             fieldMap={{
               id: 'id',
               title: 'company',
               subTitle: 'position',
+              visible: 'visible',
             }}
           ></List>
         )}
@@ -56,6 +71,7 @@ const WorkExperience = () => {
         centered={true}
         open={opened}
         onCancel={handleCancel}
+        afterClose={resetForm}
       >
         <Form
           name="layout-multiple-horizontal"

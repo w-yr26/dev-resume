@@ -1,12 +1,12 @@
 import { create } from 'zustand'
-import type { devInitType, devState } from '@/types/dev'
+import type { devInitType, devState, keyType } from '@/types/dev'
 
 const initialData: devInitType = {
   dataSource: {
     BASE_INFO: {
       info: {
         avatar:
-          'data:image/jpeg;base64,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',
+          'data:image/jpeg;base64,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',
         user_name: '张柯林',
         gender: 1,
         age: 21,
@@ -33,6 +33,7 @@ const initialData: devInitType = {
           overview:
             '一款致力于制作流量推广业务的素材的平台，面向司内设计人员，实现流量推广小游戏素材快速换皮、研发和制作，为游戏侧服务',
           date: '2025-03-16',
+          visible: true,
         },
       ],
       visible: true,
@@ -57,7 +58,7 @@ const initialData: devInitType = {
       visible: true,
     },
     SKILL_LIST: {
-      info: '<ul><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li></ul>',
+      info: '<ul><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li></ul>',
       visible: true,
     },
     HEART_LIST: {
@@ -78,9 +79,69 @@ const initialData: devInitType = {
   num: 10,
 }
 
-const useDevStore = create<devState>(() => {
+const useDevStore = create<devState>((set) => {
   return {
     devSchema: initialData,
+    changeBaseInfo: (newVal: string, key: string) => {
+      return set((state) => {
+        return {
+          devSchema: {
+            ...state.devSchema,
+            dataSource: {
+              ...state.devSchema.dataSource,
+              BASE_INFO: {
+                ...state.devSchema.dataSource.BASE_INFO,
+                info: {
+                  ...state.devSchema.dataSource.BASE_INFO.info,
+                  [key]: newVal,
+                },
+              },
+            },
+          },
+        }
+      })
+    },
+    setVisible: (id: string, key: keyType) => {
+      return set((state) => {
+        return {
+          devSchema: {
+            ...state.devSchema,
+            dataSource: {
+              ...state.devSchema.dataSource,
+              [key]: {
+                ...state.devSchema.dataSource[key],
+                info: state.devSchema.dataSource[key].info.map((item) => {
+                  if (item.id !== id) return item
+                  else
+                    return {
+                      ...item,
+                      visible: !item.visible,
+                    }
+                }),
+              },
+            },
+          },
+        }
+      })
+    },
+    handleDel: (id: string, key: keyType) => {
+      return set((state) => {
+        return {
+          devSchema: {
+            ...state.devSchema,
+            dataSource: {
+              ...state.devSchema.dataSource,
+              [key]: {
+                ...state.devSchema.dataSource[key],
+                info: state.devSchema.dataSource[key].info.filter((item) => {
+                  return item.id !== id
+                }),
+              },
+            },
+          },
+        }
+      })
+    },
   }
 })
 

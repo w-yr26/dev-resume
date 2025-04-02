@@ -72,3 +72,44 @@ $light-cardBg-color: #ffffff;
   justify-content: flex-end;
   margin-top: 1.5rem;
 }
+
+/* 菜单列表 */
+.menu-list {
+  width: 100px;
+  height: auto;
+  box-sizing: border-box;
+
+  .menu-item {
+    width: 100%;
+    height: 28px;
+    color: #333;
+    line-height: 28px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin: 2px 0;
+    transition: background 0.2s ease-in-out;
+
+    .menu-icon-box {
+      width: 14px;
+    }
+
+    .menu-item-label {
+      margin-left: 8px;
+    }
+
+    &:hover {
+      background-color: #e4e4e7;
+      cursor: help;
+    }
+  }
+
+  .menu-item-del {
+    color: #c83c2d;
+
+    &:hover {
+      color: #333;
+    }
+  }
+}
