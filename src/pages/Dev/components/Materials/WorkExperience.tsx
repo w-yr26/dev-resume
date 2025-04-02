@@ -1,6 +1,6 @@
 import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header/index'
-import CustomLayout from '../../../../components/CustomLayout/index'
+import CustomLayout from '@/components/CustomLayout/index'
 import type { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
@@ -15,6 +15,7 @@ const WorkExperience = () => {
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
+  const setVisible = useDevStore((state) => state.setVisible)
   const {
     list: workList,
     opened,
@@ -22,7 +23,13 @@ const WorkExperience = () => {
     handleAdd,
     handleCancel,
     handleOk,
+    resetForm,
   } = useModalForm<WorkExpItemType>(storeWorkList)
+
+  const handleVisible = (id: string) => {
+    // storeWorkList
+    setVisible(id, 'WORK_EXP')
+  }
 
   return (
     <>
@@ -32,12 +39,14 @@ const WorkExperience = () => {
           <AddBtn handleAdd={handleAdd} />
         ) : (
           <List
-            data={workList}
+            data={storeWorkList}
             handleAdd={handleAdd}
+            handleVisible={handleVisible}
             fieldMap={{
               id: 'id',
               title: 'company',
               subTitle: 'position',
+              visible: 'visible',
             }}
           ></List>
         )}
@@ -56,6 +65,7 @@ const WorkExperience = () => {
         centered={true}
         open={opened}
         onCancel={handleCancel}
+        afterClose={resetForm}
       >
         <Form
           name="layout-multiple-horizontal"
