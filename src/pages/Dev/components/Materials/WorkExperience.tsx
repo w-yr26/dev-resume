@@ -16,8 +16,9 @@ const WorkExperience = () => {
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
   const setVisible = useDevStore((state) => state.setVisible)
+  const handleDel = useDevStore((state) => state.handleDel)
   const {
-    list: workList,
+    // list: workList,
     opened,
     formRef,
     handleAdd,
@@ -31,17 +32,22 @@ const WorkExperience = () => {
     setVisible(id, 'WORK_EXP')
   }
 
+  const handleDelItem = (id: string) => {
+    handleDel(id, 'WORK_EXP')
+  }
+
   return (
     <>
       <CustomLayout>
         <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
-        {workList.length === 0 ? (
+        {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={handleAdd} />
         ) : (
           <List
             data={storeWorkList}
             handleAdd={handleAdd}
             handleVisible={handleVisible}
+            handleDel={handleDelItem}
             fieldMap={{
               id: 'id',
               title: 'company',

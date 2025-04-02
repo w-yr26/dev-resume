@@ -18,6 +18,7 @@ type ListProps<T> = {
   }
   handleAdd: () => void
   handleVisible: (id: string) => void
+  handleDel: (id: string) => void
 }
 
 const List = <T,>({
@@ -25,6 +26,7 @@ const List = <T,>({
   fieldMap,
   handleAdd,
   handleVisible,
+  handleDel,
 }: ListProps<T>) => {
   const content = (item: T) => (
     <div className={styles['menu-list']}>
@@ -43,7 +45,10 @@ const List = <T,>({
         </div>
         <div className={styles['menu-item-label']}>编辑</div>
       </div>
-      <div className={`${styles['menu-item']} ${styles['menu-item-del']}`}>
+      <div
+        className={`${styles['menu-item']} ${styles['menu-item-del']}`}
+        onClick={() => handleDel(item[fieldMap.id] as string)}
+      >
         <div className={styles['menu-icon-box']}>
           <DeleteOutlined color="#c83c2d" />
         </div>

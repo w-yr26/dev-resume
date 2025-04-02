@@ -118,6 +118,7 @@ export type devState = {
   devSchema: devInitType
   changeBaseInfo: (newVal: string, key: string) => void
   setVisible: (id: string, key: keyType) => void
+  handleDel: (id: string, key: keyType) => void
 }
 
 export type keyType = 'WORK_EXP'

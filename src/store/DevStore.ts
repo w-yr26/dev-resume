@@ -124,6 +124,24 @@ const useDevStore = create<devState>((set) => {
         }
       })
     },
+    handleDel: (id: string, key: keyType) => {
+      return set((state) => {
+        return {
+          devSchema: {
+            ...state.devSchema,
+            dataSource: {
+              ...state.devSchema.dataSource,
+              [key]: {
+                ...state.devSchema.dataSource[key],
+                info: state.devSchema.dataSource[key].info.filter((item) => {
+                  return item.id !== id
+                }),
+              },
+            },
+          },
+        }
+      })
+    },
   }
 })
 
