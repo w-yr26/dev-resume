@@ -1,4 +1,5 @@
 import useDevStore from './DevStore'
 import useGlobalStore from './GlobalStore'
+import useUserStore from './UserStore'
 
-export { useDevStore, useGlobalStore }
+export { useDevStore, useGlobalStore, useUserStore }
