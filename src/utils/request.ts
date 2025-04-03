@@ -1,7 +1,10 @@
 import { message } from 'antd'
-import axios, { type Method } from 'axios'
+import axios, { type AxiosError, type Method } from 'axios'
+import router from '@/router'
 import { useUserStore } from '@/store'
 const store = useUserStore.getState()
+
+// 请求实例
 const instance = axios.create({
   baseURL: 'http://123.207.71.32:8082',
   timeout: 5000,
@@ -47,8 +50,16 @@ instance.interceptors.response.use(
     // 数据剥离
     return response.data
   },
-  function (error) {
-    // 超出 2xx 范围的状态码都会触发该函数。
+  function (error: AxiosError) {
+    const { status } = error
+    // 401错误, token失效
+    if (status === 401) {
+      message.warning('当前登录状态有误, 请重新登录')
+      router.navigate('/login', {
+        replace: true,
+      })
+    }
+
     // 对响应错误做点什么
     return Promise.reject(error)
   }
