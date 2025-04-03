@@ -116,9 +116,9 @@ export type devInitType = {
 
 export type devState = {
   devSchema: devInitType
-  changeBaseInfo: (newVal: string, key: string) => void
-  setVisible: (id: string, key: keyType) => void
-  handleDel: (id: string, key: keyType) => void
+  immerBaseInfo: (newVal: string, key: string) => void
+  immerVisible: (id: string, key: keyType) => void
+  immerDel: (id: string, key: keyType) => void
 }
 
 export type keyType = 'WORK_EXP'

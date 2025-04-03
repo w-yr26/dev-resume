@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { devInitType, devState, keyType } from '@/types/dev'
+import { produce } from 'immer'
 
 const initialData: devInitType = {
   dataSource: {
@@ -82,66 +83,37 @@ const initialData: devInitType = {
 const useDevStore = create<devState>((set) => {
   return {
     devSchema: initialData,
-    changeBaseInfo: (newVal: string, key: string) => {
-      return set((state) => {
-        return {
-          devSchema: {
-            ...state.devSchema,
-            dataSource: {
-              ...state.devSchema.dataSource,
-              BASE_INFO: {
-                ...state.devSchema.dataSource.BASE_INFO,
-                info: {
-                  ...state.devSchema.dataSource.BASE_INFO.info,
-                  [key]: newVal,
-                },
-              },
-            },
-          },
-        }
-      })
-    },
-    setVisible: (id: string, key: keyType) => {
-      return set((state) => {
-        return {
-          devSchema: {
-            ...state.devSchema,
-            dataSource: {
-              ...state.devSchema.dataSource,
-              [key]: {
-                ...state.devSchema.dataSource[key],
-                info: state.devSchema.dataSource[key].info.map((item) => {
-                  if (item.id !== id) return item
-                  else
-                    return {
-                      ...item,
-                      visible: !item.visible,
-                    }
-                }),
-              },
-            },
-          },
-        }
-      })
-    },
-    handleDel: (id: string, key: keyType) => {
-      return set((state) => {
-        return {
-          devSchema: {
-            ...state.devSchema,
-            dataSource: {
-              ...state.devSchema.dataSource,
-              [key]: {
-                ...state.devSchema.dataSource[key],
-                info: state.devSchema.dataSource[key].info.filter((item) => {
-                  return item.id !== id
-                }),
-              },
-            },
-          },
-        }
-      })
-    },
+    immerBaseInfo: (newVal: string, key: string) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource.BASE_INFO.info = {
+            ...state.devSchema.dataSource.BASE_INFO.info,
+            [key]: newVal,
+          }
+        })
+      ),
+    immerVisible: (id: string, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
+            key
+          ].info.map((item) => {
+            if (item.id !== id) return item
+            return {
+              ...item,
+              visible: !item.visible,
+            }
+          })
+        })
+      ),
+    immerDel: (id: string, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
+            key
+          ].info.filter((item) => item.id !== id)
+        })
+      ),
   }
 })
 

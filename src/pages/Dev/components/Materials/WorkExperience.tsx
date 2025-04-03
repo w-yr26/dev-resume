@@ -15,8 +15,8 @@ const WorkExperience = () => {
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
-  const setVisible = useDevStore((state) => state.setVisible)
-  const handleDel = useDevStore((state) => state.handleDel)
+  const setVisible = useDevStore((state) => state.immerVisible)
+  const handleDel = useDevStore((state) => state.immerDel)
   const {
     // list: workList,
     opened,
