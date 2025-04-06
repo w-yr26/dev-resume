@@ -1,7 +1,6 @@
 import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
-import type { WorkExpItemType } from '@/types/dev'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
@@ -17,15 +16,35 @@ const WorkExperience = () => {
   )
   const setVisible = useDevStore((state) => state.immerVisible)
   const handleDel = useDevStore((state) => state.immerDel)
+  const addInfoList = useDevStore((state) => state.addInfoList)
+
+  const addItem = (value: any) => {
+    addInfoList(value, 'WORK_EXP')
+  }
   const {
     // list: workList,
     opened,
     formRef,
     handleAdd,
     handleCancel,
-    handleOk,
     resetForm,
-  } = useModalForm<WorkExpItemType>(storeWorkList)
+  } = useModalForm([])
+
+  const handleOk = async () => {
+    try {
+      const values = await formRef.validateFields()
+      console.log('values', values)
+      addItem({
+        ...values,
+        id: new Date().getTime(),
+        output: '<p>内容测试</p>',
+      })
+      resetForm()
+      handleCancel()
+    } catch (err) {
+      console.log('校验失败', err)
+    }
+  }
 
   const handleVisible = (id: string) => {
     // storeWorkList
@@ -34,6 +53,18 @@ const WorkExperience = () => {
 
   const handleDelItem = (id: string) => {
     handleDel(id, 'WORK_EXP')
+  }
+
+  const handleEdit = (id: string) => {
+    const dataSource = storeWorkList.find((item) => item.id === id)
+    handleAdd()
+    formRef.setFieldsValue({
+      company: dataSource?.company,
+      position: dataSource?.position,
+      // date: dataSource?.date,
+      tecStack: dataSource?.tecStack,
+      overview: dataSource?.overview,
+    })
   }
 
   return (
@@ -48,6 +79,7 @@ const WorkExperience = () => {
             handleAdd={handleAdd}
             handleVisible={handleVisible}
             handleDel={handleDelItem}
+            handleEdit={handleEdit}
             fieldMap={{
               id: 'id',
               title: 'company',

@@ -111,7 +111,6 @@ export type devInitType = {
   }
   componentList: optionalCom[]
   curTemplate: string // 当前使用的简历模板id
-  num: number
 }
 
 export type devState = {
@@ -119,6 +118,7 @@ export type devState = {
   immerBaseInfo: (newVal: string, key: string) => void
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void
+  addInfoList: (data: any, key: keyType) => void
 }
 
 export type keyType = 'WORK_EXP'

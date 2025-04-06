@@ -77,7 +77,6 @@ const initialData: devInitType = {
     'HEART_LIST',
   ],
   curTemplate: '01',
-  num: 10,
 }
 
 const useDevStore = create<devState>((set) => {
@@ -112,6 +111,15 @@ const useDevStore = create<devState>((set) => {
           state.devSchema.dataSource[key].info = state.devSchema.dataSource[
             key
           ].info.filter((item) => item.id !== id)
+        })
+      ),
+    addInfoList: (data: any, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = [
+            ...state.devSchema.dataSource[key].info,
+            data,
+          ]
         })
       ),
   }
