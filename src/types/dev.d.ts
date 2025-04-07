@@ -1,3 +1,4 @@
+import type { Dayjs } from 'dayjs'
 // 物料区头部
 export type HeaderType = {
   label: string
@@ -38,7 +39,7 @@ export type EduBgType = {
 export type WorkExpItemType = {
   company: string
   position: string
-  date: string
+  date: [Dayjs, Dayjs]
   overview: string
   output: string
   tecStack: string

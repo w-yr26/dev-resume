@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { devInitType, devState, keyType } from '@/types/dev'
 import { produce } from 'immer'
+import dayjs from 'dayjs'
 
 const initialData: devInitType = {
   dataSource: {
@@ -33,7 +34,7 @@ const initialData: devInitType = {
             '<p>基于 canvas 和 video，生成视频海报图和缩略图，实现按视频总时长动态均分时间点、生成视频缩略图(雪碧图)，实现在进度条预览内容</p><p>异步顺序执行，结合 reduce 实现 mergePromise 方法，确保缩略图绘制按时间点顺序执行，避免异步执行速度的不确定性导致渲染顺序问题</p><p>基于 FFmpeg.wasm 实现视频字幕烧制功能</p><p>使用 BroadcaseChannel 进行页面通信，显示视频处理进度</p><p>使用 indexDB 缓存所需字体文件，提升二次构建速度</p><p>基于 EventBus 埋入对应事件的监听，并通过维护用户操作快照记录，实现撤销、重做功能</p>',
           overview:
             '一款致力于制作流量推广业务的素材的平台，面向司内设计人员，实现流量推广小游戏素材快速换皮、研发和制作，为游戏侧服务',
-          date: '2025-03-16',
+          date: [dayjs('2025-01-01'), dayjs('2025-03-05')],
           visible: true,
         },
       ],
@@ -42,7 +43,7 @@ const initialData: devInitType = {
     PROJECT_EXP: {
       info: [
         {
-          date: '2025/02',
+          date: [dayjs('2025-03-05'), dayjs('2025-05-04')],
           id: new Date().getDate() + '',
           name: 'mini-vue',
           position: '前端开发人员',

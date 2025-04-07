@@ -61,7 +61,7 @@ const WorkExperience = () => {
     formRef.setFieldsValue({
       company: dataSource?.company,
       position: dataSource?.position,
-      // date: dataSource?.date,
+      date: dataSource?.date,
       tecStack: dataSource?.tecStack,
       overview: dataSource?.overview,
     })

@@ -26,7 +26,10 @@ const WorkTem = () => {
             <div key={infoItem.id}>
               <div className={styles['content-head']}>
                 <span className="project-name">{infoItem.company}</span>
-                <span className="date">{infoItem.date}</span>
+                <span className="date">
+                  {infoItem.date[0].format('YYYY-MM')} -{' '}
+                  {infoItem.date[1].format('YYYY-MM')}
+                </span>
               </div>
               <div className="overview-box">
                 <div className={styles['module-head']}>项目概述：</div>
