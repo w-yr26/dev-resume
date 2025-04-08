@@ -121,12 +121,7 @@ const WorkExperience = () => {
           setInfoId('')
         }}
       >
-        <Form
-          name="layout-multiple-horizontal"
-          layout="vertical"
-          requiredMark={false}
-          form={formRef}
-        >
+        <Form layout="vertical" requiredMark={false} form={formRef}>
           <div className={styles['row-form-item']}>
             <Form.Item
               label="公司"

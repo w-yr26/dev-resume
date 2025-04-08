@@ -51,12 +51,7 @@ const ProjectExperience = () => {
         open={opened}
         onCancel={handleCancel}
       >
-        <Form
-          name="layout-multiple-horizontal"
-          layout="vertical"
-          requiredMark={false}
-          form={formRef}
-        >
+        <Form layout="vertical" requiredMark={false} form={formRef}>
           <div className="flex justify-between items-center gap-[10px]">
             <Form.Item
               label="项目名称"
