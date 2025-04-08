@@ -135,6 +135,22 @@ const useDevStore = create<devState>((set) => {
           })
         })
       ),
+    changeItemVisible: (key) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].visible =
+            !state.devSchema.dataSource[key].visible
+        })
+      ),
+    resetInfo: (key) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key] = {
+            info: [],
+            visible: true,
+          }
+        })
+      ),
   }
 })
 

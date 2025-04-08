@@ -5,6 +5,7 @@ import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
+import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
 import styles from './index.module.scss'
 import { useDevStore } from '@/store'
 import { useEffect, useMemo, useState } from 'react'
@@ -83,7 +84,9 @@ const WorkExperience = () => {
   return (
     <>
       <CustomLayout>
-        <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
+        <Header label="工作/实习经历" icon={CalculatorOutlined}>
+          <CtxMenu currentKey="WORK_EXP"></CtxMenu>
+        </Header>
         {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={() => setOpend(true)} />
         ) : (
