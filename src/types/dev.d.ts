@@ -120,6 +120,7 @@ export type devState = {
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void
   addInfoList: (data: any, key: keyType) => void
+  updateInfo: (data: any, id: string, key: keyType) => void
 }
 
 export type keyType = 'WORK_EXP'

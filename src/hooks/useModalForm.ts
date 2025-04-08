@@ -34,6 +34,7 @@ export function useModalForm<T>(defaultValues: T[]) {
 
   const resetForm = () => {
     formRef.resetFields()
+    console.log('reset exe')
   }
 
   return {

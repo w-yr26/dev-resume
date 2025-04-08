@@ -5,9 +5,9 @@ import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
-import { useModalForm } from '@/hooks/useModalForm'
 import styles from './index.module.scss'
 import { useDevStore } from '@/store'
+import { useEffect, useMemo, useState } from 'react'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
@@ -17,34 +17,10 @@ const WorkExperience = () => {
   const setVisible = useDevStore((state) => state.immerVisible)
   const handleDel = useDevStore((state) => state.immerDel)
   const addInfoList = useDevStore((state) => state.addInfoList)
-
-  const addItem = (value: any) => {
-    addInfoList(value, 'WORK_EXP')
-  }
-  const {
-    // list: workList,
-    opened,
-    formRef,
-    handleAdd,
-    handleCancel,
-    resetForm,
-  } = useModalForm([])
-
-  const handleOk = async () => {
-    try {
-      const values = await formRef.validateFields()
-      console.log('values', values)
-      addItem({
-        ...values,
-        id: new Date().getTime(),
-        output: '<p>内容测试</p>',
-      })
-      resetForm()
-      handleCancel()
-    } catch (err) {
-      console.log('校验失败', err)
-    }
-  }
+  const updateInfo = useDevStore((state) => state.updateInfo)
+  const [opened, setOpend] = useState(false)
+  const [infoId, setInfoId] = useState('')
+  const [formRef] = Form.useForm()
 
   const handleVisible = (id: string) => {
     // storeWorkList
@@ -56,15 +32,51 @@ const WorkExperience = () => {
   }
 
   const handleEdit = (id: string) => {
-    const dataSource = storeWorkList.find((item) => item.id === id)
-    handleAdd()
-    formRef.setFieldsValue({
-      company: dataSource?.company,
-      position: dataSource?.position,
-      date: dataSource?.date,
-      tecStack: dataSource?.tecStack,
-      overview: dataSource?.overview,
-    })
+    setOpend(true)
+    // TODO: id未必永远不一致
+    setInfoId(id)
+  }
+
+  const currentInfo = useMemo(() => {
+    return storeWorkList.find((item) => item.id === infoId)
+  }, [infoId, storeWorkList])
+
+  useEffect(() => {
+    if (currentInfo) {
+      formRef.setFieldsValue(currentInfo)
+    }
+  }, [currentInfo, formRef])
+
+  const handleOk = async () => {
+    try {
+      const values = await formRef.validateFields()
+      console.log('values', values)
+      // 更新
+      if (infoId) {
+        updateInfo(
+          {
+            ...currentInfo,
+            ...values,
+          },
+          infoId,
+          'WORK_EXP'
+        )
+        setInfoId('')
+      } else {
+        // 创建
+        addInfoList(
+          {
+            ...values,
+            id: new Date().getTime(),
+            output: '<p>内容测试</p>',
+          },
+          'WORK_EXP'
+        )
+      }
+      setOpend(false)
+    } catch (err) {
+      console.log('校验失败', err)
+    }
   }
 
   return (
@@ -72,11 +84,11 @@ const WorkExperience = () => {
       <CustomLayout>
         <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
         {storeWorkList.length === 0 ? (
-          <AddBtn handleAdd={handleAdd} />
+          <AddBtn handleAdd={() => setOpend(true)} />
         ) : (
           <List
             data={storeWorkList}
-            handleAdd={handleAdd}
+            handleAdd={() => setOpend(true)}
             handleVisible={handleVisible}
             handleDel={handleDelItem}
             handleEdit={handleEdit}
@@ -97,13 +109,16 @@ const WorkExperience = () => {
         mask={true}
         footer={[
           <Button key="submit" onClick={handleOk}>
-            创建
+            {infoId ? '更新' : '创建'}
           </Button>,
         ]}
         centered={true}
         open={opened}
-        onCancel={handleCancel}
-        afterClose={resetForm}
+        onCancel={() => {
+          setOpend(false)
+          formRef.resetFields()
+          setInfoId('')
+        }}
       >
         <Form
           name="layout-multiple-horizontal"
@@ -111,7 +126,7 @@ const WorkExperience = () => {
           requiredMark={false}
           form={formRef}
         >
-          <div className={styles['row-form-item ']}>
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="公司"
               name="company"
@@ -135,7 +150,7 @@ const WorkExperience = () => {
               <Input />
             </Form.Item>
           </div>
-          <div className={styles['row-form-item ']}>
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="时间"
               name="date"

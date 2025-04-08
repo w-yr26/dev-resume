@@ -123,6 +123,18 @@ const useDevStore = create<devState>((set) => {
           ]
         })
       ),
+    updateInfo: (data: any, id: string, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
+            key
+          ].info.map((item) => {
+            if (item.id === id) {
+              return { ...data }
+            } else return item
+          })
+        })
+      ),
   }
 })
 
