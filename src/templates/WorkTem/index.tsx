@@ -15,7 +15,7 @@ const WorkTem = () => {
     <div
       className={styles['work-wrapper']}
       style={{
-        borderBottom: hideHead ? 'none' : '1px',
+        borderBottomWidth: hideHead ? 'none' : '1px',
       }}
     >
       {hideHead ? '' : <div className={styles['left-wrapper']}>工作经历</div>}
