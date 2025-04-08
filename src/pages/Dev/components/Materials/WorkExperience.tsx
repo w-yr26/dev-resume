@@ -68,7 +68,8 @@ const WorkExperience = () => {
           {
             ...values,
             id: new Date().getTime(),
-            output: '<p>内容测试</p>',
+            visible: true,
+            // output: '<p>内容测试</p>',
           },
           'WORK_EXP'
         )
@@ -176,15 +177,20 @@ const WorkExperience = () => {
           <Form.Item label="项目概述" name="overview" layout="vertical">
             <Input.TextArea />
           </Form.Item>
-          <div>
+          <Form.Item
+            label="实习产出"
+            name="output"
+            valuePropName="value"
+            trigger="onChange"
+            validateTrigger="onChange"
+            rules={[{ required: true, message: '请输入产出内容' }]}
+            layout="vertical"
+          >
+            <RichInput />
+          </Form.Item>
+          {/* <div>
             <div className={styles['rich-text-field']}>实习产出</div>
-            <RichInput
-              value="<p>form test msg</p>"
-              onChange={(value) => {
-                console.log('form value', value)
-              }}
-            ></RichInput>
-          </div>
+          </div> */}
         </Form>
       </Modal>
     </>
