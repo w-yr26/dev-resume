@@ -1,3 +1,303 @@
 .layout-container {
-  color: red;
+  background-color: rgb(250, 250, 250);
+  width: 100%;
+  height: 100%;
+  // position: relative;
+  display: flex;
+
+
 }
+html,
+body {
+  background-color: rgb(250, 250, 250);
+  margin: 0;
+  padding: 0;
+  // height: 100%;
+}
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+li{
+  list-style: none;
+}
+a{
+  text-decoration: none;
+}
+
+// 左边栏目
+.left{
+  // background-color: pink;
+  // position: fixed;
+  // position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 320px;
+  padding: 16px;
+}
+
+// logo区域
+.left .logoArea{
+  height: 40px;
+  // background-color: orange;
+  margin-bottom: 16px;
+}
+.left .logoPhoto{
+  height: 100%;
+  width: 40px;
+  margin: 0 auto;
+}
+.left .logoPhoto a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: url(../../assets/logo.png);
+  background-repeat: no-repeat;
+  font-size: 0;
+  transition: all 0.5s;
+
+}
+.left .logoPhoto a:hover{
+  background-image: url(../../assets/logoHover.png);
+}
+
+// 左边导航栏目
+.leftNav{
+  border-top: 1px solid rgb(239, 239, 241);
+  padding-top: 16px;
+  height: 600px;
+}
+.leftNav ul li a{
+  display: block;
+  height: 40px;
+  width: 100%;
+  // background-color: pink;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  color: #09090b;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+.leftNav ul li .active{
+  background-color: rgb(239, 239, 241);
+  cursor: default;
+  
+}
+.leftNav ul li a:hover{
+  background-color: rgb(228, 228, 231);
+}
+
+// 左下角账号以及相关区域
+.leftAccount{
+  height: 100px;
+  // background-color: orange;
+  border-top: 1px solid rgb(239, 239, 241);
+  
+}
+.leftAccount .top{
+  margin-top: 16px;
+  display: flex;
+  padding: 0 12px;
+  height: 40px;
+  // line-height: 40px;
+  align-items: center;
+}
+.leftAccount .topA{
+  display: block;
+  transition: all 0.3s;
+  border-radius: 5px;
+
+}
+.leftAccount a:hover{
+  background-color: rgb(228, 228, 231);
+}
+.leftAccount .top .photo img{
+  width: 24px;
+  height: 24px;
+}
+.leftAccount .top .account{
+  margin-left: 12px;
+  font-size: 14px;
+  color: #09090b;
+  font-weight: 500;
+}
+.leftAccount .textArea{
+  margin-top: 16px;
+  padding-left: 8px;
+}
+.leftAccount .textArea ul li{
+  font-size: 12px;
+  color: #3f3f46;
+  margin-bottom: 4px;
+}
+.leftAccount .textArea ul li:last-child{
+  margin-bottom: 20px;  
+}
+.leftAccount .textArea a{
+  color: #3f3f46;
+  text-decoration: underline;
+}
+.leftAccount .textArea p{
+  font-size: 12px;
+  color: #3f3f46;
+}
+
+// 右边栏目
+.rightResume{
+  flex: 1;
+  // position: absolute;
+  padding: 12px 20px;
+  // height: 100%;
+  height: 760px;
+  padding-right: 0;
+}
+
+// 头部部分
+.rightResume .top{
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 50px;
+  
+  width: 100%;
+}
+.rightResume .top .buttonStyle{
+  width: 70px;
+  height: 32px;
+  text-align: center;
+  line-height: 32px;
+}
+.rightResume .top .active{
+  background-color: rgb(244, 244, 245);
+}
+
+// 底部盒子 新建 导入 对已有简历操作
+.rightResume .bottom{
+  height: 100%;
+  padding-top: 32px;
+  display: flex;
+  // 自动换行
+  flex-wrap: wrap;
+  // justify-content: space-between;
+  // justify-content: flex-start;
+}
+
+// 新建简历部分
+.rightResume .bottom .createNewResume{
+  width: 280px;
+  height: 396px;
+  background-color: rgb(239, 239, 241);
+  margin-right: 32px;
+  margin-bottom: 16px;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+.createNewResume-top{
+  height: 330px;
+  text-align: center;
+  line-height: 396px;
+}
+
+.createNewResume-bottom{
+  height: 66px;
+  // background-color: black;
+  padding: 16px;
+  padding-top: 0;
+}
+.createNewResume-bottom p{
+  font-size: 16px;
+  color: #09090b;
+
+}
+.createNewResume-bottom div{
+  font-size: 12px;
+  color: rgb(99, 99, 100);
+}
+.createNewResume:hover{
+  transform: scale(1.05);
+  filter: blur(0.5px);
+}
+
+
+// 导入简历部分
+.rightResume .bottom .importFiles{
+  width: 280px;
+  height: 396px;
+  background-color: rgb(239, 239, 241);
+  margin-right: 32px;
+  margin-bottom: 16px;
+  border-radius: 5px;
+  transition: all 0.5s;
+}
+.importResume-top{
+  height: 330px;
+  text-align: center;
+  line-height: 396px;
+}
+.importResume-bottom{
+  height: 66px;
+  // background-color: black;
+  padding: 16px;
+  padding-top: 0;
+}
+.importResume-bottom p{
+  font-size: 16px;
+  color: #09090b;
+}
+.importResume-bottom div{
+  font-size: 12px;
+  color: rgb(99, 99, 100);
+}
+.importFiles:hover{
+  transform: scale(1.05);
+  filter: blur(0.5px);
+}
+
+.createA{
+  color: black;
+  display: block;
+}
+
+// 简历模版部分
+.resumePart{
+  // 模板背景图
+  background-image: url(https://rxresu.me/templates/jpg/kakuna.jpg);
+  width: 280px;
+  height: 396px;
+  // 显示位置 后面删掉
+  background-color: orange;
+  margin-right: 32px;
+  margin-bottom: 16px;
+  border-radius: 5px;
+  transition: all 0.5s;
+  position: relative;
+}
+.resumePart:hover{
+  transform: scale(1.05);
+  filter: blur(0.5px);
+}
+.resumePart .resumeName{
+  font-size: 16px;
+  color: #09090b;
+}
+.resumePart .updateTime{
+  font-size: 12px;
+  color: rgb(99, 99, 100);
+}
+.resumePart-bottom{
+  position: absolute;
+  height: 66px;
+  // background-color: black;
+  padding: 16px;
+  padding-top: 0;
+  width: 100%;
+  top: 330px;
+}
+
