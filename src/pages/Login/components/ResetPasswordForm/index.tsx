@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Form, Input, Button, Row, Col, message } from 'antd'
+import { Form, Input, Row, Col, message } from 'antd'
+import CustomBtn from '@/components/CustomBtn'
 import styles from './index.module.scss'
 import { getVerificationCodeAPI, postNewPwdAPI } from '@/apis/user'
 import { useNavigate } from 'react-router-dom'
@@ -38,7 +39,7 @@ export const ResetPasswordForm = ({
     await handleSendVerificationCode()
   }
 
-  const formatCountdown = (seconds: number) => {
+  const formatCountdown = (seconds: number): string => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins.toString().padStart(2, '0')}:${secs
@@ -136,42 +137,30 @@ export const ResetPasswordForm = ({
             />
           </Col>
           <Col span={8}>
-            <Button
-              type="primary"
-              className={styles['verification-button']}
-              loading={isSendingCode}
+            <CustomBtn
               disabled={isSendingCode || countdown > 0}
+              label={
+                isSendingCode
+                  ? '发送中...'
+                  : countdown > 0
+                  ? formatCountdown(countdown as number)
+                  : isCodeSent
+                  ? '重新获取验证码'
+                  : '获取验证码'
+              }
               onClick={handleSendCode}
-              block
-            >
-              {isSendingCode ? (
-                '发送中...'
-              ) : countdown > 0 ? (
-                <span style={{ display: 'inline-block', width: '100%' }}>
-                  ({formatCountdown(countdown)})
-                </span>
-              ) : isCodeSent ? (
-                '重新获取验证码'
-              ) : (
-                '获取验证码'
-              )}
-            </Button>
+            />
           </Col>
         </Row>
       </Form.Item>
 
       <Form.Item>
-        <Button
-          type="primary"
-          htmlType="submit"
-          className={styles.button}
-          loading={isLoading}
-          disabled={isLoading}
-          block
+        <CustomBtn
+          label={isLoading ? '提交中...' : '确认修改'}
+          type="submit"
           onClick={handleRevisePSD}
-        >
-          {isLoading ? '提交中...' : '确认修改'}
-        </Button>
+          disabled={true}
+        />
       </Form.Item>
     </Form>
   )

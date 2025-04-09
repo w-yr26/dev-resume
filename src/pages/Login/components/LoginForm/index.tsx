@@ -1,4 +1,5 @@
 import { Form, Input, Button } from 'antd'
+import CustomBtn from '@/components/CustomBtn'
 import styles from './index.module.scss'
 
 interface LoginFormProps {
@@ -46,7 +47,12 @@ export const LoginForm = ({
       </Form.Item>
 
       <Form.Item>
-        <Button
+        <CustomBtn
+          type="submit"
+          disabled={isLoading}
+          label={isLoading ? '登录中...' : '登录'}
+        />
+        {/* <Button
           type="primary"
           htmlType="submit"
           className={styles.button}
@@ -54,7 +60,7 @@ export const LoginForm = ({
           disabled={isLoading}
         >
           {isLoading ? '登录中...' : '登录'}
-        </Button>
+        </Button> */}
         <a
           onClick={onForgotPassword}
           className={styles['forgot-link']}
