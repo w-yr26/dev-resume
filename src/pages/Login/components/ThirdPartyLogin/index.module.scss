@@ -1,0 +1,63 @@
+$light-primary-color: #18181b;
+.container {
+    margin-top: 20px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .text {
+    margin-bottom: 15px;
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    background: var(--light-cardBg-color);
+    padding: 0 10px;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 12px 15px;
+    line-height:0.7;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    display: block;
+    margin-bottom: 15px;
+    color: white;
+    background-color: $light-primary-color;
+  
+  
+    @media (max-width: 767px) {
+      padding: 12px 15px;
+      font-size: 14px;
+    }
+  }
+
+  
+  
+  .container:before,
+  .container:after {
+    content: "";
+    display: block;
+    width: 30%;
+    border-top: 1px dashed #e4e4e7;
+    position: absolute;
+    top: 15%;
+    transform: translateY(-50%);
+    
+    @media (max-width: 767px) {
+      width: 25%;
+    }
+  }
+  
+  .container:before {
+    left: 0;
+  }
+  
+  .container:after {
+    right: 0;
+  }

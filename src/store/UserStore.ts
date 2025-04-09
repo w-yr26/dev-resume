@@ -7,6 +7,7 @@ const useUserStore = create<userStoreType>((set) => {
       token: localStorage.getItem('token') || '',
       email: localStorage.getItem('email') || '',
       user_name: localStorage.getItem('user_name') || '',
+      id: localStorage.getItem('user_id') || '',
     },
     updateInfo: (key, value) => {
       return set((state) => {

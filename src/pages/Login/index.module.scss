@@ -1,3 +1,91 @@
+$light-primary-color: #18181b;
+$light-secondary-color: #3f3f46;
+$light-accent-color: #71717a;
+$light-bg-color: #fafafa;
+$light-text-color: #18181b;
+$light-muted-color: #f4f4f5;
+$light-border-color: #e4e4e7;
+$light-cardBg-color: #ffffff;
+
 .login-layout {
-  color: red;
+  background-color: $light-bg-color;
+  color: $light-text-color;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.login-form-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+
+  @media (min-width: 992px) {
+    .login-form {
+      width: 420px;
+      padding: 20px;
+      background-color: $light-cardBg-color;
+    }
+
+    .image-container {
+      flex: 1;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 991px) {
+    .login-form {
+      width: 50%;
+      padding: 20px;
+      background-color: $light-cardBg-color;
+    }
+
+    .image-container {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .image-container {
+      display: none;
+    }
+
+    .login-form {
+      width: 100%;
+      padding: 20px;
+    }
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    @media (max-width: 767px) {
+      font-size: 24px;
+    }
+  }
+
+  p {
+    padding: 8px 0;
+    font-size: 12px;
+    @media (max-width: 767px) {
+      font-size: 14px;
+    }
+
+    a {
+      color: $light-primary-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+.image-container {
+  background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643');
+  background-size: cover;
+  background-position: center;
 }

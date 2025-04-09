@@ -1,3 +1,4 @@
+import { useUserStore } from '@/store'
 import styles from './index.module.scss'
 // import './iconfont/iconfont.css'
 
@@ -13,6 +14,8 @@ import {
 import { Avatar, Button } from 'antd'
 
 const Home = () => {
+  const { user_name } = useUserStore((state) => state.info)
+
   return (
     <div className={styles['layout-container']}>
       {/* 左边栏 */}
@@ -47,18 +50,13 @@ const Home = () => {
           <a href="#" className={styles['top-alink']}>
             <div className={styles['top']}>
               <div className={styles['photo']}>
-                <Avatar size={24} />
+                <Avatar size={24}>{user_name}</Avatar>
               </div>
-              <div className={styles['account']}>123456</div>
+              <div className={styles['account']}>{user_name}</div>
             </div>
           </a>
           <div className={styles['text-area']}>
-            {/* <ul>
-                <li>已获得 <a href="#">MIT 许可</a></li>
-                <li>来自社区，服务社区。</li>
-                <li><a href="#">Amruth Pillai</a> 的热心项目</li>
-              </ul> */}
-            <p>及时简历 v4.4.5</p>
+            <p>DevResume 1.0.0</p>
           </div>
         </div>
       </div>
@@ -82,64 +80,62 @@ const Home = () => {
         </div>
 
         {/* 底部 */}
-        <tbody>
-          <div className={styles['bottom']}>
-            {/* 新建部分 */}
-            <div className={styles['create-new-resume']}>
-              <a href="#" className={styles['createA']}>
-                <div className={styles['create-new-resume-top']}>
-                  <PlusOutlined style={{ fontSize: '60px' }} />
-                </div>
-
-                <div className={styles['create-new-resume-bottom']}>
-                  <p>创建新简历</p>
-                  <div>从头开始构建</div>
-                </div>
-              </a>
-            </div>
-
-            {/* 导入部分 */}
-            <div className={styles['import-files']}>
-              <a href="#" className={styles['createA']}>
-                <div className={styles['import-resume-top']}>
-                  <DownloadOutlined style={{ fontSize: '60px' }} />
-                </div>
-
-                <div className={styles['import-resume-bottom']}>
-                  <p>导入现有简历</p>
-                  <div>LinkedIn、JSON简历等</div>
-                </div>
-              </a>
-            </div>
-
-            {/* 简历模板部分 */}
-            {/* 每增加一个简历就在后面追加 */}
-            <div className={styles['resume-part']}>
-              <div className={styles['resume-part-bottom']}>
-                <div className={styles['resume-name']}>我的简历</div>
-                <div className={styles['update-time']}>
-                  最后更新于 <span>time前</span>
-                </div>
+        <div className={styles['bottom']}>
+          {/* 新建部分 */}
+          <div className={styles['create-new-resume']}>
+            <a href="#" className={styles['createA']}>
+              <div className={styles['create-new-resume-top']}>
+                <PlusOutlined style={{ fontSize: '60px' }} />
               </div>
-            </div>
-            <div className={styles['resume-part']}>
-              <div className={styles['resume-part-bottom']}>
-                <div className={styles['resume-name']}>我的简历</div>
-                <div className={styles['update-time']}>
-                  最后更新于 <span>time前</span>
-                </div>
+
+              <div className={styles['create-new-resume-bottom']}>
+                <p>创建新简历</p>
+                <div>从头开始构建</div>
               </div>
-            </div>
-            <div className={styles['resume-part']}>
-              <div className={styles['resume-part-bottom']}>
-                <div className={styles['resume-name']}>我的简历</div>
-                <div className={styles['update-time']}>
-                  最后更新于 <span>time前</span>
-                </div>
+            </a>
+          </div>
+
+          {/* 导入部分 */}
+          <div className={styles['import-files']}>
+            <a href="#" className={styles['createA']}>
+              <div className={styles['import-resume-top']}>
+                <DownloadOutlined style={{ fontSize: '60px' }} />
+              </div>
+
+              <div className={styles['import-resume-bottom']}>
+                <p>导入现有简历</p>
+                <div>LinkedIn、JSON简历等</div>
+              </div>
+            </a>
+          </div>
+
+          {/* 简历模板部分 */}
+          {/* 每增加一个简历就在后面追加 */}
+          <div className={styles['resume-part']}>
+            <div className={styles['resume-part-bottom']}>
+              <div className={styles['resume-name']}>我的简历</div>
+              <div className={styles['update-time']}>
+                最后更新于 <span>time前</span>
               </div>
             </div>
           </div>
-        </tbody>
+          <div className={styles['resume-part']}>
+            <div className={styles['resume-part-bottom']}>
+              <div className={styles['resume-name']}>我的简历</div>
+              <div className={styles['update-time']}>
+                最后更新于 <span>time前</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles['resume-part']}>
+            <div className={styles['resume-part-bottom']}>
+              <div className={styles['resume-name']}>我的简历</div>
+              <div className={styles['update-time']}>
+                最后更新于 <span>time前</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

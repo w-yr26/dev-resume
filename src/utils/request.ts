@@ -32,7 +32,7 @@ instance.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数
     // 注意，请求状态码!==业务状态码
-    const { code } = response.data
+    const { code, msg } = response.data
     const { authorization } = response.headers
     const token = store.info.token
     const updateInfo = store.updateInfo
@@ -44,7 +44,7 @@ instance.interceptors.response.use(
 
     // 业务统一状态码出错
     if (code !== 1) {
-      message.error('请求出错, 请稍后再试')
+      message.error(msg || '请求出错, 请稍后再试')
     }
 
     // 数据剥离
@@ -58,6 +58,8 @@ instance.interceptors.response.use(
       router.navigate('/login', {
         replace: true,
       })
+    } else {
+      message.error(JSON.stringify(error))
     }
 
     // 对响应错误做点什么
@@ -82,7 +84,7 @@ export const request = <T>(
   method: Method = 'GET',
   submitData?: object
 ) => {
-  return instance.request<Data<T>>({
+  return instance.request<any, Data<T>>({
     url,
     method,
     [method.toUpperCase() === 'GET' ? 'params' : 'data']: submitData,
