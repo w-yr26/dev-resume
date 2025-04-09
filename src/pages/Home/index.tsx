@@ -10,15 +10,17 @@ const Home = () => {
  return(
     <div className={styles['layout-container']}>
       {/* 左边栏 */}
-      <div className={styles['left']}>
+      <div className={styles['left-container']}>
+
           {/* logo区域 */}
-          <div className={styles['logoArea']}>
-            <div className={styles['logoPhoto']}>
+          <div className={styles['logo-area']}>
+            <div className={styles['logo-photo']}>
               <a href="#">logo存放</a>
             </div>
           </div>
+
           {/* 左边栏目导航区域 */}
-          <div className={styles['leftNav']}>
+          <div className={styles['left-nav']}>
             <ul>
               <li><a href="#" className={styles['active']}>
               <FileTextOutlined rotate={-20}/>&nbsp;&nbsp;
@@ -28,19 +30,20 @@ const Home = () => {
                 设置</a></li>
             </ul>
           </div>
+
           {/* 左边账号栏目 */}
-          <div className={styles['leftAccount']}>
-            <a href="#" className={styles['topA']}>
-            <div className={styles['top']}>
-                <div className={styles['photo']}>
-                  <Avatar size={24}/>
-                </div>
-                <div className={styles['account']}>
-                  123456
-                </div>
-            </div>
+          <div className={styles['left-account']}>
+            <a href="#" className={styles['top-alink']}>
+              <div className={styles['top']}>
+                  <div className={styles['photo']}>
+                    <Avatar size={24}/>
+                  </div>
+                  <div className={styles['account']}>
+                    123456
+                  </div>
+              </div>
             </a>
-            <div className={styles['textArea']}>
+            <div className={styles['text-area']}>
               {/* <ul>
                 <li>已获得 <a href="#">MIT 许可</a></li>
                 <li>来自社区，服务社区。</li>
@@ -52,14 +55,15 @@ const Home = () => {
           
       </div>
 
-      <div className={styles['rightResume']}>
+      {/* 右边简历栏目部分 */}
+      <div className={styles['right-container']}>
         {/* 头部 */}
         <div className={styles['top']}>
           <h1>简历</h1>
           <div>
             {/* active选中 */}
-          <Button className={styles['buttonStyle']}><AppstoreOutlined />网格</Button>
-          <Button className={styles['buttonStyle']}><BarsOutlined />列表</Button>
+          <Button className={styles['button-style']}><AppstoreOutlined />网格</Button>
+          <Button className={styles['button-style']}><BarsOutlined />列表</Button>
           </div>
         </div>
         
@@ -67,13 +71,13 @@ const Home = () => {
         <tbody>
           <div className={styles['bottom']}>
             {/* 新建部分 */}
-            <div className={styles['createNewResume']}>
+            <div className={styles['create-new-resume']}>
               <a href="#" className={styles['createA']}>
-                <div className={styles['createNewResume-top']}>
+                <div className={styles['create-new-resume-top']}>
                   <PlusOutlined style={{fontSize:'60px'}}/>
                 </div>
 
-                <div className={styles['createNewResume-bottom']}>
+                <div className={styles['create-new-resume-bottom']}>
                   <p>创建新简历</p>
                   <div>从头开始构建</div>
                 </div>
@@ -81,13 +85,13 @@ const Home = () => {
             </div> 
 
             {/* 导入部分 */}
-            <div className={styles['importFiles']}>
+            <div className={styles['import-files']}>
               <a href="#" className={styles['createA']}>
-                  <div className={styles['importResume-top']}>
+                  <div className={styles['import-resume-top']}>
                     <DownloadOutlined style={{fontSize:'60px'}}/>
                   </div>
 
-                  <div className={styles['importResume-bottom']}>
+                  <div className={styles['import-resume-bottom']}>
                     <p>导入现有简历</p>
                     <div>LinkedIn、JSON简历等</div>
                   </div>
@@ -97,67 +101,96 @@ const Home = () => {
 
             {/* 简历模板部分 */}
             {/* 每增加一个简历就在后面追加 */}
-            <div className={styles['resumePart']}>
-              <div className={styles['resumePart-bottom']}>
-                <div className={styles['resumeName']}>
+            <div className={styles['resume-part']}>
+
+              {/* 任务栏弹框 */}
+              <div className={styles['taskbar']}>
+
+              </div>
+
+
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
                   我的简历
                 </div>
-                <div className={styles['updateTime']}>
+                <div className={styles['update-time']}>
                   最后更新于 <span>time前</span>
                 </div>
               </div>
             </div>
 
-            <div className={styles['resumePart']}>
-              <div className={styles['resumePart-bottom']}>
-                <div className={styles['resumeName']}>
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
                   我的简历
                 </div>
-                <div className={styles['updateTime']}>
+                <div className={styles['update-time']}>
                   最后更新于 <span>time前</span>
                 </div>
               </div>
             </div>
 
-            <div className={styles['resumePart']}>
-              <div className={styles['resumePart-bottom']}>
-                <div className={styles['resumeName']}>
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
                   我的简历
                 </div>
-                <div className={styles['updateTime']}>
+                <div className={styles['update-time']}>
                   最后更新于 <span>time前</span>
                 </div>
               </div>
             </div>
 
-            <div className={styles['resumePart']}>
-              <div className={styles['resumePart-bottom']}>
-                <div className={styles['resumeName']}>
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
                   我的简历
                 </div>
-                <div className={styles['updateTime']}>
+                <div className={styles['update-time']}>
                   最后更新于 <span>time前</span>
                 </div>
               </div>
             </div>
 
-            <div className={styles['resumePart']}>
-              <div className={styles['resumePart-bottom']}>
-                <div className={styles['resumeName']}>
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
                   我的简历
                 </div>
-                <div className={styles['updateTime']}>
+                <div className={styles['update-time']}>
                   最后更新于 <span>time前</span>
                 </div>
               </div>
             </div>
 
-            <div className={styles['resumePart']}>
-              <div className={styles['resumePart-bottom']}>
-                <div className={styles['resumeName']}>
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
                   我的简历
                 </div>
-                <div className={styles['updateTime']}>
+                <div className={styles['update-time']}>
+                  最后更新于 <span>time前</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
+                  我的简历
+                </div>
+                <div className={styles['update-time']}>
+                  最后更新于 <span>time前</span>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles['resume-part']}>
+              <div className={styles['resume-part-bottom']}>
+                <div className={styles['resume-name']}>
+                  我的简历
+                </div>
+                <div className={styles['update-time']}>
                   最后更新于 <span>time前</span>
                 </div>
               </div>
