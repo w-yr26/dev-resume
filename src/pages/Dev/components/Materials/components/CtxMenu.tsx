@@ -1,7 +1,6 @@
 import { useDevStore } from '@/store'
 import type { headMenuType, keyType } from '@/types/dev'
 import {
-  DeleteOutlined,
   EyeOutlined,
   MenuOutlined,
   SettingOutlined,
@@ -35,11 +34,11 @@ const CtxMenu = ({ currentKey }: { currentKey: keyType }) => {
         resetInfo(currentKey)
       },
     },
-    {
-      label: '移除',
-      key: 'delete',
-      icon: DeleteOutlined,
-    },
+    // {
+    //   label: '移除',
+    //   key: 'delete',
+    //   icon: DeleteOutlined,
+    // },
   ]
 
   const handleClick = ({ callback }: headMenuType) => {
