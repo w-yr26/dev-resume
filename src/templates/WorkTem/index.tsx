@@ -13,51 +13,43 @@ const WorkTem = () => {
 
   return (
     <>
-      {visible && (
-        <div
-          className={styles['work-wrapper']}
-          style={{
-            borderBottomWidth: hideHead ? 'none' : '1px',
-          }}
-        >
-          {hideHead ? (
-            ''
-          ) : (
+      {visible &&
+        (hideHead ? null : (
+          <div className={styles['work-wrapper']}>
             <div className={styles['left-wrapper']}>工作经历</div>
-          )}
-          <div className={styles['right-wrapper']}>
-            {workInfo.map((infoItem) => {
-              if (!infoItem.visible) return null
-              return (
-                <div key={infoItem.id}>
-                  <div className={styles['content-head']}>
-                    <span className="project-name">{infoItem.company}</span>
-                    <span className="date">
-                      {infoItem.date[0].format('YYYY-MM')} -{' '}
-                      {infoItem.date[1].format('YYYY-MM')}
-                    </span>
-                  </div>
-                  <div className="overview-box">
-                    <div className={styles['module-head']}>项目概述：</div>
-                    <div className={styles['content-box']}>
-                      <p>{infoItem.overview}</p>
+            <div className={styles['right-wrapper']}>
+              {workInfo.map((infoItem) => {
+                if (!infoItem.visible) return null
+                return (
+                  <div key={infoItem.id}>
+                    <div className={styles['content-head']}>
+                      <span className="project-name">{infoItem.company}</span>
+                      <span className="date">
+                        {infoItem.date[0].format('YYYY-MM')} -{' '}
+                        {infoItem.date[1].format('YYYY-MM')}
+                      </span>
+                    </div>
+                    <div className="overview-box">
+                      <div className={styles['module-head']}>项目概述：</div>
+                      <div className={styles['content-box']}>
+                        <p>{infoItem.overview}</p>
+                      </div>
+                    </div>
+                    <div className="output-box">
+                      <div className={styles['module-head']}>项目内容：</div>
+                      <div
+                        className={styles['content-box']}
+                        dangerouslySetInnerHTML={{
+                          __html: infoItem.output,
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="output-box">
-                    <div className={styles['module-head']}>项目内容：</div>
-                    <div
-                      className={styles['content-box']}
-                      dangerouslySetInnerHTML={{
-                        __html: infoItem.output,
-                      }}
-                    />
-                  </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        ))}
     </>
   )
 }
