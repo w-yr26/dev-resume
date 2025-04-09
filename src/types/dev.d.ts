@@ -1,3 +1,5 @@
+import type { Dayjs } from 'dayjs'
+import React from 'react'
 // 物料区头部
 export type HeaderType = {
   label: string
@@ -5,6 +7,7 @@ export type HeaderType = {
     Omit<AntdIconProps, 'ref'> & React.RefAttributes<HTMLSpanElement>
   >
   opMenu?: false
+  children?: React.ReactNode
 }
 
 export type CustomIptType = {
@@ -38,7 +41,7 @@ export type EduBgType = {
 export type WorkExpItemType = {
   company: string
   position: string
-  date: string
+  date: [Dayjs, Dayjs]
   overview: string
   output: string
   tecStack: string
@@ -77,6 +80,15 @@ export type optionalCom =
   | 'SKILL_LIST'
   | 'HEART_LIST'
 
+export type headMenuType = {
+  label: string
+  key: string
+  icon: React.ForwardRefExoticComponent<
+    Omit<AntdIconProps, 'ref'> & React.RefAttributes<HTMLSpanElement>
+  >
+  callback?: () => void
+}
+
 // 以下是dev模块和store相关的数据类型声明
 export type devInitType = {
   dataSource: {
@@ -111,14 +123,17 @@ export type devInitType = {
   }
   componentList: optionalCom[]
   curTemplate: string // 当前使用的简历模板id
-  num: number
 }
 
 export type devState = {
   devSchema: devInitType
-  changeBaseInfo: (newVal: string, key: string) => void
-  setVisible: (id: string, key: keyType) => void
-  handleDel: (id: string, key: keyType) => void
+  immerBaseInfo: (newVal: string, key: string) => void
+  immerVisible: (id: string, key: keyType) => void
+  immerDel: (id: string, key: keyType) => void
+  addInfoList: (data: any, key: keyType) => void
+  updateInfo: (data: any, id: string, key: keyType) => void
+  changeItemVisible: (key: keyType) => void
+  resetInfo: (key: keyType) => void
 }
 
 export type keyType = 'WORK_EXP'

@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import type { devInitType, devState, keyType } from '@/types/dev'
+import { produce } from 'immer'
+import dayjs from 'dayjs'
 
 const initialData: devInitType = {
   dataSource: {
@@ -32,7 +34,7 @@ const initialData: devInitType = {
             '<p>基于 canvas 和 video，生成视频海报图和缩略图，实现按视频总时长动态均分时间点、生成视频缩略图(雪碧图)，实现在进度条预览内容</p><p>异步顺序执行，结合 reduce 实现 mergePromise 方法，确保缩略图绘制按时间点顺序执行，避免异步执行速度的不确定性导致渲染顺序问题</p><p>基于 FFmpeg.wasm 实现视频字幕烧制功能</p><p>使用 BroadcaseChannel 进行页面通信，显示视频处理进度</p><p>使用 indexDB 缓存所需字体文件，提升二次构建速度</p><p>基于 EventBus 埋入对应事件的监听，并通过维护用户操作快照记录，实现撤销、重做功能</p>',
           overview:
             '一款致力于制作流量推广业务的素材的平台，面向司内设计人员，实现流量推广小游戏素材快速换皮、研发和制作，为游戏侧服务',
-          date: '2025-03-16',
+          date: [dayjs('2025-01-01'), dayjs('2025-03-05')],
           visible: true,
         },
       ],
@@ -41,7 +43,7 @@ const initialData: devInitType = {
     PROJECT_EXP: {
       info: [
         {
-          date: '2025/02',
+          date: [dayjs('2025-03-05'), dayjs('2025-05-04')],
           id: new Date().getDate() + '',
           name: 'mini-vue',
           position: '前端开发人员',
@@ -76,72 +78,79 @@ const initialData: devInitType = {
     'HEART_LIST',
   ],
   curTemplate: '01',
-  num: 10,
 }
 
 const useDevStore = create<devState>((set) => {
   return {
     devSchema: initialData,
-    changeBaseInfo: (newVal: string, key: string) => {
-      return set((state) => {
-        return {
-          devSchema: {
-            ...state.devSchema,
-            dataSource: {
-              ...state.devSchema.dataSource,
-              BASE_INFO: {
-                ...state.devSchema.dataSource.BASE_INFO,
-                info: {
-                  ...state.devSchema.dataSource.BASE_INFO.info,
-                  [key]: newVal,
-                },
-              },
-            },
-          },
-        }
-      })
-    },
-    setVisible: (id: string, key: keyType) => {
-      return set((state) => {
-        return {
-          devSchema: {
-            ...state.devSchema,
-            dataSource: {
-              ...state.devSchema.dataSource,
-              [key]: {
-                ...state.devSchema.dataSource[key],
-                info: state.devSchema.dataSource[key].info.map((item) => {
-                  if (item.id !== id) return item
-                  else
-                    return {
-                      ...item,
-                      visible: !item.visible,
-                    }
-                }),
-              },
-            },
-          },
-        }
-      })
-    },
-    handleDel: (id: string, key: keyType) => {
-      return set((state) => {
-        return {
-          devSchema: {
-            ...state.devSchema,
-            dataSource: {
-              ...state.devSchema.dataSource,
-              [key]: {
-                ...state.devSchema.dataSource[key],
-                info: state.devSchema.dataSource[key].info.filter((item) => {
-                  return item.id !== id
-                }),
-              },
-            },
-          },
-        }
-      })
-    },
+    immerBaseInfo: (newVal: string, key: string) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource.BASE_INFO.info = {
+            ...state.devSchema.dataSource.BASE_INFO.info,
+            [key]: newVal,
+          }
+        })
+      ),
+    immerVisible: (id: string, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
+            key
+          ].info.map((item) => {
+            if (item.id !== id) return item
+            return {
+              ...item,
+              visible: !item.visible,
+            }
+          })
+        })
+      ),
+    immerDel: (id: string, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
+            key
+          ].info.filter((item) => item.id !== id)
+        })
+      ),
+    addInfoList: (data: any, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = [
+            ...state.devSchema.dataSource[key].info,
+            data,
+          ]
+        })
+      ),
+    updateInfo: (data: any, id: string, key: keyType) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
+            key
+          ].info.map((item) => {
+            if (item.id === id) {
+              return { ...data }
+            } else return item
+          })
+        })
+      ),
+    changeItemVisible: (key) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].visible =
+            !state.devSchema.dataSource[key].visible
+        })
+      ),
+    resetInfo: (key) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key] = {
+            info: [],
+            visible: true,
+          }
+        })
+      ),
   }
 })
 

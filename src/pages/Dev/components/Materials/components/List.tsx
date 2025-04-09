@@ -19,6 +19,7 @@ type ListProps<T> = {
   handleAdd: () => void
   handleVisible: (id: string) => void
   handleDel: (id: string) => void
+  handleEdit: (id: string) => void
 }
 
 const List = <T,>({
@@ -27,6 +28,7 @@ const List = <T,>({
   handleAdd,
   handleVisible,
   handleDel,
+  handleEdit,
 }: ListProps<T>) => {
   const content = (item: T) => (
     <div className={styles['menu-list']}>
@@ -39,7 +41,10 @@ const List = <T,>({
         </div>
         <div className={styles['menu-item-label']}>可见</div>
       </div>
-      <div className={styles['menu-item']}>
+      <div
+        className={styles['menu-item']}
+        onClick={() => handleEdit(item[fieldMap.id] as string)}
+      >
         <div className={styles['menu-icon-box']}>
           <EditOutlined />
         </div>

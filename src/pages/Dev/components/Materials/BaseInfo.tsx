@@ -17,7 +17,7 @@ import { useDevStore } from '@/store'
 
 const BaseInfo = () => {
   const { info } = useDevStore((state) => state.devSchema.dataSource.BASE_INFO)
-  const changeBaseInfo = useDevStore((state) => state.changeBaseInfo)
+  const changeBaseInfo = useDevStore((state) => state.immerBaseInfo)
   // console.log(info)
 
   const [itemList, setItemList] = useState<AddItemType[]>([])

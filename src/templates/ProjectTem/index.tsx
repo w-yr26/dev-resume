@@ -17,7 +17,10 @@ const EduBgTem = memo(() => {
             <div key={infoItem.id}>
               <div className={styles['content-head']}>
                 <span className="project-name">{infoItem.name}</span>
-                <span className="date">{infoItem.date}</span>
+                <span className="date">
+                  {infoItem.date[0].format('YYYY-MM')} -{' '}
+                  {infoItem.date[1].format('YYYY-MM')}
+                </span>
               </div>
               <div className={styles['link-box']}>https://baidu.com</div>
               <div className="overview-box">
