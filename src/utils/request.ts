@@ -6,7 +6,7 @@ const store = useUserStore.getState()
 
 // 请求实例
 const instance = axios.create({
-  baseURL: 'http://123.207.71.32:8082',
+  baseURL: 'http://123.207.71.32:8086',
   timeout: 5000,
 })
 
