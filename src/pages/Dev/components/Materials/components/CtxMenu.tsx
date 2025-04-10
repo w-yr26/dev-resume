@@ -1,6 +1,7 @@
 import { useDevStore } from '@/store'
 import type { headMenuType, keyType } from '@/types/dev'
 import {
+  EditOutlined,
   EyeOutlined,
   MenuOutlined,
   SettingOutlined,
@@ -8,7 +9,13 @@ import {
 import { Popover } from 'antd'
 import styles from './index.module.scss'
 
-const CtxMenu = ({ currentKey }: { currentKey: keyType }) => {
+const CtxMenu = ({
+  currentKey,
+  renameLabel,
+}: {
+  currentKey: keyType
+  renameLabel?: () => void
+}) => {
   const changeItemVisible = useDevStore((state) => state.changeItemVisible)
   const resetInfo = useDevStore((state) => state.resetInfo)
   const ListContent: headMenuType[] = [
@@ -20,12 +27,14 @@ const CtxMenu = ({ currentKey }: { currentKey: keyType }) => {
         changeItemVisible(currentKey)
       },
     },
-    // {
-    //   label: '重命名',
-    //   key: 'rename',
-    //   icon: EditOutlined,
-    //   // disabled: true,
-    // },
+    {
+      label: '重命名',
+      key: 'rename',
+      icon: EditOutlined,
+      callback: () => {
+        if (renameLabel) renameLabel()
+      },
+    },
     {
       label: '重置',
       key: 'reset',

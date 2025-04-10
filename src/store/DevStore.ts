@@ -22,6 +22,7 @@ const initialData: devInitType = {
     EDU_BG: {
       info: '',
       visible: true,
+      label: '教育经历',
     },
     WORK_EXP: {
       info: [
@@ -39,6 +40,7 @@ const initialData: devInitType = {
         },
       ],
       visible: true,
+      label: '工作/实习经历',
     },
     PROJECT_EXP: {
       info: [
@@ -54,18 +56,22 @@ const initialData: devInitType = {
         },
       ],
       visible: true,
+      label: '项目经历',
     },
     AWARD_LIST: {
       info: [],
       visible: true,
+      label: '个人荣誉',
     },
     SKILL_LIST: {
       info: '<ul><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li></ul>',
       visible: true,
+      label: '技能特长',
     },
     HEART_LIST: {
       info: '',
       visible: true,
+      label: '兴趣爱好',
     },
   },
   componentList: [
@@ -149,6 +155,12 @@ const useDevStore = create<devState>((set) => {
             info: [],
             visible: true,
           }
+        })
+      ),
+    changeLabel: (key, value) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].label = value
         })
       ),
   }
