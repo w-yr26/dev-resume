@@ -3,9 +3,11 @@ import styles from './index.module.scss'
 import { useMemo } from 'react'
 
 const WorkTem = () => {
-  const { info: workInfo, visible } = useDevStore(
-    (state) => state.devSchema.dataSource.WORK_EXP
-  )
+  const {
+    info: workInfo,
+    visible,
+    label,
+  } = useDevStore((state) => state.devSchema.dataSource.WORK_EXP)
 
   const hideHead = useMemo(() => {
     return workInfo.findIndex((item) => item.visible) === -1
@@ -16,7 +18,7 @@ const WorkTem = () => {
       {visible &&
         (hideHead ? null : (
           <div className={styles['work-wrapper']}>
-            <div className={styles['left-wrapper']}>工作经历</div>
+            <div className={styles['left-wrapper']}>{label || '工作经历'}</div>
             <div className={styles['right-wrapper']}>
               {workInfo.map((infoItem) => {
                 if (!infoItem.visible) return null

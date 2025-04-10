@@ -15,10 +15,14 @@ const WorkExperience = () => {
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
+  const label = useDevStore(
+    (state) => state.devSchema.dataSource.WORK_EXP.label
+  )
   const setVisible = useDevStore((state) => state.immerVisible)
   const handleDel = useDevStore((state) => state.immerDel)
   const addInfoList = useDevStore((state) => state.addInfoList)
   const updateInfo = useDevStore((state) => state.updateInfo)
+  const changeLabel = useDevStore((state) => state.changeLabel)
   const [opened, setOpend] = useState(false)
   const [infoId, setInfoId] = useState('')
   const [formRef] = Form.useForm()
@@ -81,11 +85,25 @@ const WorkExperience = () => {
     }
   }
 
+  const [isEdit, setIsEdit] = useState(false)
+  const handleChange = (val: string) => {
+    changeLabel('WORK_EXP', val)
+  }
+
   return (
     <>
       <CustomLayout>
-        <Header label="工作/实习经历" icon={CalculatorOutlined}>
-          <CtxMenu currentKey="WORK_EXP"></CtxMenu>
+        <Header
+          label={label || '工作/实习经历'}
+          icon={CalculatorOutlined}
+          isEdit={isEdit}
+          handleChange={handleChange}
+          handleBlur={() => setIsEdit(false)}
+        >
+          <CtxMenu
+            currentKey="WORK_EXP"
+            renameLabel={() => setIsEdit(true)}
+          ></CtxMenu>
         </Header>
         {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={() => setOpend(true)} />

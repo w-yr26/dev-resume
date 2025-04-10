@@ -8,6 +8,9 @@ export type HeaderType = {
   >
   opMenu?: false
   children?: React.ReactNode
+  isEdit?: boolean
+  handleChange?: (val: string) => void
+  handleBlur?: () => void
 }
 
 export type CustomIptType = {
@@ -95,30 +98,37 @@ export type devInitType = {
     BASE_INFO: {
       info: BaseInfoType
       visible: boolean
+      label?: string
     }
     EDU_BG: {
       info: string
       visible: boolean
+      label?: string
     }
     WORK_EXP: {
       info: WorkExpItemType[]
       visible: boolean
+      label?: string
     }
     PROJECT_EXP: {
       info: PeojectExpItemType[]
       visible: boolean
+      label?: string
     }
     AWARD_LIST: {
       info: AwardItemType[]
       visible: boolean
+      label?: string
     }
     SKILL_LIST: {
       info: string
       visible: boolean
+      label?: string
     }
     HEART_LIST: {
       info: string
       visible: boolean
+      label?: string
     }
   }
   componentList: optionalCom[]
@@ -134,6 +144,7 @@ export type devState = {
   updateInfo: (data: any, id: string, key: keyType) => void
   changeItemVisible: (key: keyType) => void
   resetInfo: (key: keyType) => void
+  changeLabel: (key: keyType, value: string) => void
 }
 
 export type keyType = 'WORK_EXP'
