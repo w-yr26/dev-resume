@@ -9,6 +9,7 @@ import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
 import styles from './index.module.scss'
 import { useDevStore } from '@/store'
 import { useEffect, useMemo, useState } from 'react'
+import { useChangeLabel } from '@/hooks/useChangeLabel'
 const { RangePicker } = DatePicker
 
 const WorkExperience = () => {
@@ -22,7 +23,6 @@ const WorkExperience = () => {
   const handleDel = useDevStore((state) => state.immerDel)
   const addInfoList = useDevStore((state) => state.addInfoList)
   const updateInfo = useDevStore((state) => state.updateInfo)
-  const changeLabel = useDevStore((state) => state.changeLabel)
   const [opened, setOpend] = useState(false)
   const [infoId, setInfoId] = useState('')
   const [formRef] = Form.useForm()
@@ -89,11 +89,7 @@ const WorkExperience = () => {
     formRef.resetFields()
     setInfoId('')
   }
-
-  const [isEdit, setIsEdit] = useState(false)
-  const handleChange = (val: string) => {
-    changeLabel('WORK_EXP', val)
-  }
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   return (
     <>

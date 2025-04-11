@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type {
+  allKeyType,
   devInitType,
   devState,
   InfoArrTypeMap,
@@ -7,6 +8,16 @@ import type {
 } from '@/types/dev'
 import { produce } from 'immer'
 import dayjs from 'dayjs'
+
+const defaultInfoMap: Record<allKeyType, any> = {
+  BASE_INFO: {},
+  EDU_BG: '',
+  WORK_EXP: [],
+  PROJECT_EXP: [],
+  AWARD_LIST: [],
+  SKILL_LIST: '',
+  HEART_LIST: '',
+}
 
 const initialData: devInitType = {
   dataSource: {
@@ -170,7 +181,8 @@ const useDevStore = create<devState>((set) => {
       set(
         produce((state: devState) => {
           state.devSchema.dataSource[key] = {
-            info: [],
+            ...state.devSchema.dataSource[key],
+            info: defaultInfoMap[key],
             visible: true,
           }
         })

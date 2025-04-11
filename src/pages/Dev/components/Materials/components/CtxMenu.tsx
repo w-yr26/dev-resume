@@ -1,5 +1,5 @@
 import { useDevStore } from '@/store'
-import type { headMenuType, keyType } from '@/types/dev'
+import type { allKeyType, headMenuType } from '@/types/dev'
 import {
   EditOutlined,
   EyeOutlined,
@@ -13,7 +13,7 @@ const CtxMenu = ({
   currentKey,
   renameLabel,
 }: {
-  currentKey: keyType
+  currentKey: allKeyType
   renameLabel?: () => void
 }) => {
   const changeItemVisible = useDevStore((state) => state.changeItemVisible)

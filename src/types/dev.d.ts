@@ -158,9 +158,17 @@ export type devState = {
   immerDel: (id: string, key: keyType) => void
   addInfoList: (data: any, key: keyType) => void
   updateInfo: (data: any, id: string, key: keyType) => void
-  changeItemVisible: (key: keyType) => void
-  resetInfo: (key: keyType) => void
-  changeLabel: (key: keyType, value: string) => void
+  changeItemVisible: (key: allKeyType) => void
+  resetInfo: (key: allKeyType) => void
+  changeLabel: (key: allKeyType, value: string) => void
 }
 
-export type keyType = 'WORK_EXP' | 'PROJECT_EXP'
+export type keyType = keyof InfoArrTypeMap
+export type allKeyType =
+  | 'WORK_EXP'
+  | 'PROJECT_EXP'
+  | 'AWARD_LIST'
+  | 'EDU_BG'
+  | 'SKILL_LIST'
+  | 'HEART_LIST'
+  | 'BASE_INFO'
