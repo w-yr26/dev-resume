@@ -54,7 +54,7 @@ export type WorkExpItemType = {
 
 export type PeojectExpItemType = Pick<
   WorkExpItemType,
-  'id' | 'date' | 'position' | 'overview' | 'output'
+  'id' | 'date' | 'position' | 'overview' | 'output' | 'visible'
 > & {
   name: string
 }
@@ -64,6 +64,7 @@ export type AwardItemType = {
   award: string
   date: string
   describe: string
+  visible: boolean
 }
 
 export type SkillType = {
@@ -135,13 +136,24 @@ export type devInitType = {
   curTemplate: string // 当前使用的简历模板id
 }
 
+// 这个Map存放info为数组的字段
+export type InfoArrTypeMap = {
+  WORK_EXP: WorkExpItemType
+  PROJECT_EXP: PeojectExpItemType
+  AWARD_LIST: AwardItemType
+}
+
+// 这个Map存放info为string的字段
+export type InfoStrTypeMap = {
+  EDU_BG: string
+  SKILL_LIST: string
+  HEART_LIST: string
+}
+
 export type devState = {
   devSchema: devInitType
   immerBaseInfo: (newVal: string, key: string) => void
-  immerRichInfo: (
-    newVal: string,
-    key: 'EDU_BG' | 'HEART_LIST' | 'SKILL_LIST'
-  ) => void
+  immerRichInfo: (newVal: string, key: keyof InfoStrTypeMap) => void
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void
   addInfoList: (data: any, key: keyType) => void
@@ -151,4 +163,4 @@ export type devState = {
   changeLabel: (key: keyType, value: string) => void
 }
 
-export type keyType = 'WORK_EXP'
+export type keyType = 'WORK_EXP' | 'PROJECT_EXP'

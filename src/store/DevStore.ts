@@ -1,5 +1,10 @@
 import { create } from 'zustand'
-import type { devInitType, devState, keyType } from '@/types/dev'
+import type {
+  devInitType,
+  devState,
+  InfoArrTypeMap,
+  keyType,
+} from '@/types/dev'
 import { produce } from 'immer'
 import dayjs from 'dayjs'
 
@@ -53,6 +58,7 @@ const initialData: devInitType = {
             'Vue3 简化版，实现 reactivity、runtime-core、runtime-dom 模块，该项目模拟了Vue3的基本功能，如 ref、reactive、computed、provide-inject、nextTick 等',
           output:
             '<p>1. 实现 ref/reactive，基于 Proxy 进行数据拦截，并使用 weakMap、Map、Set 实现Dep依赖收集及后续通知依赖更新</p><p>2. 引入虚拟 DOM 概念，通过 processComponent、processELement 等实现视图的创建更新流程，并通过diff算法优化视图更新</p><p>3. 实现 runtime-dom 模块，对 runtime-core 进一步解耦，实现 runtime-core 的跨平台支持(如 Canvas 平台)</p><p>4. 通过 Object.create() 寄生式继承，实现祖孙组件之间通过 provide-inject 进行通信；完成props、emits父子组件通信</p><p>5. 借助 Promise.then() 实现虚拟 DOM 的异步更新，实现 nextTick</p><p>6. 使用 pnpm + monorepo 实现单一代码库管理多模块等</p>',
+          visible: true,
         },
       ],
       visible: true,
@@ -105,26 +111,31 @@ const useDevStore = create<devState>((set) => {
           state.devSchema.dataSource[key].info = newVal
         })
       ),
-    immerVisible: (id: string, key: keyType) =>
+    immerVisible: <T extends keyof InfoArrTypeMap>(id: string, key: T) =>
       set(
         produce((state: devState) => {
-          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
-            key
-          ].info.map((item) => {
+          const infoList = state.devSchema.dataSource[key]
+            .info as InfoArrTypeMap[T][]
+          const newInfoList = infoList.map((item) => {
             if (item.id !== id) return item
             return {
               ...item,
               visible: !item.visible,
             }
           })
+
+          ;(state.devSchema.dataSource[key].info as InfoArrTypeMap[T][]) =
+            newInfoList
         })
       ),
-    immerDel: (id: string, key: keyType) =>
+    immerDel: <T extends keyof InfoArrTypeMap>(id: string, key: T) =>
       set(
         produce((state: devState) => {
-          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
-            key
-          ].info.filter((item) => item.id !== id)
+          const infoList = state.devSchema.dataSource[key]
+            .info as InfoArrTypeMap[T][]
+          const newInfoList = infoList.filter((item) => item.id !== id)
+          ;(state.devSchema.dataSource[key].info as InfoArrTypeMap[T][]) =
+            newInfoList
         })
       ),
     addInfoList: (data: any, key: keyType) =>
