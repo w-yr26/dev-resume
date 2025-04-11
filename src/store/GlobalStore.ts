@@ -5,7 +5,7 @@ import ProjectTem from '@/templates/ProjectTem'
 import WorkTem from '@/templates/WorkTem/index'
 import SkillTem from '@/templates/SkillTem'
 import EduBgTem from '@/templates/EduBgTem'
-
+import HeartTem from '@/templates/HeartTem'
 const useGlobalStore = create<GlobalInitType>(() => {
   return {
     keyToComponentMap: {
@@ -15,7 +15,7 @@ const useGlobalStore = create<GlobalInitType>(() => {
       PROJECT_EXP: ProjectTem,
       // AWARD_LIST: Award,
       SKILL_LIST: SkillTem,
-      // HEART_LIST: Heart,
+      HEART_LIST: HeartTem,
     },
   }
 })
