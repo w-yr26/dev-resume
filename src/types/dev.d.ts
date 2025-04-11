@@ -138,8 +138,6 @@ export type devInitType = {
 export type devState = {
   devSchema: devInitType
   immerBaseInfo: (newVal: string, key: string) => void
-  immerEduBg: (newVal: string) => void
-  immerSkillInfo: (newVal: string) => void
   immerRichInfo: (
     newVal: string,
     key: 'EDU_BG' | 'HEART_LIST' | 'SKILL_LIST'

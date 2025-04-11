@@ -98,18 +98,7 @@ const useDevStore = create<devState>((set) => {
           }
         })
       ),
-    immerEduBg: (newVal: string) =>
-      set(
-        produce((state: devState) => {
-          state.devSchema.dataSource.EDU_BG.info = newVal
-        })
-      ),
-    immerSkillInfo: (newVal: string) =>
-      set(
-        produce((state: devState) => {
-          state.devSchema.dataSource.SKILL_LIST.info = newVal
-        })
-      ),
+    // 此处就包含了“教育背景”、“技能特长”、“兴趣爱好”的info字段的修改(因为这三者都是直接渲染标签内容，无需特殊处理)
     immerRichInfo: (newVal, key) =>
       set(
         produce((state: devState) => {
