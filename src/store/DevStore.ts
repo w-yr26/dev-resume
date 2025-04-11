@@ -22,7 +22,7 @@ const initialData: devInitType = {
     EDU_BG: {
       info: '',
       visible: true,
-      label: '教育经历',
+      label: '教育背景',
     },
     WORK_EXP: {
       info: [
@@ -69,7 +69,7 @@ const initialData: devInitType = {
       label: '技能特长',
     },
     HEART_LIST: {
-      info: '',
+      info: '打球',
       visible: true,
       label: '兴趣爱好',
     },
@@ -102,6 +102,18 @@ const useDevStore = create<devState>((set) => {
       set(
         produce((state: devState) => {
           state.devSchema.dataSource.EDU_BG.info = newVal
+        })
+      ),
+    immerSkillInfo: (newVal: string) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource.SKILL_LIST.info = newVal
+        })
+      ),
+    immerRichInfo: (newVal, key) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource[key].info = newVal
         })
       ),
     immerVisible: (id: string, key: keyType) =>

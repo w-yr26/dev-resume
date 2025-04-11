@@ -4,17 +4,18 @@ import RichInput from './components/RichInput'
 import CustomLayout from '@/components/CustomLayout/index'
 import { useDevStore } from '@/store'
 const EduBg = () => {
-  const { info } = useDevStore((state) => state.devSchema.dataSource.EDU_BG)
-  const immerEduBg = useDevStore((state) => state.immerEduBg)
-  const handleChange = (val: string) => {
-    console.log('val', val)
-    immerEduBg(val)
-  }
+  const { info, label } = useDevStore(
+    (state) => state.devSchema.dataSource.EDU_BG
+  )
+  const immerRichInfo = useDevStore((state) => state.immerRichInfo)
 
   return (
     <CustomLayout>
-      <Header label="教育背景" icon={IdcardOutlined}></Header>
-      <RichInput value={info} onChange={handleChange}></RichInput>
+      <Header label={label || '教育背景'} icon={IdcardOutlined}></Header>
+      <RichInput
+        value={info}
+        onChange={(val: string) => immerRichInfo(val, 'EDU_BG')}
+      ></RichInput>
     </CustomLayout>
   )
 }
