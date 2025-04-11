@@ -2,7 +2,6 @@ import { message } from 'antd'
 import axios, { type AxiosError, type Method } from 'axios'
 import router from '@/router'
 import { useUserStore } from '@/store'
-const store = useUserStore.getState()
 
 // 请求实例
 const instance = axios.create({
@@ -14,6 +13,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前校验token令牌，并在请求头添加token
+    const store = useUserStore.getState()
     const token = store.info.token
     if (token) {
       config.headers.Authorization = token
@@ -34,6 +34,7 @@ instance.interceptors.response.use(
     // 注意，请求状态码!==业务状态码
     const { code, msg } = response.data
     const { authorization } = response.headers
+    const store = useUserStore.getState()
     const token = store.info.token
     const updateInfo = store.updateInfo
     // 无token，则存储
