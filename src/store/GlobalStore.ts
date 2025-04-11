@@ -4,14 +4,15 @@ import BaseInfoTem from '@/templates/BaseInfoTem'
 import ProjectTem from '@/templates/ProjectTem'
 import WorkTem from '@/templates/WorkTem/index'
 import SkillTem from '@/templates/SkillTem'
+import EduBgTem from '@/templates/EduBgTem'
 
 const useGlobalStore = create<GlobalInitType>(() => {
   return {
     keyToComponentMap: {
       BASE_INFO: BaseInfoTem,
-      EDU_BG: ProjectTem,
+      EDU_BG: EduBgTem,
       WORK_EXP: WorkTem,
-      // PROJECT_EXP: ProjectExperience,
+      PROJECT_EXP: ProjectTem,
       // AWARD_LIST: Award,
       SKILL_LIST: SkillTem,
       // HEART_LIST: Heart,

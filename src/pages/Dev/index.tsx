@@ -137,7 +137,7 @@ const Dev = () => {
             <div className={styles['preview-content']} ref={mainRef}>
               {comList.map((item, index) => {
                 const Com = comMap[item]
-                return Com ? <Com key={index}></Com> : ''
+                return Com ? <Com key={index}></Com> : null
               })}
             </div>
             {lineShow && (

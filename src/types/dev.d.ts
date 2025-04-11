@@ -138,6 +138,7 @@ export type devInitType = {
 export type devState = {
   devSchema: devInitType
   immerBaseInfo: (newVal: string, key: string) => void
+  immerEduBg: (newVal: string) => void
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void
   addInfoList: (data: any, key: keyType) => void

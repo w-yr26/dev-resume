@@ -98,6 +98,12 @@ const useDevStore = create<devState>((set) => {
           }
         })
       ),
+    immerEduBg: (newVal: string) =>
+      set(
+        produce((state: devState) => {
+          state.devSchema.dataSource.EDU_BG.info = newVal
+        })
+      ),
     immerVisible: (id: string, key: keyType) =>
       set(
         produce((state: devState) => {
