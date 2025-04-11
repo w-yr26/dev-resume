@@ -66,7 +66,6 @@ const WorkExperience = () => {
           infoId,
           'WORK_EXP'
         )
-        setInfoId('')
       } else {
         // 创建
         addInfoList(
@@ -79,10 +78,16 @@ const WorkExperience = () => {
           'WORK_EXP'
         )
       }
-      setOpend(false)
+      resetState()
     } catch (err) {
       console.log('校验失败', err)
     }
+  }
+
+  const resetState = () => {
+    setOpend(false)
+    formRef.resetFields()
+    setInfoId('')
   }
 
   const [isEdit, setIsEdit] = useState(false)
@@ -136,11 +141,7 @@ const WorkExperience = () => {
         ]}
         centered={true}
         open={opened}
-        onCancel={() => {
-          setOpend(false)
-          formRef.resetFields()
-          setInfoId('')
-        }}
+        onCancel={resetState}
       >
         <Form layout="vertical" requiredMark={false} form={formRef}>
           <div className={styles['row-form-item']}>
