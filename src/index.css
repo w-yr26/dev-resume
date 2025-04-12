@@ -4,6 +4,10 @@
   /* list-style: none; */
 }
 
+a {
+  text-decoration: none;
+}
+
 /* @theme { */
 /* 明亮风格自定义主题色 */
 /* --color-light-primary: '#18181b';
