@@ -19,6 +19,11 @@
   // logo区域
   .logo-area {
     height: 48px;
+    width: 100%;
+    background-image: url('/src/assets/logo.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     margin-bottom: 8px;
   }
 

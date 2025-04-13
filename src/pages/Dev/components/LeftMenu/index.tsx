@@ -50,7 +50,7 @@ const iconMenu = [
 const LeftMenu: React.FC = () => {
   return (
     <div className={styles['left-container']}>
-      <div>Logo</div>
+      <div className={styles['mini-logo']} />
       <ul className={styles['menu-list']}>
         {iconMenu.map((item) => {
           return (

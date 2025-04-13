@@ -23,11 +23,7 @@ const Home = () => {
       {/* 左边栏 */}
       <div className={styles['left-container']}>
         {/* logo区域 */}
-        <div className={styles['logo-area']}>
-          <div className={styles['logo-photo']}>
-            <a href="#">logo存放</a>
-          </div>
-        </div>
+        <div className={styles['logo-area']} />
 
         {/* 左边栏目导航区域 */}
         <div className={styles['left-nav']}>

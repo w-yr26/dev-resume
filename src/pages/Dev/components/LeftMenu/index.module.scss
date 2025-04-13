@@ -8,7 +8,7 @@ $light-border-color: #e4e4e7;
 $light-cardBg-color: #ffffff;
 
 .left-container {
-  width: 3.5rem;
+  width: 48px;
   height: 100%;
   box-sizing: border-box;
   display: flex;
@@ -35,4 +35,13 @@ $light-cardBg-color: #ffffff;
       }
     }
   }
+}
+
+.mini-logo {
+  width: 100%;
+  height: 48px;
+  background-image: url('/src/assets/logo-mini.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
