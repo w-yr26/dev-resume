@@ -6,7 +6,9 @@ import WorkTem from '@/templates/WorkTem/index'
 import SkillTem from '@/templates/SkillTem'
 import EduBgTem from '@/templates/EduBgTem'
 import HeartTem from '@/templates/HeartTem'
+import AwardTem from '@/templates/AwardTem'
 import { produce } from 'immer'
+
 const useGlobalStore = create<GlobalInitType>((set) => {
   return {
     keyToComponentMap: {
@@ -14,7 +16,7 @@ const useGlobalStore = create<GlobalInitType>((set) => {
       EDU_BG: EduBgTem,
       WORK_EXP: WorkTem,
       PROJECT_EXP: ProjectTem,
-      // AWARD_LIST: Award,
+      AWARD_LIST: AwardTem,
       SKILL_LIST: SkillTem,
       HEART_LIST: HeartTem,
     },

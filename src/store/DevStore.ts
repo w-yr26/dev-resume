@@ -76,7 +76,15 @@ const initialData: devInitType = {
       label: '项目经历',
     },
     AWARD_LIST: {
-      info: [],
+      info: [
+        {
+          id: '001',
+          award: '互联网+',
+          date: [dayjs('2025-01-01'), dayjs('2025-03-05')],
+          describe: '垃圾比赛，垃圾比赛',
+          visible: true,
+        },
+      ],
       visible: true,
       label: '个人荣誉',
     },

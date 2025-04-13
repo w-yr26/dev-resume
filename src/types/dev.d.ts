@@ -68,7 +68,7 @@ export type PeojectExpItemType = Pick<
 export type AwardItemType = {
   id: string
   award: string
-  date: string
+  date: [Dayjs, Dayjs]
   describe: string
   visible: boolean
 }
