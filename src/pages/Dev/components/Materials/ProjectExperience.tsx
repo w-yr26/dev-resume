@@ -5,84 +5,30 @@ import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
 import RichInput from './components/RichInput'
 import List from './components/List'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
+import { useModalForm } from '@/hooks/useModalForm'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
   const storeProjectList = useDevStore(
     (state) => state.devSchema.dataSource.PROJECT_EXP.info
   )
-  const setVisible = useDevStore((state) => state.immerVisible)
-  const handleDel = useDevStore((state) => state.immerDel)
   const label = useDevStore(
     (state) => state.devSchema.dataSource.PROJECT_EXP.label
   )
-  const updateInfo = useDevStore((state) => state.updateInfo)
-  const addInfoList = useDevStore((state) => state.addInfoList)
-  const [opened, setOpened] = useState(false)
-  const [infoId, setInfoId] = useState('')
-  const [formRef] = Form.useForm()
 
-  const currentInfo = useMemo(() => {
-    return storeProjectList.find((item) => item.id === infoId)
-  }, [infoId, storeProjectList])
-
-  useEffect(() => {
-    if (currentInfo) {
-      formRef.setFieldsValue(currentInfo)
-    }
-  }, [currentInfo, formRef])
-
-  const handleVisible = (id: string) => {
-    setVisible(id, 'PROJECT_EXP')
-  }
-
-  const handleDelItem = (id: string) => {
-    handleDel(id, 'PROJECT_EXP')
-  }
-
-  const handleEdit = (id: string) => {
-    setOpened(true)
-    // TODO: id未必永远不一致
-    setInfoId(id)
-  }
-
-  const handleOk = async () => {
-    try {
-      const values = await formRef.validateFields()
-      // 更新
-      if (infoId) {
-        updateInfo(
-          {
-            ...currentInfo,
-            ...values,
-          },
-          infoId,
-          'PROJECT_EXP'
-        )
-      } else {
-        // 创建
-        addInfoList(
-          {
-            ...values,
-            id: new Date().getTime(),
-            visible: true,
-          },
-          'PROJECT_EXP'
-        )
-      }
-      resetState()
-    } catch (err) {
-      console.log('校验失败', err)
-    }
-  }
-
-  const resetState = () => {
-    setOpened(false)
-    formRef.resetFields()
-    setInfoId('')
-  }
+  const {
+    opened,
+    formRef,
+    infoId,
+    handleDelItem,
+    handleEdit,
+    handleOk,
+    handleVisible,
+    resetState,
+    handleOpen,
+  } = useModalForm(storeProjectList, 'PROJECT_EXP')
 
   const setPosition = useGlobalStore((state) => state.setPosition)
   const proRef = useRef<HTMLDivElement>(null)
@@ -98,11 +44,11 @@ const ProjectExperience = () => {
     <CustomLayout ref={proRef}>
       <Header label={label || '项目经历'} icon={BranchesOutlined}></Header>
       {storeProjectList.length === 0 ? (
-        <AddBtn handleAdd={() => setOpened(true)} />
+        <AddBtn handleAdd={handleOpen} />
       ) : (
         <List
           data={storeProjectList}
-          handleAdd={() => setOpened(true)}
+          handleAdd={handleOpen}
           handleVisible={handleVisible}
           handleDel={handleDelItem}
           handleEdit={handleEdit}

@@ -5,86 +5,29 @@ import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
+import { useModalForm } from '@/hooks/useModalForm'
 const { RangePicker } = DatePicker
 
 const Award = () => {
   const storeAwardList = useDevStore(
     (state) => state.devSchema.dataSource.AWARD_LIST.info
   )
-  const setVisible = useDevStore((state) => state.immerVisible)
-  const handleDel = useDevStore((state) => state.immerDel)
   const label = useDevStore(
     (state) => state.devSchema.dataSource.AWARD_LIST.label
   )
-  const updateInfo = useDevStore((state) => state.updateInfo)
-  const addInfoList = useDevStore((state) => state.addInfoList)
-  const [opened, setOpened] = useState(false)
-  const [infoId, setInfoId] = useState('')
-  const [formRef] = Form.useForm()
-
-  const currentInfo = useMemo(() => {
-    return storeAwardList.find((item) => item.id === infoId)
-  }, [infoId, storeAwardList])
-
-  useEffect(() => {
-    if (currentInfo) {
-      console.log('currentInfo', currentInfo)
-
-      formRef.setFieldsValue(currentInfo)
-    }
-  }, [currentInfo, formRef])
-
-  const handleVisible = (id: string) => {
-    setVisible(id, 'AWARD_LIST')
-  }
-
-  const handleDelItem = (id: string) => {
-    handleDel(id, 'AWARD_LIST')
-  }
-
-  const handleEdit = (id: string) => {
-    setOpened(true)
-    // TODO: id未必永远不一致
-    setInfoId(id)
-  }
-
-  const handleOk = async () => {
-    try {
-      const values = await formRef.validateFields()
-      // 更新
-      if (infoId) {
-        updateInfo(
-          {
-            ...currentInfo,
-            ...values,
-          },
-          infoId,
-          'AWARD_LIST'
-        )
-      } else {
-        // 创建
-        addInfoList(
-          {
-            ...values,
-            id: new Date().getTime(),
-            visible: true,
-          },
-          'AWARD_LIST'
-        )
-      }
-      resetState()
-    } catch (err) {
-      console.log('校验失败', err)
-    }
-  }
-
-  const resetState = () => {
-    setOpened(false)
-    formRef.resetFields()
-    setInfoId('')
-  }
+  const {
+    opened,
+    formRef,
+    infoId,
+    handleDelItem,
+    handleEdit,
+    handleOk,
+    handleVisible,
+    resetState,
+    handleOpen,
+  } = useModalForm(storeAwardList, 'AWARD_LIST')
 
   const setPosition = useGlobalStore((state) => state.setPosition)
   const awardRef = useRef<HTMLDivElement>(null)
@@ -101,11 +44,11 @@ const Award = () => {
       <Header label={label || '荣誉奖项'} icon={BulbOutlined}></Header>
 
       {storeAwardList.length === 0 ? (
-        <AddBtn handleAdd={() => setOpened(true)} />
+        <AddBtn handleAdd={handleOpen} />
       ) : (
         <List
           data={storeAwardList}
-          handleAdd={() => setOpened(true)}
+          handleAdd={handleOpen}
           handleVisible={handleVisible}
           handleEdit={handleEdit}
           handleDel={handleDelItem}
