@@ -1,15 +1,18 @@
 import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
-import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
 import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
-import styles from './index.module.scss'
-import { useDevStore } from '@/store'
-import { useEffect, useMemo, useState } from 'react'
+import { Form, Input, Modal, DatePicker, Button } from 'antd'
 const { RangePicker } = DatePicker
+import { useEffect, useRef } from 'react'
+import { useDevStore, useGlobalStore } from '@/store'
+import { useChangeLabel } from '@/hooks/useChangeLabel'
+import { useModalForm } from '@/hooks/useModalForm'
+import type { WorkExpItemType } from '@/types/dev'
+import styles from './index.module.scss'
 
 const WorkExperience = () => {
   const storeWorkList = useDevStore(
@@ -18,81 +21,32 @@ const WorkExperience = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.label
   )
-  const setVisible = useDevStore((state) => state.immerVisible)
-  const handleDel = useDevStore((state) => state.immerDel)
-  const addInfoList = useDevStore((state) => state.addInfoList)
-  const updateInfo = useDevStore((state) => state.updateInfo)
-  const changeLabel = useDevStore((state) => state.changeLabel)
-  const [opened, setOpend] = useState(false)
-  const [infoId, setInfoId] = useState('')
-  const [formRef] = Form.useForm()
+  const setPosition = useGlobalStore((state) => state.setPosition)
 
-  const handleVisible = (id: string) => {
-    // storeWorkList
-    setVisible(id, 'WORK_EXP')
-  }
-
-  const handleDelItem = (id: string) => {
-    handleDel(id, 'WORK_EXP')
-  }
-
-  const handleEdit = (id: string) => {
-    setOpend(true)
-    // TODO: id未必永远不一致
-    setInfoId(id)
-  }
-
-  const currentInfo = useMemo(() => {
-    return storeWorkList.find((item) => item.id === infoId)
-  }, [infoId, storeWorkList])
-
+  const workRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (currentInfo) {
-      formRef.setFieldsValue(currentInfo)
+    if (workRef.current) {
+      const { y } = workRef.current.getBoundingClientRect()
+      setPosition('WORK_EXP', y)
     }
-  }, [currentInfo, formRef])
+  }, [])
 
-  const handleOk = async () => {
-    try {
-      const values = await formRef.validateFields()
-      console.log('values', values)
-      // 更新
-      if (infoId) {
-        updateInfo(
-          {
-            ...currentInfo,
-            ...values,
-          },
-          infoId,
-          'WORK_EXP'
-        )
-        setInfoId('')
-      } else {
-        // 创建
-        addInfoList(
-          {
-            ...values,
-            id: new Date().getTime(),
-            visible: true,
-            // output: '<p>内容测试</p>',
-          },
-          'WORK_EXP'
-        )
-      }
-      setOpend(false)
-    } catch (err) {
-      console.log('校验失败', err)
-    }
-  }
-
-  const [isEdit, setIsEdit] = useState(false)
-  const handleChange = (val: string) => {
-    changeLabel('WORK_EXP', val)
-  }
+  const {
+    opened,
+    formRef,
+    infoId,
+    handleDelItem,
+    handleEdit,
+    handleOk,
+    handleVisible,
+    resetState,
+    handleOpen,
+  } = useModalForm<WorkExpItemType>(storeWorkList, 'WORK_EXP')
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   return (
     <>
-      <CustomLayout>
+      <CustomLayout ref={workRef}>
         <Header
           label={label || '工作/实习经历'}
           icon={CalculatorOutlined}
@@ -106,11 +60,11 @@ const WorkExperience = () => {
           ></CtxMenu>
         </Header>
         {storeWorkList.length === 0 ? (
-          <AddBtn handleAdd={() => setOpend(true)} />
+          <AddBtn handleAdd={handleOpen} />
         ) : (
           <List
             data={storeWorkList}
-            handleAdd={() => setOpend(true)}
+            handleAdd={handleOpen}
             handleVisible={handleVisible}
             handleDel={handleDelItem}
             handleEdit={handleEdit}
@@ -136,11 +90,7 @@ const WorkExperience = () => {
         ]}
         centered={true}
         open={opened}
-        onCancel={() => {
-          setOpend(false)
-          formRef.resetFields()
-          setInfoId('')
-        }}
+        onCancel={resetState}
       >
         <Form layout="vertical" requiredMark={false} form={formRef}>
           <div className={styles['row-form-item']}>

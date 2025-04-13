@@ -1,7 +1,23 @@
 import { create } from 'zustand'
-import type { devInitType, devState, keyType } from '@/types/dev'
+import type {
+  allKeyType,
+  devInitType,
+  devState,
+  InfoArrTypeMap,
+  keyType,
+} from '@/types/dev'
 import { produce } from 'immer'
 import dayjs from 'dayjs'
+
+const defaultInfoMap: Record<allKeyType, any> = {
+  BASE_INFO: {},
+  EDU_BG: '',
+  WORK_EXP: [],
+  PROJECT_EXP: [],
+  AWARD_LIST: [],
+  SKILL_LIST: '',
+  HEART_LIST: '',
+}
 
 const initialData: devInitType = {
   dataSource: {
@@ -22,7 +38,7 @@ const initialData: devInitType = {
     EDU_BG: {
       info: '',
       visible: true,
-      label: '教育经历',
+      label: '教育背景',
     },
     WORK_EXP: {
       info: [
@@ -53,15 +69,24 @@ const initialData: devInitType = {
             'Vue3 简化版，实现 reactivity、runtime-core、runtime-dom 模块，该项目模拟了Vue3的基本功能，如 ref、reactive、computed、provide-inject、nextTick 等',
           output:
             '<p>1. 实现 ref/reactive，基于 Proxy 进行数据拦截，并使用 weakMap、Map、Set 实现Dep依赖收集及后续通知依赖更新</p><p>2. 引入虚拟 DOM 概念，通过 processComponent、processELement 等实现视图的创建更新流程，并通过diff算法优化视图更新</p><p>3. 实现 runtime-dom 模块，对 runtime-core 进一步解耦，实现 runtime-core 的跨平台支持(如 Canvas 平台)</p><p>4. 通过 Object.create() 寄生式继承，实现祖孙组件之间通过 provide-inject 进行通信；完成props、emits父子组件通信</p><p>5. 借助 Promise.then() 实现虚拟 DOM 的异步更新，实现 nextTick</p><p>6. 使用 pnpm + monorepo 实现单一代码库管理多模块等</p>',
+          visible: true,
         },
       ],
       visible: true,
       label: '项目经历',
     },
     AWARD_LIST: {
-      info: [],
+      info: [
+        {
+          id: '001',
+          award: '互联网+',
+          date: [dayjs('2025-01-01'), dayjs('2025-03-05')],
+          describe: '垃圾比赛，垃圾比赛',
+          visible: true,
+        },
+      ],
       visible: true,
-      label: '个人荣誉',
+      label: '荣誉奖项',
     },
     SKILL_LIST: {
       info: '<ul><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li><li>掌握Web开发基础，掌握 HTML，CSS，JavaScript</li><li>熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验</li><li>掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等</li><li>熟悉 HTTP 协议，DNS/CDN 等网络相关知识</li><li>掌握基本的 git 命令进行代码版本管理</li></ul>',
@@ -69,7 +94,7 @@ const initialData: devInitType = {
       label: '技能特长',
     },
     HEART_LIST: {
-      info: '',
+      info: '打球',
       visible: true,
       label: '兴趣爱好',
     },
@@ -98,26 +123,38 @@ const useDevStore = create<devState>((set) => {
           }
         })
       ),
-    immerVisible: (id: string, key: keyType) =>
+    // 此处就包含了“教育背景”、“技能特长”、“兴趣爱好”的info字段的修改(因为这三者都是直接渲染标签内容，无需特殊处理)
+    immerRichInfo: (newVal, key) =>
       set(
         produce((state: devState) => {
-          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
-            key
-          ].info.map((item) => {
+          state.devSchema.dataSource[key].info = newVal
+        })
+      ),
+    immerVisible: <T extends keyof InfoArrTypeMap>(id: string, key: T) =>
+      set(
+        produce((state: devState) => {
+          const infoList = state.devSchema.dataSource[key]
+            .info as InfoArrTypeMap[T][]
+          const newInfoList = infoList.map((item) => {
             if (item.id !== id) return item
             return {
               ...item,
               visible: !item.visible,
             }
           })
+
+          ;(state.devSchema.dataSource[key].info as InfoArrTypeMap[T][]) =
+            newInfoList
         })
       ),
-    immerDel: (id: string, key: keyType) =>
+    immerDel: <T extends keyof InfoArrTypeMap>(id: string, key: T) =>
       set(
         produce((state: devState) => {
-          state.devSchema.dataSource[key].info = state.devSchema.dataSource[
-            key
-          ].info.filter((item) => item.id !== id)
+          const infoList = state.devSchema.dataSource[key]
+            .info as InfoArrTypeMap[T][]
+          const newInfoList = infoList.filter((item) => item.id !== id)
+          ;(state.devSchema.dataSource[key].info as InfoArrTypeMap[T][]) =
+            newInfoList
         })
       ),
     addInfoList: (data: any, key: keyType) =>
@@ -152,7 +189,8 @@ const useDevStore = create<devState>((set) => {
       set(
         produce((state: devState) => {
           state.devSchema.dataSource[key] = {
-            info: [],
+            ...state.devSchema.dataSource[key],
+            info: defaultInfoMap[key],
             visible: true,
           }
         })

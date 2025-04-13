@@ -1,54 +1,90 @@
 import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
 import { BulbOutlined } from '@ant-design/icons'
-import { useModalForm } from '@/hooks/useModalForm'
-import type { AwardItemType } from '@/types/dev'
 import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
+import { useEffect, useRef } from 'react'
+import { useDevStore, useGlobalStore } from '@/store'
+import { useModalForm } from '@/hooks/useModalForm'
+import { useChangeLabel } from '@/hooks/useChangeLabel'
+import CtxMenu from './components/CtxMenu'
 const { RangePicker } = DatePicker
 
 const Award = () => {
+  const storeAwardList = useDevStore(
+    (state) => state.devSchema.dataSource.AWARD_LIST.info
+  )
+  const label = useDevStore(
+    (state) => state.devSchema.dataSource.AWARD_LIST.label
+  )
+
+  const setPosition = useGlobalStore((state) => state.setPosition)
+  const awardRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (awardRef.current) {
+      const { y } = awardRef.current.getBoundingClientRect()
+      setPosition('AWARD_LIST', y)
+    }
+  }, [])
+
   const {
-    list: awardList,
     opened,
     formRef,
-    handleAdd,
-    handleCancel,
+    infoId,
+    handleDelItem,
+    handleEdit,
     handleOk,
-  } = useModalForm<AwardItemType>([])
+    handleVisible,
+    resetState,
+    handleOpen,
+  } = useModalForm(storeAwardList, 'AWARD_LIST')
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('AWARD_LIST')
 
   return (
-    <CustomLayout>
-      <Header label="荣誉奖项" icon={BulbOutlined}></Header>
+    <CustomLayout ref={awardRef}>
+      <Header
+        label={label || '荣誉奖项'}
+        icon={BulbOutlined}
+        isEdit={isEdit}
+        handleChange={handleChange}
+        handleBlur={() => setIsEdit(false)}
+      >
+        <CtxMenu currentKey="AWARD_LIST" renameLabel={() => setIsEdit(true)} />
+      </Header>
 
-      {awardList.length === 0 ? (
-        <AddBtn handleAdd={handleAdd} />
+      {storeAwardList.length === 0 ? (
+        <AddBtn handleAdd={handleOpen} />
       ) : (
         <List
-          data={awardList}
-          handleAdd={handleAdd}
+          data={storeAwardList}
+          handleAdd={handleOpen}
+          handleVisible={handleVisible}
+          handleEdit={handleEdit}
+          handleDel={handleDelItem}
           fieldMap={{
             id: 'id',
             title: 'award',
             subTitle: 'describe',
+            visible: 'visible',
           }}
         ></List>
       )}
 
       <Modal
-        title="创建新条目"
+        title={infoId ? '编辑条目' : '创建新条目'}
         width="50%"
         mask={true}
         footer={[
           <Button key="submit" onClick={handleOk}>
-            创建
+            {infoId ? '编辑' : '创建'}
           </Button>,
         ]}
         centered={true}
         open={opened}
-        onCancel={handleCancel}
+        onCancel={resetState}
       >
         <Form layout="vertical" requiredMark={false} form={formRef}>
           <div className={styles['row-form-item']}>
@@ -71,7 +107,7 @@ const Award = () => {
               <RangePicker />
             </Form.Item>
           </div>
-          <Form.Item label="概述" name="overview" layout="vertical">
+          <Form.Item label="概述" name="describe" layout="vertical">
             <Input.TextArea />
           </Form.Item>
         </Form>

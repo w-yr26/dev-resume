@@ -1,5 +1,11 @@
 import type { Dayjs } from 'dayjs'
 import React from 'react'
+
+// 自定义局部布局
+export type LayoutPropsType = {
+  children: React.ReactNode
+}
+
 // 物料区头部
 export type HeaderType = {
   label: string
@@ -54,7 +60,7 @@ export type WorkExpItemType = {
 
 export type PeojectExpItemType = Pick<
   WorkExpItemType,
-  'id' | 'date' | 'position' | 'overview' | 'output'
+  'id' | 'date' | 'position' | 'overview' | 'output' | 'visible'
 > & {
   name: string
 }
@@ -62,8 +68,9 @@ export type PeojectExpItemType = Pick<
 export type AwardItemType = {
   id: string
   award: string
-  date: string
+  date: [Dayjs, Dayjs]
   describe: string
+  visible: boolean
 }
 
 export type SkillType = {
@@ -135,16 +142,39 @@ export type devInitType = {
   curTemplate: string // 当前使用的简历模板id
 }
 
+// 这个Map存放info为数组的字段
+export type InfoArrTypeMap = {
+  WORK_EXP: WorkExpItemType
+  PROJECT_EXP: PeojectExpItemType
+  AWARD_LIST: AwardItemType
+}
+
+// 这个Map存放info为string的字段
+export type InfoStrTypeMap = {
+  EDU_BG: string
+  SKILL_LIST: string
+  HEART_LIST: string
+}
+
 export type devState = {
   devSchema: devInitType
   immerBaseInfo: (newVal: string, key: string) => void
+  immerRichInfo: (newVal: string, key: keyof InfoStrTypeMap) => void
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void
   addInfoList: (data: any, key: keyType) => void
   updateInfo: (data: any, id: string, key: keyType) => void
-  changeItemVisible: (key: keyType) => void
-  resetInfo: (key: keyType) => void
-  changeLabel: (key: keyType, value: string) => void
+  changeItemVisible: (key: allKeyType) => void
+  resetInfo: (key: allKeyType) => void
+  changeLabel: (key: allKeyType, value: string) => void
 }
 
-export type keyType = 'WORK_EXP'
+export type keyType = keyof InfoArrTypeMap
+export type allKeyType =
+  | 'WORK_EXP'
+  | 'PROJECT_EXP'
+  | 'AWARD_LIST'
+  | 'EDU_BG'
+  | 'SKILL_LIST'
+  | 'HEART_LIST'
+  | 'BASE_INFO'

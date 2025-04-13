@@ -10,15 +10,23 @@ import {
 } from '@ant-design/icons'
 import CustomInput from './components/CustomInput'
 import CustomLayout from '@/components/CustomLayout/index'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
-import { useDevStore } from '@/store'
+import { useDevStore, useGlobalStore } from '@/store'
 
 const BaseInfo = () => {
+  const baseinfoRef = useRef<HTMLDivElement>(null)
   const { info } = useDevStore((state) => state.devSchema.dataSource.BASE_INFO)
   const changeBaseInfo = useDevStore((state) => state.immerBaseInfo)
-  // console.log(info)
+  const setPosition = useGlobalStore((state) => state.setPosition)
+
+  useEffect(() => {
+    if (baseinfoRef.current) {
+      const { y } = baseinfoRef.current.getBoundingClientRect()
+      setPosition('BASE_INFO', y)
+    }
+  }, [])
 
   const [itemList, setItemList] = useState<AddItemType[]>([])
 
@@ -45,7 +53,7 @@ const BaseInfo = () => {
   }
 
   return (
-    <CustomLayout>
+    <CustomLayout ref={baseinfoRef}>
       <Header
         icon={InfoCircleOutlined}
         label="基础信息"

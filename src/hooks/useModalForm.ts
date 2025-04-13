@@ -1,49 +1,96 @@
-import { useState } from 'react'
+import { useDevStore } from '@/store'
+import type { keyType } from '@/types/dev'
 import { Form } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
 
-export function useModalForm<T>(defaultValues: T[]) {
-  const [list, setList] = useState<T[]>(defaultValues)
-  const [opened, setOpend] = useState(false)
+export function useModalForm<
+  T extends {
+    id: string
+  }
+>(data: T[], key: keyType) {
+  const setVisible = useDevStore((state) => state.immerVisible)
+  const handleDel = useDevStore((state) => state.immerDel)
+  const addInfoList = useDevStore((state) => state.addInfoList)
+  const updateInfo = useDevStore((state) => state.updateInfo)
+  const [opened, setOpened] = useState(false)
+  const [infoId, setInfoId] = useState('')
   const [formRef] = Form.useForm()
 
-  const handleAdd = () => {
-    setOpend(true)
+  const handleVisible = (id: string) => {
+    // data
+    setVisible(id, key)
   }
+
+  const handleDelItem = (id: string) => {
+    handleDel(id, key)
+  }
+
+  const handleEdit = (id: string) => {
+    setOpened(true)
+    // TODO: id未必永远不一致
+    setInfoId(id)
+  }
+
+  const currentInfo = useMemo(() => {
+    return data.find((item) => item.id === infoId)
+  }, [infoId, data])
+
+  useEffect(() => {
+    if (currentInfo) {
+      formRef.setFieldsValue(currentInfo)
+    }
+  }, [currentInfo, formRef])
+
   const handleOk = async () => {
     try {
       const values = await formRef.validateFields()
-      console.log('values', values)
-      setList([
-        ...list,
-        {
-          ...values,
-          output: 'new output',
-          id: new Date().getTime(),
-        },
-      ])
-      // const addItem =
-      setOpend(false)
+      // 更新
+      if (infoId) {
+        updateInfo(
+          {
+            ...currentInfo,
+            ...values,
+          },
+          infoId,
+          key
+        )
+      } else {
+        // 创建
+        addInfoList(
+          {
+            ...values,
+            id: new Date().getTime(),
+            visible: true,
+            // output: '<p>内容测试</p>',
+          },
+          key
+        )
+      }
+      resetState()
     } catch (err) {
       console.log('校验失败', err)
     }
   }
 
-  const handleCancel = () => {
-    setOpend(false)
+  const resetState = () => {
+    setOpened(false)
+    formRef.resetFields()
+    setInfoId('')
   }
 
-  const resetForm = () => {
-    formRef.resetFields()
-    console.log('reset exe')
+  const handleOpen = () => {
+    setOpened(true)
   }
 
   return {
-    list,
     opened,
+    infoId,
     formRef,
-    handleAdd,
-    handleCancel,
+    handleVisible,
+    handleDelItem,
+    handleEdit,
     handleOk,
-    resetForm,
+    resetState,
+    handleOpen,
   }
 }
