@@ -8,6 +8,8 @@ import List from './components/List'
 import { useEffect, useRef } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
+import { useChangeLabel } from '@/hooks/useChangeLabel'
+import CtxMenu from './components/CtxMenu'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
@@ -17,6 +19,16 @@ const ProjectExperience = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.PROJECT_EXP.label
   )
+
+  const setPosition = useGlobalStore((state) => state.setPosition)
+  const proRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (proRef.current) {
+      const { y } = proRef.current.getBoundingClientRect()
+      setPosition('PROJECT_EXP', y)
+    }
+  }, [])
 
   const {
     opened,
@@ -29,20 +41,19 @@ const ProjectExperience = () => {
     resetState,
     handleOpen,
   } = useModalForm(storeProjectList, 'PROJECT_EXP')
-
-  const setPosition = useGlobalStore((state) => state.setPosition)
-  const proRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (proRef.current) {
-      const { y } = proRef.current.getBoundingClientRect()
-      setPosition('PROJECT_EXP', y)
-    }
-  }, [])
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('PROJECT_EXP')
 
   return (
     <CustomLayout ref={proRef}>
-      <Header label={label || '项目经历'} icon={BranchesOutlined}></Header>
+      <Header
+        label={label || '项目经历'}
+        icon={BranchesOutlined}
+        isEdit={isEdit}
+        handleChange={handleChange}
+        handleBlur={() => setIsEdit(false)}
+      >
+        <CtxMenu currentKey="PROJECT_EXP" renameLabel={() => setIsEdit(true)} />
+      </Header>
       {storeProjectList.length === 0 ? (
         <AddBtn handleAdd={handleOpen} />
       ) : (

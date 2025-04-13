@@ -8,6 +8,8 @@ import { Button, DatePicker, Form, Input, Modal } from 'antd'
 import { useEffect, useRef } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
+import { useChangeLabel } from '@/hooks/useChangeLabel'
+import CtxMenu from './components/CtxMenu'
 const { RangePicker } = DatePicker
 
 const Award = () => {
@@ -17,17 +19,6 @@ const Award = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.AWARD_LIST.label
   )
-  const {
-    opened,
-    formRef,
-    infoId,
-    handleDelItem,
-    handleEdit,
-    handleOk,
-    handleVisible,
-    resetState,
-    handleOpen,
-  } = useModalForm(storeAwardList, 'AWARD_LIST')
 
   const setPosition = useGlobalStore((state) => state.setPosition)
   const awardRef = useRef<HTMLDivElement>(null)
@@ -39,9 +30,30 @@ const Award = () => {
     }
   }, [])
 
+  const {
+    opened,
+    formRef,
+    infoId,
+    handleDelItem,
+    handleEdit,
+    handleOk,
+    handleVisible,
+    resetState,
+    handleOpen,
+  } = useModalForm(storeAwardList, 'AWARD_LIST')
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('AWARD_LIST')
+
   return (
     <CustomLayout ref={awardRef}>
-      <Header label={label || '荣誉奖项'} icon={BulbOutlined}></Header>
+      <Header
+        label={label || '荣誉奖项'}
+        icon={BulbOutlined}
+        isEdit={isEdit}
+        handleChange={handleChange}
+        handleBlur={() => setIsEdit(false)}
+      >
+        <CtxMenu currentKey="AWARD_LIST" renameLabel={() => setIsEdit(true)} />
+      </Header>
 
       {storeAwardList.length === 0 ? (
         <AddBtn handleAdd={handleOpen} />
