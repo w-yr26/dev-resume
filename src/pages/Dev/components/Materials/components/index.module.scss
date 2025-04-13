@@ -113,3 +113,26 @@ $light-cardBg-color: #ffffff;
     }
   }
 }
+
+/* 栏目菜单列表 */
+.head-menu-list {
+  width: 100px;
+  box-sizing: border-box;
+
+  .head-menu-item {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 4px;
+    transition: backgroundColor 0.3s ease;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #f8f8f9;
+    }
+
+    .icon-box {
+      margin-right: 8px;
+    }
+  }
+}

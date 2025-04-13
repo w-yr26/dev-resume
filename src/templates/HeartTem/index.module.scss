@@ -1,0 +1,40 @@
+.edu-bg-wrapper {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #292929;
+}
+
+.left-wrapper {
+  width: 20%;
+  height: auto;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.right-wrapper {
+  flex: 1;
+
+  .content-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+  }
+
+  .link-box {
+    text-decoration: underline;
+    margin: 8px 0;
+  }
+}
+
+.module-head {
+  line-height: 2;
+}
+
+.content-box {
+  line-height: 1.2;
+
+  p {
+    margin: 8px 0;
+  }
+}

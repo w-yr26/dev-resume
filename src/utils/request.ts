@@ -1,9 +1,11 @@
 import { message } from 'antd'
-import axios, { type Method } from 'axios'
+import axios, { type AxiosError, type Method } from 'axios'
+import router from '@/router'
 import { useUserStore } from '@/store'
-const store = useUserStore.getState()
+
+// 请求实例
 const instance = axios.create({
-  baseURL: 'http://123.207.71.32:8082',
+  baseURL: 'http://123.207.71.32:8086',
   timeout: 5000,
 })
 
@@ -11,6 +13,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前校验token令牌，并在请求头添加token
+    const store = useUserStore.getState()
     const token = store.info.token
     if (token) {
       config.headers.Authorization = token
@@ -29,8 +32,9 @@ instance.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数
     // 注意，请求状态码!==业务状态码
-    const { code } = response.data
+    const { code, msg } = response.data
     const { authorization } = response.headers
+    const store = useUserStore.getState()
     const token = store.info.token
     const updateInfo = store.updateInfo
     // 无token，则存储
@@ -41,14 +45,24 @@ instance.interceptors.response.use(
 
     // 业务统一状态码出错
     if (code !== 1) {
-      message.error('请求出错, 请稍后再试')
+      message.error(msg || '请求出错, 请稍后再试')
     }
 
     // 数据剥离
     return response.data
   },
-  function (error) {
-    // 超出 2xx 范围的状态码都会触发该函数。
+  function (error: AxiosError) {
+    const { status } = error
+    // 401错误, token失效
+    if (status === 401) {
+      message.warning('当前登录状态有误, 请重新登录')
+      router.navigate('/login', {
+        replace: true,
+      })
+    } else {
+      message.error(JSON.stringify(error))
+    }
+
     // 对响应错误做点什么
     return Promise.reject(error)
   }
@@ -71,7 +85,7 @@ export const request = <T>(
   method: Method = 'GET',
   submitData?: object
 ) => {
-  return instance.request<Data<T>>({
+  return instance.request<any, Data<T>>({
     url,
     method,
     [method.toUpperCase() === 'GET' ? 'params' : 'data']: submitData,

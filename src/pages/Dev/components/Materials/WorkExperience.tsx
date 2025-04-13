@@ -1,53 +1,73 @@
 import { CalculatorOutlined } from '@ant-design/icons'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
-import type { WorkExpItemType } from '@/types/dev'
-import { Form, Input, Modal, DatePicker, Button } from 'antd'
 import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
-import { useModalForm } from '@/hooks/useModalForm'
-import styles from './index.module.scss'
-import { useDevStore } from '@/store'
+import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
+import { Form, Input, Modal, DatePicker, Button } from 'antd'
 const { RangePicker } = DatePicker
+import { useEffect, useRef } from 'react'
+import { useDevStore, useGlobalStore } from '@/store'
+import { useChangeLabel } from '@/hooks/useChangeLabel'
+import { useModalForm } from '@/hooks/useModalForm'
+import type { WorkExpItemType } from '@/types/dev'
+import styles from './index.module.scss'
 
 const WorkExperience = () => {
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
-  const setVisible = useDevStore((state) => state.setVisible)
-  const handleDel = useDevStore((state) => state.handleDel)
+  const label = useDevStore(
+    (state) => state.devSchema.dataSource.WORK_EXP.label
+  )
+  const setPosition = useGlobalStore((state) => state.setPosition)
+
+  const workRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (workRef.current) {
+      const { y } = workRef.current.getBoundingClientRect()
+      setPosition('WORK_EXP', y)
+    }
+  }, [])
+
   const {
-    // list: workList,
     opened,
     formRef,
-    handleAdd,
-    handleCancel,
+    infoId,
+    handleDelItem,
+    handleEdit,
     handleOk,
-    resetForm,
-  } = useModalForm<WorkExpItemType>(storeWorkList)
-
-  const handleVisible = (id: string) => {
-    // storeWorkList
-    setVisible(id, 'WORK_EXP')
-  }
-
-  const handleDelItem = (id: string) => {
-    handleDel(id, 'WORK_EXP')
-  }
+    handleVisible,
+    resetState,
+    handleOpen,
+  } = useModalForm<WorkExpItemType>(storeWorkList, 'WORK_EXP')
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   return (
     <>
-      <CustomLayout>
-        <Header label="工作/实习经历" icon={CalculatorOutlined}></Header>
+      <CustomLayout ref={workRef}>
+        <Header
+          label={label || '工作/实习经历'}
+          icon={CalculatorOutlined}
+          isEdit={isEdit}
+          handleChange={handleChange}
+          handleBlur={() => setIsEdit(false)}
+        >
+          <CtxMenu
+            currentKey="WORK_EXP"
+            renameLabel={() => setIsEdit(true)}
+          ></CtxMenu>
+        </Header>
         {storeWorkList.length === 0 ? (
-          <AddBtn handleAdd={handleAdd} />
+          <AddBtn handleAdd={handleOpen} />
         ) : (
           <List
             data={storeWorkList}
-            handleAdd={handleAdd}
+            handleAdd={handleOpen}
             handleVisible={handleVisible}
             handleDel={handleDelItem}
+            handleEdit={handleEdit}
             fieldMap={{
               id: 'id',
               title: 'company',
@@ -65,21 +85,15 @@ const WorkExperience = () => {
         mask={true}
         footer={[
           <Button key="submit" onClick={handleOk}>
-            创建
+            {infoId ? '更新' : '创建'}
           </Button>,
         ]}
         centered={true}
         open={opened}
-        onCancel={handleCancel}
-        afterClose={resetForm}
+        onCancel={resetState}
       >
-        <Form
-          name="layout-multiple-horizontal"
-          layout="vertical"
-          requiredMark={false}
-          form={formRef}
-        >
-          <div className={styles['row-form-item ']}>
+        <Form layout="vertical" requiredMark={false} form={formRef}>
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="公司"
               name="company"
@@ -103,7 +117,7 @@ const WorkExperience = () => {
               <Input />
             </Form.Item>
           </div>
-          <div className={styles['row-form-item ']}>
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="时间"
               name="date"
@@ -129,15 +143,20 @@ const WorkExperience = () => {
           <Form.Item label="项目概述" name="overview" layout="vertical">
             <Input.TextArea />
           </Form.Item>
-          <div>
+          <Form.Item
+            label="实习产出"
+            name="output"
+            valuePropName="value"
+            trigger="onChange"
+            validateTrigger="onChange"
+            rules={[{ required: true, message: '请输入产出内容' }]}
+            layout="vertical"
+          >
+            <RichInput />
+          </Form.Item>
+          {/* <div>
             <div className={styles['rich-text-field']}>实习产出</div>
-            <RichInput
-              value="<p>form test msg</p>"
-              onChange={(value) => {
-                console.log('form value', value)
-              }}
-            ></RichInput>
-          </div>
+          </div> */}
         </Form>
       </Modal>
     </>

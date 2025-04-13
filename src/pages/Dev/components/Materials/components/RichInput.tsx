@@ -5,14 +5,14 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor'
 
 const RichInput: React.FC<{
-  value: string
+  value?: string
   onChange?: (value: string) => void
 }> = ({ value, onChange }) => {
   // editor 实例
   const [editor, setEditor] = useState<IDomEditor | null>(null)
 
   // 编辑器内容
-  const [html, setHtml] = useState(value)
+  // const [html, setHtml] = useState(value)
 
   // 工具栏配置
   const toolbarConfig: Partial<IToolbarConfig> = {}
@@ -68,11 +68,11 @@ const RichInput: React.FC<{
         />
         <Editor
           defaultConfig={editorConfig}
-          value={html}
+          value={value}
           onCreated={setEditor}
           onChange={(editor) => {
             const newHtml = editor.getHtml()
-            setHtml(newHtml)
+            // setHtml(newHtml)
             onChange?.(newHtml)
           }}
           mode="simple"

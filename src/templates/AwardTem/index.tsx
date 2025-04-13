@@ -4,47 +4,35 @@ import { useMemo } from 'react'
 
 const WorkTem = () => {
   const {
-    info: workInfo,
+    info: awardInfo,
     visible,
     label,
-  } = useDevStore((state) => state.devSchema.dataSource.WORK_EXP)
+  } = useDevStore((state) => state.devSchema.dataSource.AWARD_LIST)
 
   const hideHead = useMemo(() => {
-    return workInfo.findIndex((item) => item.visible) === -1
-  }, [workInfo])
+    return awardInfo.findIndex((item) => item.visible) === -1
+  }, [awardInfo])
 
   return (
     <>
       {visible &&
         (hideHead ? null : (
           <div className={styles['work-wrapper']}>
-            <div className={styles['left-wrapper']}>{label || '工作经历'}</div>
+            <div className={styles['left-wrapper']}>{label || '荣誉奖项'}</div>
             <div className={styles['right-wrapper']}>
-              {workInfo.map((infoItem) => {
+              {awardInfo.map((infoItem) => {
                 if (!infoItem.visible) return null
                 return (
                   <div key={infoItem.id}>
                     <div className={styles['content-head']}>
-                      <span className="project-name">{infoItem.company}</span>
+                      <span className="project-name">{infoItem.award}</span>
                       <span className="date">
                         {infoItem.date[0].format('YYYY-MM')} -{' '}
                         {infoItem.date[1].format('YYYY-MM')}
                       </span>
                     </div>
                     <div className="overview-box">
-                      <div className={styles['module-head']}>项目概述：</div>
-                      <div className={styles['content-box']}>
-                        <p>{infoItem.overview}</p>
-                      </div>
-                    </div>
-                    <div className="output-box">
-                      <div className={styles['module-head']}>项目内容：</div>
-                      <div
-                        className={styles['content-box']}
-                        dangerouslySetInnerHTML={{
-                          __html: infoItem.output,
-                        }}
-                      />
+                      <p>{infoItem.describe}</p>
                     </div>
                   </div>
                 )

@@ -1,17 +1,45 @@
 import type { HeaderType } from '@/types/dev'
-import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
 import styles from './index.module.scss'
+import { Input } from 'antd'
+import { useState } from 'react'
 
-const Header: React.FC<HeaderType> = (props) => {
-  const { label, icon: Icon, opMenu = true } = props
+const Header = (props: HeaderType) => {
+  const {
+    label,
+    icon: Icon,
+    opMenu = true,
+    children,
+    isEdit,
+    handleChange: propChange,
+    handleBlur,
+  } = props
+
+  const [name, setName] = useState(label)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value
+    setName(newName)
+    if (propChange) propChange(newName)
+  }
 
   return (
     <div className={styles['header-container']}>
       <div className={styles['header-left']}>
         <Icon />
-        <span className={styles['label']}>{label}</span>
+        {isEdit ? (
+          <Input
+            value={name}
+            autoFocus
+            onChange={handleChange}
+            onBlur={() => {
+              if (handleBlur) handleBlur()
+            }}
+            className={styles['rename-input']}
+          />
+        ) : (
+          <span className={styles['label']}>{label}</span>
+        )}
       </div>
-      {opMenu && <CtxMenu />}
+      {opMenu && children}
     </div>
   )
 }

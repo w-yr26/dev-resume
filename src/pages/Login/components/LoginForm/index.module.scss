@@ -1,0 +1,80 @@
+$light-primary-color: #18181b;
+
+.input {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px 15px;
+    border: 1px solid var(--light-border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: rgba(228, 228, 231, 0.2);
+    
+    @media (max-width: 767px) {
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+  }
+
+  :global {
+
+    .ant-form-item-label > label {
+      transform: translateY(6px);
+      margin-bottom: 8px;
+      font-weight: 500;
+      
+      @media (max-width: 767px) {
+        transform: translateY(5px);
+      }
+    }
+
+    .ant-form-item-explain {
+      margin-top: -10px;
+      margin-bottom:25px;
+      margin-left: 10px;
+      color: #ff4d4f;
+      font-size: 12px;
+      
+    }
+
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+  }
+  
+  .button {
+    width: 100%;
+    padding: 12px 15px;
+    line-height:0.7;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+    text-align: center;
+    display: block;
+    margin-bottom: 15px;
+    color: white;
+    background-color: $light-primary-color;
+  
+  
+    @media (max-width: 767px) {
+      padding: 12px 15px;
+      font-size: 14px;
+    }
+  }
+  
+  .forgot-link {
+    color: var(--light-secondary-color);
+    text-align: right;
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 767px) {
+      font-size: 14px;
+    }
+  }

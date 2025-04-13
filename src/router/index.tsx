@@ -10,21 +10,6 @@ import Login from '../pages/Login'
 import Dev from '@/pages/Dev'
 import Register from '@/pages/Register'
 
-// const router = createBrowserRouter([
-//   {
-//     path: '/',
-//     element: <Layout />,
-//     children: [
-//       {
-//         // path: 'home',
-//         index: true,
-//         element: <Home />,
-//         // loader:
-//       },
-//     ],
-//   },
-// ])
-
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route path="/" element={<Layout />}>
