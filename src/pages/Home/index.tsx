@@ -16,6 +16,8 @@ import { Avatar, Button } from 'antd'
 const Home = () => {
   const { user_name } = useUserStore((state) => state.info)
 
+  const arr = [1, 2, 3, 4, 5]
+
   return (
     <div className={styles['layout-container']}>
       {/* 左边栏 */}
@@ -96,22 +98,29 @@ const Home = () => {
           </div>
 
           {/* 简历列表 */}
-          <div className={styles['resume-item']}>
-            <div className={styles['resume-bottom']}>
-              <p className={styles['resume-name']}>我的简历</p>
-              <p className={styles['update-time']}>
-                最后更新于&nbsp;
-                <span
-                  style={{
-                    color: '#333',
-                  }}
-                >
-                  time
-                </span>
-                &nbsp;前
-              </p>
+          {arr.map((item, index) => (
+            <div
+              className={`${styles['resume-item']} ${styles['animation-item']}`}
+              style={{
+                animationDelay: `0.${index + 1}s`,
+              }}
+            >
+              <div className={styles['resume-bottom']}>
+                <p className={styles['resume-name']}>我的简历 - {item}</p>
+                <p className={styles['update-time']}>
+                  最后更新于&nbsp;
+                  <span
+                    style={{
+                      color: '#333',
+                    }}
+                  >
+                    time
+                  </span>
+                  &nbsp;前
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
