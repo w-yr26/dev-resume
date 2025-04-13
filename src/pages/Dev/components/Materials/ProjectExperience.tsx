@@ -8,6 +8,8 @@ import RichInput from './components/RichInput'
 import List from './components/List'
 import styles from './index.module.scss'
 import { useModalForm } from '@/hooks/useModalForm'
+import { useEffect, useRef } from 'react'
+import { useGlobalStore } from '@/store'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
@@ -20,8 +22,18 @@ const ProjectExperience = () => {
     handleOk,
   } = useModalForm<PeojectExpItemType>([])
 
+  const setPosition = useGlobalStore((state) => state.setPosition)
+  const proRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (proRef.current) {
+      const { y } = proRef.current.getBoundingClientRect()
+      setPosition('PROJECT_EXP', y)
+    }
+  }, [])
+
   return (
-    <CustomLayout>
+    <CustomLayout ref={proRef}>
       <Header label="项目经历" icon={BranchesOutlined}></Header>
       {experienceList.length === 0 ? (
         <AddBtn handleAdd={handleAdd} />

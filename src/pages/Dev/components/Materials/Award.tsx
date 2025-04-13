@@ -7,6 +7,8 @@ import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
+import { useEffect, useRef } from 'react'
+import { useGlobalStore } from '@/store'
 const { RangePicker } = DatePicker
 
 const Award = () => {
@@ -19,8 +21,18 @@ const Award = () => {
     handleOk,
   } = useModalForm<AwardItemType>([])
 
+  const setPosition = useGlobalStore((state) => state.setPosition)
+  const awardRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (awardRef.current) {
+      const { y } = awardRef.current.getBoundingClientRect()
+      setPosition('AWARD_LIST', y)
+    }
+  }, [])
+
   return (
-    <CustomLayout>
+    <CustomLayout ref={awardRef}>
       <Header label="荣誉奖项" icon={BulbOutlined}></Header>
 
       {awardList.length === 0 ? (

@@ -26,12 +26,14 @@ $light-cardBg-color: #ffffff;
 
     .icon-item {
       padding: 0.5rem;
+      box-sizing: border-box;
+      border: 0.5px solid transparent;
+      border-radius: 0.5rem;
 
       &:hover {
         cursor: help;
-        border: 1px solid transparent;
+        // box-sizing: border-box;
         background-color: $light-muted-color;
-        border-radius: 0.5rem;
       }
     }
   }

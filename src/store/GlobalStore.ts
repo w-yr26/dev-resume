@@ -6,7 +6,8 @@ import WorkTem from '@/templates/WorkTem/index'
 import SkillTem from '@/templates/SkillTem'
 import EduBgTem from '@/templates/EduBgTem'
 import HeartTem from '@/templates/HeartTem'
-const useGlobalStore = create<GlobalInitType>(() => {
+import { produce } from 'immer'
+const useGlobalStore = create<GlobalInitType>((set) => {
   return {
     keyToComponentMap: {
       BASE_INFO: BaseInfoTem,
@@ -17,6 +18,15 @@ const useGlobalStore = create<GlobalInitType>(() => {
       SKILL_LIST: SkillTem,
       HEART_LIST: HeartTem,
     },
+    keyToPosition: {
+      // BASE_INFO: 0,
+    },
+    setPosition: (key, val) =>
+      set(
+        produce((state: GlobalInitType) => {
+          state.keyToPosition[key] = val
+        })
+      ),
   }
 })
 

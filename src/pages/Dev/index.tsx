@@ -14,6 +14,7 @@ const Dev = () => {
   const comMap = useGlobalStore((state) => state.keyToComponentMap)
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
@@ -106,6 +107,16 @@ const Dev = () => {
     return () => observer.disconnect()
   }, [])
 
+  // 滚动至具体位置
+  const handleScroll = (position: number) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: position,
+        behavior: 'smooth',
+      })
+    }
+  }
+
   return (
     <div className={styles['dev-container']}>
       <div
@@ -114,8 +125,8 @@ const Dev = () => {
           width: '30%',
         }}
       >
-        <LeftMenu />
-        <Materials></Materials>
+        <LeftMenu iconClick={handleScroll} />
+        <Materials ref={scrollRef} />
       </div>
       <main className={styles['main-container']}>
         <div

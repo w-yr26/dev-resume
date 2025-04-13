@@ -1,5 +1,11 @@
 import type { Dayjs } from 'dayjs'
 import React from 'react'
+
+// 自定义局部布局
+export type LayoutPropsType = {
+  children: React.ReactNode
+}
+
 // 物料区头部
 export type HeaderType = {
   label: string

@@ -7,8 +7,8 @@ import AddBtn from './components/AddBtn'
 import List from './components/List'
 import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
 import styles from './index.module.scss'
-import { useDevStore } from '@/store'
-import { useEffect, useMemo, useState } from 'react'
+import { useDevStore, useGlobalStore } from '@/store'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 const { RangePicker } = DatePicker
 
@@ -23,9 +23,17 @@ const WorkExperience = () => {
   const handleDel = useDevStore((state) => state.immerDel)
   const addInfoList = useDevStore((state) => state.addInfoList)
   const updateInfo = useDevStore((state) => state.updateInfo)
+  const setPosition = useGlobalStore((state) => state.setPosition)
   const [opened, setOpend] = useState(false)
   const [infoId, setInfoId] = useState('')
   const [formRef] = Form.useForm()
+  const workRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (workRef.current) {
+      const { y } = workRef.current.getBoundingClientRect()
+      setPosition('WORK_EXP', y)
+    }
+  }, [])
 
   const handleVisible = (id: string) => {
     // storeWorkList
@@ -93,7 +101,7 @@ const WorkExperience = () => {
 
   return (
     <>
-      <CustomLayout>
+      <CustomLayout ref={workRef}>
         <Header
           label={label || '工作/实习经历'}
           icon={CalculatorOutlined}
