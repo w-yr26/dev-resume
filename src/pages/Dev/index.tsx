@@ -123,6 +123,7 @@ const Dev = () => {
         style={{
           display: 'flex',
           width: '30%',
+          backgroundColor: '#f8f8f9',
         }}
       >
         <LeftMenu iconClick={handleScroll} />

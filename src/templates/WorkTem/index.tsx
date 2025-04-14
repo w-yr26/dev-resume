@@ -23,7 +23,7 @@ const WorkTem = () => {
               {workInfo.map((infoItem) => {
                 if (!infoItem.visible) return null
                 return (
-                  <div key={infoItem.id}>
+                  <div key={infoItem.id} className={styles['content-box']}>
                     <div className={styles['content-head']}>
                       <span className="project-name">{infoItem.company}</span>
                       <span className="date">
