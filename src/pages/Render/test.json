@@ -1,0 +1,156 @@
+{
+  "type": "root",
+  "layout": "vertical",
+  "style": {},
+  "bind": "",
+  "children": [
+    {
+      "type": "container",
+      "layout": "horizontal",
+      "style": { "gap": "16px", "alignItems": "center" },
+      "bind": "BASE_INFO",
+      "isLoop": false,
+      "children": [
+        {
+          "type": "image",
+          "bind": "avatar",
+          "style": { "width": "100px", "height": "130px" }
+        },
+        {
+          "type": "container",
+          "layout": "flex",
+          "style": {
+            "flex": 1,
+            "flexWrap": "wrap",
+            "padding": "0 14px",
+            "listStyle": "none"
+          },
+          "children": [
+            {
+              "type": "text",
+              "bind": "user_name",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            },
+            {
+              "type": "text",
+              "bind": "gender",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            },
+            {
+              "type": "text",
+              "bind": "age",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            },
+            {
+              "type": "text",
+              "bind": "position",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            },
+            {
+              "type": "text",
+              "bind": "phone",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            },
+            {
+              "type": "text",
+              "bind": "email",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            },
+            {
+              "type": "text",
+              "bind": "blob",
+              "style": {
+                "minWidth": "50%",
+                "lineHeight": 2
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "container",
+      "layout": "horizontal",
+      "title": "实习/工作经历",
+      "bind": "WORK_EXP",
+      "isLoop": true,
+      "style": {
+        "padding": "8px 0",
+        "borderBottom": "1px solid #292929"
+      },
+      "children": [
+        {
+          "type": "text",
+          "bind": "label",
+          "style": {
+            "fontWeight": 700,
+            "color": "#333",
+            "width": "20%",
+            "height": "auto",
+            "fontSize": "15px"
+          }
+        },
+        {
+          "type": "section",
+          "layout": "vertical",
+          "bind": "info",
+          "style": {
+            "flex": 1,
+            "color": "green"
+          },
+          "children": [
+            {
+              "type": "container",
+              "layout": "horizontal",
+              "style": {
+                "alignItems": "center",
+                "justifyContent": "space-between"
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "bind": "company",
+                  "style": { "fontWeight": 500 }
+                },
+                {
+                  "type": "text",
+                  "bind": "position",
+                  "style": { "fontWeight": 500 }
+                },
+                {
+                  "type": "text",
+                  "bind": "date",
+                  "style": { "fontWeight": 500 }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "bind": "overview",
+              "style": {}
+            },
+            { "type": "html", "bind": "output", "style": {} }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -23,7 +23,8 @@ const initialData: devInitType = {
   dataSource: {
     BASE_INFO: {
       info: {
-        avatar: '',
+        avatar:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrHHBwxiucvXNsuFpXD-gU0T32BHbMcGEcEQ&s',
         user_name: '张柯林',
         gender: 1,
         age: 21,
