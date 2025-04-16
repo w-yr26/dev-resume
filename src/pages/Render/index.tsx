@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
+import styled from './index.module.scss'
 interface RenderProps {
   node: {
     type: string
@@ -8,7 +9,8 @@ interface RenderProps {
     style?: CSSProperties
     bind: string
     repeat?: string
-    isLoop?: boolean
+    showLabel?: boolean
+    label?: string
   }
   dataContext: any
 }
@@ -22,7 +24,15 @@ const formatDate = (data: Dayjs[]) => {
 }
 
 const Render = ({ dataContext, node }: RenderProps) => {
-  const { type, layout, children = [], style = {}, bind, isLoop = true } = node
+  const {
+    type,
+    layout,
+    children = [],
+    style = {},
+    bind,
+    showLabel = true,
+    label = '',
+  } = node
 
   const mergedStyle: React.CSSProperties = {
     display:
@@ -32,18 +42,13 @@ const Render = ({ dataContext, node }: RenderProps) => {
           : 'block'
         : undefined,
     flexDirection: layout === 'vertical' ? 'column' : undefined,
-    // gap: style.gap,
-    // alignItems: style.alignItems,
-    // fontSize: style.fontSize,
-    // fontWeight: style.fontWeight,
-    // color: style.color,
     ...style,
   }
 
   // 根部
   if (type === 'root') {
     return (
-      <div>
+      <div className={styled['render-container']}>
         {children.map((child: any, index: number) => {
           return <Render key={index} dataContext={dataContext} node={child} />
         })}
@@ -52,8 +57,8 @@ const Render = ({ dataContext, node }: RenderProps) => {
   }
 
   if (type === 'container') {
-    // 不是循环，参考BASE_INFO，所拿到的 dataContext 需要再往下拆一层
-    if (!isLoop) {
+    // 不需要显示栏目的label，参考BASE_INFO，所拿到的 dataContext 需要再往下拆一层
+    if (!showLabel) {
       // 此时是非循环列表
       const data = dataContext[bind].info || {}
       const visible = dataContext[bind].visible
@@ -66,7 +71,7 @@ const Render = ({ dataContext, node }: RenderProps) => {
         </div>
       )
     } else {
-      // 是循环，则不能往下直接拆到info[];因为还有label
+      // 需要显示栏目label，则不能往下直接拆到info[];因为还有label
       // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
       const data = dataContext[bind] || { ...dataContext }
       return (
@@ -102,10 +107,29 @@ const Render = ({ dataContext, node }: RenderProps) => {
 
   if (type === 'text') {
     let data = dataContext[bind]
-    if (checkDate(data)) {
+    if (!data) {
+      data = '默认内容...'
+    } else if (checkDate(data)) {
       data = formatDate(data)
     }
     return <span style={mergedStyle}>{data}</span>
+  }
+
+  if (type === 'html') {
+    const data = dataContext[bind] ?? '占位信息...'
+
+    return (
+      <div
+        style={mergedStyle}
+        dangerouslySetInnerHTML={{
+          __html: data,
+        }}
+      />
+    )
+  }
+
+  if (type === 'label') {
+    return <div style={mergedStyle}>{label}</div>
   }
 
   if (type === 'image') {

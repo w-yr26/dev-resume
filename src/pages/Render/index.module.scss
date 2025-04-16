@@ -1,0 +1,5 @@
+.render-container {
+  & > *:last-child {
+    border-bottom: 0 !important;
+  }
+}
