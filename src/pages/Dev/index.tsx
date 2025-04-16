@@ -4,14 +4,15 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore } from '@/store'
 import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
+import Render from '../Render'
+import uiSchema from '../Render/test.json'
 
 const Dev = () => {
-  const comList = useDevStore((state) => state.devSchema.componentList)
-  const comMap = useGlobalStore((state) => state.keyToComponentMap)
+  const dataSource = useDevStore((state) => state.devSchema.dataSource)
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -123,6 +124,7 @@ const Dev = () => {
         style={{
           display: 'flex',
           width: '30%',
+          backgroundColor: '#f8f8f9',
         }}
       >
         <LeftMenu iconClick={handleScroll} />
@@ -146,10 +148,11 @@ const Dev = () => {
             ref={resumeRef}
           >
             <div className={styles['preview-content']} ref={mainRef}>
-              {comList.map((item, index) => {
+              {/* {comList.map((item, index) => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : null
-              })}
+              })} */}
+              <Render dataContext={dataSource} node={uiSchema} />
             </div>
             {lineShow && (
               <div className={styles['page-line']}>
