@@ -3,7 +3,66 @@
   // width: 30%;
   flex: 1;
   height: 100%;
-  padding: 0 1rem;
+  padding: 0 14px;
   background-color: #fff;
   overflow-y: auto;
+}
+
+.custom-line {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin: 8px 0;
+
+  .setting-label {
+    margin-right: 12px;
+    font-size: 13px;
+    height: 100%;
+  }
+}
+
+.color-picker-box {
+  height: 48px;
+  display: flex;
+  align-items: center;
+
+  .picker-item {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .color-name {
+    color: #333;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 8px;
+  }
+}
+
+.theme-color-container {
+  display: grid;
+  width: 100%;
+  height: 120px;
+  margin: 12px 0;
+  grid-template-columns: repeat(9, 1fr);
+
+  .color-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .radio-box {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+
+    &:hover {
+      cursor: pointer;
+      outline: 1.5px solid #333;
+      outline-offset: 2px;
+    }
+  }
 }
