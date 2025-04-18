@@ -4,7 +4,7 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
-import { useDevStore } from '@/store'
+import { useDevStore, useStyleStore } from '@/store'
 import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
@@ -13,6 +13,7 @@ import uiSchema from '../Render/test.json'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
+  const pagPadding = useStyleStore((state) => state.pagPadding)
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -147,7 +148,13 @@ const Dev = () => {
             }}
             ref={resumeRef}
           >
-            <div className={styles['preview-content']} ref={mainRef}>
+            <div
+              className={styles['preview-content']}
+              ref={mainRef}
+              style={{
+                padding: pagPadding + 'px',
+              }}
+            >
               {/* {comList.map((item, index) => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : null
