@@ -1,6 +1,6 @@
 import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
-import Icon, { HeartOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import HeartSVG from '@/assets/svg/dev/heart.svg?react'
 import RichInput from './components/RichInput'
 import { useDevStore, useGlobalStore } from '@/store'
@@ -28,7 +28,6 @@ const Heart = () => {
     <CustomLayout ref={heartRef}>
       <Header
         label={label || '兴趣爱好'}
-        icon={HeartOutlined}
         svg={<Icon component={HeartSVG} />}
         isEdit={isEdit}
         handleChange={handleChange}

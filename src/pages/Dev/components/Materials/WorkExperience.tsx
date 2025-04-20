@@ -1,4 +1,4 @@
-import Icon, { CalculatorOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
@@ -50,7 +50,6 @@ const WorkExperience = () => {
       <CustomLayout ref={workRef}>
         <Header
           label={label || '工作/实习经历'}
-          icon={CalculatorOutlined}
           svg={<Icon component={WorkSVG} />}
           isEdit={isEdit}
           handleChange={handleChange}

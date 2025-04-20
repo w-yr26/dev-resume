@@ -1,4 +1,4 @@
-import Icon, { IdcardOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import EduSVG from '@/assets/svg/dev/edu.svg?react'
 import Header from '@/components/Header/index'
 import RichInput from './components/RichInput'
@@ -28,7 +28,6 @@ const EduBg = () => {
     <CustomLayout ref={edubgRef}>
       <Header
         label={label || '教育背景'}
-        icon={IdcardOutlined}
         svg={<Icon component={EduSVG} />}
         isEdit={isEdit}
         handleChange={handleChange}

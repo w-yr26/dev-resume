@@ -9,9 +9,6 @@ export type LayoutPropsType = {
 // 物料区头部
 export type HeaderType = {
   label: string
-  icon: React.ForwardRefExoticComponent<
-    Omit<IconComponentProps, 'ref'> & RefAttributes<HTMLSpanElement>
-  >
   svg?: React.ReactNode
   opMenu?: false
   children?: React.ReactNode
