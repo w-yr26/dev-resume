@@ -1,12 +1,11 @@
-import {
+import Icon, {
   AppstoreAddOutlined,
-  BgColorsOutlined,
-  DownloadOutlined,
-  FullscreenExitOutlined,
-  ImportOutlined,
   InfoCircleOutlined,
-  LayoutOutlined,
 } from '@ant-design/icons'
+import PageSVG from '@/assets/svg/dev/page.svg?react'
+import ThemeSVG from '@/assets/svg/dev/theme.svg?react'
+import OutputSVG from '@/assets/svg/dev/output.svg?react'
+import ColorSVG from '@/assets/svg/dev/color.svg?react'
 import { Tooltip } from 'antd'
 import styles from './index.module.scss'
 
@@ -16,24 +15,20 @@ const toolMenu = [
     label: '模板',
   },
   {
-    icon: <LayoutOutlined />,
-    label: '布局',
+    icon: <Icon component={ThemeSVG} />,
+    label: '排版',
   },
   {
-    icon: <BgColorsOutlined />,
+    icon: <Icon component={PageSVG} />,
+    label: '页面',
+  },
+  {
+    icon: <Icon component={ColorSVG} />,
     label: '主题',
   },
   {
-    icon: <FullscreenExitOutlined />,
-    label: '全局',
-  },
-  {
-    icon: <DownloadOutlined />,
+    icon: <Icon component={OutputSVG} />,
     label: '导出',
-  },
-  {
-    icon: <ImportOutlined />,
-    label: '导入',
   },
   {
     icon: <InfoCircleOutlined />,
