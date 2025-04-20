@@ -1,4 +1,5 @@
-import { BgColorsOutlined } from '@ant-design/icons'
+import Icon, { BgColorsOutlined } from '@ant-design/icons'
+import ThemeFillSVG from '@/assets/svg/dev/theme-fill.svg?react'
 import { ConfigProvider, Slider, Switch } from 'antd'
 import CustomLayout from '@/components/CustomLayout'
 import CustomField from './components/CustomField'
@@ -7,7 +8,11 @@ import styled from './index.module.scss'
 const TypeSetting = () => {
   return (
     <CustomLayout>
-      <Header label="排版" icon={BgColorsOutlined} />
+      <Header
+        label="排版"
+        icon={BgColorsOutlined}
+        svg={<Icon component={ThemeFillSVG} />}
+      />
       <CustomField title="字号">
         <ConfigProvider
           theme={{

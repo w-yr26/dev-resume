@@ -1,12 +1,19 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
-import { BgColorsOutlined } from '@ant-design/icons'
+import Icon, { BgColorsOutlined } from '@ant-design/icons'
+import OutputSVG from '@/assets/svg/dev/output.svg?react'
+import PDFSVG from '@/assets/svg/dev/pdf.svg?react'
+import JsonSVG from '@/assets/svg/dev/json.svg?react'
 import styled from './index.module.scss'
 
 const DownloadSetting = () => {
   return (
     <CustomLayout>
-      <Header icon={BgColorsOutlined} label="导出"></Header>
+      <Header
+        icon={BgColorsOutlined}
+        label="导出"
+        svg={<Icon component={OutputSVG} />}
+      />
       <div
         className={styled['down-load-box']}
         style={{
@@ -14,7 +21,7 @@ const DownloadSetting = () => {
         }}
       >
         <div className={styled['icon-box']}>
-          <BgColorsOutlined></BgColorsOutlined>
+          <Icon component={JsonSVG} />
         </div>
         <div className={styled['content-box']}>
           <div className={styled['title']}>JSON</div>
@@ -25,7 +32,7 @@ const DownloadSetting = () => {
       </div>
       <div className={styled['down-load-box']}>
         <div className={styled['icon-box']}>
-          <BgColorsOutlined></BgColorsOutlined>
+          <Icon component={PDFSVG} />
         </div>
         <div className={styled['content-box']}>
           <div className={styled['title']}>PDF</div>

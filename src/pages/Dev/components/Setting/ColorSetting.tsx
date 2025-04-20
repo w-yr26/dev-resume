@@ -1,6 +1,7 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
-import { BgColorsOutlined } from '@ant-design/icons'
+import Icon, { BgColorsOutlined } from '@ant-design/icons'
+import ColorFillSVG from '@/assets/svg/dev/color-fill.svg?react'
 import { ColorPicker, ConfigProvider, Select } from 'antd'
 import styled from './index.module.scss'
 import CustomField from './components/CustomField'
@@ -30,7 +31,11 @@ const themeColorList = [
 const ColorSetting = () => {
   return (
     <CustomLayout>
-      <Header label="主题" icon={BgColorsOutlined} />
+      <Header
+        label="主题"
+        icon={BgColorsOutlined}
+        svg={<Icon component={ColorFillSVG} />}
+      />
       <CustomField title="主题色">
         <div className={styled['theme-color-container']}>
           {themeColorList.map((color) => (
