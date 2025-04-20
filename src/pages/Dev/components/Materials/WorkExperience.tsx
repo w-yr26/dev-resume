@@ -1,4 +1,5 @@
-import { CalculatorOutlined } from '@ant-design/icons'
+import Icon, { CalculatorOutlined } from '@ant-design/icons'
+import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
 import RichInput from './components/RichInput'
@@ -50,6 +51,7 @@ const WorkExperience = () => {
         <Header
           label={label || '工作/实习经历'}
           icon={CalculatorOutlined}
+          svg={<Icon component={WorkSVG} />}
           isEdit={isEdit}
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}

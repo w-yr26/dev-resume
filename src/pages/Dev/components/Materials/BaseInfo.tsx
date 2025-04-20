@@ -1,6 +1,6 @@
 import { Avatar, Input } from 'antd'
 import Header from '@/components/Header/index'
-import {
+import Icon, {
   CheckSquareOutlined,
   CloseOutlined,
   HolderOutlined,
@@ -8,6 +8,7 @@ import {
   PlusOutlined,
   UserOutlined,
 } from '@ant-design/icons'
+import InfoSVG from '@/assets/svg/dev/info.svg?react'
 import CustomInput from './components/CustomInput'
 import CustomLayout from '@/components/CustomLayout/index'
 import { useEffect, useRef, useState } from 'react'
@@ -56,6 +57,7 @@ const BaseInfo = () => {
     <CustomLayout ref={baseinfoRef}>
       <Header
         icon={InfoCircleOutlined}
+        svg={<Icon component={InfoSVG} />}
         label="基础信息"
         opMenu={false}
       ></Header>

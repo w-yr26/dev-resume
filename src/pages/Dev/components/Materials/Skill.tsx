@@ -1,6 +1,7 @@
 import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
-import { CompressOutlined } from '@ant-design/icons'
+import Icon, { CompressOutlined } from '@ant-design/icons'
+import SkillSVG from '@/assets/svg/dev/skill.svg?react'
 import RichInput from './components/RichInput'
 import { useDevStore, useGlobalStore } from '@/store'
 import CtxMenu from './components/CtxMenu'
@@ -28,6 +29,7 @@ const Skill = () => {
       <Header
         label={label || '技能特长'}
         icon={CompressOutlined}
+        svg={<Icon component={SkillSVG} />}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
