@@ -86,7 +86,6 @@ const Render = ({ dataContext, node }: RenderProps) => {
         paddingTop: modulePadding + 'px',
         paddingBottom: modulePadding + 'px',
       }
-      console.log('mergedStyle', mergedStyle)
     }
     // 不需要显示栏目的label，参考BASE_INFO，所拿到的 dataContext 需要再往下拆一层
     if (!showLabel) {
