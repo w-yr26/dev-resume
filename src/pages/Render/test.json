@@ -5,12 +5,11 @@
   "bind": "",
   "children": [
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "style": {
         "gap": "16px",
         "alignItems": "center",
-        "padding": "8px 0",
         "borderBottomWidth": "1px",
         "borderBottomStyle": "solid",
         "borderBottomColor": "#292929"
@@ -200,12 +199,11 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "教育背景",
       "bind": "EDU_BG",
       "style": {
-        "padding": "8px 0",
         "borderBottomWidth": "1px",
         "borderBottomStyle": "solid",
         "borderBottomColor": "#292929"
@@ -230,13 +228,12 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "实习/工作经历",
       "bind": "WORK_EXP",
       "showLabel": true,
       "style": {
-        "padding": "8px 0",
         "borderBottomWidth": "1px",
         "borderBottomStyle": "solid",
         "borderBottomColor": "#292929"
@@ -327,13 +324,12 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "项目经历",
       "bind": "PROJECT_EXP",
       "showLabel": true,
       "style": {
-        "padding": "8px 0",
         "borderBottomWidth": "1px",
         "borderBottomStyle": "solid",
         "borderBottomColor": "#292929"
@@ -424,13 +420,12 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "技能特长",
       "bind": "SKILL_LIST",
       "showLabel": true,
       "style": {
-        "padding": "8px 0",
         "borderBottomWidth": "1px",
         "borderBottomStyle": "solid",
         "borderBottomColor": "#292929"

@@ -30,6 +30,7 @@ const Render = ({ dataContext, node }: RenderProps) => {
   const fontColor = useStyleStore((state) => state.fontColor)
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
+  const modulePadding = useStyleStore((state) => state.modulePadding)
 
   const {
     type,
@@ -41,9 +42,9 @@ const Render = ({ dataContext, node }: RenderProps) => {
     label = '',
   } = node
 
-  const mergedStyle: React.CSSProperties = {
+  let mergedStyle: React.CSSProperties = {
     display:
-      type === 'container' || type === 'root'
+      type === 'container' || type === 'root' || type === 'module'
         ? layout === 'horizontal'
           ? 'flex'
           : 'block'
@@ -77,7 +78,16 @@ const Render = ({ dataContext, node }: RenderProps) => {
     )
   }
 
-  if (type === 'container') {
+  if (type === 'container' || type === 'module') {
+    // 如果当前是模块，style.padding还要考虑联动
+    if (type === 'module') {
+      mergedStyle = {
+        ...mergedStyle,
+        paddingTop: modulePadding + 'px',
+        paddingBottom: modulePadding + 'px',
+      }
+      console.log('mergedStyle', mergedStyle)
+    }
     // 不需要显示栏目的label，参考BASE_INFO，所拿到的 dataContext 需要再往下拆一层
     if (!showLabel) {
       // 此时是非循环列表
