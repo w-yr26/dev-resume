@@ -1,6 +1,7 @@
 import { CSSProperties } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
+import { useStyleStore } from '@/store'
 interface RenderProps {
   node: {
     type: string
@@ -24,6 +25,12 @@ const formatDate = (data: Dayjs[]) => {
 }
 
 const Render = ({ dataContext, node }: RenderProps) => {
+  const lineHeight = useStyleStore((state) => state.lineHeight)
+  const fontSize = useStyleStore((state) => state.fontSize)
+  const fontColor = useStyleStore((state) => state.fontColor)
+  const bgColor = useStyleStore((state) => state.bgColor)
+  const borderStyle = useStyleStore((state) => state.borderStyle)
+
   const {
     type,
     layout,
@@ -36,19 +43,33 @@ const Render = ({ dataContext, node }: RenderProps) => {
 
   const mergedStyle: React.CSSProperties = {
     display:
-      type === 'container'
+      type === 'container' || type === 'root'
         ? layout === 'horizontal'
           ? 'flex'
           : 'block'
         : undefined,
     flexDirection: layout === 'vertical' ? 'column' : undefined,
     ...style,
+    borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
   }
 
   // 根部
   if (type === 'root') {
+    const rootStyle: React.CSSProperties = {
+      lineHeight: style.lineHeight ?? lineHeight,
+      fontSize: style.fontSize ?? fontSize + 'px',
+      color: style.color ?? fontColor,
+      backgroundColor: style.backgroundColor ?? bgColor,
+    }
+    // console.log('merge', mergedStyle, rootStyle)
     return (
-      <div className={styled['render-container']}>
+      <div
+        className={styled['render-container']}
+        style={{
+          ...mergedStyle,
+          ...rootStyle,
+        }}
+      >
         {children.map((child: any, index: number) => {
           return <Render key={index} dataContext={dataContext} node={child} />
         })}

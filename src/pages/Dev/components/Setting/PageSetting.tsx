@@ -1,6 +1,6 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
-import Icon, { BgColorsOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import { ConfigProvider, Slider, Splitter } from 'antd'
 import CustomField from './components/CustomField'
@@ -13,11 +13,7 @@ const TypeSetting = () => {
   const setModulePadding = useStyleStore((state) => state.setModulePadding)
   return (
     <CustomLayout>
-      <Header
-        label="页面"
-        icon={BgColorsOutlined}
-        svg={<Icon component={PageSVG} />}
-      />
+      <Header label="页面" svg={<Icon component={PageSVG} />} />
       <CustomField title="页边距">
         <ConfigProvider
           theme={{

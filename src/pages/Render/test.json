@@ -11,7 +11,9 @@
         "gap": "16px",
         "alignItems": "center",
         "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "bind": "BASE_INFO",
       "showLabel": false,
@@ -23,7 +25,7 @@
         },
         {
           "type": "container",
-          "layout": "flex",
+          "layout": "horizontal",
           "style": {
             "flex": 1,
             "display": "flex",
@@ -204,7 +206,9 @@
       "bind": "EDU_BG",
       "style": {
         "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {
@@ -233,7 +237,9 @@
       "showLabel": true,
       "style": {
         "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {
@@ -294,9 +300,7 @@
                 {
                   "type": "text",
                   "bind": "overview",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             },
@@ -314,9 +318,7 @@
                 {
                   "type": "html",
                   "bind": "output",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             }
@@ -332,7 +334,9 @@
       "showLabel": true,
       "style": {
         "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {
@@ -393,9 +397,7 @@
                 {
                   "type": "text",
                   "bind": "overview",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             },
@@ -413,9 +415,7 @@
                 {
                   "type": "html",
                   "bind": "output",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             }
@@ -431,7 +431,9 @@
       "showLabel": true,
       "style": {
         "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {

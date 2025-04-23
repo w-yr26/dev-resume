@@ -1,10 +1,11 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
-import Icon, { BgColorsOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import ColorFillSVG from '@/assets/svg/dev/color-fill.svg?react'
 import { ColorPicker, ConfigProvider, Select } from 'antd'
 import styled from './index.module.scss'
 import CustomField from './components/CustomField'
+import { useStyleStore } from '@/store'
 
 const themeColorList = [
   '#475569',
@@ -29,13 +30,16 @@ const themeColorList = [
 ]
 
 const ColorSetting = () => {
+  const fontColor = useStyleStore((state) => state.fontColor)
+  const bgColor = useStyleStore((state) => state.bgColor)
+  const borderStyle = useStyleStore((state) => state.borderStyle)
+  const setFontColor = useStyleStore((state) => state.setFontColor)
+  const setBgColor = useStyleStore((state) => state.setBgColor)
+  const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
+
   return (
     <CustomLayout>
-      <Header
-        label="主题"
-        icon={BgColorsOutlined}
-        svg={<Icon component={ColorFillSVG} />}
-      />
+      <Header label="主题" svg={<Icon component={ColorFillSVG} />} />
       <CustomField title="主题色">
         <div className={styled['theme-color-container']}>
           {themeColorList.map((color) => (
@@ -57,15 +61,21 @@ const ColorSetting = () => {
         </div>
         <div className={styled['picker-item']}>
           <span className={styled['color-name']}>背景色</span>
-          <ColorPicker defaultValue="#1677ff" />
+          <ColorPicker
+            value={bgColor}
+            onChange={(_, color) => setBgColor(color)}
+          />
         </div>
         <div className={styled['picker-item']}>
           <span className={styled['color-name']}>文本色</span>
-          <ColorPicker defaultValue="#1677ff" />
+          <ColorPicker
+            value={fontColor}
+            defaultFormat={'hex'}
+            onChange={(_, color) => setFontColor(color)}
+          />
         </div>
       </div>
-      <CustomField title="分页线颜色">
-        {/* #d9d9d9 */}
+      <CustomField title="分页线样式">
         <ConfigProvider
           theme={{
             components: {
@@ -77,9 +87,17 @@ const ColorSetting = () => {
           }}
         >
           <Select
-            defaultValue="lucy"
+            value={borderStyle}
+            onChange={(val) => {
+              console.log('val', val)
+              setBorderStyle(val)
+            }}
             style={{ width: '100%', margin: '12px 0' }}
-            options={[{ value: 'lucy', label: 'Lucy' }]}
+            options={[
+              { value: 'solid', label: '———————' },
+              { value: 'dashed', label: '-----------------' },
+              { value: 'dotted', label: '·······························' },
+            ]}
           />
         </ConfigProvider>
       </CustomField>
