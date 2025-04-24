@@ -11,6 +11,20 @@ const TypeSetting = () => {
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const setPagePadding = useStyleStore((state) => state.setPagePadding)
   const setModulePadding = useStyleStore((state) => state.setModulePadding)
+  const setSidebarProportions = useStyleStore(
+    (state) => state.setSidebarProportions
+  )
+
+  const handleResize = (sizes: number[]) => {
+    const sumWidth = sizes.reduce((prev, current) => {
+      return (prev += current)
+    }, 0)
+    const sizeProportion =
+      Number((Math.floor(sizes[0]) / Math.floor(sumWidth)).toFixed(1)) * 10
+    // console.log(sumWidth, sizeProportion, sizes)
+
+    setSidebarProportions([sizeProportion, 10 - sizeProportion])
+  }
   return (
     <CustomLayout>
       <Header label="页面" svg={<Icon component={PageSVG} />} />
@@ -31,7 +45,7 @@ const TypeSetting = () => {
           }}
         >
           <Slider
-            min={1}
+            min={0}
             max={25}
             value={pagPadding}
             onChange={(val: number) => setPagePadding(val)}
@@ -70,8 +84,9 @@ const TypeSetting = () => {
             width: '100%',
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
           }}
+          onResizeEnd={handleResize}
         >
-          <Splitter.Panel defaultSize="40%" min="20%" max="70%">
+          <Splitter.Panel defaultSize="40%" min="30%" max="70%">
             侧栏
           </Splitter.Panel>
           <Splitter.Panel>主内容</Splitter.Panel>

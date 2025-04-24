@@ -8,6 +8,7 @@ export type styleInitType = {
   fontSize: number
   fontColor: string
   bgColor: string
+  sidebarProportions: number[]
   borderStyle: 'solid' | 'dashed' | 'dotted' | none
   setPagePadding: (val: number) => void
   setModulePadding: (val: number) => void
@@ -16,4 +17,5 @@ export type styleInitType = {
   setFontColor: (val: string) => void
   setBgColor: (val: string) => void
   setBorderStyle: (val: 'solid' | 'dashed' | 'dotted' | none) => void
+  setSidebarProportions: (val: number[]) => void
 }

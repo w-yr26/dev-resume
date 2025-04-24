@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import { CSSProperties, memo } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore } from '@/store'
@@ -24,13 +24,15 @@ const formatDate = (data: Dayjs[]) => {
   return data.map((item) => item.format('YYYY-MM')).join('~')
 }
 
-const Render = ({ dataContext, node }: RenderProps) => {
+const Render = memo(({ dataContext, node }: RenderProps) => {
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const modulePadding = useStyleStore((state) => state.modulePadding)
+  const pagPadding = useStyleStore((state) => state.pagPadding)
+  const sidebarProportions = useStyleStore((state) => state.sidebarProportions)
 
   const {
     type,
@@ -54,14 +56,30 @@ const Render = ({ dataContext, node }: RenderProps) => {
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
   }
 
+  if (layout === 'grid') {
+    console.log('exe')
+
+    mergedStyle.display = 'grid'
+    mergedStyle.gridTemplateColumns = sidebarProportions
+      .map((item) => item + 'fr')
+      .join(' ')
+  }
+
   // 根部
   if (type === 'root') {
+    // TODO：这里存在逻辑错误，应该是让配置中的style相关的值赋到store内
     const rootStyle: React.CSSProperties = {
       lineHeight: style.lineHeight ?? lineHeight,
       fontSize: style.fontSize ?? fontSize + 'px',
       color: style.color ?? fontColor,
       backgroundColor: style.backgroundColor ?? bgColor,
+      padding: style.padding ?? pagPadding + 'px',
     }
+
+    // 根容器也水平排列的前提下，整体就是两栏布局
+    // if (layout === 'horizontal') {
+    // }
+
     // console.log('merge', mergedStyle, rootStyle)
     return (
       <div
@@ -170,6 +188,6 @@ const Render = ({ dataContext, node }: RenderProps) => {
     return <img src={dataContext[bind]} style={mergedStyle} />
   }
   return null
-}
+})
 
 export default Render

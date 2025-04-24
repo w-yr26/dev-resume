@@ -10,6 +10,7 @@ const useStyleStore = create<styleInitType>((set) => {
     fontColor: 'rgb(24, 24, 27)',
     bgColor: 'rgb(255, 255, 255)',
     borderStyle: 'solid',
+    sidebarProportions: [40, 60],
     setPagePadding: (val) =>
       set(() => ({
         pagPadding: val,
@@ -37,6 +38,10 @@ const useStyleStore = create<styleInitType>((set) => {
     setBorderStyle: (val) =>
       set(() => ({
         borderStyle: val,
+      })),
+    setSidebarProportions: (val) =>
+      set(() => ({
+        sidebarProportions: val,
       })),
   }
 })
