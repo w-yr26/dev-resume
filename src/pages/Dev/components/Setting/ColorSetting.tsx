@@ -8,7 +8,7 @@ import CustomField from './components/CustomField'
 import { useStyleStore } from '@/store'
 
 const themeColorList = [
-  '#475569',
+  'rgb(71, 85, 105)',
   '#57534e',
   '#dc2626',
   '#ea580c',
@@ -31,11 +31,13 @@ const themeColorList = [
 
 const ColorSetting = () => {
   const fontColor = useStyleStore((state) => state.fontColor)
+  const mainColor = useStyleStore((state) => state.mainColor)
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const setFontColor = useStyleStore((state) => state.setFontColor)
   const setBgColor = useStyleStore((state) => state.setBgColor)
   const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
+  const setMainColor = useStyleStore((state) => state.setMainColor)
 
   return (
     <CustomLayout>
@@ -43,12 +45,15 @@ const ColorSetting = () => {
       <CustomField title="主题色">
         <div className={styled['theme-color-container']}>
           {themeColorList.map((color) => (
-            <div key={color} className={styled['color-item']}>
+            <div key={color} className={`styled['color-item']`}>
               <div
                 style={{
                   backgroundColor: color,
                 }}
-                className={styled['radio-box']}
+                className={`${styled['radio-box']} ${
+                  color === mainColor ? styled['active'] : ''
+                }`}
+                onClick={() => setMainColor(color)}
               />
             </div>
           ))}

@@ -7,6 +7,7 @@ const useStyleStore = create<styleInitType>((set) => {
     modulePadding: 8,
     lineHeight: 1.5,
     fontSize: 14,
+    mainColor: 'rgb(71, 85, 105)',
     fontColor: 'rgb(24, 24, 27)',
     bgColor: 'rgb(255, 255, 255)',
     borderStyle: 'solid',
@@ -30,6 +31,10 @@ const useStyleStore = create<styleInitType>((set) => {
     setFontColor: (val) =>
       set(() => ({
         fontColor: val,
+      })),
+    setMainColor: (val) =>
+      set(() => ({
+        mainColor: val,
       })),
     setBgColor: (val) =>
       set(() => ({

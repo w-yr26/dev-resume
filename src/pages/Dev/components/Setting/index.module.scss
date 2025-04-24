@@ -131,3 +131,11 @@
     }
   }
 }
+
+.active {
+  // width: 24px;
+  // height: 24px;
+  border-radius: 50%;
+  outline: 1.5px solid #333;
+  outline-offset: 2px;
+}
