@@ -142,11 +142,15 @@ const Render = ({ dataContext, node }: RenderProps) => {
     } else if (checkDate(data)) {
       data = formatDate(data)
     }
-    return <span style={mergedStyle}>{data}</span>
+    return <div style={mergedStyle}>{data}</div>
   }
 
   if (type === 'html') {
     const data = dataContext[bind] ?? '占位信息...'
+    mergedStyle = {
+      ...mergedStyle,
+      listStylePosition: 'inside',
+    }
 
     return (
       <div
