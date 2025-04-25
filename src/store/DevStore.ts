@@ -10,7 +10,7 @@ import { produce } from 'immer'
 import dayjs from 'dayjs'
 
 const defaultInfoMap: Record<allKeyType, any> = {
-  BASE_INFO: {},
+  BASE_INFO: [],
   EDU_BG: '',
   WORK_EXP: [],
   PROJECT_EXP: [],
@@ -22,17 +22,19 @@ const defaultInfoMap: Record<allKeyType, any> = {
 const initialData: devInitType = {
   dataSource: {
     BASE_INFO: {
-      info: {
-        avatar:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrHHBwxiucvXNsuFpXD-gU0T32BHbMcGEcEQ&s',
-        user_name: '张柯林',
-        gender: 1,
-        age: 21,
-        position: '前端开发实习生',
-        phone: '18026086011',
-        email: '18026086011@163.com',
-        blob: 'https://juejin.cn/user/4479833607519512/posts',
-      },
+      info: [
+        {
+          avatar:
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrHHBwxiucvXNsuFpXD-gU0T32BHbMcGEcEQ&s',
+          user_name: '张柯林',
+          gender: 1,
+          age: 21,
+          position: '前端开发实习生',
+          phone: '18026086011',
+          email: '18026086011@163.com',
+          blob: 'https://juejin.cn/user/4479833607519512/posts',
+        },
+      ],
       visible: true,
     },
     EDU_BG: {
@@ -42,6 +44,18 @@ const initialData: devInitType = {
     },
     WORK_EXP: {
       info: [
+        {
+          company: '腾讯',
+          position: '前端开发实习生',
+          tecStack: 'Vue2、Vue3',
+          id: '001',
+          output:
+            '<p>1. 基于 canvas 和 video，生成视频海报图和缩略图，实现按视频总时长动态均分时间点、生成视频缩略图(雪碧图)，实现在进度条预览内容</p><p>2. 异步顺序执行，结合 reduce 实现 mergePromise 方法，确保缩略图绘制按时间点顺序执行，避免异步执行速度的不确定性导致渲染顺序问题</p><p>3. 基于 FFmpeg.wasm 实现视频字幕烧制功能</p><p>3.1 使用 BroadcaseChannel 进行页面通信，显示视频处理进度</p><p>3.2 使用 indexDB 缓存所需字体文件，提升二次构建速度</p><p>3.3 基于 EventBus 埋入对应事件的监听，并通过维护用户操作快照记录，实现撤销、重做功能</p>',
+          overview:
+            '一款致力于制作流量推广业务的素材的平台，面向司内设计人员，实现流量推广小游戏素材快速换皮、研发和制作，为游戏侧服务',
+          date: [dayjs('2025-01-01'), dayjs('2025-03-05')],
+          visible: true,
+        },
         {
           company: '腾讯',
           position: '前端开发实习生',
@@ -117,10 +131,13 @@ const useDevStore = create<devState>((set) => {
     immerBaseInfo: (newVal: string, key: string) =>
       set(
         produce((state: devState) => {
-          state.devSchema.dataSource.BASE_INFO.info = {
-            ...state.devSchema.dataSource.BASE_INFO.info,
-            [key]: newVal,
-          }
+          state.devSchema.dataSource.BASE_INFO.info = [
+            { ...state.devSchema.dataSource.BASE_INFO.info[0], [key]: newVal },
+          ]
+          // {
+          //   ...state.devSchema.dataSource.BASE_INFO.info,
+          //   [key]: newVal,
+          // }
         })
       ),
     // 此处就包含了“教育背景”、“技能特长”、“兴趣爱好”的info字段的修改(因为这三者都是直接渲染标签内容，无需特殊处理)

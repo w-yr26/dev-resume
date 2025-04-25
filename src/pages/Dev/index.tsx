@@ -9,7 +9,7 @@ import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
 import Render from '../Render'
-import uiSchema from '../Render/test3.json'
+import uiSchema from '../Render/test2.json'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)

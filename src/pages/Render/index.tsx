@@ -1,4 +1,4 @@
-import { CSSProperties, memo } from 'react'
+import React, { CSSProperties, memo } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore } from '@/store'
@@ -46,12 +46,15 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
 
   let mergedStyle: React.CSSProperties = {
     display:
-      type === 'container' || type === 'root' || type === 'module'
+      type === 'container' ||
+      type === 'root' ||
+      type === 'module' ||
+      type === 'section'
         ? layout === 'horizontal'
           ? 'flex'
           : 'block'
         : undefined,
-    flexDirection: layout === 'vertical' ? 'column' : undefined,
+    flexDirection: layout === 'vertical' ? 'column' : 'row',
     ...style,
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
   }
@@ -134,19 +137,21 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
 
   // 局部循环列表
   if (type === 'section') {
+    console.log('mergestyle', mergedStyle, children)
+
     const list = dataContext[bind] || []
     // 此时做两层循环，一层是遍历数据列表，一层是遍历所有的子容器
     return (
       <div style={mergedStyle}>
         {list.map((item: any, index: number) => {
           return (
-            <div key={index}>
+            <React.Fragment key={index}>
               {children.map((child: any, idx: number) => {
                 return (
                   <Render key={idx} dataContext={item} node={child}></Render>
                 )
               })}
-            </div>
+            </React.Fragment>
           )
         })}
       </div>

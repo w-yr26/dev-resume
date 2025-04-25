@@ -101,7 +101,7 @@ export type headMenuType = {
 export type devInitType = {
   dataSource: {
     BASE_INFO: {
-      info: BaseInfoType
+      info: BaseInfoType[]
       visible: boolean
       label?: string
     }

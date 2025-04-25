@@ -4,7 +4,6 @@ import Icon, {
   CheckSquareOutlined,
   CloseOutlined,
   HolderOutlined,
-  InfoCircleOutlined,
   PlusOutlined,
   UserOutlined,
 } from '@ant-design/icons'
@@ -18,7 +17,9 @@ import { useDevStore, useGlobalStore } from '@/store'
 
 const BaseInfo = () => {
   const baseinfoRef = useRef<HTMLDivElement>(null)
-  const { info } = useDevStore((state) => state.devSchema.dataSource.BASE_INFO)
+  const {
+    info: [baseInfo],
+  } = useDevStore((state) => state.devSchema.dataSource.BASE_INFO)
   const changeBaseInfo = useDevStore((state) => state.immerBaseInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
 
@@ -56,7 +57,6 @@ const BaseInfo = () => {
   return (
     <CustomLayout ref={baseinfoRef}>
       <Header
-        icon={InfoCircleOutlined}
         svg={<Icon component={InfoSVG} />}
         label="基础信息"
         opMenu={false}
@@ -73,14 +73,14 @@ const BaseInfo = () => {
               height: '36px',
             }}
             disabled
-            value={info.avatar}
+            value={baseInfo.avatar}
           />
         </div>
       </div>
       <CustomInput
         label="姓名"
         placeholder="请输入您的姓名"
-        value={info.user_name}
+        value={baseInfo.user_name}
         onChange={(e) => {
           handleFieldChange(e, 'user_name')
         }}
@@ -88,7 +88,7 @@ const BaseInfo = () => {
       <CustomInput
         label="求职岗位"
         placeholder="请输入求职岗位"
-        value={info.position}
+        value={baseInfo.position}
         onChange={(e) => {
           handleFieldChange(e, 'position')
         }}
@@ -102,7 +102,7 @@ const BaseInfo = () => {
           <CustomInput
             label="电话"
             placeholder="请输入您的联系方式"
-            value={info.phone}
+            value={baseInfo.phone}
             onChange={(e) => {
               handleFieldChange(e, 'phone')
             }}
@@ -116,7 +116,7 @@ const BaseInfo = () => {
           <CustomInput
             label="电子邮件"
             placeholder="请输入您的邮件"
-            value={info.email}
+            value={baseInfo.email}
             onChange={(e) => {
               handleFieldChange(e, 'email')
             }}
@@ -132,7 +132,7 @@ const BaseInfo = () => {
           <CustomInput
             label="个人博客"
             placeholder="https://example.com"
-            value={info.blob}
+            value={baseInfo.blob}
             onChange={(e) => {
               handleFieldChange(e, 'blob')
             }}
@@ -146,7 +146,7 @@ const BaseInfo = () => {
           <CustomInput
             label="性别"
             placeholder="请输入您的性别"
-            value={info.gender}
+            value={baseInfo.gender}
             onChange={(e) => {
               handleFieldChange(e, 'gender')
             }}
@@ -160,7 +160,7 @@ const BaseInfo = () => {
           <CustomInput
             label="年龄"
             placeholder="请输入您的年龄"
-            value={info.age}
+            value={baseInfo.age}
             onChange={(e) => {
               handleFieldChange(e, 'age')
             }}
