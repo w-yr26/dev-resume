@@ -42,7 +42,11 @@ export type BaseInfoType = {
 }
 
 export type EduBgType = {
+  school: string
   bg: string
+  id: string
+  visible: boolean
+  date: [Dayjs, Dayjs]
 }
 
 export type WorkExpItemType = {
@@ -106,7 +110,7 @@ export type devInitType = {
       label?: string
     }
     EDU_BG: {
-      info: string
+      info: EduBgType[]
       visible: boolean
       label?: string
     }
@@ -145,6 +149,7 @@ export type InfoArrTypeMap = {
   WORK_EXP: WorkExpItemType
   PROJECT_EXP: PeojectExpItemType
   AWARD_LIST: AwardItemType
+  EDU_BG: EduBgType
 }
 
 // 这个Map存放info为string的字段

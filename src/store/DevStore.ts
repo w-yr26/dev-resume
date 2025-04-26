@@ -38,7 +38,15 @@ const initialData: devInitType = {
       visible: true,
     },
     EDU_BG: {
-      info: '',
+      info: [
+        {
+          bg: '全日制本科',
+          date: [dayjs('2022-09-01'), dayjs('2026-06-30')],
+          id: '0001',
+          school: '华南农业大学',
+          visible: true,
+        },
+      ],
       visible: true,
       label: '教育背景',
     },

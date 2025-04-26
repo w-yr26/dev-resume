@@ -15,7 +15,6 @@
         "borderBottomColor": "#292929"
       },
       "bind": "BASE_INFO",
-      "showLabel": true,
       "children": [
         {
           "type": "section",
@@ -229,9 +228,38 @@
           }
         },
         {
-          "type": "text",
+          "type": "section",
+          "layout": "vertical",
           "bind": "info",
-          "style": { "flex": 1, "fontWeight": 600 }
+          "style": { "flex": 1 },
+          "children": [
+            {
+              "type": "container",
+              "layout": "horizontal",
+              "style": {
+                "justifyContent": "space-between",
+                "alignItems": "center",
+                "fontWeight": 600
+              },
+              "children": [
+                {
+                  "type": "text",
+                  "bind": "bg",
+                  "style": {}
+                },
+                {
+                  "type": "text",
+                  "bind": "school",
+                  "style": {}
+                },
+                {
+                  "type": "text",
+                  "bind": "date",
+                  "style": {}
+                }
+              ]
+            }
+          ]
         }
       ]
     },
