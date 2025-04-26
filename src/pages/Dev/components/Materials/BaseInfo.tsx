@@ -3,14 +3,13 @@ import Header from '@/components/Header/index'
 import Icon, {
   CheckSquareOutlined,
   CloseOutlined,
-  HolderOutlined,
   PlusOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 import InfoSVG from '@/assets/svg/dev/info.svg?react'
 import CustomInput from './components/CustomInput'
 import CustomLayout from '@/components/CustomLayout/index'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import { useDevStore, useGlobalStore } from '@/store'
@@ -30,7 +29,53 @@ const BaseInfo = () => {
     }
   }, [])
 
-  const [itemList, setItemList] = useState<AddItemType[]>([])
+  const [addFieldsList, setAddFieldsList] = useState<AddItemType[]>([])
+  const [isShow, setIsShow] = useState(false)
+  const [customLabel, setCustomLabel] = useState('')
+  const [customVal, setCustomVal] = useState('')
+
+  const handleLabelBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setCustomLabel(e.target.value)
+  }
+  // const handleLabelEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   setCustomLabel(e.currentTarget.value)
+  // }
+
+  const handleValBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setCustomVal(e.target.value)
+  }
+
+  const handleCustomFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    setAddFieldsList(
+      addFieldsList.map((field) => {
+        if (field.id === id) {
+          return {
+            ...field,
+            value: e.target.value,
+          }
+        } else return field
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (customLabel && customVal) {
+      setAddFieldsList([
+        ...addFieldsList,
+        {
+          label: customLabel,
+          value: customVal,
+          id: new Date().getTime(),
+        },
+      ])
+      setIsShow(false)
+      setCustomLabel('')
+      setCustomVal('')
+    }
+  }, [customLabel, customVal])
 
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -39,20 +84,9 @@ const BaseInfo = () => {
     changeBaseInfo(e.target.value, key)
   }
 
-  const handleAddItem = () => {
-    setItemList([
-      ...itemList,
-      {
-        label: 'undefined',
-        value: 'undefined',
-        id: new Date().getTime(),
-      },
-    ])
-  }
-
-  const handleDelItem = (id: number) => {
-    setItemList(itemList.filter((item) => item.id !== id))
-  }
+  // const handleDelItem = (id: number) => {
+  //   setItemList(itemList.filter((item) => item.id !== id))
+  // }
 
   return (
     <CustomLayout ref={baseinfoRef}>
@@ -60,7 +94,7 @@ const BaseInfo = () => {
         svg={<Icon component={InfoSVG} />}
         label="基础信息"
         opMenu={false}
-      ></Header>
+      />
       <div className={styles['avatar-name-box']}>
         <div className="avatar-img">
           <Avatar shape="circle" size={54} icon={<UserOutlined />} />
@@ -84,7 +118,7 @@ const BaseInfo = () => {
         onChange={(e) => {
           handleFieldChange(e, 'user_name')
         }}
-      ></CustomInput>
+      />
       <CustomInput
         label="求职岗位"
         placeholder="请输入求职岗位"
@@ -92,7 +126,7 @@ const BaseInfo = () => {
         onChange={(e) => {
           handleFieldChange(e, 'position')
         }}
-      ></CustomInput>
+      />
       <div className={styles['row-form-item']}>
         <div
           style={{
@@ -167,37 +201,49 @@ const BaseInfo = () => {
           ></CustomInput>
         </div>
       </div>
-      {itemList.map((item) => {
+      {addFieldsList.map((item) => {
         return (
-          <div className={styles['info-list-item']} key={item.id}>
-            <HolderOutlined className="hover:cursor-help" />
-            <CheckSquareOutlined />
-            <Input
-              style={{
-                height: '36px',
-                width: '40%',
-              }}
-              defaultValue={item.label}
-            ></Input>
-            <Input
-              style={{
-                height: '36px',
-                width: '40%',
-              }}
-              defaultValue={item.value}
-            ></Input>
-            <CloseOutlined
-              className="hover:cursor-help"
-              onClick={() => {
-                handleDelItem(item.id)
-              }}
+          <React.Fragment key={item.id}>
+            <CustomInput
+              label={item.label}
+              placeholder="请输入文本"
+              value={item.value}
+              onChange={(e) => handleCustomFieldChange(e, item.id)}
             />
-          </div>
+          </React.Fragment>
         )
       })}
+      {isShow ? (
+        <div className={styles['info-list-item']}>
+          <CheckSquareOutlined />
+          <Input
+            style={{
+              height: '36px',
+              width: '40%',
+            }}
+            placeholder="输入字段名"
+            autoFocus
+            defaultValue={customLabel}
+            onBlur={handleLabelBlur}
+          />
+          <Input
+            style={{
+              height: '36px',
+              width: '40%',
+            }}
+            placeholder="输入字段值"
+            defaultValue={customVal}
+            onBlur={handleValBlur}
+          />
+          <CloseOutlined className="hover:cursor-help" />
+        </div>
+      ) : null}
       <div className={styles['custom-field-box']}>
         <PlusOutlined color="#3f3f46" />
-        <span className={styles['custom-label']} onClick={handleAddItem}>
+        <span
+          className={styles['custom-label']}
+          onClick={() => setIsShow(true)}
+        >
           添加自定义字段
         </span>
       </div>

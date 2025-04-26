@@ -4,15 +4,16 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
-import { useDevStore } from '@/store'
+import { useDevStore, useUIStore } from '@/store'
 import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
 import Render from '../Render'
-import uiSchema from '../Render/test2.json'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
+  const setUiSchema = useUIStore((state) => state.setUiSchema)
+  const uiSchema = useUIStore((state) => state.uiSchema)
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -106,6 +107,24 @@ const Dev = () => {
     }
 
     return () => observer.disconnect()
+  }, [])
+
+  // const [uiSchema, setUiSchema] = useState<any>()
+  useEffect(() => {
+    const getUiSchema = async () => {
+      try {
+        const res = await fetch('/test.json')
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+        const uiSchemaRes = await res.json()
+        console.log('uiSchemaRes', uiSchemaRes)
+
+        setUiSchema(uiSchemaRes)
+      } catch (error) {
+        console.log('err', error)
+        setUiSchema(null)
+      }
+    }
+    getUiSchema()
   }, [])
 
   // 滚动至具体位置

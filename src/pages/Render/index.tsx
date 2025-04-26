@@ -1,18 +1,10 @@
-import React, { CSSProperties, memo } from 'react'
+import React, { memo } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore } from '@/store'
+import { nodeType } from '@/types/ui'
 interface RenderProps {
-  node: {
-    type: string
-    layout: string
-    children?: any[]
-    style?: CSSProperties
-    bind: string
-    repeat?: string
-    showLabel?: boolean
-    label?: string
-  }
+  node: nodeType | null
   dataContext: any
 }
 
@@ -34,15 +26,8 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
   const pagPadding = useStyleStore((state) => state.pagPadding)
   const sidebarProportions = useStyleStore((state) => state.sidebarProportions)
 
-  const {
-    type,
-    layout,
-    children = [],
-    style = {},
-    bind,
-    showLabel = true,
-    label = '',
-  } = node
+  if (!node) return null
+  const { type, layout, children = [], style = {}, bind, label = '' } = node
 
   let mergedStyle: React.CSSProperties = {
     display:
@@ -60,8 +45,6 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
   }
 
   if (layout === 'grid') {
-    console.log('exe')
-
     mergedStyle.display = 'grid'
     mergedStyle.gridTemplateColumns = sidebarProportions
       .map((item) => item + 'fr')
@@ -108,37 +91,20 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
         paddingBottom: modulePadding + 'px',
       }
     }
-    // 不需要显示栏目的label，参考BASE_INFO，所拿到的 dataContext 需要再往下拆一层
-    if (!showLabel) {
-      // 此时是非循环列表
-      const data = dataContext[bind].info || {}
-      const visible = dataContext[bind].visible
-      if (!visible) return null
-      return (
-        <div style={mergedStyle}>
-          {children.map((child: any, index: number) => {
-            return <Render key={index} node={child} dataContext={data} />
-          })}
-        </div>
-      )
-    } else {
-      // 需要显示栏目label，则不能往下直接拆到info[];因为还有label
-      // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
-      const data = dataContext[bind] || { ...dataContext }
-      return (
-        <div style={mergedStyle}>
-          {children.map((child: any, index: number) => {
-            return <Render key={index} node={child} dataContext={data} />
-          })}
-        </div>
-      )
-    }
+
+    // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
+    const data = dataContext[bind] || { ...dataContext }
+    return (
+      <div style={mergedStyle}>
+        {children.map((child: any, index: number) => {
+          return <Render key={index} node={child} dataContext={data} />
+        })}
+      </div>
+    )
   }
 
   // 局部循环列表
   if (type === 'section') {
-    console.log('mergestyle', mergedStyle, children)
-
     const list = dataContext[bind] || []
     // 此时做两层循环，一层是遍历数据列表，一层是遍历所有的子容器
     return (

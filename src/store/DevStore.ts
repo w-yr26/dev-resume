@@ -60,7 +60,7 @@ const initialData: devInitType = {
           company: '腾讯',
           position: '前端开发实习生',
           tecStack: 'Vue2、Vue3',
-          id: '001',
+          id: '002',
           output:
             '<p>1. 基于 canvas 和 video，生成视频海报图和缩略图，实现按视频总时长动态均分时间点、生成视频缩略图(雪碧图)，实现在进度条预览内容</p><p>2. 异步顺序执行，结合 reduce 实现 mergePromise 方法，确保缩略图绘制按时间点顺序执行，避免异步执行速度的不确定性导致渲染顺序问题</p><p>3. 基于 FFmpeg.wasm 实现视频字幕烧制功能</p><p>3.1 使用 BroadcaseChannel 进行页面通信，显示视频处理进度</p><p>3.2 使用 indexDB 缓存所需字体文件，提升二次构建速度</p><p>3.3 基于 EventBus 埋入对应事件的监听，并通过维护用户操作快照记录，实现撤销、重做功能</p>',
           overview:
