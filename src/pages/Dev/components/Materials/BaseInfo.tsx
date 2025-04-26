@@ -110,14 +110,51 @@ const BaseInfo = () => {
           />
         </div>
       </div>
-      <CustomInput
-        label="姓名"
-        placeholder="请输入您的姓名"
-        value={baseInfo.user_name}
-        onChange={(e) => {
-          handleFieldChange(e, 'user_name')
-        }}
-      />
+
+      <div className={styles['row-form-item']}>
+        <div
+          style={{
+            flex: 2,
+          }}
+        >
+          <CustomInput
+            label="姓名"
+            placeholder="请输入您的姓名"
+            value={baseInfo.user_name}
+            onChange={(e) => {
+              handleFieldChange(e, 'user_name')
+            }}
+          />
+        </div>
+        <div
+          style={{
+            flex: 1,
+          }}
+        >
+          <CustomInput
+            label="性别"
+            placeholder="请输入您的性别"
+            value={baseInfo.gender}
+            onChange={(e) => {
+              handleFieldChange(e, 'gender')
+            }}
+          ></CustomInput>
+        </div>
+        <div
+          style={{
+            flex: 1,
+          }}
+        >
+          <CustomInput
+            label="年龄"
+            placeholder="请输入您的年龄"
+            value={baseInfo.age}
+            onChange={(e) => {
+              handleFieldChange(e, 'age')
+            }}
+          ></CustomInput>
+        </div>
+      </div>
       <CustomInput
         label="求职岗位"
         placeholder="请输入求职岗位"
@@ -156,50 +193,15 @@ const BaseInfo = () => {
           ></CustomInput>
         </div>
       </div>
-      <div className={styles['row-form-item']}>
-        <div
-          style={{
-            flex: 2,
-          }}
-        >
-          <CustomInput
-            label="个人博客"
-            placeholder="https://example.com"
-            value={baseInfo.blob}
-            onChange={(e) => {
-              handleFieldChange(e, 'blob')
-            }}
-          ></CustomInput>
-        </div>
-        <div
-          style={{
-            flex: 1,
-          }}
-        >
-          <CustomInput
-            label="性别"
-            placeholder="请输入您的性别"
-            value={baseInfo.gender}
-            onChange={(e) => {
-              handleFieldChange(e, 'gender')
-            }}
-          ></CustomInput>
-        </div>
-        <div
-          style={{
-            flex: 1,
-          }}
-        >
-          <CustomInput
-            label="年龄"
-            placeholder="请输入您的年龄"
-            value={baseInfo.age}
-            onChange={(e) => {
-              handleFieldChange(e, 'age')
-            }}
-          ></CustomInput>
-        </div>
-      </div>
+
+      <CustomInput
+        label="个人博客"
+        placeholder="https://example.com"
+        value={baseInfo.blob}
+        onChange={(e) => {
+          handleFieldChange(e, 'blob')
+        }}
+      />
       {/* {addFieldsList.map((item) => {
         return (
           <React.Fragment key={item.id}>
