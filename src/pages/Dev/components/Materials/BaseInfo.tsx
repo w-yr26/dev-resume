@@ -1,16 +1,12 @@
 import { Avatar, Input } from 'antd'
 import Header from '@/components/Header/index'
-import Icon, {
-  CheckSquareOutlined,
-  CloseOutlined,
-  PlusOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
+import Icon from '@ant-design/icons'
+import userSVG from '@/assets/svg/dev/user.svg?react'
 import InfoSVG from '@/assets/svg/dev/info.svg?react'
 import CustomInput from './components/CustomInput'
 import CustomLayout from '@/components/CustomLayout/index'
-import React, { useEffect, useRef, useState } from 'react'
-import { AddItemType } from '@/types/dev'
+import React, { useEffect, useRef } from 'react'
+// import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import { useDevStore, useGlobalStore } from '@/store'
 
@@ -29,53 +25,52 @@ const BaseInfo = () => {
     }
   }, [])
 
-  const [addFieldsList, setAddFieldsList] = useState<AddItemType[]>([])
-  const [isShow, setIsShow] = useState(false)
-  const [customLabel, setCustomLabel] = useState('')
-  const [customVal, setCustomVal] = useState('')
+  // const [addFieldsList, setAddFieldsList] = useState<AddItemType[]>([])
+  // const [isShow, setIsShow] = useState(false)
+  // const [customLabel, setCustomLabel] = useState('')
+  // const [customVal, setCustomVal] = useState('')
 
-  const handleLabelBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    setCustomLabel(e.target.value)
-  }
+  // const handleLabelBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  //   setCustomLabel(e.target.value)
+  // }
   // const handleLabelEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
   //   setCustomLabel(e.currentTarget.value)
   // }
 
-  const handleValBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    setCustomVal(e.target.value)
-  }
+  // const handleValBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  //   setCustomVal(e.target.value)
+  // }
 
-  const handleCustomFieldChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    id: number
-  ) => {
-    setAddFieldsList(
-      addFieldsList.map((field) => {
-        if (field.id === id) {
-          return {
-            ...field,
-            value: e.target.value,
-          }
-        } else return field
-      })
-    )
-  }
+  // const handleCustomFieldChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>,
+  //   id: number
+  // ) => {
+  //   setAddFieldsList(
+  //     addFieldsList.map((field) => {
+  //       if (field.id === id) {
+  //         return {
+  //           ...field,
+  //           value: e.target.value,
+  //         }
+  //       } else return field
+  //     })
+  //   )
+  // }
 
-  useEffect(() => {
-    if (customLabel && customVal) {
-      setAddFieldsList([
-        ...addFieldsList,
-        {
-          label: customLabel,
-          value: customVal,
-          id: new Date().getTime(),
-        },
-      ])
-      setIsShow(false)
-      setCustomLabel('')
-      setCustomVal('')
-    }
-  }, [customLabel, customVal])
+  // useEffect(() => {
+  //   if (customLabel && customVal) {
+  //     setAddFieldsList([
+  //       ...addFieldsList,
+  //       {
+  //         label: customLabel,
+  //         value: customVal,
+  //         id: new Date().getTime(),
+  //       },
+  //     ])
+  //     setCustomLabel('')
+  //     setCustomVal('')
+  //   }
+  // }, [customLabel, customVal])
 
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -97,7 +92,11 @@ const BaseInfo = () => {
       />
       <div className={styles['avatar-name-box']}>
         <div className="avatar-img">
-          <Avatar shape="circle" size={54} icon={<UserOutlined />} />
+          <Avatar
+            shape="circle"
+            size={54}
+            icon={<Icon component={userSVG} />}
+          />
         </div>
         <div className={styles['img-url-box']}>
           <p className={styles['label']}>头像</p>
@@ -201,7 +200,7 @@ const BaseInfo = () => {
           ></CustomInput>
         </div>
       </div>
-      {addFieldsList.map((item) => {
+      {/* {addFieldsList.map((item) => {
         return (
           <React.Fragment key={item.id}>
             <CustomInput
@@ -237,8 +236,8 @@ const BaseInfo = () => {
           />
           <CloseOutlined className="hover:cursor-help" />
         </div>
-      ) : null}
-      <div className={styles['custom-field-box']}>
+      ) : null} */}
+      {/* <div className={styles['custom-field-box']}>
         <PlusOutlined color="#3f3f46" />
         <span
           className={styles['custom-label']}
@@ -246,7 +245,7 @@ const BaseInfo = () => {
         >
           添加自定义字段
         </span>
-      </div>
+      </div> */}
     </CustomLayout>
   )
 }
