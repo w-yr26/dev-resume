@@ -2,6 +2,17 @@
   "type": "root",
   "layout": "vertical",
   "style": {},
+  "configStyle": {
+    "pagePadding": 14,
+    "modulePadding": 8,
+    "lineHeight": 1.2,
+    "fontSize": 14,
+    "mainColor": "rgb(71, 85, 105)",
+    "fontColor": "rgb(10, 10, 10)",
+    "bgColor": "rgb(255, 255, 255)",
+    "borderStyle": "solid",
+    "sidebarProportions": [40, 60]
+  },
   "bind": "",
   "children": [
     {

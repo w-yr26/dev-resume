@@ -3,18 +3,18 @@ import type { styleInitType } from '@/types/style'
 
 const useStyleStore = create<styleInitType>((set) => {
   return {
-    pagPadding: 14,
-    modulePadding: 8,
-    lineHeight: 1.5,
-    fontSize: 14,
-    mainColor: 'rgb(71, 85, 105)',
-    fontColor: 'rgb(24, 24, 27)',
-    bgColor: 'rgb(255, 255, 255)',
-    borderStyle: 'solid',
-    sidebarProportions: [40, 60],
+    pagePadding: 0,
+    modulePadding: 0,
+    lineHeight: 0,
+    fontSize: 0,
+    mainColor: '',
+    fontColor: '',
+    bgColor: '',
+    borderStyle: '',
+    sidebarProportions: [],
     setPagePadding: (val) =>
       set(() => ({
-        pagPadding: val,
+        pagePadding: val,
       })),
     setModulePadding: (val) =>
       set(() => ({

@@ -23,8 +23,9 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const modulePadding = useStyleStore((state) => state.modulePadding)
-  const pagPadding = useStyleStore((state) => state.pagPadding)
+  const pagePadding = useStyleStore((state) => state.pagePadding)
   const sidebarProportions = useStyleStore((state) => state.sidebarProportions)
+  console.log('render exe')
 
   if (!node) return null
   const { type, layout, children = [], style = {}, bind, label = '' } = node
@@ -54,19 +55,16 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
   // 根部
   if (type === 'root') {
     // TODO：这里存在逻辑错误，应该是让配置中的style相关的值赋到store内
+    console.log('root', lineHeight, fontSize, bgColor, pagePadding)
+
     const rootStyle: React.CSSProperties = {
-      lineHeight: style.lineHeight ?? lineHeight,
-      fontSize: style.fontSize ?? fontSize + 'px',
-      color: style.color ?? fontColor,
-      backgroundColor: style.backgroundColor ?? bgColor,
-      padding: style.padding ?? pagPadding + 'px',
+      lineHeight: lineHeight,
+      fontSize: fontSize + 'px',
+      color: fontColor,
+      backgroundColor: bgColor,
+      padding: pagePadding + 'px',
     }
 
-    // 根容器也水平排列的前提下，整体就是两栏布局
-    // if (layout === 'horizontal') {
-    // }
-
-    // console.log('merge', mergedStyle, rootStyle)
     return (
       <div
         className={styled['render-container']}

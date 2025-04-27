@@ -4,7 +4,7 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
-import { useDevStore, useUIStore } from '@/store'
+import { useDevStore, useStyleStore, useUIStore } from '@/store'
 import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
@@ -14,6 +14,17 @@ const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const uiSchema = useUIStore((state) => state.uiSchema)
+  const setPagePadding = useStyleStore((state) => state.setPagePadding)
+  const setModulePadding = useStyleStore((state) => state.setModulePadding)
+  const setLineHeight = useStyleStore((state) => state.setLineHeight)
+  const setFontSize = useStyleStore((state) => state.setFontSize)
+  const setFontColor = useStyleStore((state) => state.setFontColor)
+  const setMainColor = useStyleStore((state) => state.setMainColor)
+  const setBgColor = useStyleStore((state) => state.setBgColor)
+  const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
+  const setSidebarProportions = useStyleStore(
+    (state) => state.setSidebarProportions
+  )
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -109,23 +120,53 @@ const Dev = () => {
     return () => observer.disconnect()
   }, [])
 
-  // const [uiSchema, setUiSchema] = useState<any>()
+  const [loading, setLoading] = useState<boolean>(false)
   useEffect(() => {
     const getUiSchema = async () => {
       try {
+        setLoading(true)
         const res = await fetch('/test.json')
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
         const uiSchemaRes = await res.json()
-        console.log('uiSchemaRes', uiSchemaRes)
-
         setUiSchema(uiSchemaRes)
+        await initGlobalStyle(uiSchemaRes)
       } catch (error) {
         console.log('err', error)
         setUiSchema(null)
+      } finally {
+        setLoading(false)
       }
     }
     getUiSchema()
   }, [])
+
+  const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
+    return new Promise((resolve) => {
+      const {
+        configStyle: {
+          pagePadding,
+          modulePadding,
+          lineHeight,
+          fontSize,
+          fontColor,
+          bgColor,
+          mainColor,
+          borderStyle,
+          sidebarProportions,
+        },
+      } = uiSchemaRes
+      setPagePadding(pagePadding)
+      setModulePadding(modulePadding)
+      setLineHeight(lineHeight)
+      setFontSize(fontSize)
+      setFontColor(fontColor)
+      setBgColor(bgColor)
+      setMainColor(mainColor)
+      setBorderStyle(borderStyle)
+      setSidebarProportions(sidebarProportions)
+      resolve('success')
+    })
+  }
 
   // 滚动至具体位置
   const handleScroll = (position: number) => {
@@ -171,7 +212,9 @@ const Dev = () => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : null
               })} */}
-              <Render dataContext={dataSource} node={uiSchema} />
+              {uiSchema && !loading ? (
+                <Render dataContext={dataSource} node={uiSchema} />
+              ) : null}
             </div>
             {lineShow && (
               <div className={styles['page-line']}>

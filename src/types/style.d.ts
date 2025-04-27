@@ -2,7 +2,7 @@ import type { ColorPickerProps, GetProp } from 'antd'
 type Color = GetProp<ColorPickerProps, 'value'>
 
 export type styleInitType = {
-  pagPadding: number
+  pagePadding: number
   modulePadding: number
   lineHeight: number
   fontSize: number

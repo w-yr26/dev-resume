@@ -17,6 +17,7 @@ export type nodeType = {
   layout: layoutType
   type: uiType
   style: React.CSSProperties
+  configStyle?: Record<string, any>
   label?: string
   children?: nodeType[]
 }
