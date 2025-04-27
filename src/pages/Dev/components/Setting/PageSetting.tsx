@@ -4,16 +4,17 @@ import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import { ConfigProvider, Slider, Splitter } from 'antd'
 import CustomField from './components/CustomField'
-import { useStyleStore } from '@/store'
+import { useStyleStore, useUIStore } from '@/store'
 
 const TypeSetting = () => {
-  const pagPadding = useStyleStore((state) => state.pagPadding)
+  const pagePadding = useStyleStore((state) => state.pagePadding)
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const setPagePadding = useStyleStore((state) => state.setPagePadding)
   const setModulePadding = useStyleStore((state) => state.setModulePadding)
   const setSidebarProportions = useStyleStore(
     (state) => state.setSidebarProportions
   )
+  const isHorizontal = useUIStore((state) => state.isHorizontal)
 
   const handleResize = (sizes: number[]) => {
     const sumWidth = sizes.reduce((prev, current) => {
@@ -47,7 +48,7 @@ const TypeSetting = () => {
           <Slider
             min={0}
             max={25}
-            value={pagPadding}
+            value={pagePadding}
             onChange={(val: number) => setPagePadding(val)}
           />
         </ConfigProvider>
@@ -76,22 +77,24 @@ const TypeSetting = () => {
           />
         </ConfigProvider>
       </CustomField>
-      <CustomField title="主侧比例">
-        <Splitter
-          style={{
-            margin: '16px 0 0',
-            height: 80,
-            width: '100%',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-          }}
-          onResizeEnd={handleResize}
-        >
-          <Splitter.Panel defaultSize="40%" min="30%" max="70%">
-            侧栏
-          </Splitter.Panel>
-          <Splitter.Panel>主内容</Splitter.Panel>
-        </Splitter>
-      </CustomField>
+      {isHorizontal ? (
+        <CustomField title="主侧比例">
+          <Splitter
+            style={{
+              margin: '16px 0 0',
+              height: 80,
+              width: '100%',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            }}
+            onResizeEnd={handleResize}
+          >
+            <Splitter.Panel defaultSize="40%" min="30%" max="70%">
+              侧栏
+            </Splitter.Panel>
+            <Splitter.Panel>主内容</Splitter.Panel>
+          </Splitter>
+        </CustomField>
+      ) : null}
     </CustomLayout>
   )
 }

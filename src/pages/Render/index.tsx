@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
-import { useStyleStore } from '@/store'
+import { useStyleStore, useUIStore } from '@/store'
 import { nodeType } from '@/types/ui'
 interface RenderProps {
   node: nodeType | null
@@ -25,7 +25,7 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const pagePadding = useStyleStore((state) => state.pagePadding)
   const sidebarProportions = useStyleStore((state) => state.sidebarProportions)
-  console.log('render exe')
+  const setIsHorizontal = useUIStore((state) => state.setIsHorizontal)
 
   if (!node) return null
   const { type, layout, children = [], style = {}, bind, label = '' } = node
@@ -38,6 +38,8 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
       type === 'section'
         ? layout === 'horizontal'
           ? 'flex'
+          : layout === 'grid'
+          ? 'grid'
           : 'block'
         : undefined,
     flexDirection: layout === 'vertical' ? 'column' : 'row',
@@ -45,24 +47,22 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
   }
 
-  if (layout === 'grid') {
-    mergedStyle.display = 'grid'
-    mergedStyle.gridTemplateColumns = sidebarProportions
-      .map((item) => item + 'fr')
-      .join(' ')
-  }
-
   // 根部
   if (type === 'root') {
-    // TODO：这里存在逻辑错误，应该是让配置中的style相关的值赋到store内
-    console.log('root', lineHeight, fontSize, bgColor, pagePadding)
-
     const rootStyle: React.CSSProperties = {
       lineHeight: lineHeight,
       fontSize: fontSize + 'px',
       color: fontColor,
       backgroundColor: bgColor,
       padding: pagePadding + 'px',
+    }
+
+    // 整体是两栏布局，需要设置主侧栏的比例并且表示当前简历全局是两栏排列的
+    if (layout === 'grid') {
+      setIsHorizontal(true)
+      rootStyle.gridTemplateColumns = sidebarProportions
+        .map((item) => item + 'fr')
+        .join(' ')
     }
 
     return (

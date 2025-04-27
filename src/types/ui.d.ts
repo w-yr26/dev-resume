@@ -23,6 +23,8 @@ export type nodeType = {
 }
 
 export type uiStoreType = {
+  isHorizontal: boolean
   uiSchema: nodeType | null
   setUiSchema: (newUISchema: nodeType | null) => void
+  setIsHorizontal: (arg: boolean) => void
 }

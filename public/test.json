@@ -5,7 +5,7 @@
   "configStyle": {
     "pagePadding": 14,
     "modulePadding": 8,
-    "lineHeight": 1.2,
+    "lineHeight": 1.5,
     "fontSize": 14,
     "mainColor": "rgb(71, 85, 105)",
     "fontColor": "rgb(10, 10, 10)",
