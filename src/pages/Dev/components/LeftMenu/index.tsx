@@ -11,6 +11,9 @@ import { Avatar, Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
 import { optionalCom } from '@/types/dev'
+import StyleEditor from './StyleEditor'
+import { useRef } from 'react'
+import type { drawerMethods } from '@/types/materials'
 
 const iconMenu = [
   {
@@ -50,17 +53,17 @@ const iconMenu = [
   },
   {
     icon: <Icon component={AddSmallSVG} />,
-    label: '新增一项',
+    label: '开发者模式',
     key: 'ADD_MORE',
   },
 ]
 
 const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
-
+  const drawerRef = useRef<drawerMethods>(null)
   const handleClick = (key: optionalCom | 'ADD_MORE') => {
     if (key === 'ADD_MORE') {
-      console.log('add')
+      drawerRef.current?.handleOpen()
     } else {
       console.log(keyToPosition[key])
       iconClick(keyToPosition[key] || 0)
@@ -68,31 +71,36 @@ const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
   }
 
   return (
-    <div className={styles['left-container']}>
-      <div className={styles['mini-logo']} />
-      <ul className={styles['menu-list']}>
-        {iconMenu.map((item) => {
-          return (
-            <li
-              key={item.key}
-              className={styles['icon-item']}
-              onClick={() => handleClick(item.key as optionalCom | 'ADD_MORE')}
-            >
-              <Tooltip placement="right" title={item.label}>
-                {item.icon}
-              </Tooltip>
-            </li>
-          )
-        })}
-      </ul>
-      <div>
-        <Avatar
-          shape="square"
-          size="large"
-          icon={<Icon component={UserSVG} />}
-        />
+    <>
+      <div className={styles['left-container']}>
+        <div className={styles['mini-logo']} />
+        <ul className={styles['menu-list']}>
+          {iconMenu.map((item) => {
+            return (
+              <li
+                key={item.key}
+                className={styles['icon-item']}
+                onClick={() =>
+                  handleClick(item.key as optionalCom | 'ADD_MORE')
+                }
+              >
+                <Tooltip placement="right" title={item.label}>
+                  {item.icon}
+                </Tooltip>
+              </li>
+            )
+          })}
+        </ul>
+        <div>
+          <Avatar
+            shape="square"
+            size="large"
+            icon={<Icon component={UserSVG} />}
+          />
+        </div>
       </div>
-    </div>
+      <StyleEditor ref={drawerRef} />
+    </>
   )
 }
 

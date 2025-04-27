@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore, useUIStore } from '@/store'
@@ -16,7 +16,11 @@ const formatDate = (data: Dayjs[]) => {
   return data.map((item) => item.format('YYYY-MM')).join('~')
 }
 
-const Render = memo(({ dataContext, node }: RenderProps) => {
+// 这里原先使用 memo 时，当用户自定义修改样式，是无法达到更新的效果的
+// 因为 memo 进行的是浅比较，而原先修改的逻辑是借助"currentSchema与uiSchema引用地址相同"进行修改的，所以 uiSchema 的引用地址保持不变，所以加了 memo 之后就不会更新
+// TODO：每一次只需要进行很小的 style 改动，但是却要重新执行整个递归，导致会有很明显的样式更新延迟
+const Render = (props: RenderProps) => {
+  const { dataContext, node } = props
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
@@ -157,6 +161,6 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
     return <img src={dataContext[bind]} style={mergedStyle} />
   }
   return null
-})
+}
 
 export default Render

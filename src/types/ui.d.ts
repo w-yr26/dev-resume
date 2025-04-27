@@ -28,3 +28,12 @@ export type uiStoreType = {
   setUiSchema: (newUISchema: nodeType | null) => void
   setIsHorizontal: (arg: boolean) => void
 }
+
+// 树形结构的数据类型
+export type treeDateType = {
+  key: string
+  title: string
+  children: treeDateType[]
+  cssStyle: React.CSSProperties
+  rawNode: nodeType
+}

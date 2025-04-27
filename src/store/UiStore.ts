@@ -1,4 +1,4 @@
-import { uiStoreType } from '@/types/ui'
+import type { uiStoreType } from '@/types/ui'
 import { create } from 'zustand'
 
 const useUIStore = create<uiStoreType>((set) => {
