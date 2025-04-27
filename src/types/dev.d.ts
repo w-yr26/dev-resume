@@ -39,6 +39,7 @@ export type BaseInfoType = {
   blob: string
   gender: 0 | 1
   age: number | undefined
+  visible: boolean
 }
 
 export type EduBgType = {

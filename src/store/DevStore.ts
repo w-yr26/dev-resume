@@ -11,7 +11,7 @@ import dayjs from 'dayjs'
 
 const defaultInfoMap: Record<allKeyType, any> = {
   BASE_INFO: [],
-  EDU_BG: '',
+  EDU_BG: [],
   WORK_EXP: [],
   PROJECT_EXP: [],
   AWARD_LIST: [],
@@ -33,6 +33,7 @@ const initialData: devInitType = {
           phone: '18026086011',
           email: '18026086011@163.com',
           blob: 'https://juejin.cn/user/4479833607519512/posts',
+          visible: true,
         },
       ],
       visible: true,

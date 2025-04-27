@@ -110,7 +110,7 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
     return (
       <div style={mergedStyle}>
         {list.map((item: any, index: number) => {
-          return (
+          return item.visible ? (
             <React.Fragment key={index}>
               {children.map((child: any, idx: number) => {
                 return (
@@ -118,7 +118,7 @@ const Render = memo(({ dataContext, node }: RenderProps) => {
                 )
               })}
             </React.Fragment>
-          )
+          ) : null
         })}
       </div>
     )
