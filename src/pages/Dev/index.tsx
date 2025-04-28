@@ -129,7 +129,6 @@ const Dev = () => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
         const uiSchemaRes = await res.json()
         setUiSchema(uiSchemaRes)
-        console.log('uiSchemaRes', uiSchemaRes)
 
         await initGlobalStyle(uiSchemaRes)
       } catch (error) {

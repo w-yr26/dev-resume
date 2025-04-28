@@ -17,6 +17,7 @@ export type nodeType = {
   layout: layoutType
   type: uiType
   style: React.CSSProperties
+  nodeKey: string
   configStyle?: Record<string, any>
   label?: string
   tag?: string
@@ -28,11 +29,17 @@ export type uiStoreType = {
   uiSchema: nodeType | null
   setUiSchema: (newUISchema: nodeType | null) => void
   setIsHorizontal: (arg: boolean) => void
+  updateUISchema: (
+    node: nodeType,
+    id: string,
+    updater: (node: nodeType) => nodeType
+  ) => void
 }
 
 // 树形结构的数据类型
 export type treeDateType = {
   key: string
+  nodeKey: string
   title: string
   children: treeDateType[]
   cssStyle: React.CSSProperties
