@@ -19,6 +19,7 @@ export type nodeType = {
   style: React.CSSProperties
   configStyle?: Record<string, any>
   label?: string
+  tag?: string
   children?: nodeType[]
 }
 

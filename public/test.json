@@ -13,6 +13,7 @@
     "borderStyle": "solid",
     "sidebarProportions": [40, 60]
   },
+  "tag": "简历",
   "bind": "",
   "children": [
     {
@@ -26,6 +27,7 @@
         "borderBottomColor": "#292929"
       },
       "bind": "BASE_INFO",
+      "tag": "基础信息",
       "children": [
         {
           "type": "section",
@@ -219,8 +221,8 @@
     {
       "type": "module",
       "layout": "horizontal",
-      "title": "教育背景",
       "bind": "EDU_BG",
+      "tag": "教育背景",
       "style": {
         "borderBottomWidth": "1px",
         "borderBottomStyle": "solid",
@@ -277,8 +279,8 @@
     {
       "type": "module",
       "layout": "horizontal",
-      "title": "实习/工作经历",
       "bind": "WORK_EXP",
+      "tag": "实习/工作经历",
       "showLabel": true,
       "style": {
         "borderBottomWidth": "1px",
@@ -373,8 +375,8 @@
     {
       "type": "module",
       "layout": "horizontal",
-      "title": "项目经历",
       "bind": "PROJECT_EXP",
+      "tag": "项目经历",
       "showLabel": true,
       "style": {
         "borderBottomWidth": "1px",
@@ -469,8 +471,8 @@
     {
       "type": "module",
       "layout": "horizontal",
-      "title": "技能特长",
       "bind": "SKILL_LIST",
+      "tag": "技能特长",
       "showLabel": true,
       "style": {
         "borderBottomWidth": "1px",

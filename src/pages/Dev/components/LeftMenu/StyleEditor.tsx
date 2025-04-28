@@ -14,7 +14,7 @@ const mapToAntdTreeData = (
 ): treeDateType => {
   return {
     key: path,
-    title: node.bind || node.type,
+    title: node.tag || node.type,
     cssStyle: node.style || {},
     rawNode: node,
     children: (node.children || []).map((child: nodeType, index: number) =>
@@ -67,7 +67,7 @@ const StyleEditor = forwardRef<drawerMethods>((props, ref) => {
 
   useEffect(() => {
     console.log('keyPath', keyPath, currentStyle)
-    if (uiSchema) {
+    if (uiSchema && keyPath.length) {
       let currentSchema: nodeType | null = uiSchema
       // 重置css样式
       keyPath.forEach((position: number) => {
@@ -95,6 +95,8 @@ const StyleEditor = forwardRef<drawerMethods>((props, ref) => {
             <Tree
               blockNode
               showIcon
+              defaultSelectedKeys={['0']}
+              defaultExpandedKeys={['0']}
               treeData={[styleTree]}
               onSelect={handleSelectNode}
             />
@@ -104,7 +106,7 @@ const StyleEditor = forwardRef<drawerMethods>((props, ref) => {
           <Editor
             width="100%"
             defaultLanguage="json"
-            defaultValue={JSON.stringify({ color: 'red' }, null, 2)}
+            defaultValue={JSON.stringify({}, null, 2)}
             value={currentStyle}
             onMount={(editor) => {
               editor.onDidBlurEditorText(() => {
