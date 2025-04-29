@@ -1,44 +1,45 @@
-import {
-  AimOutlined,
+import Icon, {
   FilePdfOutlined,
   FullscreenExitOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons'
+import codeSVG from '@/assets/svg/dev/code.svg?react'
 import styles from './index.module.scss'
 import { Tooltip } from 'antd'
 
 type barType = {
   upWheel: () => void
   reduceWheel: () => void
+  handleModeSwitch: () => void
 }
 
-const BottomBar = ({ reduceWheel, upWheel }: barType) => {
+const BottomBar = ({ reduceWheel, upWheel, handleModeSwitch }: barType) => {
   const iconArr = [
     {
-      icon: FullscreenExitOutlined,
+      icon: <FullscreenExitOutlined />,
       label: '重置缩放',
       callback: () => {},
     },
     {
-      icon: ZoomInOutlined,
+      icon: <ZoomInOutlined />,
       label: '放大',
       callback: upWheel,
     },
     {
-      icon: ZoomOutOutlined,
+      icon: <ZoomOutOutlined />,
       label: '缩小',
       callback: reduceWheel,
     },
     {
-      icon: AimOutlined,
-      label: '中心画板',
+      icon: <FilePdfOutlined />,
+      label: '下载pdf',
       callback: () => {},
     },
     {
-      icon: FilePdfOutlined,
-      label: '下载pdf',
-      callback: () => {},
+      icon: <Icon component={codeSVG} />,
+      label: 'CSS编辑',
+      callback: handleModeSwitch,
     },
   ]
 
@@ -48,9 +49,7 @@ const BottomBar = ({ reduceWheel, upWheel }: barType) => {
         return (
           <div key={item.label} className={styles['utile-box']}>
             <Tooltip title={item.label}>
-              <div onClick={item.callback}>
-                <item.icon />
-              </div>
+              <div onClick={item.callback}>{item.icon}</div>
             </Tooltip>
           </div>
         )

@@ -9,6 +9,8 @@ import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
 import Render from '../Render'
+import StyleEditor from './components/LeftMenu/StyleEditor'
+import type { drawerMethods } from '@/types/materials'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -28,6 +30,8 @@ const Dev = () => {
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const drawerRef = useRef<drawerMethods>(null)
+
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
@@ -179,6 +183,11 @@ const Dev = () => {
     }
   }
 
+  // 模式切换
+  const handleModeSwitch = () => {
+    drawerRef.current?.handleOpen()
+  }
+
   return (
     <div className={styles['dev-container']}>
       <div
@@ -234,7 +243,12 @@ const Dev = () => {
         <Setting></Setting>
         <RightMenu></RightMenu>
       </div>
-      <BottomBar upWheel={upWheel} reduceWheel={reduceWheel}></BottomBar>
+      <BottomBar
+        upWheel={upWheel}
+        reduceWheel={reduceWheel}
+        handleModeSwitch={handleModeSwitch}
+      />
+      <StyleEditor ref={drawerRef} />
     </div>
   )
 }

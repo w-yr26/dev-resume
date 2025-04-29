@@ -11,9 +11,6 @@ import { Avatar, Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
 import { optionalCom } from '@/types/dev'
-import StyleEditor from './StyleEditor'
-import { useRef } from 'react'
-import type { drawerMethods } from '@/types/materials'
 
 const iconMenu = [
   {
@@ -60,10 +57,9 @@ const iconMenu = [
 
 const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
-  const drawerRef = useRef<drawerMethods>(null)
   const handleClick = (key: optionalCom | 'ADD_MORE') => {
     if (key === 'ADD_MORE') {
-      drawerRef.current?.handleOpen()
+      console.log('add')
     } else {
       console.log(keyToPosition[key])
       iconClick(keyToPosition[key] || 0)
@@ -99,7 +95,6 @@ const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
           />
         </div>
       </div>
-      <StyleEditor ref={drawerRef} />
     </>
   )
 }
