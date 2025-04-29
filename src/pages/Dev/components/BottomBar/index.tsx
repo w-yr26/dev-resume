@@ -1,10 +1,9 @@
-import Icon, {
-  FilePdfOutlined,
-  FullscreenExitOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
-} from '@ant-design/icons'
-import codeSVG from '@/assets/svg/dev/code.svg?react'
+import Icon from '@ant-design/icons'
+import cssSVG from '@/assets/svg/dev/css.svg?react'
+import centerSVG from '@/assets/svg/dev/center.svg?react'
+import zoomInSVG from '@/assets/svg/dev/zoom-in-line.svg?react'
+import zoomOutSVG from '@/assets/svg/dev/zoom-out-line.svg?react'
+import pdfSVG from '@/assets/svg/dev/pdf.svg?react'
 import styles from './index.module.scss'
 import { Tooltip } from 'antd'
 
@@ -17,27 +16,27 @@ type barType = {
 const BottomBar = ({ reduceWheel, upWheel, handleModeSwitch }: barType) => {
   const iconArr = [
     {
-      icon: <FullscreenExitOutlined />,
+      icon: <Icon component={centerSVG} />,
       label: '重置缩放',
       callback: () => {},
     },
     {
-      icon: <ZoomInOutlined />,
+      icon: <Icon component={zoomInSVG} />,
       label: '放大',
       callback: upWheel,
     },
     {
-      icon: <ZoomOutOutlined />,
+      icon: <Icon component={zoomOutSVG} />,
       label: '缩小',
       callback: reduceWheel,
     },
     {
-      icon: <FilePdfOutlined />,
+      icon: <Icon component={pdfSVG} />,
       label: '下载pdf',
       callback: () => {},
     },
     {
-      icon: <Icon component={codeSVG} />,
+      icon: <Icon component={cssSVG} />,
       label: 'CSS编辑',
       callback: handleModeSwitch,
     },
