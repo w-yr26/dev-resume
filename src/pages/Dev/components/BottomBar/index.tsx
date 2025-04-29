@@ -4,16 +4,26 @@ import centerSVG from '@/assets/svg/dev/center.svg?react'
 import zoomInSVG from '@/assets/svg/dev/zoom-in-line.svg?react'
 import zoomOutSVG from '@/assets/svg/dev/zoom-out-line.svg?react'
 import pdfSVG from '@/assets/svg/dev/pdf.svg?react'
+import normalSVG from '@/assets/svg/dev/normal.svg?react'
+import codeSVG from '@/assets/svg/dev/code.svg?react'
 import styles from './index.module.scss'
-import { Tooltip } from 'antd'
+import { ConfigProvider, Switch, Tooltip } from 'antd'
 
 type barType = {
   upWheel: () => void
   reduceWheel: () => void
   handleModeSwitch: () => void
+  isDev: boolean
+  setIsDev: (valk: boolean) => void
 }
 
-const BottomBar = ({ reduceWheel, upWheel, handleModeSwitch }: barType) => {
+const BottomBar = ({
+  reduceWheel,
+  upWheel,
+  handleModeSwitch,
+  isDev,
+  setIsDev,
+}: barType) => {
   const iconArr = [
     {
       icon: <Icon component={centerSVG} />,
@@ -40,6 +50,28 @@ const BottomBar = ({ reduceWheel, upWheel, handleModeSwitch }: barType) => {
       label: 'CSS编辑',
       callback: handleModeSwitch,
     },
+    {
+      icon: (
+        <ConfigProvider
+          theme={{
+            components: {
+              Switch: {
+                colorPrimary: '#09090b',
+                colorPrimaryHover: '#09090b',
+              },
+            },
+          }}
+        >
+          <Switch
+            checkedChildren={<Icon component={normalSVG} />}
+            unCheckedChildren={<Icon component={codeSVG} />}
+            checked={isDev}
+            onClick={(val) => setIsDev(val)}
+          />
+        </ConfigProvider>
+      ),
+      callback: () => {},
+    },
   ]
 
   return (
@@ -47,9 +79,13 @@ const BottomBar = ({ reduceWheel, upWheel, handleModeSwitch }: barType) => {
       {iconArr.map((item) => {
         return (
           <div key={item.label} className={styles['utile-box']}>
-            <Tooltip title={item.label}>
+            {item.label ? (
+              <Tooltip title={item.label}>
+                <div onClick={item.callback}>{item.icon}</div>
+              </Tooltip>
+            ) : (
               <div onClick={item.callback}>{item.icon}</div>
-            </Tooltip>
+            )}
           </div>
         )
       })}

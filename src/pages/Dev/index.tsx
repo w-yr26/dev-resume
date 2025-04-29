@@ -39,6 +39,7 @@ const Dev = () => {
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   const [lineShow, setLineShow] = useState(false)
+  const [isDev, setIsDev] = useState(false)
 
   const startX = useRef(0)
   const startY = useRef(0)
@@ -190,16 +191,8 @@ const Dev = () => {
 
   return (
     <div className={styles['dev-container']}>
-      <div
-        style={{
-          display: 'flex',
-          width: '30%',
-          backgroundColor: '#f8f8f9',
-        }}
-      >
-        <LeftMenu iconClick={handleScroll} />
-        <Materials ref={scrollRef} />
-      </div>
+      <LeftMenu iconClick={handleScroll} isDev={isDev} />
+      <Materials ref={scrollRef} isDev={isDev} />
       <main className={styles['main-container']}>
         <div
           className={styles['preview-container']}
@@ -240,13 +233,15 @@ const Dev = () => {
           width: '30%',
         }}
       >
-        <Setting></Setting>
-        <RightMenu></RightMenu>
+        <Setting />
+        <RightMenu />
       </div>
       <BottomBar
         upWheel={upWheel}
         reduceWheel={reduceWheel}
         handleModeSwitch={handleModeSwitch}
+        isDev={isDev}
+        setIsDev={(val: boolean) => setIsDev(val)}
       />
       <StyleEditor ref={drawerRef} />
     </div>

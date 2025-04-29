@@ -6,7 +6,8 @@ import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AwardSVG from '@/assets/svg/dev/award.svg?react'
 import SkillSVG from '@/assets/svg/dev/skill.svg?react'
 import HeartSVG from '@/assets/svg/dev/heart.svg?react'
-import AddSmallSVG from '@/assets/svg/dev/add-small.svg?react'
+import extendSVG from '@/assets/svg/dev/extend.svg?react'
+import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Avatar, Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
@@ -48,14 +49,15 @@ const iconMenu = [
     label: '兴趣爱好',
     key: 'HEART_LIST',
   },
-  {
-    icon: <Icon component={AddSmallSVG} />,
-    label: '开发者模式',
-    key: 'ADD_MORE',
-  },
 ]
 
-const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
+const LeftMenu = ({
+  iconClick,
+  isDev,
+}: {
+  iconClick: (position: number) => void
+  isDev: boolean
+}) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
   const handleClick = (key: optionalCom | 'ADD_MORE') => {
     if (key === 'ADD_MORE') {
@@ -67,35 +69,37 @@ const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
   }
 
   return (
-    <>
-      <div className={styles['left-container']}>
-        <div className={styles['mini-logo']} />
-        <ul className={styles['menu-list']}>
-          {iconMenu.map((item) => {
-            return (
-              <li
-                key={item.key}
-                className={styles['icon-item']}
-                onClick={() =>
-                  handleClick(item.key as optionalCom | 'ADD_MORE')
-                }
-              >
-                <Tooltip placement="right" title={item.label}>
-                  {item.icon}
-                </Tooltip>
-              </li>
-            )
-          })}
-        </ul>
-        <div>
-          <Avatar
-            shape="square"
-            size="large"
-            icon={<Icon component={UserSVG} />}
-          />
-        </div>
+    <div className={styles['left-container']}>
+      <div className={styles['mini-logo']}>
+        {isDev ? (
+          <Icon component={extendSVG} />
+        ) : (
+          <Icon component={shrinkSVG} />
+        )}
       </div>
-    </>
+      <ul className={styles['menu-list']}>
+        {iconMenu.map((item) => {
+          return (
+            <li
+              key={item.key}
+              className={styles['icon-item']}
+              onClick={() => handleClick(item.key as optionalCom | 'ADD_MORE')}
+            >
+              <Tooltip placement="right" title={item.label}>
+                {item.icon}
+              </Tooltip>
+            </li>
+          )
+        })}
+      </ul>
+      <div>
+        <Avatar
+          shape="square"
+          size="large"
+          icon={<Icon component={UserSVG} />}
+        />
+      </div>
+    </div>
   )
 }
 
