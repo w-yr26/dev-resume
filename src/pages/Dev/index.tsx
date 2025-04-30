@@ -203,10 +203,6 @@ const Dev = () => {
         className={`${styles['main-container']}
         ${isDev && styles['not-edit']}
         `}
-        style={{
-          flex: isDev ? 'none' : 1,
-          width: isDev ? '100%' : 'auto',
-        }}
       >
         <div
           className={styles['preview-container']}
