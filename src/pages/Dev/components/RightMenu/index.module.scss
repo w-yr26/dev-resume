@@ -9,7 +9,7 @@ $light-cardBg-color: #ffffff;
 
 .right-container {
   // w-12 h-full py-4 box-border flex flex-col justify-center items-center border-l border-[#e4e4e7]
-  width: 3rem;
+  width: 48px;
   height: 100%;
   padding: 1rem;
   box-sizing: border-box;
@@ -18,7 +18,8 @@ $light-cardBg-color: #ffffff;
   justify-content: center;
   align-items: center;
   border: 1px solid $light-border-color;
-
+  z-index: 2;
+  
   .list-box {
     display: flex;
     flex-direction: column;

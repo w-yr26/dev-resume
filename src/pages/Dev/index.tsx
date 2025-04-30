@@ -56,6 +56,12 @@ const Dev = () => {
     setWheel((prev) => prev - 0.1)
   }
 
+  // 重置缩放
+  const resetWheel = () => {
+    if (wheel === 0.7) return
+    setWheel(0.7)
+  }
+
   const startDrag = (e: React.MouseEvent<Element>) => {
     e.preventDefault()
     setDragging(true)
@@ -191,9 +197,17 @@ const Dev = () => {
 
   return (
     <div className={styles['dev-container']}>
-      <LeftMenu iconClick={handleScroll} isDev={isDev} />
+      <LeftMenu iconClick={handleScroll} />
       <Materials ref={scrollRef} isDev={isDev} />
-      <main className={styles['main-container']}>
+      <main
+        className={`${styles['main-container']}
+        ${isDev && styles['not-edit']}
+        `}
+        style={{
+          flex: isDev ? 'none' : 1,
+          width: isDev ? '100%' : 'auto',
+        }}
+      >
         <div
           className={styles['preview-container']}
           onWheel={(e) => handleWheel(e)}
@@ -227,21 +241,15 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <div
-        style={{
-          display: 'flex',
-          width: '30%',
-        }}
-      >
-        <Setting />
-        <RightMenu />
-      </div>
+      <Setting isDev={isDev} />
+      <RightMenu />
       <BottomBar
         upWheel={upWheel}
         reduceWheel={reduceWheel}
         handleModeSwitch={handleModeSwitch}
+        resetWheel={resetWheel}
         isDev={isDev}
-        setIsDev={(val: boolean) => setIsDev(val)}
+        setIsDev={(val) => setIsDev(val)}
       />
       <StyleEditor ref={drawerRef} />
     </div>

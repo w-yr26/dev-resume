@@ -4,9 +4,13 @@ import styles from './index.module.scss'
 import PageSetting from './PageSetting'
 import TypeSetting from './TypeSetting'
 
-const Setting = () => {
+const Setting = ({ isDev }: { isDev: boolean }) => {
   return (
-    <div className={styles['setting-contaienr']}>
+    <div
+      className={`${styles['setting-contaienr']} ${
+        isDev && styles['active-translate']
+      }`}
+    >
       <TypeSetting />
       <PageSetting />
       <ColorSetting />

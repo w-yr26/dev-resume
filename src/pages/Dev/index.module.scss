@@ -11,11 +11,12 @@ $light-cardBg-color: #ffffff;
   height: 100vh;
   display: flex;
   justify-content: space-between;
+  background: $light-bg-color;
+  overflow: hidden;
 
   .main-container {
     flex: 1;
     display: flex;
-    background: $light-bg-color;
   }
 
   .preview-container {
@@ -25,6 +26,11 @@ $light-cardBg-color: #ffffff;
     width: 100%;
     height: 100%;
   }
+}
+
+.not-edit {
+  display: none;
+  width: 100%;
 }
 
 .resume-container {

@@ -13,6 +13,7 @@ type barType = {
   upWheel: () => void
   reduceWheel: () => void
   handleModeSwitch: () => void
+  resetWheel: () => void
   isDev: boolean
   setIsDev: (valk: boolean) => void
 }
@@ -21,6 +22,7 @@ const BottomBar = ({
   reduceWheel,
   upWheel,
   handleModeSwitch,
+  resetWheel,
   isDev,
   setIsDev,
 }: barType) => {
@@ -28,7 +30,7 @@ const BottomBar = ({
     {
       icon: <Icon component={centerSVG} />,
       label: '重置缩放',
-      callback: () => {},
+      callback: resetWheel,
     },
     {
       icon: <Icon component={zoomInSVG} />,
@@ -58,6 +60,7 @@ const BottomBar = ({
               Switch: {
                 colorPrimary: '#09090b',
                 colorPrimaryHover: '#09090b',
+                controlHeight: 24,
               },
             },
           }}
@@ -76,9 +79,9 @@ const BottomBar = ({
 
   return (
     <div className={styles['bar-container']}>
-      {iconArr.map((item) => {
+      {iconArr.map((item, index) => {
         return (
-          <div key={item.label} className={styles['utile-box']}>
+          <div key={index} className={styles['utile-box']}>
             {item.label ? (
               <Tooltip title={item.label}>
                 <div onClick={item.callback}>{item.icon}</div>
