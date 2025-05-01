@@ -32,8 +32,8 @@ const checkRichTextIsEmpty = (richText: string) => {
 }
 
 const sleep = (delay = 500) => {
-  return Promise.resolve(() => {
-    setTimeout(() => {}, delay)
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay) // 延迟后执行 resolve
   })
 }
 

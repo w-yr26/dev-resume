@@ -41,6 +41,7 @@ export function useExportPDF(
   }
 
   const savePDF = async () => {
+    // 页面先重置缩放，且一定要在转换为 canvas 图像之前缩放
     setWheel(1)
     await sleep()
     const {
@@ -48,19 +49,38 @@ export function useExportPDF(
       height: canvasHeight,
       width: canvasWidth,
     } = (await dom2Canvas()) || {}
-    console.log(base64URL, canvasHeight, canvasWidth)
     const pdfInstance = new jsPDF({
       orientation: 'portrait',
       unit: 'px',
       format: 'a4',
     })
     if (!base64URL || !canvasHeight || !canvasWidth) return
+
     const pageWidth = pdfInstance.internal.pageSize.getWidth()
+    const pageHeight = pdfInstance.internal.pageSize.getHeight()
+    let pageSize = 0
 
     // 计算等比缩放后的尺寸
     const scale = pageWidth / canvasWidth
     const imgHeight = canvasHeight * scale
-    addImage(0, 0, pdfInstance, base64URL, pageWidth, imgHeight)
+    // 计算所需的页数(也就是内容实际高度是否 > 一张a4的高度)
+    let tempHeight = imgHeight
+    while (tempHeight > 0) {
+      pageSize = pageSize + 1
+      tempHeight -= pageHeight
+    }
+
+    Array(pageSize)
+      .fill(0)
+      .forEach((_, index) => {
+        if (index > 0) {
+          // 新增的页面要与原页面的配置保持一致
+          pdfInstance.addPage('a4', 'portrait')
+        }
+
+        const yPos = -(index * pageHeight)
+        addImage(0, yPos, pdfInstance, base64URL, pageWidth, imgHeight)
+      })
     pdfInstance.save(`resume-${new Date().getTime()}`)
   }
 
