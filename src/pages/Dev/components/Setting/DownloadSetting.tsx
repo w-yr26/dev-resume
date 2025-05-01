@@ -1,6 +1,6 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
-import Icon, { BgColorsOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import OutputSVG from '@/assets/svg/dev/output.svg?react'
 import PDFSVG from '@/assets/svg/dev/pdf.svg?react'
 import JsonSVG from '@/assets/svg/dev/json.svg?react'
@@ -9,11 +9,7 @@ import styled from './index.module.scss'
 const DownloadSetting = () => {
   return (
     <CustomLayout>
-      <Header
-        icon={BgColorsOutlined}
-        label="导出"
-        svg={<Icon component={OutputSVG} />}
-      />
+      <Header label="导出" svg={<Icon component={OutputSVG} />} />
       <div
         className={styled['down-load-box']}
         style={{

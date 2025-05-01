@@ -11,7 +11,7 @@ import BottomBar from './components/BottomBar'
 import Render from '../Render'
 import StyleEditor from './components/LeftMenu/StyleEditor'
 import type { drawerMethods } from '@/types/materials'
-import html2canvas from 'html2canvas'
+import { useExportPDF } from '@/hooks/useExportPDF'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -199,21 +199,23 @@ const Dev = () => {
   }
 
   // canvas 转换
-  const dom2Canvas = async () => {
-    if (mainRef.current) {
-      const canvas = await html2canvas(mainRef.current, {
-        useCORS: true, // 允许图片跨域，后续换掉
-        scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
-      })
-      const { width, height } = canvas
-      const base64URL = canvas.toDataURL('image/jpeg', 1) // 第二个参数quality: 生成的图片质量
-      return {
-        base64URL,
-        width,
-        height,
-      }
-    }
-  }
+  // const dom2Canvas = async () => {
+  //   if (mainRef.current) {
+  //     const canvas = await html2canvas(mainRef.current, {
+  //       useCORS: true, // 允许图片跨域，后续换掉
+  //       scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
+  //     })
+  //     const { width, height } = canvas
+  //     const base64URL = canvas.toDataURL('image/jpeg', 1) // 第二个参数quality: 生成的图片质量
+  //     return {
+  //       base64URL,
+  //       width,
+  //       height,
+  //     }
+  //   }
+  // }
+
+  const { savePDF } = useExportPDF(mainRef, setWheel)
 
   return (
     <div className={styles['dev-container']}>
@@ -266,8 +268,7 @@ const Dev = () => {
         resetWheel={resetWheel}
         isDev={isDev}
         setIsDev={(val) => setIsDev(val)}
-        setWheel={(wheel: number) => setWheel(wheel)}
-        dom2Canvas={dom2Canvas}
+        savePDF={savePDF}
       />
       <StyleEditor ref={drawerRef} />
     </div>
