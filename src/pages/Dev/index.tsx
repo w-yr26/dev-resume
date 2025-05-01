@@ -12,6 +12,7 @@ import Render from '../Render'
 import StyleEditor from './components/LeftMenu/StyleEditor'
 import type { drawerMethods } from '@/types/materials'
 import { useExportPDF } from '@/hooks/useExportPDF'
+import { Spin } from 'antd'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -215,7 +216,7 @@ const Dev = () => {
   //   }
   // }
 
-  const { savePDF } = useExportPDF(mainRef, setWheel)
+  const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
 
   return (
     <div className={styles['dev-container']}>
@@ -256,6 +257,11 @@ const Dev = () => {
                 <span>分页线</span>
               </div>
             )}
+            {isLoading ? (
+              <div className={styles['loading-box']}>
+                <Spin />
+              </div>
+            ) : null}
           </div>
         </div>
       </main>

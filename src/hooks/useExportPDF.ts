@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import type { RGBAData } from 'jspdf'
@@ -8,6 +8,8 @@ export function useExportPDF(
   mainRef: React.RefObject<HTMLDivElement | null>,
   setWheel: (wheel: number) => void
 ) {
+  const [isLoading, setIsLoading] = useState(false)
+
   const dom2Canvas = async () => {
     if (mainRef.current) {
       const canvas = await html2canvas(mainRef.current, {
@@ -64,6 +66,8 @@ export function useExportPDF(
     const scale = pageWidth / canvasWidth
     const imgHeight = canvasHeight * scale
     // 计算所需的页数(也就是内容实际高度是否 > 一张a4的高度)
+    console.log('imgHeight', imgHeight, 'pageHeight', pageHeight)
+
     let tempHeight = imgHeight
     while (tempHeight > 0) {
       pageSize = pageSize + 1
@@ -81,10 +85,12 @@ export function useExportPDF(
         const yPos = -(index * pageHeight)
         addImage(0, yPos, pdfInstance, base64URL, pageWidth, imgHeight)
       })
-    pdfInstance.save(`resume-${new Date().getTime()}`)
+    pdfInstance.save(`resume_${new Date().getTime()}`)
   }
 
   return {
+    isLoading,
+    setIsLoading,
     dom2Canvas,
     savePDF,
   }

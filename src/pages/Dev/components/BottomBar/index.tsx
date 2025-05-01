@@ -34,45 +34,6 @@ const BottomBar = ({
   setIsDev,
   savePDF,
 }: barType) => {
-  // const addImage = (
-  //   _x: number,
-  //   _y: number,
-  //   pdfInstance: jsPDF,
-  //   base_data:
-  //     | string
-  //     | HTMLImageElement
-  //     | HTMLCanvasElement
-  //     | Uint8Array
-  //     | RGBAData,
-  //   _width: number,
-  //   _height: number
-  // ) => {
-  //   pdfInstance.addImage(base_data, 'JPEG', _x, _y, _width, _height)
-  // }
-
-  // const savePDF = async () => {
-  //   setWheel(1)
-  //   await sleep()
-  //   const {
-  //     base64URL,
-  //     height: canvasHeight,
-  //     width: canvasWidth,
-  //   } = (await dom2Canvas()) || {}
-  //   console.log(base64URL, canvasHeight, canvasWidth)
-  //   const pdfInstance = new jsPDF({
-  //     orientation: 'portrait',
-  //     unit: 'px',
-  //     format: 'a4',
-  //   })
-  //   if (!base64URL || !canvasHeight || !canvasWidth) return
-  //   const pageWidth = pdfInstance.internal.pageSize.getWidth()
-
-  //   // 计算等比缩放后的尺寸
-  //   const scale = pageWidth / canvasWidth
-  //   const imgHeight = canvasHeight * scale
-  //   addImage(0, 0, pdfInstance, base64URL, pageWidth, imgHeight)
-  //   pdfInstance.save(`resume-${new Date().getTime()}`)
-  // }
 
   const iconArr = [
     {
