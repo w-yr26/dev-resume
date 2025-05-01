@@ -31,4 +31,17 @@ const checkRichTextIsEmpty = (richText: string) => {
   return stripped === ''
 }
 
-export { pxToMm, request, setLocalItem, getLocalItem, checkRichTextIsEmpty }
+const sleep = (delay = 500) => {
+  return Promise.resolve(() => {
+    setTimeout(() => {}, delay)
+  })
+}
+
+export {
+  pxToMm,
+  request,
+  setLocalItem,
+  getLocalItem,
+  checkRichTextIsEmpty,
+  sleep,
+}

@@ -11,6 +11,7 @@ import BottomBar from './components/BottomBar'
 import Render from '../Render'
 import StyleEditor from './components/LeftMenu/StyleEditor'
 import type { drawerMethods } from '@/types/materials'
+import html2canvas from 'html2canvas'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -35,7 +36,7 @@ const Dev = () => {
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
-  const [wheel, setWheel] = useState(0.7)
+  const [wheel, setWheel] = useState(1)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   const [lineShow, setLineShow] = useState(false)
@@ -120,6 +121,8 @@ const Dev = () => {
         const mmHeight = pxToMm(height)
         if (mmHeight > 297) {
           setLineShow(true)
+        } else {
+          setLineShow(false)
         }
       })
     })
@@ -195,6 +198,23 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
+  // canvas 转换
+  const dom2Canvas = async () => {
+    if (mainRef.current) {
+      const canvas = await html2canvas(mainRef.current, {
+        useCORS: true, // 允许图片跨域，后续换掉
+        scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
+      })
+      const { width, height } = canvas
+      const base64URL = canvas.toDataURL('image/jpeg', 1) // 第二个参数quality: 生成的图片质量
+      return {
+        base64URL,
+        width,
+        height,
+      }
+    }
+  }
+
   return (
     <div className={styles['dev-container']}>
       <LeftMenu iconClick={handleScroll} />
@@ -246,6 +266,8 @@ const Dev = () => {
         resetWheel={resetWheel}
         isDev={isDev}
         setIsDev={(val) => setIsDev(val)}
+        setWheel={(wheel: number) => setWheel(wheel)}
+        dom2Canvas={dom2Canvas}
       />
       <StyleEditor ref={drawerRef} />
     </div>

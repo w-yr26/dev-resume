@@ -75,7 +75,7 @@ const initialData: devInitType = {
           overview:
             '一款致力于制作流量推广业务的素材的平台，面向司内设计人员，实现流量推广小游戏素材快速换皮、研发和制作，为游戏侧服务',
           date: [dayjs('2025-01-01'), dayjs('2025-03-05')],
-          visible: true,
+          visible: false,
         },
       ],
       visible: true,
