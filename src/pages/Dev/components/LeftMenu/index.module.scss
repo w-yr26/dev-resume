@@ -16,7 +16,8 @@ $light-cardBg-color: #ffffff;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
-  background: #fff;
+  background: #f8f8f9;
+  z-index: 2;
 
   .menu-list {
     display: flex;
@@ -39,11 +40,14 @@ $light-cardBg-color: #ffffff;
   }
 }
 
-.mini-logo {
+.theme-box {
   width: 100%;
   height: 48px;
-  background-image: url('/src/assets/logo-mini.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+  }
 }

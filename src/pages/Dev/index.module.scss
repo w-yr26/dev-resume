@@ -11,11 +11,12 @@ $light-cardBg-color: #ffffff;
   height: 100vh;
   display: flex;
   justify-content: space-between;
+  background: $light-bg-color;
+  // overflow: hidden;
 
   .main-container {
     flex: 1;
     display: flex;
-    background: $light-bg-color;
   }
 
   .preview-container {
@@ -25,6 +26,11 @@ $light-cardBg-color: #ffffff;
     width: 100%;
     height: 100%;
   }
+}
+
+.not-edit {
+  flex: none !important;
+  width: calc(100% - 96px);
 }
 
 .resume-container {
@@ -42,8 +48,8 @@ $light-cardBg-color: #ffffff;
 
 .preview-content {
   max-width: 210mm;
-  min-height: 297mm;
-  padding: 14px;
+  min-height: 631.4175px;
+  // padding: 14px;
   box-sizing: border-box;
   font-size: 1rem;
   background-color: #fff;
@@ -52,6 +58,13 @@ $light-cardBg-color: #ffffff;
   & > *:last-child {
     border-bottom: 0;
   }
+}
+
+.loading-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .page-line {

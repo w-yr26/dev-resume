@@ -9,9 +9,7 @@ export type LayoutPropsType = {
 // 物料区头部
 export type HeaderType = {
   label: string
-  icon: React.ForwardRefExoticComponent<
-    Omit<AntdIconProps, 'ref'> & React.RefAttributes<HTMLSpanElement>
-  >
+  svg?: React.ReactNode
   opMenu?: false
   children?: React.ReactNode
   isEdit?: boolean
@@ -41,10 +39,15 @@ export type BaseInfoType = {
   blob: string
   gender: 0 | 1
   age: number | undefined
+  visible: boolean
 }
 
 export type EduBgType = {
+  school: string
   bg: string
+  id: string
+  visible: boolean
+  date: [Dayjs, Dayjs]
 }
 
 export type WorkExpItemType = {
@@ -103,12 +106,12 @@ export type headMenuType = {
 export type devInitType = {
   dataSource: {
     BASE_INFO: {
-      info: BaseInfoType
+      info: BaseInfoType[]
       visible: boolean
       label?: string
     }
     EDU_BG: {
-      info: string
+      info: EduBgType[]
       visible: boolean
       label?: string
     }
@@ -147,6 +150,7 @@ export type InfoArrTypeMap = {
   WORK_EXP: WorkExpItemType
   PROJECT_EXP: PeojectExpItemType
   AWARD_LIST: AwardItemType
+  EDU_BG: EduBgType
 }
 
 // 这个Map存放info为string的字段

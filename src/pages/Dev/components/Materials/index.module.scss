@@ -1,11 +1,36 @@
 .materials-contaienr {
   // min-width: 25%;
   // width: 30%;
-  flex: 1;
+  // flex: 1;
+  width: 390px;
   height: 100%;
   padding: 0 1rem;
   background-color: #fff;
   overflow-y: scroll;
+  transition: display 0.3s ease-in-out;
+
+  &::-webkit-scrollbar {
+    width: 8px; /* 滚动条宽度 */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #e9e9e9; /* 滚动条轨道颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #8b8b8b; /* 滚动条颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #bfbfbf; /* 滚动条悬停时颜色 */
+  }
+}
+
+.active-translate {
+  // transform: translateX(-440px);
+  display: none;
 }
 
 /* 水平多表单项排列 */
@@ -61,4 +86,14 @@
 .rich-text-field {
   height: 22px;
   margin-bottom: 8px;
+}
+
+.custom-date-box {
+  margin-top: 0.5rem;
+  font-size: 12px;
+
+  .label {
+    color: #18181b;
+    margin-bottom: 0.5rem;
+  }
 }

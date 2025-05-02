@@ -7,9 +7,19 @@ import ProjectExperience from './ProjectExperience'
 import Skill from './Skill'
 import WorkExperience from './WorkExperience'
 import styles from './index.module.scss'
-const Materials = forwardRef<HTMLDivElement>((props, ref) => {
+const Materials = forwardRef<
+  HTMLDivElement,
+  {
+    isLeftExpand: boolean
+  }
+>(({ isLeftExpand }, ref) => {
   return (
-    <div className={styles['materials-contaienr']} ref={ref}>
+    <div
+      className={`${styles['materials-contaienr']} ${
+        isLeftExpand && styles['active-translate']
+      }`}
+      ref={ref}
+    >
       <BaseInfo />
       <EduBg />
       <WorkExperience />

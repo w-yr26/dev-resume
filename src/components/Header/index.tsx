@@ -6,7 +6,7 @@ import { useState } from 'react'
 const Header = (props: HeaderType) => {
   const {
     label,
-    icon: Icon,
+    svg,
     opMenu = true,
     children,
     isEdit,
@@ -24,7 +24,7 @@ const Header = (props: HeaderType) => {
   return (
     <div className={styles['header-container']}>
       <div className={styles['header-left']}>
-        <Icon />
+        {svg}
         {isEdit ? (
           <Input
             value={name}

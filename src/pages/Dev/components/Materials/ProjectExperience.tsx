@@ -1,6 +1,7 @@
 import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
-import { BranchesOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
+import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
 import RichInput from './components/RichInput'
@@ -47,7 +48,7 @@ const ProjectExperience = () => {
     <CustomLayout ref={proRef}>
       <Header
         label={label || '项目经历'}
-        icon={BranchesOutlined}
+        svg={<Icon component={ProjectSVG} />}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}

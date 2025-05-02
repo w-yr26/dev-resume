@@ -1,9 +1,146 @@
 .setting-contaienr {
   // min-width: 25%;
-  // width: 30%;
-  flex: 1;
+  width: 390px;
   height: 100%;
-  padding: 0 1rem;
+  padding: 0 14px;
   background-color: #fff;
   overflow-y: auto;
+  transition: display 0.3s ease-in-out;
+
+  &::-webkit-scrollbar {
+    width: 8px; /* 滚动条宽度 */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #e9e9e9; /* 滚动条轨道颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #8b8b8b; /* 滚动条颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #bfbfbf; /* 滚动条悬停时颜色 */
+  }
+}
+
+.active-translate {
+  // transform: translateX(440px);
+  display: none;
+}
+
+.custom-line {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin: 8px 0;
+
+  .setting-label {
+    margin-right: 12px;
+    font-size: 13px;
+    height: 100%;
+  }
+}
+
+.color-picker-box {
+  height: auto;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+
+  .picker-item {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .color-name {
+    color: #333;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 8px;
+  }
+}
+
+.theme-color-container {
+  display: grid;
+  width: 100%;
+  height: 120px;
+  margin: 12px 0;
+  grid-template-columns: repeat(9, 1fr);
+
+  .color-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .radio-box {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+
+    &:hover {
+      cursor: pointer;
+      outline: 1.5px solid #333;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.down-load-box {
+  height: 84px;
+  width: 100%;
+  display: flex;
+  background-color: #fff;
+  border: 1px solid #e4e4e7;
+  padding: 8px;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: #f6f6f7;
+    cursor: pointer;
+  }
+
+  .icon-box {
+    width: 48px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .content-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .title {
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #39393b;
+      line-height: 1.5;
+    }
+  }
+}
+
+.active {
+  // width: 24px;
+  // height: 24px;
+  border-radius: 50%;
+  outline: 1.5px solid #333;
+  outline-offset: 2px;
 }

@@ -4,26 +4,45 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.scss'
-import { useDevStore } from '@/store'
+import { useDevStore, useStyleStore, useUIStore } from '@/store'
 import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
 import Render from '../Render'
-import uiSchema from '../Render/test.json'
+import StyleEditor from './components/StyleEditor'
+import type { drawerMethods } from '@/types/materials'
+import { useExportPDF } from '@/hooks/useExportPDF'
+import { Spin } from 'antd'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
+  const setUiSchema = useUIStore((state) => state.setUiSchema)
+  const uiSchema = useUIStore((state) => state.uiSchema)
+  const setPagePadding = useStyleStore((state) => state.setPagePadding)
+  const setModulePadding = useStyleStore((state) => state.setModulePadding)
+  const setLineHeight = useStyleStore((state) => state.setLineHeight)
+  const setFontSize = useStyleStore((state) => state.setFontSize)
+  const setFontColor = useStyleStore((state) => state.setFontColor)
+  const setMainColor = useStyleStore((state) => state.setMainColor)
+  const setBgColor = useStyleStore((state) => state.setBgColor)
+  const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
+  const setSidebarProportions = useStyleStore(
+    (state) => state.setSidebarProportions
+  )
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const drawerRef = useRef<drawerMethods>(null)
+
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
-  const [wheel, setWheel] = useState(0.7)
+  const [wheel, setWheel] = useState(1)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   const [lineShow, setLineShow] = useState(false)
-
+  const [isLeftExpand, setIsLeftExpand] = useState(false)
+  const [isRightExpand, setIsRightExpand] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -37,6 +56,12 @@ const Dev = () => {
   const reduceWheel = () => {
     if (wheel <= 0.3) return
     setWheel((prev) => prev - 0.1)
+  }
+
+  // 重置缩放
+  const resetWheel = () => {
+    if (wheel === 0.7) return
+    setWheel(0.7)
   }
 
   const startDrag = (e: React.MouseEvent<Element>) => {
@@ -89,24 +114,54 @@ const Dev = () => {
     }
   }, [dragging])
 
-  // 监听分页线
+  const [loading, setLoading] = useState<boolean>(false)
   useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { height } = entry.contentRect
-        const mmHeight = pxToMm(height)
-        if (mmHeight > 297) {
-          setLineShow(true)
-        }
-      })
-    })
+    const getUiSchema = async () => {
+      try {
+        setLoading(true)
+        const res = await fetch('/test.json')
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+        const uiSchemaRes = await res.json()
+        setUiSchema(uiSchemaRes)
 
-    if (mainRef.current) {
-      observer.observe(mainRef.current)
+        await initGlobalStyle(uiSchemaRes)
+      } catch (error) {
+        console.log('err', error)
+        setUiSchema(null)
+      } finally {
+        setLoading(false)
+      }
     }
-
-    return () => observer.disconnect()
+    getUiSchema()
   }, [])
+
+  const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
+    return new Promise((resolve) => {
+      const {
+        configStyle: {
+          pagePadding,
+          modulePadding,
+          lineHeight,
+          fontSize,
+          fontColor,
+          bgColor,
+          mainColor,
+          borderStyle,
+          sidebarProportions,
+        },
+      } = uiSchemaRes
+      setPagePadding(pagePadding)
+      setModulePadding(modulePadding)
+      setLineHeight(lineHeight)
+      setFontSize(fontSize)
+      setFontColor(fontColor)
+      setBgColor(bgColor)
+      setMainColor(mainColor)
+      setBorderStyle(borderStyle)
+      setSidebarProportions(sidebarProportions)
+      resolve('success')
+    })
+  }
 
   // 滚动至具体位置
   const handleScroll = (position: number) => {
@@ -118,19 +173,47 @@ const Dev = () => {
     }
   }
 
+  // 模式切换
+  const handleModeSwitch = () => {
+    drawerRef.current?.handleOpen()
+  }
+
+  const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
+
+  // 监听分页线
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const { height } = entry.contentRect
+        const mmHeight = pxToMm(height)
+        if (mmHeight > 297) {
+          setLineShow(true)
+        } else {
+          setLineShow(false)
+        }
+      })
+    })
+
+    if (mainRef.current) {
+      observer.observe(mainRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className={styles['dev-container']}>
-      <div
-        style={{
-          display: 'flex',
-          width: '30%',
-          backgroundColor: '#f8f8f9',
-        }}
+      <LeftMenu
+        iconClick={handleScroll}
+        isLeftExpand={isLeftExpand}
+        setIsLeftExpand={setIsLeftExpand}
+      />
+      <Materials ref={scrollRef} isLeftExpand={isLeftExpand} />
+      <main
+        className={`${styles['main-container']}
+        ${isLeftExpand && isRightExpand && styles['not-edit']}
+        `}
       >
-        <LeftMenu iconClick={handleScroll} />
-        <Materials ref={scrollRef} />
-      </div>
-      <main className={styles['main-container']}>
         <div
           className={styles['preview-container']}
           onWheel={(e) => handleWheel(e)}
@@ -152,26 +235,40 @@ const Dev = () => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : null
               })} */}
-              <Render dataContext={dataSource} node={uiSchema} />
+              {uiSchema && !loading && top ? (
+                <Render dataContext={dataSource} node={uiSchema} />
+              ) : null}
             </div>
             {lineShow && (
               <div className={styles['page-line']}>
                 <span>分页线</span>
               </div>
             )}
+            {isLoading ? (
+              <div className={styles['loading-box']}>
+                <Spin />
+              </div>
+            ) : null}
           </div>
         </div>
       </main>
-      <div
-        style={{
-          display: 'flex',
-          width: '30%',
-        }}
-      >
-        <Setting></Setting>
-        <RightMenu></RightMenu>
-      </div>
-      <BottomBar upWheel={upWheel} reduceWheel={reduceWheel}></BottomBar>
+      <Setting isRightExpand={isRightExpand} />
+      <RightMenu
+        isRightExpand={isRightExpand}
+        setIsRightExpand={setIsRightExpand}
+      />
+      <BottomBar
+        upWheel={upWheel}
+        reduceWheel={reduceWheel}
+        handleModeSwitch={handleModeSwitch}
+        resetWheel={resetWheel}
+        isLeftExpand={isLeftExpand}
+        isRightExpand={isRightExpand}
+        setIsLeftExpand={setIsLeftExpand}
+        setIsRightExpand={setIsRightExpand}
+        savePDF={savePDF}
+      />
+      <StyleEditor ref={drawerRef} />
     </div>
   )
 }

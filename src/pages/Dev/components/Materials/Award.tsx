@@ -1,6 +1,7 @@
 import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
-import { BulbOutlined } from '@ant-design/icons'
+import Icon from '@ant-design/icons'
+import AwardSVG from '@/assets/svg/dev/award.svg?react'
 import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
@@ -47,7 +48,7 @@ const Award = () => {
     <CustomLayout ref={awardRef}>
       <Header
         label={label || '荣誉奖项'}
-        icon={BulbOutlined}
+        svg={<Icon component={AwardSVG} />}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}

@@ -1,0 +1,17 @@
+.customer-drawer-body {
+  padding: 12px !important;
+  box-sizing: border-box !important;
+  flex: 1 !important;
+  display: flex !important;
+  // align-items: center;
+
+  .tree-container {
+    width: 240px;
+    box-sizing: border-box;
+  }
+
+  .editor-container {
+    flex: 1;
+    padding: 0 8px;
+  }
+}

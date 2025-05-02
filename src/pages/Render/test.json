@@ -5,191 +5,200 @@
   "bind": "",
   "children": [
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "style": {
         "gap": "16px",
         "alignItems": "center",
-        "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "bind": "BASE_INFO",
-      "showLabel": false,
+      "showLabel": true,
       "children": [
         {
-          "type": "image",
-          "bind": "avatar",
-          "style": { "width": "100px", "height": "130px" }
-        },
-        {
-          "type": "container",
-          "layout": "flex",
-          "style": {
-            "flex": 1,
-            "display": "flex",
-            "flexWrap": "wrap",
-            "padding": "0 14px",
-            "listStyle": "none"
-          },
+          "type": "section",
+          "layout": "horizontal",
+          "bind": "info",
+          "style": {},
           "children": [
             {
-              "type": "container",
-              "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
-                "display": "flex",
-                "alignItems": "center"
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "label": "姓名",
-                  "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
-                },
-                {
-                  "type": "text",
-                  "bind": "user_name"
-                }
-              ]
+              "type": "image",
+              "bind": "avatar",
+              "style": { "width": "100px", "height": "130px" }
             },
             {
               "type": "container",
+              "layout": "horizontal",
               "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
+                "flex": 1,
                 "display": "flex",
-                "alignItems": "center"
+                "flexWrap": "wrap",
+                "padding": "0 14px",
+                "listStyle": "none"
               },
               "children": [
                 {
-                  "type": "label",
-                  "label": "性别",
+                  "type": "container",
                   "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "姓名",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "user_name"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "bind": "gender"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
-                "display": "flex",
-                "alignItems": "center"
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "label": "年龄",
+                  "type": "container",
                   "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "性别",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "gender"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "bind": "age"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
-                "display": "flex",
-                "alignItems": "center"
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "label": "求职岗位",
+                  "type": "container",
                   "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "年龄",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "age"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "bind": "position"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
-                "display": "flex",
-                "alignItems": "center"
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "label": "联系方式",
+                  "type": "container",
                   "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "求职岗位",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "position"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "bind": "phone"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
-                "display": "flex",
-                "alignItems": "center"
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "label": "电子邮件",
+                  "type": "container",
                   "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "联系方式",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "phone"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "bind": "email"
-                }
-              ]
-            },
-            {
-              "type": "container",
-              "style": {
-                "minWidth": "50%",
-                "lineHeight": 2,
-                "display": "flex",
-                "alignItems": "center"
-              },
-              "children": [
-                {
-                  "type": "label",
-                  "label": "博客地址",
+                  "type": "container",
                   "style": {
-                    "fontWeight": 600,
-                    "marginRight": "8px"
-                  }
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "电子邮件",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "email"
+                    }
+                  ]
                 },
                 {
-                  "type": "text",
-                  "bind": "blob"
+                  "type": "container",
+                  "style": {
+                    "minWidth": "50%",
+                    "lineHeight": 2,
+                    "display": "flex",
+                    "alignItems": "center"
+                  },
+                  "children": [
+                    {
+                      "type": "label",
+                      "label": "博客地址",
+                      "style": {
+                        "fontWeight": 600,
+                        "marginRight": "8px"
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "bind": "blob"
+                    }
+                  ]
                 }
               ]
             }
@@ -198,13 +207,14 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "教育背景",
       "bind": "EDU_BG",
       "style": {
-        "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {
@@ -226,14 +236,15 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "实习/工作经历",
       "bind": "WORK_EXP",
       "showLabel": true,
       "style": {
-        "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {
@@ -294,9 +305,7 @@
                 {
                   "type": "text",
                   "bind": "overview",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             },
@@ -314,9 +323,7 @@
                 {
                   "type": "html",
                   "bind": "output",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             }
@@ -325,14 +332,15 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "项目经历",
       "bind": "PROJECT_EXP",
       "showLabel": true,
       "style": {
-        "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {
@@ -393,9 +401,7 @@
                 {
                   "type": "text",
                   "bind": "overview",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             },
@@ -413,9 +419,7 @@
                 {
                   "type": "html",
                   "bind": "output",
-                  "style": {
-                    "lineHeight": 1.5
-                  }
+                  "style": {}
                 }
               ]
             }
@@ -424,14 +428,15 @@
       ]
     },
     {
-      "type": "container",
+      "type": "module",
       "layout": "horizontal",
       "title": "技能特长",
       "bind": "SKILL_LIST",
       "showLabel": true,
       "style": {
-        "padding": "8px 0",
-        "borderBottom": "1px solid #292929"
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
       },
       "children": [
         {

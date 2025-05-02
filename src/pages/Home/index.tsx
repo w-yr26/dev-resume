@@ -1,16 +1,14 @@
 import { useUserStore } from '@/store'
 import styles from './index.module.scss'
-// import './iconfont/iconfont.css'
-
 // 引入icon图标
-import {
-  DownloadOutlined,
-  FileTextOutlined,
-  SettingOutlined,
-  AppstoreOutlined,
-  BarsOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
+import Icon from '@ant-design/icons'
+import ResumeSvg from '@/assets/svg/resume.svg?react'
+import SettingSVG from '@/assets/svg/setting.svg?react'
+import DownloadSVG from '@/assets/svg/download.svg?react'
+import ListSVG from '@/assets/svg/list.svg?react'
+import GridSVG from '@/assets/svg/grid.svg?react'
+import AddSVG from '@/assets/svg/add.svg?react'
+
 import { Avatar, Button } from 'antd'
 
 const Home = () => {
@@ -29,11 +27,21 @@ const Home = () => {
         <div className={styles['left-nav']}>
           <ul>
             <li className={`${styles['left-nav-item']} ${styles['active']}`}>
-              <FileTextOutlined rotate={-20} />
+              <Icon
+                component={ResumeSvg}
+                style={{
+                  rotate: '20deg',
+                }}
+              />
               &nbsp;&nbsp; 简历
             </li>
             <li className={styles['left-nav-item']}>
-              <SettingOutlined />
+              <Icon
+                component={SettingSVG}
+                style={{
+                  rotate: '20deg',
+                }}
+              />
               &nbsp;&nbsp; 设置
             </li>
           </ul>
@@ -56,14 +64,14 @@ const Home = () => {
           <h1>简历</h1>
           <div>
             <Button
-              icon={<AppstoreOutlined />}
+              icon={<Icon component={GridSVG} />}
               style={{
                 marginRight: '8px',
               }}
             >
               网格
             </Button>
-            <Button icon={<BarsOutlined />}>列表</Button>
+            <Button icon={<Icon component={ListSVG} />}>列表</Button>
           </div>
         </div>
 
@@ -72,7 +80,7 @@ const Home = () => {
           {/* 新建部分 */}
           <div className={styles['resume-item']}>
             <div className={styles['icon-box']}>
-              <PlusOutlined style={{ fontSize: '60px' }} />
+              <Icon component={AddSVG} />
             </div>
 
             <div className={styles['resume-bottom']}>
@@ -84,7 +92,7 @@ const Home = () => {
           {/* 导入部分 */}
           <div className={styles['resume-item']}>
             <div className={styles['icon-box']}>
-              <DownloadOutlined style={{ fontSize: '60px' }} />
+              <Icon component={DownloadSVG} className={styles['svg']} />
             </div>
 
             <div className={styles['resume-bottom']}>
@@ -100,6 +108,7 @@ const Home = () => {
               style={{
                 animationDelay: `0.${index + 1}s`,
               }}
+              key={index}
             >
               <div className={styles['resume-bottom']}>
                 <p className={styles['resume-name']}>我的简历 - {item}</p>

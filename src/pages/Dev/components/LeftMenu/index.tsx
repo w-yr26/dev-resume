@@ -1,65 +1,66 @@
-import {
-  BookOutlined,
-  BranchesOutlined,
-  BulbOutlined,
-  CalculatorOutlined,
-  CompressOutlined,
-  HeartOutlined,
-  PlusOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
+import Icon from '@ant-design/icons'
+import UserSVG from '@/assets/svg/dev/user.svg?react'
+import EduSVG from '@/assets/svg/dev/edu.svg?react'
+import WorkSVG from '@/assets/svg/dev/work.svg?react'
+import ProjectSVG from '@/assets/svg/dev/project.svg?react'
+import AwardSVG from '@/assets/svg/dev/award.svg?react'
+import SkillSVG from '@/assets/svg/dev/skill.svg?react'
+import HeartSVG from '@/assets/svg/dev/heart.svg?react'
+import extendSVG from '@/assets/svg/dev/extend.svg?react'
+import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Avatar, Tooltip } from 'antd'
-import React from 'react'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
 import { optionalCom } from '@/types/dev'
 
 const iconMenu = [
   {
-    icon: <UserOutlined />,
+    icon: <Icon component={UserSVG} />,
     label: '基本信息',
     key: 'BASE_INFO',
   },
   {
-    icon: <BookOutlined />,
+    icon: <Icon component={EduSVG} />,
     label: '教育背景',
     key: 'EDU_BG',
   },
   {
-    icon: <CalculatorOutlined />,
+    icon: <Icon component={WorkSVG} />,
     label: '工作/实习经历',
     key: 'WORK_EXP',
   },
   {
-    icon: <BranchesOutlined />,
+    icon: <Icon component={ProjectSVG} />,
     label: '项目经历',
     key: 'PROJECT_EXP',
   },
   {
-    icon: <BulbOutlined />,
+    icon: <Icon component={AwardSVG} />,
     label: '荣誉奖项',
     key: 'AWARD_LIST',
   },
   {
-    icon: <CompressOutlined />,
+    icon: <Icon component={SkillSVG} />,
     label: '技能特长',
     key: 'SKILL_LIST',
   },
   {
-    icon: <HeartOutlined />,
+    icon: <Icon component={HeartSVG} />,
     label: '兴趣爱好',
     key: 'HEART_LIST',
   },
-  {
-    icon: <PlusOutlined />,
-    label: '新增一项',
-    key: 'ADD_MORE',
-  },
 ]
 
-const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
+const LeftMenu = ({
+  iconClick,
+  isLeftExpand,
+  setIsLeftExpand,
+}: {
+  iconClick: (position: number) => void
+  isLeftExpand: boolean
+  setIsLeftExpand: (isExpand: boolean) => void
+}) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
-
   const handleClick = (key: optionalCom | 'ADD_MORE') => {
     if (key === 'ADD_MORE') {
       console.log('add')
@@ -71,7 +72,16 @@ const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
 
   return (
     <div className={styles['left-container']}>
-      <div className={styles['mini-logo']} />
+      <div
+        className={styles['theme-box']}
+        onClick={() => setIsLeftExpand(!isLeftExpand)}
+      >
+        {isLeftExpand ? (
+          <Icon component={extendSVG} />
+        ) : (
+          <Icon component={shrinkSVG} />
+        )}
+      </div>
       <ul className={styles['menu-list']}>
         {iconMenu.map((item) => {
           return (
@@ -88,7 +98,11 @@ const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
         })}
       </ul>
       <div>
-        <Avatar shape="square" size="large" icon={<UserOutlined />} />
+        <Avatar
+          shape="square"
+          size="large"
+          icon={<Icon component={UserSVG} />}
+        />
       </div>
     </div>
   )
