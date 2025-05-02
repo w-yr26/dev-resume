@@ -6,6 +6,8 @@ import PageSVG from '@/assets/svg/dev/page.svg?react'
 import ThemeSVG from '@/assets/svg/dev/theme.svg?react'
 import OutputSVG from '@/assets/svg/dev/output.svg?react'
 import ColorSVG from '@/assets/svg/dev/color.svg?react'
+import extendSVG from '@/assets/svg/dev/extend.svg?react'
+import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Tooltip } from 'antd'
 import styles from './index.module.scss'
 
@@ -36,9 +38,25 @@ const toolMenu = [
   },
 ]
 
-const RightMenu = () => {
+const RightMenu = ({
+  isRightExpand,
+  setIsRightExpand,
+}: {
+  isRightExpand: boolean
+  setIsRightExpand: (isExpand: boolean) => void
+}) => {
   return (
     <div className={styles['right-container']}>
+      <div
+        className={styles['theme-box']}
+        onClick={() => setIsRightExpand(!isRightExpand)}
+      >
+        {isRightExpand ? (
+          <Icon component={extendSVG} />
+        ) : (
+          <Icon component={shrinkSVG} />
+        )}
+      </div>
       <ul className={styles['list-box']}>
         {toolMenu.map((item) => {
           return (
@@ -50,6 +68,7 @@ const RightMenu = () => {
           )
         })}
       </ul>
+      <div className={styles['slot-box']} />
     </div>
   )
 }

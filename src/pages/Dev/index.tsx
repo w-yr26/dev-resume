@@ -41,8 +41,8 @@ const Dev = () => {
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   const [lineShow, setLineShow] = useState(false)
-  const [isDev, setIsDev] = useState(false)
-
+  const [isLeftExpand, setIsLeftExpand] = useState(false)
+  const [isRightExpand, setIsRightExpand] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -220,11 +220,15 @@ const Dev = () => {
 
   return (
     <div className={styles['dev-container']}>
-      <LeftMenu iconClick={handleScroll} />
-      <Materials ref={scrollRef} isDev={isDev} />
+      <LeftMenu
+        iconClick={handleScroll}
+        isLeftExpand={isLeftExpand}
+        setIsLeftExpand={setIsLeftExpand}
+      />
+      <Materials ref={scrollRef} isLeftExpand={isLeftExpand} />
       <main
         className={`${styles['main-container']}
-        ${isDev && styles['not-edit']}
+        ${isLeftExpand && isRightExpand && styles['not-edit']}
         `}
       >
         <div
@@ -265,15 +269,20 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <Setting isDev={isDev} />
-      <RightMenu />
+      <Setting isRightExpand={isRightExpand} />
+      <RightMenu
+        isRightExpand={isRightExpand}
+        setIsRightExpand={setIsRightExpand}
+      />
       <BottomBar
         upWheel={upWheel}
         reduceWheel={reduceWheel}
         handleModeSwitch={handleModeSwitch}
         resetWheel={resetWheel}
-        isDev={isDev}
-        setIsDev={(val) => setIsDev(val)}
+        isLeftExpand={isLeftExpand}
+        isRightExpand={isRightExpand}
+        setIsLeftExpand={setIsLeftExpand}
+        setIsRightExpand={setIsRightExpand}
         savePDF={savePDF}
       />
       <StyleEditor ref={drawerRef} />

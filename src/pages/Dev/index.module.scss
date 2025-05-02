@@ -12,7 +12,7 @@ $light-cardBg-color: #ffffff;
   display: flex;
   justify-content: space-between;
   background: $light-bg-color;
-  overflow: hidden;
+  // overflow: hidden;
 
   .main-container {
     flex: 1;
@@ -30,7 +30,7 @@ $light-cardBg-color: #ffffff;
 
 .not-edit {
   flex: none !important;
-  width: 100%;
+  width: calc(100% - 96px);
 }
 
 .resume-container {

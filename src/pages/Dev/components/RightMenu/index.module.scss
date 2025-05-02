@@ -8,18 +8,17 @@ $light-border-color: #e4e4e7;
 $light-cardBg-color: #ffffff;
 
 .right-container {
-  // w-12 h-full py-4 box-border flex flex-col justify-center items-center border-l border-[#e4e4e7]
   width: 48px;
   height: 100%;
-  padding: 1rem;
+  padding: 16px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  border: 1px solid $light-border-color;
+  background-color: #f8f8f9;
   z-index: 2;
-  
+
   .list-box {
     display: flex;
     flex-direction: column;
@@ -37,4 +36,21 @@ $light-cardBg-color: #ffffff;
       }
     }
   }
+}
+
+.theme-box {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.slot-box {
+  width: 40px;
+  height: 40px;
 }

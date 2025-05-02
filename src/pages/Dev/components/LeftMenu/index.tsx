@@ -7,7 +7,7 @@ import AwardSVG from '@/assets/svg/dev/award.svg?react'
 import SkillSVG from '@/assets/svg/dev/skill.svg?react'
 import HeartSVG from '@/assets/svg/dev/heart.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
-// import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
+import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Avatar, Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
@@ -51,7 +51,15 @@ const iconMenu = [
   },
 ]
 
-const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
+const LeftMenu = ({
+  iconClick,
+  isLeftExpand,
+  setIsLeftExpand,
+}: {
+  iconClick: (position: number) => void
+  isLeftExpand: boolean
+  setIsLeftExpand: (isExpand: boolean) => void
+}) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
   const handleClick = (key: optionalCom | 'ADD_MORE') => {
     if (key === 'ADD_MORE') {
@@ -64,13 +72,15 @@ const LeftMenu = ({ iconClick }: { iconClick: (position: number) => void }) => {
 
   return (
     <div className={styles['left-container']}>
-      <div className={styles['mini-logo']}>
-        {/* {isDev ? (
+      <div
+        className={styles['theme-box']}
+        onClick={() => setIsLeftExpand(!isLeftExpand)}
+      >
+        {isLeftExpand ? (
           <Icon component={extendSVG} />
         ) : (
           <Icon component={shrinkSVG} />
-        )} */}
-        <Icon component={extendSVG} />
+        )}
       </div>
       <ul className={styles['menu-list']}>
         {iconMenu.map((item) => {

@@ -7,7 +7,7 @@
   padding: 0 1rem;
   background-color: #fff;
   overflow-y: scroll;
-  transition: transform 0.3s ease-in-out;
+  transition: display 0.3s ease-in-out;
 
   &::-webkit-scrollbar {
     width: 8px; /* 滚动条宽度 */
@@ -29,7 +29,8 @@
 }
 
 .active-translate {
-  transform: translateX(-440px);
+  // transform: translateX(-440px);
+  display: none;
 }
 
 /* 水平多表单项排列 */

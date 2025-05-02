@@ -16,25 +16,33 @@ import { ConfigProvider, Switch, Tooltip } from 'antd'
 // }
 
 type barType = {
+  isLeftExpand: boolean
+  isRightExpand: boolean
+  setIsLeftExpand: (v: boolean) => void
+  setIsRightExpand: (v: boolean) => void
   upWheel: () => void
   reduceWheel: () => void
   handleModeSwitch: () => void
   resetWheel: () => void
-  isDev: boolean
-  setIsDev: (val: boolean) => void
   savePDF: () => Promise<any>
 }
 
 const BottomBar = ({
+  isLeftExpand,
+  isRightExpand,
+  setIsLeftExpand,
+  setIsRightExpand,
   reduceWheel,
   upWheel,
   handleModeSwitch,
   resetWheel,
-  isDev,
-  setIsDev,
   savePDF,
 }: barType) => {
-
+  const changeMode = (isDev: boolean) => {
+    setIsLeftExpand(isDev)
+    setIsRightExpand(isDev)
+  }
+  
   const iconArr = [
     {
       icon: <Icon component={centerSVG} />,
@@ -77,8 +85,8 @@ const BottomBar = ({
           <Switch
             checkedChildren={<Icon component={normalSVG} />}
             unCheckedChildren={<Icon component={codeSVG} />}
-            checked={isDev}
-            onClick={(val) => setIsDev(val)}
+            checked={isLeftExpand && isRightExpand}
+            onClick={(val) => changeMode(val)}
           />
         </ConfigProvider>
       ),
