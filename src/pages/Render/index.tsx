@@ -3,9 +3,11 @@ import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore, useUIStore } from '@/store'
 import { nodeType } from '@/types/ui'
+// import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
   dataContext: any
+  top?: number
 }
 
 const checkDate = (data: any) => {
@@ -97,7 +99,7 @@ const Render = memo((props: RenderProps) => {
     // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
     const data = dataContext[bind] || { ...dataContext }
     return (
-      <div style={mergedStyle}>
+      <div className="block-box" style={mergedStyle}>
         {children.map((child: any, index: number) => {
           return <Render key={index} node={child} dataContext={data} />
         })}
@@ -110,7 +112,7 @@ const Render = memo((props: RenderProps) => {
     const list = dataContext[bind] || []
     // 此时做两层循环，一层是遍历数据列表，一层是遍历所有的子容器
     return (
-      <div style={mergedStyle}>
+      <div className="section-box" style={mergedStyle}>
         {list.map((item: any, index: number) => {
           return item.visible ? (
             <React.Fragment key={index}>
@@ -133,7 +135,11 @@ const Render = memo((props: RenderProps) => {
     } else if (checkDate(data)) {
       data = formatDate(data)
     }
-    return <div style={mergedStyle}>{data}</div>
+    return (
+      // <BlockWrapper style={mergedStyle} data={data}>
+      <div style={mergedStyle}>{data}</div>
+      // </BlockWrapper>
+    )
   }
 
   if (type === 'html') {

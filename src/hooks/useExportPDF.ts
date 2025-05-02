@@ -60,7 +60,6 @@ export function useExportPDF(
 
     const pageWidth = pdfInstance.internal.pageSize.getWidth()
     const pageHeight = pdfInstance.internal.pageSize.getHeight()
-    let pageSize = 0
 
     // 计算等比缩放后的尺寸
     const scale = pageWidth / canvasWidth
@@ -68,11 +67,7 @@ export function useExportPDF(
     // 计算所需的页数(也就是内容实际高度是否 > 一张a4的高度)
     console.log('imgHeight', imgHeight, 'pageHeight', pageHeight)
 
-    let tempHeight = imgHeight
-    while (tempHeight > 0) {
-      pageSize = pageSize + 1
-      tempHeight -= pageHeight
-    }
+    const pageSize = Math.ceil(imgHeight / pageHeight)
 
     Array(pageSize)
       .fill(0)

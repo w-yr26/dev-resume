@@ -114,27 +114,6 @@ const Dev = () => {
     }
   }, [dragging])
 
-  // 监听分页线
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { height } = entry.contentRect
-        const mmHeight = pxToMm(height)
-        if (mmHeight > 297) {
-          setLineShow(true)
-        } else {
-          setLineShow(false)
-        }
-      })
-    })
-
-    if (mainRef.current) {
-      observer.observe(mainRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   const [loading, setLoading] = useState<boolean>(false)
   useEffect(() => {
     const getUiSchema = async () => {
@@ -199,24 +178,28 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
-  // canvas 转换
-  // const dom2Canvas = async () => {
-  //   if (mainRef.current) {
-  //     const canvas = await html2canvas(mainRef.current, {
-  //       useCORS: true, // 允许图片跨域，后续换掉
-  //       scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
-  //     })
-  //     const { width, height } = canvas
-  //     const base64URL = canvas.toDataURL('image/jpeg', 1) // 第二个参数quality: 生成的图片质量
-  //     return {
-  //       base64URL,
-  //       width,
-  //       height,
-  //     }
-  //   }
-  // }
-
   const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
+
+  // 监听分页线
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const { height } = entry.contentRect
+        const mmHeight = pxToMm(height)
+        if (mmHeight > 297) {
+          setLineShow(true)
+        } else {
+          setLineShow(false)
+        }
+      })
+    })
+
+    if (mainRef.current) {
+      observer.observe(mainRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className={styles['dev-container']}>
@@ -252,7 +235,7 @@ const Dev = () => {
                 const Com = comMap[item]
                 return Com ? <Com key={index}></Com> : null
               })} */}
-              {uiSchema && !loading ? (
+              {uiSchema && !loading && top ? (
                 <Render dataContext={dataSource} node={uiSchema} />
               ) : null}
             </div>
