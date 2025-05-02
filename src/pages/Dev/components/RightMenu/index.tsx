@@ -39,19 +39,19 @@ const toolMenu = [
 ]
 
 const RightMenu = ({
-  isRightExpand,
-  setIsRightExpand,
+  isRightUnExpand,
+  setisRightUnExpand,
 }: {
-  isRightExpand: boolean
-  setIsRightExpand: (isExpand: boolean) => void
+  isRightUnExpand: boolean
+  setisRightUnExpand: (isExpand: boolean) => void
 }) => {
   return (
     <div className={styles['right-container']}>
       <div
         className={styles['theme-box']}
-        onClick={() => setIsRightExpand(!isRightExpand)}
+        onClick={() => setisRightUnExpand(!isRightUnExpand)}
       >
-        {isRightExpand ? (
+        {isRightUnExpand ? (
           <Icon component={extendSVG} />
         ) : (
           <Icon component={shrinkSVG} />

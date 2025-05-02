@@ -4,11 +4,11 @@ import styles from './index.module.scss'
 import PageSetting from './PageSetting'
 import TypeSetting from './TypeSetting'
 
-const Setting = ({ isRightExpand }: { isRightExpand: boolean }) => {
+const Setting = ({ isRightUnExpand }: { isRightUnExpand: boolean }) => {
   return (
     <div
       className={`${styles['setting-contaienr']} ${
-        isRightExpand && styles['active-translate']
+        isRightUnExpand && styles['active-translate']
       }`}
     >
       <TypeSetting />

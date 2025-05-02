@@ -78,6 +78,7 @@ const Render = memo((props: RenderProps) => {
           ...mergedStyle,
           ...rootStyle,
         }}
+        data-node-key={node.nodeKey}
       >
         {children.map((child: any, index: number) => {
           return <Render key={index} dataContext={dataContext} node={child} />
@@ -99,7 +100,11 @@ const Render = memo((props: RenderProps) => {
     // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
     const data = dataContext[bind] || { ...dataContext }
     return (
-      <div className="block-box" style={mergedStyle}>
+      <div
+        className="block-box"
+        style={mergedStyle}
+        data-node-key={node.nodeKey}
+      >
         {children.map((child: any, index: number) => {
           return <Render key={index} node={child} dataContext={data} />
         })}
@@ -112,7 +117,11 @@ const Render = memo((props: RenderProps) => {
     const list = dataContext[bind] || []
     // 此时做两层循环，一层是遍历数据列表，一层是遍历所有的子容器
     return (
-      <div className="section-box" style={mergedStyle}>
+      <div
+        className="section-box"
+        style={mergedStyle}
+        data-node-key={node.nodeKey}
+      >
         {list.map((item: any, index: number) => {
           return item.visible ? (
             <React.Fragment key={index}>
@@ -137,7 +146,13 @@ const Render = memo((props: RenderProps) => {
     }
     return (
       // <BlockWrapper style={mergedStyle} data={data}>
-      <div style={mergedStyle}>{data}</div>
+      <div
+        className="text-box"
+        style={mergedStyle}
+        data-node-key={node.nodeKey}
+      >
+        {data}
+      </div>
       // </BlockWrapper>
     )
   }
@@ -155,6 +170,7 @@ const Render = memo((props: RenderProps) => {
         dangerouslySetInnerHTML={{
           __html: data,
         }}
+        data-node-key={node.nodeKey}
       />
     )
   }

@@ -6,6 +6,8 @@ import zoomOutSVG from '@/assets/svg/dev/zoom-out-line.svg?react'
 import pdfSVG from '@/assets/svg/dev/pdf.svg?react'
 import normalSVG from '@/assets/svg/dev/normal.svg?react'
 import codeSVG from '@/assets/svg/dev/code.svg?react'
+import chatCheckSVG from '@/assets/svg/dev/chat-check.svg?react'
+import chatDeleteSVG from '@/assets/svg/dev/chat-delete.svg?react'
 import styles from './index.module.scss'
 import { ConfigProvider, Switch, Tooltip } from 'antd'
 
@@ -16,10 +18,11 @@ import { ConfigProvider, Switch, Tooltip } from 'antd'
 // }
 
 type barType = {
-  isLeftExpand: boolean
-  isRightExpand: boolean
-  setIsLeftExpand: (v: boolean) => void
-  setIsRightExpand: (v: boolean) => void
+  isLeftUnExpand: boolean
+  isRightUnExpand: boolean
+  isReadMode: boolean
+  setisLeftUnExpand: (v: boolean) => void
+  setisRightUnExpand: (v: boolean) => void
   upWheel: () => void
   reduceWheel: () => void
   handleModeSwitch: () => void
@@ -28,10 +31,11 @@ type barType = {
 }
 
 const BottomBar = ({
-  isLeftExpand,
-  isRightExpand,
-  setIsLeftExpand,
-  setIsRightExpand,
+  isLeftUnExpand,
+  isRightUnExpand,
+  isReadMode,
+  setisLeftUnExpand,
+  setisRightUnExpand,
   reduceWheel,
   upWheel,
   handleModeSwitch,
@@ -39,10 +43,10 @@ const BottomBar = ({
   savePDF,
 }: barType) => {
   const changeMode = (isDev: boolean) => {
-    setIsLeftExpand(isDev)
-    setIsRightExpand(isDev)
+    setisLeftUnExpand(isDev)
+    setisRightUnExpand(isDev)
   }
-  
+
   const iconArr = [
     {
       icon: <Icon component={centerSVG} />,
@@ -65,6 +69,13 @@ const BottomBar = ({
       callback: handleModeSwitch,
     },
     {
+      icon: <Icon component={isReadMode ? chatCheckSVG : chatDeleteSVG} />,
+      label: '评论',
+      callback: () => {
+        console.log(isReadMode)
+      },
+    },
+    {
       icon: <Icon component={pdfSVG} />,
       label: '下载pdf',
       callback: savePDF,
@@ -85,7 +96,7 @@ const BottomBar = ({
           <Switch
             checkedChildren={<Icon component={normalSVG} />}
             unCheckedChildren={<Icon component={codeSVG} />}
-            checked={isLeftExpand && isRightExpand}
+            checked={isLeftUnExpand && isRightUnExpand}
             onClick={(val) => changeMode(val)}
           />
         </ConfigProvider>

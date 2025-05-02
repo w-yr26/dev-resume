@@ -2,7 +2,7 @@ import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
 import configStyle from '@/config/templates'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useStyleStore, useUIStore } from '@/store'
 import { pxToMm } from '@/utils'
@@ -10,9 +10,11 @@ import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
 import Render from '../Render'
 import StyleEditor from './components/StyleEditor'
-import type { drawerMethods } from '@/types/materials'
+import type { drawerMethods, ButtonPanelPosition } from '@/types/materials'
 import { useExportPDF } from '@/hooks/useExportPDF'
 import { Spin } from 'antd'
+import Icon from '@ant-design/icons'
+import commentSVG from '@/assets/svg/dev/comment.svg?react'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -37,12 +39,12 @@ const Dev = () => {
   const pageWidth = 794
   const pageHeight = 1120
   const [dragging, setDragging] = useState(false)
-  const [wheel, setWheel] = useState(1)
+  const [wheel, setWheel] = useState(0.7)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   const [lineShow, setLineShow] = useState(false)
-  const [isLeftExpand, setIsLeftExpand] = useState(false)
-  const [isRightExpand, setIsRightExpand] = useState(false)
+  const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
+  const [isRightUnExpand, setisRightUnExpand] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -65,6 +67,7 @@ const Dev = () => {
   }
 
   const startDrag = (e: React.MouseEvent<Element>) => {
+    if (isReadMode) return
     e.preventDefault()
     setDragging(true)
 
@@ -201,17 +204,116 @@ const Dev = () => {
     return () => observer.disconnect()
   }, [])
 
+  // 当前是否为阅读模式
+  const isReadMode = useMemo(() => {
+    return isLeftUnExpand && isRightUnExpand
+  }, [isLeftUnExpand, isRightUnExpand])
+
+  const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
+  const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
+  const [panelPos, setPanelPos] = useState<ButtonPanelPosition | null>(null)
+  const [currentNodeKey, setCurrentNodeKey] = useState('')
+
+  const panelRef = useRef<HTMLDivElement>(null)
+  // Hover 事件监听
+  useEffect(() => {
+    if (!isReadMode || !resumeRef.current) return
+    const container = resumeRef.current
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (panelRef.current?.contains(target)) return // 避免 hover 到面板本身
+      setHoveredEl(target)
+    }
+
+    const handleMouseOut = () => {
+      setHoveredEl(null)
+    }
+
+    container.addEventListener('mouseover', handleMouseOver, true)
+    container.addEventListener('mouseout', handleMouseOut, true)
+
+    return () => {
+      container.removeEventListener('mouseover', handleMouseOver, true)
+      container.removeEventListener('mouseout', handleMouseOut, true)
+    }
+  }, [isReadMode])
+
+  // Click 事件监听
+  useEffect(() => {
+    if (!isReadMode || !resumeRef.current) return
+    // const container = resumeRef.current
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (panelRef.current?.contains(target)) return // 避免点击面板时消失
+      // 选中目标区域外的元素
+      if (!resumeRef.current?.contains(target)) {
+        setSelectedEl(null)
+        setPanelPos({
+          left: -9999,
+          top: -999,
+        })
+        return
+      }
+      setSelectedEl(target)
+      setPanelPos({
+        top: e.clientY + 8,
+        left: e.clientX + 8,
+      })
+
+      e.preventDefault()
+      // e.stopPropagation()
+    }
+
+    document.body.addEventListener('click', handleClick, true)
+
+    return () => {
+      document.body.removeEventListener('click', handleClick, true)
+    }
+  }, [isReadMode])
+
+  // 添加高亮样式
+  useEffect(() => {
+    if (!isReadMode) return
+    if (hoveredEl) {
+      hoveredEl.style.outline = '2px solid #9b59b6'
+    }
+    return () => {
+      if (hoveredEl) {
+        hoveredEl.style.outline = ''
+      }
+    }
+  }, [hoveredEl, isReadMode])
+
+  // 添加选中的元素的样式
+  useEffect(() => {
+    if (selectedEl) {
+      selectedEl.style.backgroundColor = '#fef6d5'
+      // 获取自定义属性 node-key，用于标识当前被评论的简历内容
+      let currentNode = selectedEl
+      let currentNodeKey
+      while (!currentNodeKey) {
+        if (!currentNode.parentElement) break
+        currentNodeKey = currentNode.getAttribute('data-node-key')
+        currentNode = currentNode.parentElement
+      }
+      setCurrentNodeKey(currentNodeKey || 'notNodeKey')
+    }
+    return () => {
+      if (selectedEl) selectedEl.style.backgroundColor = ''
+    }
+  }, [selectedEl])
+
   return (
     <div className={styles['dev-container']}>
       <LeftMenu
         iconClick={handleScroll}
-        isLeftExpand={isLeftExpand}
-        setIsLeftExpand={setIsLeftExpand}
+        isLeftUnExpand={isLeftUnExpand}
+        setisLeftUnExpand={setisLeftUnExpand}
       />
-      <Materials ref={scrollRef} isLeftExpand={isLeftExpand} />
+      <Materials ref={scrollRef} isLeftUnExpand={isLeftUnExpand} />
       <main
         className={`${styles['main-container']}
-        ${isLeftExpand && isRightExpand && styles['not-edit']}
+        ${isLeftUnExpand && isRightUnExpand && styles['not-edit']}
         `}
       >
         <div
@@ -226,7 +328,7 @@ const Dev = () => {
               width: pageWidth,
               height: pageHeight,
               transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-              cursor: dragging ? 'grabbing' : 'grab',
+              cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
             }}
             ref={resumeRef}
           >
@@ -252,23 +354,37 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <Setting isRightExpand={isRightExpand} />
+      <Setting isRightUnExpand={isRightUnExpand} />
       <RightMenu
-        isRightExpand={isRightExpand}
-        setIsRightExpand={setIsRightExpand}
+        isRightUnExpand={isRightUnExpand}
+        setisRightUnExpand={setisRightUnExpand}
       />
       <BottomBar
         upWheel={upWheel}
         reduceWheel={reduceWheel}
         handleModeSwitch={handleModeSwitch}
         resetWheel={resetWheel}
-        isLeftExpand={isLeftExpand}
-        isRightExpand={isRightExpand}
-        setIsLeftExpand={setIsLeftExpand}
-        setIsRightExpand={setIsRightExpand}
+        isLeftUnExpand={isLeftUnExpand}
+        isRightUnExpand={isRightUnExpand}
+        isReadMode={isReadMode}
+        setisLeftUnExpand={setisLeftUnExpand}
+        setisRightUnExpand={setisRightUnExpand}
         savePDF={savePDF}
       />
       <StyleEditor ref={drawerRef} />
+      {panelPos && (
+        <div
+          ref={panelRef}
+          style={{
+            top: panelPos.top + 'px',
+            left: panelPos.left + 'px',
+          }}
+          className={styles['panel-box']}
+        >
+          {/* 功能按钮面板 */}
+          <Icon component={commentSVG} />
+        </div>
+      )}
     </div>
   )
 }
