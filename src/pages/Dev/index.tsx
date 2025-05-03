@@ -15,6 +15,7 @@ import { useExportPDF } from '@/hooks/useExportPDF'
 import { Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
+import ChatSideBar from './components/ChatSideBar'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -213,7 +214,8 @@ const Dev = () => {
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
   const [panelPos, setPanelPos] = useState<ButtonPanelPosition | null>(null)
   const [currentNodeKey, setCurrentNodeKey] = useState('')
-
+  const [currentText, setCurrentText] = useState('')
+  const [sidebarOpened, setSidebarOpened] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
   // Hover 事件监听
   useEffect(() => {
@@ -296,7 +298,10 @@ const Dev = () => {
         currentNodeKey = currentNode.getAttribute('data-node-key')
         currentNode = currentNode.parentElement
       }
+      // 记录当前评论节点的id
       setCurrentNodeKey(currentNodeKey || 'notNodeKey')
+      // 记录当前评论节点的内容
+      setCurrentText(selectedEl.innerText)
     }
     return () => {
       if (selectedEl) selectedEl.style.backgroundColor = ''
@@ -380,11 +385,19 @@ const Dev = () => {
             left: panelPos.left + 'px',
           }}
           className={styles['panel-box']}
+          onClick={() => setSidebarOpened(true)}
         >
           {/* 功能按钮面板 */}
           <Icon component={commentSVG} />
         </div>
       )}
+      <ChatSideBar
+        selectedNodeKey={currentNodeKey}
+        currentText={currentText}
+        sidebarOpened={sidebarOpened}
+        setSidebarOpened={setSidebarOpened}
+        setCurrentText={setCurrentText}
+      />
     </div>
   )
 }
