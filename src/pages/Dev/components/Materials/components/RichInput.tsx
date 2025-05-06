@@ -72,6 +72,8 @@ const RichInput: React.FC<{
           onCreated={setEditor}
           onChange={(editor) => {
             const newHtml = editor.getHtml()
+            console.log('newHtml', newHtml)
+
             // setHtml(newHtml)
             onChange?.(newHtml)
           }}

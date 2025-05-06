@@ -24,9 +24,33 @@ class HeaderStrategy implements TokenizationStrategy {
 
   tokenize(line: string): Token {
     const match = line.match(this.regex)!
-    console.log('line match', match)
-
     return new Token(`header${match[1].length}`, match[2])
+  }
+}
+// 无序列表
+class ListStrategy implements TokenizationStrategy {
+  private regex = /^([*\-+])\s+(.*)$/
+
+  matches(line: string): boolean {
+    return this.regex.test(line)
+  }
+
+  tokenize(line: string): Token {
+    const match = line.match(this.regex)!
+    return new Token('unordered-list-item', match[2])
+  }
+}
+// 有序列表
+class OrderedListStrategy implements TokenizationStrategy {
+  private regex = /^(\s*)(\d+)\.\s+(.*)$/ // 匹配 "1. item" 格式
+
+  matches(line: string): boolean {
+    return this.regex.test(line)
+  }
+
+  tokenize(line: string): Token {
+    const match = line.match(this.regex)!
+    return new Token('ordered-list-item', match[2]) // 返回 ordered-list-item 类型
   }
 }
 
@@ -61,7 +85,8 @@ class Tokenizer {
 const tokenizer = new Tokenizer()
 
 // 为md语法添加解析策略
-// 1~4级标题
 tokenizer.addStrategy(new HeaderStrategy())
+tokenizer.addStrategy(new ListStrategy())
+tokenizer.addStrategy(new OrderedListStrategy())
 
 export { tokenizer, Token }

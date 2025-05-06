@@ -26,6 +26,17 @@ class HTMLRender implements ASTVisitor {
         return `<h4 data-node-key=${uuidv4()}>${node.value}</h4>`
       case 'paragraph':
         return `<span data-node-key=${uuidv4()}>${node.value}</span>`
+      case 'unordered-list':
+        return `<ul data-node-key=${uuidv4()}>${node.children
+          .map((child) => this.visit(child))
+          .join('')}</ul>`
+      case 'ordered-list':
+        return `<ol data-node-key=${uuidv4()}>${node.children
+          .map((child) => this.visit(child))
+          .join('')}</ol>`
+      case 'unordered-list-item':
+      case 'ordered-list-item':
+        return `<li data-node-key=${uuidv4()}>${node.value}</li>`
       // 对 ast 树进行递归转换
       default:
         return node.children.map((child) => this.visit(child)).join('')

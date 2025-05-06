@@ -40,14 +40,20 @@ class ASTNodeFactory {
 interface NodeHandler {
   handle(token: Token): ASTNode
 }
-
+// 1～4级标题处理器
 class HeaderNodeHandler implements NodeHandler {
   handle(token: Token): MarkdownNode {
     return new MarkdownNode(token.type, token.value)
   }
 }
-
+// 文本处理器
 class ParagraphNodeHandler implements NodeHandler {
+  handle(token: Token): MarkdownNode {
+    return new MarkdownNode(token.type, token.value)
+  }
+}
+// li 列表处理器
+class ListNodeHandler implements NodeHandler {
   handle(token: Token): MarkdownNode {
     return new MarkdownNode(token.type, token.value)
   }
@@ -73,21 +79,47 @@ nodeHandlerRegistry.registerHandler('header2', new HeaderNodeHandler())
 nodeHandlerRegistry.registerHandler('header3', new HeaderNodeHandler())
 nodeHandlerRegistry.registerHandler('header4', new HeaderNodeHandler())
 nodeHandlerRegistry.registerHandler('paragraph', new ParagraphNodeHandler())
+nodeHandlerRegistry.registerHandler(
+  'unordered-list-item',
+  new ListNodeHandler()
+)
+nodeHandlerRegistry.registerHandler('ordered-list-item', new ListNodeHandler())
 
 // 构建 AST
 export const buildAST = (tokens: Token[]): ASTNode => {
   const root = ASTNodeFactory.createNode('root')
   const currentNode = root
+  // 包裹 li 列表
+  let currentList: ASTNode | null = null
 
   tokens.forEach((token) => {
     const handler = nodeHandlerRegistry.getHandler(token.type)
-    if (handler) {
-      const newNode = handler.handle(token)
-      currentNode.addChild(newNode)
-    } else {
+    // 没有匹配到，统一按文本处理
+    if (!handler) {
       const textHandler = nodeHandlerRegistry.getHandler('paragraph')!
       const textNode = textHandler.handle(token)
       if (textNode) currentNode.addChild(textNode)
+      return
+    }
+
+    const newNode = handler.handle(token)
+
+    if (
+      token.type === 'unordered-list-item' ||
+      token.type === 'ordered-list-item'
+    ) {
+      if (!currentList) {
+        // 如果当前没有列表，创建一个新的 list 节点，可能是无序列表，也可能是有序列表
+        currentList =
+          token.type === 'unordered-list-item'
+            ? ASTNodeFactory.createNode('unordered-list')
+            : ASTNodeFactory.createNode('ordered-list')
+        currentNode.addChild(currentList)
+      }
+      currentList.addChild(newNode)
+    } else {
+      currentList = null
+      currentNode.addChild(newNode)
     }
   })
 
