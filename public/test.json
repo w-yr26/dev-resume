@@ -550,7 +550,7 @@
           }
         },
         {
-          "type": "html",
+          "type": "md",
           "bind": "info",
           "nodeKey": "0-4-1",
           "style": { "flex": 1 }

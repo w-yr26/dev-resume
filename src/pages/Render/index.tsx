@@ -3,6 +3,9 @@ import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore, useUIStore } from '@/store'
 import { nodeType } from '@/types/ui'
+import { tokenizer } from '@/components/MdEditor/utils/tokens'
+import { buildAST } from '@/components/MdEditor/utils/ast'
+import { renderAST } from '@/components/MdEditor/utils/render'
 // import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
@@ -169,6 +172,29 @@ const Render = memo((props: RenderProps) => {
         style={mergedStyle}
         dangerouslySetInnerHTML={{
           __html: data,
+        }}
+        data-node-key={node.nodeKey}
+      />
+    )
+  }
+
+  if (type === 'md') {
+    const data = dataContext[bind] ?? '占位信息...'
+    mergedStyle = {
+      ...mergedStyle,
+      listStylePosition: 'inside',
+    }
+
+    const tokens = tokenizer.tokenize(data)
+    const ast = buildAST(tokens)
+    const mdStr = renderAST(ast)
+    if (!mdStr) return null
+
+    return (
+      <div
+        style={mergedStyle}
+        dangerouslySetInnerHTML={{
+          __html: mdStr,
         }}
         data-node-key={node.nodeKey}
       />

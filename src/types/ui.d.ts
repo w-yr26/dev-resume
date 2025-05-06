@@ -9,6 +9,7 @@ export type uiType =
   | 'text'
   | 'label'
   | 'html'
+  | 'md'
 
 export type layoutType = 'vertical' | 'horizontal' | 'grid'
 
