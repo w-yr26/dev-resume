@@ -159,25 +159,7 @@ const Render = memo((props: RenderProps) => {
       // </BlockWrapper>
     )
   }
-
-  if (type === 'html') {
-    const data = dataContext[bind] ?? '占位信息...'
-    mergedStyle = {
-      ...mergedStyle,
-      listStylePosition: 'inside',
-    }
-
-    return (
-      <div
-        style={mergedStyle}
-        dangerouslySetInnerHTML={{
-          __html: data,
-        }}
-        data-node-key={node.nodeKey}
-      />
-    )
-  }
-
+  
   if (type === 'md') {
     const data = dataContext[bind] ?? '占位信息...'
     mergedStyle = {

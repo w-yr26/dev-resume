@@ -406,7 +406,7 @@
                   "nodeKey": "0-2-1-2-0"
                 },
                 {
-                  "type": "html",
+                  "type": "md",
                   "bind": "output",
                   "style": {},
                   "nodeKey": "0-2-1-2-1"
@@ -514,7 +514,7 @@
                   }
                 },
                 {
-                  "type": "html",
+                  "type": "md",
                   "bind": "output",
                   "nodeKey": "0-3-1-2-1",
                   "style": {}
@@ -553,6 +553,38 @@
           "type": "md",
           "bind": "info",
           "nodeKey": "0-4-1",
+          "style": { "flex": 1 }
+        }
+      ]
+    },
+    {
+      "type": "module",
+      "layout": "horizontal",
+      "bind": "HEART_LIST",
+      "tag": "兴趣爱好",
+      "nodeKey": "0-5",
+      "style": {
+        "borderBottomWidth": "1px",
+        "borderBottomStyle": "solid",
+        "borderBottomColor": "#292929"
+      },
+      "children": [
+        {
+          "type": "text",
+          "bind": "label",
+          "nodeKey": "0-5-0",
+          "style": {
+            "fontWeight": 700,
+            "color": "#333",
+            "width": "20%",
+            "height": "auto",
+            "fontSize": "15px"
+          }
+        },
+        {
+          "type": "md",
+          "bind": "info",
+          "nodeKey": "0-5-1",
           "style": { "flex": 1 }
         }
       ]

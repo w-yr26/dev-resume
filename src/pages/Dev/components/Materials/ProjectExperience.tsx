@@ -4,13 +4,13 @@ import Icon from '@ant-design/icons'
 import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
-import RichInput from './components/RichInput'
 import List from './components/List'
 import { useEffect, useRef } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
+import MdEditor from '@/components/MdEditor'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
@@ -135,7 +135,7 @@ const ProjectExperience = () => {
             rules={[{ required: true, message: '请输入产出内容' }]}
             layout="vertical"
           >
-            <RichInput />
+            <MdEditor />
           </Form.Item>
         </Form>
       </Modal>

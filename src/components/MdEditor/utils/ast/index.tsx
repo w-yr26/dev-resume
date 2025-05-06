@@ -9,7 +9,10 @@ const replaceInlineMd = (lineStr: string | undefined) => {
     inlineCode: /`([^`]+)`/g, // 行内代码
   }
 
-  lineStr = lineStr.replace(regex.inlineCode, `<code>$1</code>`)
+  lineStr = lineStr.replace(
+    regex.inlineCode,
+    `<code style="padding: 4px; background-color: #f0f0f0; border-radius: 4px">$1</code>`
+  )
   lineStr = lineStr.replace(regex.blod, `<strong>$1</strong>`)
   lineStr = lineStr.replace(regex.italic, `<em>$1</em>`)
   return lineStr
