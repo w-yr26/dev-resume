@@ -1,5 +1,20 @@
 import { Token } from '../tokens/index'
 
+// 替换行内的md格式
+const replaceInlineMd = (lineStr: string | undefined) => {
+  if (!lineStr) return lineStr
+  const regex = {
+    blod: /\*\*([^*]+)\*\*/g, // 粗体
+    italic: /\*([^*]+)\*/g, // 斜体
+    inlineCode: /`([^`]+)`/g, // 行内代码
+  }
+
+  lineStr = lineStr.replace(regex.inlineCode, `<code>$1</code>`)
+  lineStr = lineStr.replace(regex.blod, `<strong>$1</strong>`)
+  lineStr = lineStr.replace(regex.italic, `<em>$1</em>`)
+  return lineStr
+}
+
 // ASTNode 类
 export class ASTNode {
   type: string = ''
@@ -24,9 +39,10 @@ export class ASTNode {
 }
 
 // MarkDownNode 类 -> 此处看似与ASTNode无差，但可用于后续扩展(比如标题锚点ID、文本缩进等)
+// 在此处做行内md语法格式的替换
 class MarkdownNode extends ASTNode {
   constructor(type: string, value?: string) {
-    super(type, value)
+    super(type, replaceInlineMd(value))
   }
 }
 
