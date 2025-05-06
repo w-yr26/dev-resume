@@ -50,6 +50,9 @@ importers:
       react-router-dom:
         specifier: ^6.22.3
         version: 6.22.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
       zustand:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.0.10)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
@@ -2209,6 +2212,10 @@ packages:
 
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
+
+  uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
 
   vite-plugin-svgr@4.3.0:
     resolution: {integrity: sha512-Jy9qLB2/PyWklpYy0xk0UU3TlU0t2UMpJXZvf+hWII1lAmRHrOUKi11Uw8N3rxoNk7atZNYO3pR3vI1f7oi+6w==}
@@ -4498,6 +4505,8 @@ snapshots:
   utrie@1.0.2:
     dependencies:
       base64-arraybuffer: 1.0.2
+
+  uuid@11.1.0: {}
 
   vite-plugin-svgr@4.3.0(rollup@4.35.0)(typescript@5.7.3)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.2)(sass@1.86.0)):
     dependencies:

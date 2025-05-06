@@ -9,6 +9,7 @@ import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Dev from '@/pages/Dev'
 import Register from '@/pages/Register'
+import Md from '@/pages/Md'
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -18,6 +19,7 @@ const routes = createRoutesFromElements(
     <Route path="/dev/:id" element={<Dev />}></Route>
     <Route path="login" element={<Login />}></Route>
     <Route path="register" element={<Register />}></Route>
+    <Route path="md" element={<Md />}></Route>
   </Route>
 )
 
