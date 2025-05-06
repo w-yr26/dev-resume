@@ -290,16 +290,11 @@ const Dev = () => {
   useEffect(() => {
     if (selectedEl) {
       selectedEl.style.backgroundColor = '#fef6d5'
-      // 获取自定义属性 node-key，用于标识当前被评论的简历内容
-      let currentNode = selectedEl
-      let currentNodeKey
-      while (!currentNodeKey) {
-        if (!currentNode.parentElement) break
-        currentNodeKey = currentNode.getAttribute('data-node-key')
-        currentNode = currentNode.parentElement
-      }
+      // 获取自定义属性 node-key，用于标识当前被评论的简历内容\
+      // 项目已替换成自定义md编辑器，生成的每一个标签都已使用uuid生成随机id
+      const currentNodeKey = selectedEl.getAttribute('data-node-key')
       // 记录当前评论节点的id
-      setCurrentNodeKey(currentNodeKey || 'notNodeKey')
+      setCurrentNodeKey(currentNodeKey || 'not_node_key')
       // 记录当前评论节点的内容
       setCurrentText(selectedEl.innerText)
     }
