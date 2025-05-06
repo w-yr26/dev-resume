@@ -65,8 +65,6 @@ export function useExportPDF(
     const scale = pageWidth / canvasWidth
     const imgHeight = canvasHeight * scale
     // 计算所需的页数(也就是内容实际高度是否 > 一张a4的高度)
-    console.log('imgHeight', imgHeight, 'pageHeight', pageHeight)
-
     const pageSize = Math.ceil(imgHeight / pageHeight)
 
     Array(pageSize)

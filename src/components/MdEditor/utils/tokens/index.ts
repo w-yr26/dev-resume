@@ -66,7 +66,6 @@ class Tokenizer {
     // 以“行”为维度进行分割
     const lines = markdown.split('\n').filter((item) => item)
     lines.forEach((line) => {
-      console.log('line', line)
       // 对于行内md格式，需要使用正则进行替换
       let matched = false
       for (const val of this.strategies) {
