@@ -50,7 +50,7 @@ class OrderedListStrategy implements TokenizationStrategy {
 
   tokenize(line: string): Token {
     const match = line.match(this.regex)!
-    return new Token('ordered-list-item', match[2]) // 返回 ordered-list-item 类型
+    return new Token('ordered-list-item', match[3]) // 返回 ordered-list-item 类型
   }
 }
 

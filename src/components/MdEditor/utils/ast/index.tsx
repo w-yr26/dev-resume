@@ -94,6 +94,7 @@ export const buildAST = (tokens: Token[]): ASTNode => {
 
   tokens.forEach((token) => {
     const handler = nodeHandlerRegistry.getHandler(token.type)
+    // TODO: 这里需要处理 token.type = '' 的情况，此时是换行，应该是重置所有的列表样式，否则会走 paragraph 的逻辑，最终生成一个空的 span
     // 没有匹配到，统一按文本处理
     if (!handler) {
       const textHandler = nodeHandlerRegistry.getHandler('paragraph')!
@@ -108,7 +109,13 @@ export const buildAST = (tokens: Token[]): ASTNode => {
       token.type === 'unordered-list-item' ||
       token.type === 'ordered-list-item'
     ) {
-      if (!currentList) {
+      // 此处兼容两种情况：
+      // 1. 首次创建列表
+      // 2. 无序列表和有序列表交替着使用，如无序列表之后下一行换成有序，此时也需要重新创建列表容器
+      if (
+        !currentList ||
+        currentList.type !== `${token.type.split('-')[0]}-list`
+      ) {
         // 如果当前没有列表，创建一个新的 list 节点，可能是无序列表，也可能是有序列表
         currentList =
           token.type === 'unordered-list-item'
