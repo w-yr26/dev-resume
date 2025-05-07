@@ -1,7 +1,9 @@
-import { Form, Input, Tooltip } from 'antd'
-import type { FormProps } from 'antd'
+import { Form, Input, message } from 'antd'
 import styles from './index.module.scss'
+import './custom.style.scss'
 import CustomBtn from '@/components/CustomBtn'
+import { postRegisterAPI, postRegisterCodeAPI } from '@/apis/user'
+import { useNavigate } from 'react-router-dom'
 
 type FieldType = {
   username?: string
@@ -10,19 +12,30 @@ type FieldType = {
   email?: string
 }
 const Register = () => {
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-    console.log('Success:', values)
+  const [formRef] = Form.useForm()
+  const navigate = useNavigate()
+
+  const handleGetCode = async () => {
+    const email = formRef.getFieldValue('email')
+    if (!email) return console.log('请输入邮箱')
+
+    const { msg } = await postRegisterCodeAPI(email)
+    message.success(`${msg} 请尽快注册`)
   }
 
-  const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
-    errorInfo
-  ) => {
-    console.log('Failed:', errorInfo)
+  const handleSubmit = async () => {
+    const data = await formRef.getFieldsValue()
+    const { msg } = await postRegisterAPI(data)
+    message.success(msg)
+    navigate('/login', {
+      replace: true,
+    })
   }
+
   return (
     <div className={styles['register-layout']}>
       <div className={styles['illustrate-container']}>
-        <p className={styles['slogan']}>3分钟生成专业简历，轻松拿下面试机会</p>
+        <p className={styles['slogan']}>5分钟生成专业简历，轻松拿下面试机会</p>
         <p className={styles['subtitle']}>
           选择简历模板 | AI 内容优化 | 一键导出 PDF
         </p>
@@ -43,32 +56,30 @@ const Register = () => {
         <div className="form-box">
           <Form
             name="register-form"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
             layout="vertical"
+            form={formRef}
+            onFinish={handleSubmit}
           >
             <Form.Item<FieldType>
               label="用户名"
               name="username"
-              rules={[{ required: true, message: '请输入用户名' }]}
-              validateStatus="error"
-              hasFeedback={false}
-              help={null}
+              rules={[{ required: true }]}
+              help=""
             >
-              <Tooltip
-                title={'请输入您的用户名'}
-                defaultOpen={true}
-                placement="topRight"
-              >
-                <Input className={styles['custom-input']} />
-              </Tooltip>
+              <Input className={styles['custom-input']} />
             </Form.Item>
             <Form.Item<FieldType>
               label="电子邮箱"
               name="email"
-              rules={[{ required: true, message: '请输入电子邮箱' }]}
+              rules={[
+                {
+                  type: 'email',
+                  message: '请输入正确的邮箱格式',
+                },
+                { required: true, message: '请输入电子邮箱' },
+              ]}
+              help=""
             >
               <Input className={styles['custom-input']} />
             </Form.Item>
@@ -76,6 +87,7 @@ const Register = () => {
               label="密码"
               name="password"
               rules={[{ required: true, message: '请输入密码' }]}
+              help=""
             >
               <Input.Password className={styles['custom-input']} />
             </Form.Item>
@@ -83,20 +95,39 @@ const Register = () => {
               <Form.Item<FieldType>
                 label="验证码"
                 name="verificationCode"
-                rules={[{ required: true, message: '请输入邮箱验证码' }]}
+                rules={[{ required: true }]}
                 layout="horizontal"
                 style={{
-                  width: '90%',
                   height: 'auto',
                   margin: 0,
                   marginRight: '8px',
                 }}
+                help=""
               >
-                <Input.Password className={styles['custom-input']} />
+                <Input className={styles['custom-input']} />
               </Form.Item>
-              <CustomBtn label="注册" />
+              <CustomBtn
+                type="button"
+                label="点击获取验证码"
+                style={{
+                  width: '150px',
+                }}
+                onClick={handleGetCode}
+              />
             </div>
+            <Form.Item>
+              <CustomBtn type="submit" label="注册" />
+            </Form.Item>
           </Form>
+        </div>
+        <div className={styles['navigate-to-login-box']}>
+          <span>已有账户? </span>
+          <span
+            className={styles['login-label']}
+            onClick={() => navigate('/login')}
+          >
+            登录
+          </span>
         </div>
       </div>
     </div>

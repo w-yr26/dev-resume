@@ -20,3 +20,27 @@ export const postNewPwdAPI = (data: {
 }) => {
   return request<null>('/resume/user/forgot-password', 'POST', data)
 }
+
+/**
+ * 获取邮箱验证码
+ * @param email
+ * @returns
+ */
+export const postRegisterCodeAPI = (email: string) => {
+  return request<null>(`/resume/user/RegisterCode?email=${email}`, 'POST')
+}
+
+/**
+ * 用户注册
+ * @param data 
+ * @returns 
+ */
+export const postRegisterAPI = (data: {
+  avatar?: string
+  email: string
+  password: string
+  username: string
+  verificationCode: string
+}) => {
+  return request<any>('/resume/user/register', 'POST', data)
+}

@@ -13,13 +13,17 @@ const CustomBtn = (props: customBtnType) => {
     if (onClick) onClick()
   }
   return (
-    <button type={type} className={styles['custom-btn-contaienr']} {...reset}>
+    <button
+      type={type}
+      className={styles['custom-btn-contaienr']}
+      {...reset}
+      style={style}
+    >
       <div
         className={`${styles['main-box']} ${
           disabled ? styles['disabled-btn'] : ''
         }`}
         onClick={handleClick}
-        style={style}
       >
         {label}
       </div>
