@@ -35,13 +35,13 @@ instance.interceptors.response.use(
     const { code, msg } = response.data
     const { authorization } = response.headers
     const store = useUserStore.getState()
-    const token = store.info.token
+    // const token = store.info.token
     const updateInfo = store.updateInfo
     // 无token，则存储
-    if (!token) {
-      updateInfo('token', authorization)
-      localStorage.setItem('token', authorization)
-    }
+    // if (!token) {
+    updateInfo('token', authorization)
+    localStorage.setItem('token', authorization)
+    // }
 
     // 业务统一状态码出错
     if (code !== 1) {
