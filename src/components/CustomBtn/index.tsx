@@ -7,7 +7,7 @@ type customBtnType = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const CustomBtn = (props: customBtnType) => {
-  const { label, onClick, disabled, type, style, ...reset } = props
+  const { label, onClick, disabled, type = 'button', style, ...reset } = props
   const handleClick = () => {
     if (disabled) return
     if (onClick) onClick()
