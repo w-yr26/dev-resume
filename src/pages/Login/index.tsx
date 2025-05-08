@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
-import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { loginAPI } from '@/apis/user'
 import { LoginForm } from './components/LoginForm'
 import { ThirdPartyLogin } from './components/ThirdPartyLogin'
 import { ResetPasswordForm } from './components/ResetPasswordForm'
 import styles from './index.module.scss'
-import type { ResetPasswordValues } from '@/types/user'
-
 
 const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -17,42 +14,16 @@ const Login: React.FC = () => {
   const onFinish = async (values: { email: string; password: string }) => {
     setIsLoading(true)
 
-    const { code, data, msg } = await loginAPI({
+    const { data } = await loginAPI({
       email: values.email.trim(),
       password: values.password.trim(),
     })
 
-    if (code === 1) {
-      message.success(msg || '登录成功')
-      console.log('data', data)
-      localStorage.setItem('email', data.email)
-      localStorage.setItem('user_name', data.username)
-      localStorage.setItem('user_id', String(data.id))
-      navigate('/')
-    }
+    localStorage.setItem('email', data.email)
+    localStorage.setItem('user_name', data.username)
+    localStorage.setItem('user_id', String(data.id))
+    navigate('/')
     setIsLoading(false)
-  }
-
-  const handleResetPassword = async (values: ResetPasswordValues) => {
-    // setIsLoading(true)
-    // try {
-    //   const res = await forgotPassword({
-    //     email: values.email.trim(),
-    //     password: values.newPassword,
-    //     verificationCode: values.verificationCode,
-    //   })
-    //   if (res.code === 1) {
-    //     message.success('密码重置成功')
-    //     setShowResetPassword(false)
-    //     form.resetFields()
-    //   }
-    // } catch {
-    //   // setErrorMsg('网络错误，请检查网络连接')
-    //   console.log('catch')
-    // } finally {
-    //   setIsLoading(false)
-    // }
-    console.log(values)
   }
 
   return (
@@ -80,10 +51,7 @@ const Login: React.FC = () => {
               <p>
                 <a href="/login">返回登录</a>
               </p>
-              <ResetPasswordForm
-                onFinish={handleResetPassword}
-                isLoading={isLoading}
-              />
+              <ResetPasswordForm isLoading={isLoading} />
             </>
           )}
         </div>

@@ -66,7 +66,6 @@ const Home = () => {
       slug,
       template_id: '1',
     })
-    message.success('创建成功')
     await getResumeList()
     setIsModalOpen(false)
   }
@@ -82,8 +81,7 @@ const Home = () => {
   }
 
   const handleDel = async (id: string) => {
-    const { msg } = await delResumeAPI(id)
-    message.success(msg || '删除成功')
+    await delResumeAPI(id)
     await getResumeList()
   }
 

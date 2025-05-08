@@ -47,6 +47,8 @@ instance.interceptors.response.use(
     if (code !== 1) {
       message.error(msg || '请求出错, 请稍后再试')
       return
+    } else if (code === 1) {
+      message.success(msg || '操作成功')
     }
 
     // 数据剥离

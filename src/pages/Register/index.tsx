@@ -1,4 +1,4 @@
-import { Form, Input, message } from 'antd'
+import { Form, Input } from 'antd'
 import styles from './index.module.scss'
 import './custom.style.scss'
 import CustomBtn from '@/components/CustomBtn'
@@ -19,14 +19,12 @@ const Register = () => {
     const email = formRef.getFieldValue('email')
     if (!email) return console.log('请输入邮箱')
 
-    const { msg } = await postRegisterCodeAPI(email)
-    message.success(`${msg} 请尽快注册`)
+    await postRegisterCodeAPI(email)
   }
 
   const handleSubmit = async () => {
     const data = await formRef.getFieldsValue()
-    const { msg } = await postRegisterAPI(data)
-    message.success(msg)
+    await postRegisterAPI(data)
     navigate('/login', {
       replace: true,
     })

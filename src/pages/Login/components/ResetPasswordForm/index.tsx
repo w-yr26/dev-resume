@@ -7,14 +7,10 @@ import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@/store'
 
 interface ResetPasswordFormProps {
-  onFinish: (values: any) => void
   isLoading: boolean
 }
 
-export const ResetPasswordForm = ({
-  onFinish,
-  isLoading,
-}: ResetPasswordFormProps) => {
+export const ResetPasswordForm = ({ isLoading }: ResetPasswordFormProps) => {
   const [countdown, setCountdown] = useState(0)
   const [isCodeSent, setIsCodeSent] = useState(false)
   const [form] = Form.useForm()
@@ -53,13 +49,10 @@ export const ResetPasswordForm = ({
 
       const email = form.getFieldValue('email')?.trim()
       setIsSendingCode(true)
-      const { code } = await getVerificationCodeAPI(email)
+      await getVerificationCodeAPI(email)
 
-      if (code === 1) {
-        message.success('验证码已发送至您的邮箱')
-        setIsCodeSent(true)
-        setCountdown(30)
-      }
+      setIsCodeSent(true)
+      setCountdown(30)
     } catch (err) {
       console.log(err)
       message.error('请检查邮箱、密码格式')
@@ -70,12 +63,11 @@ export const ResetPasswordForm = ({
   const handleRevisePSD = async () => {
     const values = await form.validateFields()
     console.log(values)
-    const { code } = await postNewPwdAPI({ ...values })
-    if (code) {
-      message.success('密码修改成功')
-      navigate('/login')
-    }
+    await postNewPwdAPI({ ...values })
+    navigate('/login')
   }
+
+  const onFinish = () => {}
 
   return (
     <Form
