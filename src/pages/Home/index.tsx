@@ -10,6 +10,10 @@ import ListSVG from '@/assets/svg/list.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
+import openSVG from '@/assets/svg/open.svg?react'
+import editSVG from '@/assets/svg/edit.svg?react'
+import copySVG from '@/assets/svg/copy.svg?react'
+import deleteSVG from '@/assets/svg/delete.svg?react'
 
 import {
   Avatar,
@@ -18,14 +22,21 @@ import {
   Input,
   message,
   Modal,
+  Popover,
   Tooltip,
 } from 'antd'
-import { useEffect, useState } from 'react'
-import { getResumePageAPI, postResumeCreateAPI } from '@/apis/resume'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  delResumeAPI,
+  getResumePageAPI,
+  postResumeCreateAPI,
+} from '@/apis/resume'
 import type { resumeItem } from '@/types/resume'
 import CustomBtn from '@/components/CustomBtn'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
+  const navigate = useNavigate()
   const { user_name } = useUserStore((state) => state.info)
   const userId = useUserStore((state) => state.info.id)
 
@@ -36,27 +47,27 @@ const Home = () => {
   const [resumeTitle, setResumeTitle] = useState('')
   const [slug, setSlug] = useState('')
 
-  useEffect(() => {
-    const getResumeList = async () => {
-      const { data } = await getResumePageAPI(page, PAGE_SIZE, userId)
-      setResumeList([...resumeList, ...data.records])
-    }
+  // 获取列表数据
+  const getResumeList = useCallback(async () => {
+    const { data } = await getResumePageAPI(page, PAGE_SIZE, userId)
+    setResumeList(data.records)
+  }, [page, userId])
 
-    // getResumeList()
+  useEffect(() => {
+    getResumeList()
   }, [page])
 
   const handleCreateResume = async () => {
     if (!resumeTitle) return message.warning('请输入简历名称')
-    // TODO：这里调用接口
-    const { data } = await postResumeCreateAPI({
+    await postResumeCreateAPI({
       randomId: uuidv4(),
       userId: userId,
       title: resumeTitle,
       slug,
       template_id: '1',
     })
-    console.log('create success', data)
-
+    message.success('创建成功')
+    await getResumeList()
     setIsModalOpen(false)
   }
 
@@ -65,6 +76,40 @@ const Home = () => {
     setResumeTitle(uuid)
     setSlug(uuid)
   }
+
+  const handleOpen = (id: string) => {
+    navigate(`/dev/${id}`)
+  }
+
+  const handleDel = async (id: string) => {
+    const { msg } = await delResumeAPI(id)
+    message.success(msg || '删除成功')
+    await getResumeList()
+  }
+
+  const menuContent = (id: string) => (
+    <div className={styles['menu-list']}>
+      <div className={styles['menu-item-box']} onClick={() => handleOpen(id)}>
+        <Icon component={openSVG} />
+        <span className={styles['item-label']}>打开</span>
+      </div>
+      <div className={styles['menu-item-box']}>
+        <Icon component={editSVG} />
+        <span className={styles['item-label']}>重命名</span>
+      </div>
+      <div className={styles['menu-item-box']}>
+        <Icon component={copySVG} />
+        <span className={styles['item-label']}>复制</span>
+      </div>
+      <div
+        className={`${styles['menu-item-box']} ${styles['del-item-box']}`}
+        onClick={() => handleDel(id)}
+      >
+        <Icon component={deleteSVG} />
+        <span className={styles['item-label']}>删除</span>
+      </div>
+    </div>
+  )
 
   return (
     <>
@@ -158,28 +203,44 @@ const Home = () => {
             {/* 简历列表 */}
             {resumeList.length
               ? resumeList.map((item, index) => (
-                  <div
-                    className={`${styles['resume-item']} ${styles['animation-item']}`}
-                    style={{
-                      animationDelay: `0.${index + 1}s`,
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Popover: {
+                          boxShadowSecondary: 'none',
+                        },
+                      },
                     }}
                     key={item.id}
                   >
-                    <div className={styles['resume-bottom']}>
-                      <p className={styles['resume-name']}>{item.title}</p>
-                      <p className={styles['update-time']}>
-                        最后更新于&nbsp;
-                        <span
-                          style={{
-                            color: '#333',
-                          }}
-                        >
-                          {item.updateTime}
-                        </span>
-                        &nbsp;前
-                      </p>
-                    </div>
-                  </div>
+                    <Popover
+                      content={() => menuContent(item.randomId)}
+                      title={null}
+                      trigger="click"
+                    >
+                      <div
+                        className={`${styles['resume-item']} ${styles['animation-item']}`}
+                        style={{
+                          animationDelay: `0.${index + 1}s`,
+                        }}
+                      >
+                        <div className={styles['resume-bottom']}>
+                          <p className={styles['resume-name']}>{item.title}</p>
+                          <p className={styles['update-time']}>
+                            最后更新于&nbsp;
+                            <span
+                              style={{
+                                color: '#333',
+                              }}
+                            >
+                              {item.updateTime}
+                            </span>
+                            &nbsp;前
+                          </p>
+                        </div>
+                      </div>
+                    </Popover>
+                  </ConfigProvider>
                 ))
               : null}
           </div>

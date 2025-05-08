@@ -33,5 +33,13 @@ export const postResumeCreateAPI = (data: {
   slug: string
   template_id: string
 }) => {
-  return request<any>('/resume/resume/create', 'POST', data)
+  return request<null>('/resume/resume/create', 'POST', data)
+}
+
+/**
+ * 删除简历
+ * @param randomId 简历的随机id
+ */
+export const delResumeAPI = (randomId: string) => {
+  return request<null>(`/resume/resume/delete/${randomId}`, 'DELETE')
 }
