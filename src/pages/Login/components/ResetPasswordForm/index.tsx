@@ -1,157 +1,138 @@
 import { useState, useEffect } from 'react'
-import { Form, Input, Row, Col, message } from 'antd'
+import { Form, Input, message } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
 import styles from './index.module.scss'
 import { getVerificationCodeAPI, postNewPwdAPI } from '@/apis/user'
-import { useNavigate } from 'react-router-dom'
 import { useUserStore } from '@/store'
 
-interface ResetPasswordFormProps {
-  isLoading: boolean
-}
-
-export const ResetPasswordForm = ({ isLoading }: ResetPasswordFormProps) => {
-  const [countdown, setCountdown] = useState(0)
-  const [isCodeSent, setIsCodeSent] = useState(false)
+export const ResetPasswordForm = ({
+  setShowResetPassword,
+}: {
+  setShowResetPassword: (val: boolean) => void
+}) => {
   const [form] = Form.useForm()
-  const [isSendingCode, setIsSendingCode] = useState(false)
   const { email } = useUserStore((state) => state.info)
-  const navigate = useNavigate()
+  const [countdown, setCountdown] = useState(60)
+  const [isCountdown, setIsCountdown] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (!isCountdown) return
+    if (countdown === 0) {
+      setIsCountdown(false)
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown((prev) => prev - 1)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [countdown, isCountdown])
 
   useEffect(() => {
     form.setFieldValue('email', email)
   }, [email, form])
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (countdown > 0) {
-      timer = setTimeout(() => setCountdown(countdown - 1), 1000)
-    }
-    return () => clearTimeout(timer)
-  }, [countdown])
-
   const handleSendCode = async () => {
-    if (countdown > 0) return
-    await handleSendVerificationCode()
-  }
-
-  const formatCountdown = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins.toString().padStart(2, '0')}:${secs
-      .toString()
-      .padStart(2, '0')}`
-  }
-
-  const handleSendVerificationCode = async () => {
     try {
-      await form.validateFields(['email', 'newPassword'])
-
+      await form.validateFields(['email'])
       const email = form.getFieldValue('email')?.trim()
-      setIsSendingCode(true)
-      await getVerificationCodeAPI(email)
+      console.log('email', email)
 
-      setIsCodeSent(true)
-      setCountdown(30)
+      setIsCountdown(true)
+      await getVerificationCodeAPI(email)
     } catch (err) {
       console.log(err)
-      message.error('请检查邮箱、密码格式')
-      return
+      message.error('请检查邮箱格式是否正确')
+      // 重置倒计时相关的状态
+      setCountdown(60)
+      setIsCountdown(false)
     }
   }
 
   const handleRevisePSD = async () => {
-    const values = await form.validateFields()
-    console.log(values)
-    await postNewPwdAPI({ ...values })
-    navigate('/login')
+    try {
+      setIsLoading(true)
+      await form.validateFields()
+      const values = await form.validateFields()
+      await postNewPwdAPI({ ...values })
+      setShowResetPassword(false)
+    } catch (error) {
+      console.log('error', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const onFinish = () => {}
-
   return (
-    <Form
-      form={form}
-      labelCol={{ span: 6 }}
-      name="reset-password-form"
-      onFinish={onFinish}
-      autoComplete="off"
-    >
+    <Form form={form} name="reset-password-form" autoComplete="off">
       <Form.Item
         name="email"
-        label={'邮箱'}
+        label={'原邮箱'}
         rules={[
           { required: true, message: '请输入您的注册邮箱' },
           {
-            pattern:
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            message: '请输入有效的邮箱地址',
-          },
-          {
-            validator: (_, value) => {
-              if (value && value.trim() === '') {
-                return Promise.reject('邮箱不能仅为空格')
-              }
-              return Promise.resolve()
-            },
+            type: 'email',
+            message: '请输入正确的邮箱格式',
           },
         ]}
-        normalize={(value) => value.trim()}
+        help=""
       >
-        <Input className={styles.input} placeholder="user@example.com" />
+        <Input
+          className={styles['custom-input']}
+          placeholder="user@example.com"
+        />
       </Form.Item>
 
       <Form.Item
-        name="newPassword"
+        name="password"
         label="新密码"
         rules={[
           { required: true, message: '请输入新密码' },
           { min: 6, message: '密码长度至少6位' },
         ]}
+        help=""
       >
-        <Input.Password className={styles.input} placeholder="请输入新密码" />
+        <Input.Password
+          className={styles['custom-input']}
+          placeholder="请输入新密码"
+        />
       </Form.Item>
 
-      <Form.Item
-        name="verificationCode"
-        label="验证码"
-        rules={[
-          { required: true, message: '请输入验证码' },
-          { pattern: /^\d{6}$/, message: '验证码必须是6位数字' },
-        ]}
-      >
-        <Row gutter={8}>
-          <Col span={16}>
-            <Input
-              className={styles.input}
-              placeholder="请输入6位验证码"
-              maxLength={6}
-            />
-          </Col>
-          <Col span={8}>
-            <CustomBtn
-              disabled={isSendingCode || countdown > 0}
-              label={
-                isSendingCode
-                  ? '发送中...'
-                  : countdown > 0
-                  ? formatCountdown(countdown as number)
-                  : isCodeSent
-                  ? '重新获取验证码'
-                  : '获取验证码'
-              }
-              onClick={handleSendCode}
-            />
-          </Col>
-        </Row>
-      </Form.Item>
+      <div className={styles['raw-input']}>
+        <Form.Item
+          name="verificationCode"
+          label="验证码"
+          rules={[{ required: true, message: '请输入验证码' }]}
+          style={{
+            flex: 1,
+            margin: 0,
+            marginRight: '8px',
+          }}
+          help=""
+        >
+          <Input
+            className={styles['custom-input']}
+            placeholder="请输入6位验证码"
+            maxLength={6}
+          />
+        </Form.Item>
+        <CustomBtn
+          disabled={isCountdown}
+          label={!isCountdown ? '获取验证码' : `${countdown}s 后重新获取`}
+          style={{
+            width: '120px',
+          }}
+          onClick={handleSendCode}
+        />
+      </div>
 
       <Form.Item>
         <CustomBtn
           label={isLoading ? '提交中...' : '确认修改'}
           type="submit"
           onClick={handleRevisePSD}
-          disabled={true}
         />
       </Form.Item>
     </Form>

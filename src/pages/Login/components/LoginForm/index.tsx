@@ -52,13 +52,7 @@ export const LoginForm = ({
           disabled={isLoading}
           label={isLoading ? '登录中...' : '登录'}
         />
-        <a
-          onClick={onForgotPassword}
-          className={styles['forgot-link']}
-          style={{
-            fontSize: '12px',
-          }}
-        >
+        <a onClick={onForgotPassword} className={styles['forgot-link']}>
           忘记密码？
         </a>
       </Form.Item>

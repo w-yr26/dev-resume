@@ -96,6 +96,7 @@ const Register = () => {
                 rules={[{ required: true }]}
                 layout="horizontal"
                 style={{
+                  flex: 1,
                   height: 'auto',
                   margin: 0,
                   marginRight: '8px',

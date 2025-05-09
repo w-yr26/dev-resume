@@ -51,7 +51,7 @@ const Login: React.FC = () => {
               <p>
                 <a href="/login">返回登录</a>
               </p>
-              <ResetPasswordForm isLoading={isLoading} />
+              <ResetPasswordForm setShowResetPassword={setShowResetPassword} />
             </>
           )}
         </div>

@@ -7,10 +7,9 @@ export const loginAPI = (data: loginInfoType) => {
 
 // 和密码相关password.ts
 export const getVerificationCodeAPI = (email: string) => {
-  return request(
-    `/resume/user/sendCode?email=${encodeURIComponent(email)}`,
-    'POST'
-  )
+  return request<null>(`/resume/user/sendCode`, 'POST', {
+    email,
+  })
 }
 
 export const postNewPwdAPI = (data: {
@@ -32,8 +31,8 @@ export const postRegisterCodeAPI = (email: string) => {
 
 /**
  * 用户注册
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const postRegisterAPI = (data: {
   avatar?: string
