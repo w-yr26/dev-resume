@@ -26,13 +26,15 @@ export const LoginForm = ({
         rules={[
           { required: true, message: '请输入邮箱' },
           {
-            pattern:
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            type: 'email',
             message: '请输入有效的邮箱地址',
           },
         ]}
       >
-        <Input className={styles.input} placeholder="user@example.com" />
+        <Input
+          className={styles['custom-input']}
+          placeholder="user@example.com"
+        />
       </Form.Item>
 
       <Form.Item
@@ -43,7 +45,10 @@ export const LoginForm = ({
           { min: 6, message: '密码长度至少6位' },
         ]}
       >
-        <Input.Password className={styles.input} placeholder="password123" />
+        <Input.Password
+          className={styles['custom-input']}
+          placeholder="password123"
+        />
       </Form.Item>
 
       <Form.Item>

@@ -43,3 +43,20 @@ export const postRegisterAPI = (data: {
 }) => {
   return request<any>('/resume/user/register', 'POST', data)
 }
+
+// String redirectUrl = ""
+//         + "?client_id=" + CLIENT_ID
+//         + "&redirect_uri=" + URLEncoder.encode("http://localhost:8080/resume/user/gitee/callback", "UTF-8")
+//         + "&response_type=code";
+
+// const CLIENT_ID =
+//   'f7a79df789b8ae0a5f1fa8d3c64c749fd0ab98008d445c7605fa5a7ceffe62a2'
+// const callback = 'http://localhost:8080/resume/user/gitee/callback'
+export const postGiteeLoginAPI = () => {
+  // return request<any>(
+  //   `https://gitee.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${callback}&response_type=code`,
+  //   'POST'
+  // )
+
+  return request<any>('/resume/user/gitee/redirect')
+}
