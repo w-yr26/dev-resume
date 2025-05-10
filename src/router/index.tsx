@@ -11,6 +11,7 @@ import Dev from '@/pages/Dev'
 import Register from '@/pages/Register'
 import Md from '@/pages/Md'
 import ThirdPart from '@/pages/ThirdPart'
+import Design from '@/pages/Design'
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -22,6 +23,7 @@ const routes = createRoutesFromElements(
     <Route path="register" element={<Register />}></Route>
     <Route path="md" element={<Md />}></Route>
     <Route path="/third/login" element={<ThirdPart />}></Route>
+    <Route path="/design" element={<Design />}></Route>
   </Route>
 )
 

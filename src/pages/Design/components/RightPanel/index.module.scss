@@ -1,0 +1,81 @@
+/* 右侧属性面板 */
+.property-container {
+  width: 25%;
+  height: 100%;
+  background-color: #fff;
+  // padding: 0 10px;
+  box-sizing: border-box;
+  border-left: 1px solid #e4e4e7;
+
+  .property-header {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+
+    h4 {
+      margin-left: 8px;
+    }
+  }
+
+  .tabs-menu {
+    height: 48px;
+    width: 100%;
+    background-color: #f4f4f5;
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    box-sizing: border-box;
+    padding: 8px 10px;
+
+    .tab-item {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+
+      span {
+        margin-left: 8px;
+        line-height: 1;
+      }
+    }
+  }
+}
+
+.tab-active {
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.setting-container {
+  width: 100%;
+  height: auto;
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  .custom-setting-box {
+    box-sizing: border-box;
+    padding: 12px 10px;
+    border-bottom: 1px solid #e4e4e7;
+  }
+
+  .custom-raw {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+
+    .raw-left {
+      font-weight: 600;
+      width: 100px;
+    }
+
+    .raw-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+}
