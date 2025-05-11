@@ -8,6 +8,7 @@ import imageSVG from '@/assets/svg/design/image.svg?react'
 import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import styles from './index.module.scss'
 import { v4 as uuidv4 } from 'uuid'
+import type { uiType } from '@/types/ui'
 
 const LeftPanel = () => {
   const draggableList = [
@@ -21,6 +22,7 @@ const LeftPanel = () => {
           // JSON描述信息
           desUISchema: {
             type: 'module',
+            isNested: true,
             layout: 'horizontal',
             style: {},
             bind: '',
@@ -40,6 +42,7 @@ const LeftPanel = () => {
           sub: '用于定义列表数据',
           desUISchema: {
             type: 'section',
+            isNested: true,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -54,6 +57,7 @@ const LeftPanel = () => {
           sub: '用于定义md数据',
           desUISchema: {
             type: 'md',
+            isNested: false,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -68,6 +72,7 @@ const LeftPanel = () => {
           sub: '用于定义单行文本',
           desUISchema: {
             type: 'text',
+            isNested: false,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -82,6 +87,7 @@ const LeftPanel = () => {
           sub: '用于定义图片',
           desUISchema: {
             type: 'image',
+            isNested: false,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -96,6 +102,7 @@ const LeftPanel = () => {
           sub: '用于定义多栏布局',
           desUISchema: {
             type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container
+            isNested: true,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -110,6 +117,7 @@ const LeftPanel = () => {
           sub: '用于定义多栏布局',
           desUISchema: {
             type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container
+            isNested: true,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -135,6 +143,8 @@ const LeftPanel = () => {
                       <DraggableBox
                         id={item.desUISchema.nodeKey}
                         key={item.desUISchema.nodeKey}
+                        desUISchema={item.desUISchema}
+                        nodeType={item.desUISchema.type as uiType}
                       >
                         <div className={styles['module-item']}>
                           <div className={styles['top']}>

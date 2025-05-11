@@ -45,3 +45,20 @@ export type treeDateType = {
   cssStyle: React.CSSProperties
   rawNode: nodeType
 }
+
+// ====== 以下与简历模板设计有关 ===
+export type singleNode = {
+  type: uiType
+  isNested: boolean
+  layout: layoutType
+  bind: string
+  tag: string
+  nodeKey: string
+  style: object
+  children?: singleNode[]
+}
+
+export type designStoreType = {
+  currentUISchema: singleNode
+  insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
+}

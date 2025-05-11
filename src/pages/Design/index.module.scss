@@ -32,9 +32,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-
 }
-
 
 /* 中间画布 */
 .preview-container {
@@ -53,22 +51,22 @@
     width: 90%;
     box-sizing: border-box;
     padding: 20px;
-
-    fieldset {
-      width: 100%;
-      height: auto;
-      // border-top: none; /* 隐藏顶部边框（由legend替代） */
-      border: none;
-      padding: 20px;
-      box-sizing: border-box;
-
-      &:hover {
-        border: 3px solid #8b8b8d;
-      }
-    }
-
-    legend {
-      padding: 0 10px; /* 控制文字与边框的间距 */
-    }
   }
+}
+
+fieldset {
+  width: 100%;
+  height: auto;
+  // border-top: none; /* 隐藏顶部边框（由legend替代） */
+  // border: none;
+  padding: 20px;
+  box-sizing: border-box;
+  &:hover {
+    cursor: pointer;
+    border: 3px solid #8b8b8d;
+  }
+}
+
+legend {
+  padding: 0 10px; /* 控制文字与边框的间距 */
 }

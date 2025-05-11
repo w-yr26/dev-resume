@@ -1,20 +1,22 @@
 import { useRef } from 'react'
 import { useDrag } from 'react-dnd'
-// 拖拽项类型常量
-const ItemTypes = {
-  BOX: 'box',
-}
+import type { uiType } from '@/types/ui'
+
 const DraggableBox = ({
   children,
   id,
+  nodeType,
+  desUISchema,
 }: {
   children: React.ReactNode
   id: string
+  nodeType: uiType
+  desUISchema: any
 }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.BOX,
-    item: { id },
+    type: nodeType,
+    item: { id, desUISchema },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
