@@ -2,15 +2,174 @@ import Icon from '@ant-design/icons'
 import dataSVG from '@/assets/svg/design/database.svg?react'
 import themeSVG from '@/assets/svg/dev/theme.svg?react'
 import SettingSVG from '@/assets/svg/setting.svg?react'
-import { Input, Radio, Select, Skeleton, Tag } from 'antd'
+import { Cascader, Input, Radio, Select, Tag } from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
+import { useDesignStore } from '@/store'
+import { useEffect, useMemo } from 'react'
 
-const RightPanel = () => {
+interface Option {
+  value: string
+  label: string
+  children?: Option[]
+  disabled?: boolean
+}
+
+const cascaderOptions: Option[] = [
+  {
+    value: 'EDU_BG',
+    label: '教育背景',
+    children: [
+      {
+        value: 'label',
+        label: '模块文本',
+      },
+      {
+        value: 'bg',
+        label: '学历',
+      },
+
+      {
+        value: 'school',
+        label: '院校',
+      },
+      {
+        value: 'date',
+        label: '时间',
+      },
+    ],
+  },
+  {
+    value: 'WORK_EXP',
+    label: '实习/工作经历',
+    children: [
+      {
+        value: 'label',
+        label: '模块文本',
+      },
+      {
+        value: 'company',
+        label: '公司',
+      },
+
+      {
+        value: 'position',
+        label: '职位',
+      },
+      {
+        value: 'date',
+        label: '时间',
+      },
+      {
+        // 这里插个眼，现有的方案中，“项目描述”是会作为label存在的，但是此处未定义给用户
+        value: 'overview',
+        label: '项目描述',
+      },
+      {
+        value: 'output',
+        label: '实习产出',
+      },
+    ],
+  },
+  {
+    value: 'PROJECT_EXP',
+    label: '项目经历',
+    children: [
+      {
+        value: 'label',
+        label: '模块文本',
+      },
+      {
+        value: 'name',
+        label: '项目名称',
+      },
+
+      {
+        value: 'position',
+        label: '团队位置',
+      },
+      {
+        value: 'date',
+        label: '时间',
+      },
+      {
+        value: 'overview',
+        label: '项目描述',
+      },
+      {
+        value: 'output',
+        label: '实习产出',
+      },
+    ],
+  },
+  {
+    value: 'SKILL_LIST',
+    label: '技能特长',
+    children: [
+      {
+        value: 'label',
+        label: '模块文本',
+      },
+      {
+        value: 'info',
+        label: '技能特长描述',
+      },
+    ],
+  },
+  {
+    value: 'HEART_LIST',
+    label: '兴趣爱好',
+    children: [
+      {
+        value: 'label',
+        label: '模块文本',
+      },
+      {
+        value: 'info',
+        label: '爱好描述',
+      },
+    ],
+  },
+]
+
+const RightPanel = ({ activeBind }: { activeBind: string }) => {
+  // const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
+  // const currentUISchema = useDesignStore((state) => state.currentUISchema)
+  console.log('activeBind', activeBind)
+
+  const setConfig = useDesignStore((state) => state.setConfig)
+  const selectedSchema = useDesignStore((state) => state.selectedSchema)
+  const singleNode = selectedSchema()
+
+  useEffect(() => {
+    console.log('singleNode', singleNode)
+  }, [singleNode])
+
   const options: CheckboxGroupProps<string>['options'] = [
     { label: '水平', value: 'horizontal' },
     { label: '垂直', value: 'vertical' },
   ]
+
+  const moduleOptions = [
+    { value: 'BASE_INFO', label: '基础信息' },
+    { value: 'EDU_BG', label: '教育背景' },
+    { value: 'WORK_EXP', label: '实习/工作经历' },
+    { value: 'PROJECT_EXP', label: '项目经历' },
+    { value: 'SKILL_LIST', label: '技能特长' },
+    // { value: 'AWARD_LIST', label: '荣誉奖项' },
+    { value: 'HEART_LIST', label: '兴趣爱好' },
+  ]
+
+  const filterCascaderOptions = useMemo(() => {
+    return cascaderOptions.map((item) => {
+      if (item.value === activeBind) return item
+      else
+        return {
+          ...item,
+          disabled: true,
+        }
+    })
+  }, [activeBind])
 
   return (
     <aside className={styles['property-container']}>
@@ -49,60 +208,90 @@ const RightPanel = () => {
           <div className={styles['custom-raw']}>
             <div className={styles['raw-left']}>组件信息</div>
             <div className={styles['raw-right']}>
-              <Tag>normal-container</Tag>
+              <Tag>{singleNode?.type}</Tag>
             </div>
           </div>
           <div className={styles['custom-raw']}>
             <div className={styles['raw-left']}>ID</div>
             <div className={styles['raw-right']}>
-              <Input disabled value={Math.random()} />
+              <Input disabled value={singleNode?.nodeKey} />
             </div>
           </div>
           <div className={styles['custom-raw']}>
             <div className={styles['raw-left']}>名称</div>
             <div className={styles['raw-right']}>
-              <Input placeholder="请输入文本信息(可选)" />
+              <Input
+                placeholder="请输入文本信息(可选)"
+                value={singleNode?.tag}
+                onChange={(e) => {
+                  if (singleNode)
+                    setConfig(singleNode.nodeKey, 'tag', e.target.value)
+                }}
+              />
             </div>
           </div>
         </div>
         <div
           className={`${styles['data-bind-container']} ${styles['custom-setting-box']}`}
         >
-          <div className={styles['custom-raw']}>
-            <div className={styles['raw-left']}>布局结构</div>
-            <div className={styles['raw-right']}>
-              <Radio.Group
-                block
-                options={options}
-                defaultValue="Pear"
-                optionType="button"
-              />
+          {singleNode?.type === 'module' ? (
+            <div className={styles['custom-raw']}>
+              <div className={styles['raw-left']}>布局结构</div>
+              <div className={styles['raw-right']}>
+                <Radio.Group
+                  block
+                  options={options}
+                  value={singleNode?.layout}
+                  defaultValue="vertical"
+                  optionType="button"
+                  onChange={(e) => {
+                    if (singleNode)
+                      setConfig(singleNode.nodeKey, 'layout', e.target.value)
+                  }}
+                />
+              </div>
             </div>
-          </div>
-          <div className={styles['custom-raw']}>
-            <div className={styles['raw-left']}>匹配字段</div>
-            <div className={styles['raw-right']}>
-              <Select
-                defaultValue="基础信息"
-                style={{
-                  width: '100%',
-                }}
-                options={[
-                  { value: 'BASE_INFO', label: '基础信息' },
-                  { value: 'EDU_BG', label: '教育背景' },
-                  { value: 'WORK_EXP', label: '工作经历' },
-                  { value: 'PROJECT_EXP', label: '项目经历' },
-                  { value: 'AWARD_LIST', label: '荣誉奖项' },
-                  { value: 'SKILL_LIST', label: '技能特长' },
-                  { value: 'HEART_LIST', label: '兴趣爱好' },
-                ]}
-              />
+          ) : null}
+          {singleNode?.type === 'module' ? (
+            <div className={styles['custom-raw']}>
+              <div className={styles['raw-left']}>绑定字段(模块)</div>
+              <div className={styles['raw-right']}>
+                <Select
+                  defaultValue="BASE_INFO"
+                  value={singleNode?.bind}
+                  style={{
+                    width: '100%',
+                  }}
+                  options={moduleOptions}
+                  onSelect={(bind) => {
+                    if (singleNode) setConfig(singleNode.nodeKey, 'bind', bind)
+                  }}
+                />
+              </div>
             </div>
-          </div>
-          <div className={styles['custom-raw']}>
+          ) : null}
+          {singleNode?.type !== 'module' && singleNode?.type !== 'root' ? (
+            <div className={styles['custom-raw']}>
+              <div className={styles['raw-left']}>绑定字段(模块内)</div>
+              <div className={styles['raw-right']}>
+                <Cascader
+                  style={{
+                    width: '100%',
+                  }}
+                  options={filterCascaderOptions}
+                  onChange={(e) => {
+                    if (singleNode)
+                      setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
+                  }}
+                  placeholder="选择绑定字段"
+                />
+              </div>
+            </div>
+          ) : null}
+          {/* <div className={styles['custom-raw']}>
             <div className={styles['raw-left']}>字段结构</div>
             <div className={styles['raw-right']}>代码高亮</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </aside>

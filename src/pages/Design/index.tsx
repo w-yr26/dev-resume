@@ -15,7 +15,8 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React from 'react'
+import React, { useState } from 'react'
+import { message } from 'antd'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -41,15 +42,42 @@ const typeToSVG: Record<uiType, any> = {
 
 const Design = () => {
   const currentUISchema = useDesignStore((state) => state.currentUISchema)
+  const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   const insertNode = useDesignStore((state) => state.insertNode)
-  const handleDrop = (nodeKey: string, targetKey: string, desUISchema: any) => {
+  const setCurrentSelectedKey = useDesignStore(
+    (state) => state.setCurrentSelectedKey
+  )
+  const [activeBind, setActiveBind] = useState('root')
+
+  const handleDrop = (
+    nodeKey: string,
+    targetKey: string,
+    desUISchema: any,
+    bind: string
+  ) => {
+    // 如果bind字段仍然为root且此时不是模块容器(也就是说不是第二层ui)，则其上一层还未选择绑定的模块，此时不能插入新的ui
+    // 因为单个模块内的各元素的bind字段是通过级联组件筛选的，需要先确定模块的bind字段，才能接着确认模块内部的bind字段
+    if (bind === 'root' && desUISchema.type !== 'module') {
+      return message.warning('请先标注父元素模块类型')
+    }
     insertNode(nodeKey, targetKey, desUISchema)
   }
 
-  const renderTemplate = (uiSchema: singleNode) => {
+  const renderTemplate = (uiSchema: singleNode, parentBind: string) => {
     return (
       <>
-        <fieldset>
+        <fieldset
+          className={`${styles['fieldset-item']} ${
+            uiSchema.nodeKey === currentSelectedKey
+              ? styles['active-fieldset']
+              : ''
+          }`}
+          onClick={(e) => {
+            e.stopPropagation()
+            setCurrentSelectedKey(uiSchema.nodeKey)
+            setActiveBind(parentBind)
+          }}
+        >
           <legend>
             <Icon component={typeToSVG[uiSchema.type]} />
             <span
@@ -58,22 +86,34 @@ const Design = () => {
               }}
             >
               {typeToComponentName[uiSchema.type]}
+              {uiSchema.bind ? (
+                <span className={styles['module-name']}> {uiSchema.bind}</span>
+              ) : null}
             </span>
           </legend>
 
-          {uiSchema.children?.length
-            ? uiSchema.children.map((nestedChild: singleNode) => (
-                <React.Fragment key={nestedChild.nodeKey}>
-                  {renderTemplate(nestedChild)}
-                </React.Fragment>
-              ))
-            : null}
-
+          <div
+            className={`${
+              uiSchema.layout === 'horizontal' ? styles['flex-fieldset'] : ''
+            }`}
+          >
+            {uiSchema.children?.length
+              ? uiSchema.children.map((nestedChild: singleNode) => (
+                  <React.Fragment key={nestedChild.nodeKey}>
+                    {renderTemplate(
+                      nestedChild,
+                      nestedChild.bind || parentBind
+                    )}
+                  </React.Fragment>
+                ))
+              : null}
+          </div>
           {uiSchema.isNested ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
               nodeKey={uiSchema.nodeKey}
+              parentBind={parentBind}
             >
               <DragBtn />
             </DropTarget>
@@ -97,10 +137,10 @@ const Design = () => {
           <LeftPanel />
           <main className={styles['preview-container']}>
             <div className={styles['view-container']}>
-              {renderTemplate(currentUISchema)}
+              {renderTemplate(currentUISchema, currentUISchema.bind)}
             </div>
           </main>
-          <RightPanel />
+          <RightPanel activeBind={activeBind} />
         </div>
       </div>
     </DndProvider>

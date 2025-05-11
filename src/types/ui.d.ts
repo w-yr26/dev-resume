@@ -60,5 +60,13 @@ export type singleNode = {
 
 export type designStoreType = {
   currentUISchema: singleNode
+  currentSelectedKey: string
   insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
+  setCurrentSelectedKey: (key: string) => void
+  selectedSchema: () => singleNode | null
+  setConfig: <T extends keyof singleNode>(
+    nodeKey: string,
+    key: T,
+    val: singleNode[T]
+  ) => void
 }

@@ -54,19 +54,40 @@
   }
 }
 
-fieldset {
+.fieldset-item {
   width: 100%;
   height: auto;
   // border-top: none; /* 隐藏顶部边框（由legend替代） */
   // border: none;
   padding: 20px;
   box-sizing: border-box;
+
   &:hover {
     cursor: pointer;
-    border: 3px solid #8b8b8d;
+  }
+
+  legend {
+    padding: 0 10px; /* 控制文字与边框的间距 */
+  }
+
+  .module-name {
+    font-size: 12px;
+    color: #71717a;
   }
 }
 
-legend {
-  padding: 0 10px; /* 控制文字与边框的间距 */
+.flex-fieldset {
+  display: flex;
+  // align-items: center;
+  align-items: stretch;
+  justify-content: space-between;
+
+  & > fieldset {
+    // flex: 1;
+    width: 50%;
+  }
+}
+
+.active-fieldset {
+  border: 3px solid #8b8b8d;
 }

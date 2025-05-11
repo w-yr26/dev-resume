@@ -8,6 +8,7 @@ export const findNode = (
   nodeKey: string,
   originSchema: singleNode
 ): singleNode | null => {
+  if (!nodeKey) return null
   if (nodeKey === originSchema.nodeKey) return originSchema
   if (!originSchema.children?.length) return null
   for (const child of originSchema.children) {
@@ -19,14 +20,14 @@ export const findNode = (
 
 const useDesignStore = create<designStoreType>()(
   devtools(
-    (set) => {
+    (set, get) => {
       return {
         currentUISchema: {
           type: 'root', // 根容器
           isNested: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
           style: {}, // 即configStyle
-          bind: '',
+          bind: 'root',
           tag: '',
           nodeKey: 'root' + '~' + uuidv4(),
           children: [
@@ -39,9 +40,10 @@ const useDesignStore = create<designStoreType>()(
               tag: '',
               nodeKey: 'module1' + '~' + uuidv4(),
               children: [],
-            }
+            },
           ],
         },
+        currentSelectedKey: '',
         insertNode: (nodeKey, targetKey, desUISchema) => {
           set(
             produce((state: designStoreType) => {
@@ -53,6 +55,26 @@ const useDesignStore = create<designStoreType>()(
                 ...desUISchema,
                 nodeKey: `${nodeKey}${targetNode.children.length}`,
               })
+            })
+          )
+        },
+        setCurrentSelectedKey: (key) => {
+          return set(() => {
+            return {
+              currentSelectedKey: key,
+            }
+          })
+        },
+        // 根据当前选中的节点key，计算出当前节点的schema
+        selectedSchema: () => {
+          return findNode(get().currentSelectedKey, get().currentUISchema)
+        },
+        setConfig: (nodeKey, key, value) => {
+          set(
+            produce((state: designStoreType) => {
+              const targetNode = findNode(nodeKey, state.currentUISchema)
+              if (!targetNode) return
+              targetNode[key] = value
             })
           )
         },
