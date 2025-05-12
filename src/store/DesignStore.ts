@@ -24,7 +24,7 @@ const useDesignStore = create<designStoreType>()(
       return {
         currentUISchema: {
           type: 'root', // 根容器
-          isNested: true, // 是否支持嵌套，即children是否有值
+          isNestedAgain: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
           style: {}, // 即configStyle
           bind: 'root',
@@ -33,7 +33,7 @@ const useDesignStore = create<designStoreType>()(
           children: [
             {
               type: 'module', // 根容器
-              isNested: true, // 是否支持嵌套，即children是否有值
+              isNestedAgain: true, // 是否支持嵌套，即children是否有值
               layout: 'vertical',
               style: {}, // 即configStyle
               bind: '',

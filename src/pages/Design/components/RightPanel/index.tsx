@@ -6,7 +6,7 @@ import { Cascader, Input, Radio, Select, Tag } from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
 import { useDesignStore } from '@/store'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 
 interface Option {
   value: string
@@ -132,18 +132,15 @@ const cascaderOptions: Option[] = [
   },
 ]
 
-const RightPanel = ({ activeBind }: { activeBind: string }) => {
+const RightPanel = ({ prevBind }: { prevBind: string }) => {
   // const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   // const currentUISchema = useDesignStore((state) => state.currentUISchema)
-  console.log('activeBind', activeBind)
+  console.log('prevBind', prevBind)
 
   const setConfig = useDesignStore((state) => state.setConfig)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
-
-  useEffect(() => {
-    console.log('singleNode', singleNode)
-  }, [singleNode])
+  console.log('singleNode', singleNode)
 
   const options: CheckboxGroupProps<string>['options'] = [
     { label: '水平', value: 'horizontal' },
@@ -160,16 +157,17 @@ const RightPanel = ({ activeBind }: { activeBind: string }) => {
     { value: 'HEART_LIST', label: '兴趣爱好' },
   ]
 
+  // 不属于当前模块的子项都进行禁用
   const filterCascaderOptions = useMemo(() => {
     return cascaderOptions.map((item) => {
-      if (item.value === activeBind) return item
+      if (item.value === prevBind) return item
       else
         return {
           ...item,
           disabled: true,
         }
     })
-  }, [activeBind])
+  }, [prevBind])
 
   return (
     <aside className={styles['property-container']}>
@@ -231,68 +229,73 @@ const RightPanel = ({ activeBind }: { activeBind: string }) => {
             </div>
           </div>
         </div>
-        <div
-          className={`${styles['data-bind-container']} ${styles['custom-setting-box']}`}
-        >
-          {singleNode?.type === 'module' ? (
-            <div className={styles['custom-raw']}>
-              <div className={styles['raw-left']}>布局结构</div>
-              <div className={styles['raw-right']}>
-                <Radio.Group
-                  block
-                  options={options}
-                  value={singleNode?.layout}
-                  defaultValue="vertical"
-                  optionType="button"
-                  onChange={(e) => {
-                    if (singleNode)
-                      setConfig(singleNode.nodeKey, 'layout', e.target.value)
-                  }}
-                />
+        {singleNode?.type === 'root' ? null : (
+          <div
+            className={`${styles['data-bind-container']} ${styles['custom-setting-box']}`}
+          >
+            {singleNode?.type === 'module' ? (
+              <div className={styles['custom-raw']}>
+                <div className={styles['raw-left']}>布局结构</div>
+                <div className={styles['raw-right']}>
+                  <Radio.Group
+                    block
+                    options={options}
+                    value={singleNode?.layout}
+                    defaultValue="vertical"
+                    optionType="button"
+                    onChange={(e) => {
+                      if (singleNode)
+                        setConfig(singleNode.nodeKey, 'layout', e.target.value)
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ) : null}
-          {singleNode?.type === 'module' ? (
-            <div className={styles['custom-raw']}>
-              <div className={styles['raw-left']}>绑定字段(模块)</div>
-              <div className={styles['raw-right']}>
-                <Select
-                  defaultValue="BASE_INFO"
-                  value={singleNode?.bind}
-                  style={{
-                    width: '100%',
-                  }}
-                  options={moduleOptions}
-                  onSelect={(bind) => {
-                    if (singleNode) setConfig(singleNode.nodeKey, 'bind', bind)
-                  }}
-                />
+            ) : null}
+            {singleNode?.type === 'module' ? (
+              <div className={styles['custom-raw']}>
+                <div className={styles['raw-left']}>绑定字段(模块)</div>
+                <div className={styles['raw-right']}>
+                  <Select
+                    defaultValue="BASE_INFO"
+                    value={singleNode?.bind}
+                    style={{
+                      width: '100%',
+                    }}
+                    options={moduleOptions}
+                    onSelect={(bind) => {
+                      if (singleNode)
+                        setConfig(singleNode.nodeKey, 'bind', bind)
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ) : null}
-          {singleNode?.type !== 'module' && singleNode?.type !== 'root' ? (
-            <div className={styles['custom-raw']}>
-              <div className={styles['raw-left']}>绑定字段(模块内)</div>
-              <div className={styles['raw-right']}>
-                <Cascader
-                  style={{
-                    width: '100%',
-                  }}
-                  options={filterCascaderOptions}
-                  onChange={(e) => {
-                    if (singleNode)
-                      setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
-                  }}
-                  placeholder="选择绑定字段"
-                />
+            ) : null}
+            {singleNode?.type !== 'module' &&
+            singleNode?.type !== 'container' ? (
+              <div className={styles['custom-raw']}>
+                <div className={styles['raw-left']}>绑定字段(模块内)</div>
+                <div className={styles['raw-right']}>
+                  <Cascader
+                    style={{
+                      width: '100%',
+                    }}
+                    value={[singleNode?.bind || '']}
+                    options={filterCascaderOptions}
+                    onChange={(e) => {
+                      if (singleNode)
+                        setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
+                    }}
+                    placeholder="选择绑定字段"
+                  />
+                </div>
               </div>
-            </div>
-          ) : null}
-          {/* <div className={styles['custom-raw']}>
+            ) : null}
+            {/* <div className={styles['custom-raw']}>
             <div className={styles['raw-left']}>字段结构</div>
             <div className={styles['raw-right']}>代码高亮</div>
           </div> */}
-        </div>
+          </div>
+        )}
       </div>
     </aside>
   )

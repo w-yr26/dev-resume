@@ -29,7 +29,7 @@ const DropTarget = ({
     accept:
       nodeType === 'root'
         ? 'module'
-        : ['container', 'md', 'text', 'section', 'image'],
+        : ['container', 'md', 'text', 'section', 'image', 'label'],
     drop: (item: any) => {
       // 此处可拿的id是因为在 <DraggableBox /> 中传了id字段
       console.log('bindRef.current', bindRef.current)

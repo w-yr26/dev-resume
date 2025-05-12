@@ -17,6 +17,7 @@ import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
 import React, { useState } from 'react'
 import { message } from 'antd'
+import GlobalSetting from './components/GlobalSetting'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -47,7 +48,7 @@ const Design = () => {
   const setCurrentSelectedKey = useDesignStore(
     (state) => state.setCurrentSelectedKey
   )
-  const [activeBind, setActiveBind] = useState('root')
+  const [prevBind, setPrevBind] = useState('root')
 
   const handleDrop = (
     nodeKey: string,
@@ -75,7 +76,7 @@ const Design = () => {
           onClick={(e) => {
             e.stopPropagation()
             setCurrentSelectedKey(uiSchema.nodeKey)
-            setActiveBind(parentBind)
+            setPrevBind(parentBind)
           }}
         >
           <legend>
@@ -108,7 +109,7 @@ const Design = () => {
                 ))
               : null}
           </div>
-          {uiSchema.isNested ? (
+          {uiSchema.isNestedAgain ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
@@ -140,7 +141,11 @@ const Design = () => {
               {renderTemplate(currentUISchema, currentUISchema.bind)}
             </div>
           </main>
-          <RightPanel activeBind={activeBind} />
+          {currentSelectedKey ? (
+            <RightPanel prevBind={prevBind} />
+          ) : (
+            <GlobalSetting />
+          )}
         </div>
       </div>
     </DndProvider>

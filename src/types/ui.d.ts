@@ -49,7 +49,7 @@ export type treeDateType = {
 // ====== 以下与简历模板设计有关 ===
 export type singleNode = {
   type: uiType
-  isNested: boolean
+  isNestedAgain: boolean
   layout: layoutType
   bind: string
   tag: string

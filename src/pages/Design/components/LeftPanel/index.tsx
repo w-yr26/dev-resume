@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid'
 import type { uiType } from '@/types/ui'
 
 const LeftPanel = () => {
+  // 说明：tag字段仅仅是用来描述模块，而不是每个字段都要描述，但是bind就是每个字段都要绑定
   const draggableList = [
     {
       label: '容器组件',
@@ -22,8 +23,24 @@ const LeftPanel = () => {
           // JSON描述信息
           desUISchema: {
             type: 'module',
-            isNested: true,
-            layout: 'horizontal',
+            isNestedAgain: true,
+            layout: 'vertical',
+            style: {},
+            bind: '',
+            tag: '',
+            nodeKey: uuidv4(),
+            children: [],
+          },
+        },
+        {
+          svg: normalBoxSVG,
+          title: '普通容器',
+          sub: '用于定义container',
+          // JSON描述信息
+          desUISchema: {
+            type: 'container',
+            isNestedAgain: true,
+            layout: 'vertical',
             style: {},
             bind: '',
             tag: '',
@@ -42,8 +59,8 @@ const LeftPanel = () => {
           sub: '用于定义列表数据',
           desUISchema: {
             type: 'section',
-            isNested: true,
-            // layout: 'vertical',
+            isNestedAgain: true,
+            layout: 'vertical', // 列表容器也只能是垂直
             style: {},
             bind: '',
             tag: '',
@@ -57,8 +74,8 @@ const LeftPanel = () => {
           sub: '用于定义md数据',
           desUISchema: {
             type: 'md',
-            isNested: false,
-            // layout: 'vertical',
+            isNestedAgain: false,
+            layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
             style: {},
             bind: '',
             tag: '',
@@ -68,12 +85,12 @@ const LeftPanel = () => {
         },
         {
           svg: textBlockSVG,
-          title: '文本块',
-          sub: '用于定义单行文本',
+          title: '模块标题',
+          sub: '用于定义模块标题',
           desUISchema: {
-            type: 'text',
-            isNested: false,
-            // layout: 'vertical',
+            type: 'label',
+            isNestedAgain: false,
+            layout: 'vertical',
             style: {},
             bind: '',
             tag: '',
@@ -87,7 +104,7 @@ const LeftPanel = () => {
           sub: '用于定义图片',
           desUISchema: {
             type: 'image',
-            isNested: false,
+            isNestedAgain: false,
             // layout: 'vertical',
             style: {},
             bind: '',
@@ -96,34 +113,72 @@ const LeftPanel = () => {
             // children: [],
           },
         },
-        {
-          svg: threeColumnSVG,
-          title: '两列布局',
-          sub: '用于定义多栏布局',
-          desUISchema: {
-            type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container
-            isNested: true,
-            // layout: 'vertical',
-            style: {},
-            bind: '',
-            tag: '',
-            nodeKey: uuidv4(),
-            children: [],
-          },
-        },
+        // {
+        //   svg: threeColumnSVG,
+        //   title: '两列布局',
+        //   sub: '用于定义两列文本',
+        //   desUISchema: {
+        //     type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container
+        //     isNestedAgain: true,
+        //     // layout: 'vertical',
+        //     style: {},
+        //     bind: '',
+        //     tag: '',
+        //     nodeKey: uuidv4(),
+        //     children: [
+        //       {
+        //         type: 'text',
+        //         isNestedAgain: false,
+        //         // layout: 'vertical',
+        //         style: {},
+        //         bind: '',
+        //         tag: '',
+        //         nodeKey: uuidv4(),
+        //       },
+        //     ],
+        //   },
+        // },
         {
           svg: threeColumnSVG,
           title: '三列布局',
-          sub: '用于定义多栏布局',
+          sub: '用于定义三列文本',
           desUISchema: {
-            type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container
-            isNested: true,
-            // layout: 'vertical',
+            type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container(目前Render中对于三栏布局，父盒子的type也是container)
+            isNestedAgain: false,
+            layout: 'horizontal', // 既然是行内多列布局，layout也不再支持选择
             style: {},
-            bind: '',
-            tag: '',
+            bind: '', // 不需要(TODO:但是不需要绑定的条件是啥呢？type === 'container'?)
+            tag: '', // 不需要
             nodeKey: uuidv4(),
-            children: [],
+            children: [
+              {
+                type: 'text',
+                isNestedAgain: false,
+                layout: 'horizontal',
+                style: {},
+                bind: '',
+                tag: '', // 不需要
+                nodeKey: uuidv4(),
+              },
+              {
+                type: 'text',
+                isNestedAgain: false,
+                layout: 'horizontal',
+                style: {},
+                bind: '',
+                tag: '', // 不需要
+                nodeKey: uuidv4(),
+              },
+              {
+                type: 'text',
+                isNestedAgain: false,
+                layout: 'horizontal',
+                style: {},
+                bind: '',
+                tag: '', // 不需要
+                nodeKey: uuidv4(),
+              },
+            ],
           },
         },
       ],
