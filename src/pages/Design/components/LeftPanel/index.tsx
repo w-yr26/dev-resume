@@ -61,7 +61,9 @@ const LeftPanel = () => {
             type: 'section',
             isNestedAgain: true,
             layout: 'vertical', // 列表容器也只能是垂直
-            style: {},
+            style: {
+              padding: 0,
+            },
             bind: '',
             tag: '',
             nodeKey: uuidv4(),
@@ -76,7 +78,9 @@ const LeftPanel = () => {
             type: 'md',
             isNestedAgain: false,
             layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
-            style: {},
+            style: {
+              padding: 0,
+            },
             bind: '',
             tag: '',
             nodeKey: uuidv4(),
@@ -91,7 +95,30 @@ const LeftPanel = () => {
             type: 'label',
             isNestedAgain: false,
             layout: 'vertical',
-            style: {},
+            style: {
+              fontSize: '14px',
+              fontWeight: 500,
+              color: '#333',
+            },
+            bind: '',
+            tag: '',
+            nodeKey: uuidv4(),
+            // children: [],
+          },
+        },
+        {
+          svg: textBlockSVG,
+          title: '普通文本',
+          sub: '用于定义文本内容',
+          desUISchema: {
+            type: 'text',
+            isNestedAgain: false,
+            layout: 'vertical',
+            style: {
+              fontSize: '14px',
+              fontWeight: 400,
+              color: '#333',
+            },
             bind: '',
             tag: '',
             nodeKey: uuidv4(),
@@ -155,7 +182,11 @@ const LeftPanel = () => {
                 type: 'text',
                 isNestedAgain: false,
                 layout: 'horizontal',
-                style: {},
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 400,
+                  color: '#333',
+                },
                 bind: '',
                 tag: '', // 不需要
                 nodeKey: uuidv4(),
@@ -164,7 +195,11 @@ const LeftPanel = () => {
                 type: 'text',
                 isNestedAgain: false,
                 layout: 'horizontal',
-                style: {},
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 400,
+                  color: '#333',
+                },
                 bind: '',
                 tag: '', // 不需要
                 nodeKey: uuidv4(),
@@ -173,7 +208,11 @@ const LeftPanel = () => {
                 type: 'text',
                 isNestedAgain: false,
                 layout: 'horizontal',
-                style: {},
+                style: {
+                  fontSize: '14px',
+                  fontWeight: 400,
+                  color: '#333',
+                },
                 bind: '',
                 tag: '', // 不需要
                 nodeKey: uuidv4(),

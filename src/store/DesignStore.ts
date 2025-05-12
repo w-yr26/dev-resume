@@ -78,6 +78,15 @@ const useDesignStore = create<designStoreType>()(
             })
           )
         },
+        changeStyle: (nodeKey, styleKey, newCssStyle) => {
+          set(
+            produce((state: designStoreType) => {
+              const targetNode = findNode(nodeKey, state.currentUISchema)
+              if (!targetNode) return
+              targetNode.style[styleKey] = newCssStyle
+            })
+          )
+        },
       }
     },
     {

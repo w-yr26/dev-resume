@@ -27,7 +27,7 @@ const typeToComponentName: Record<uiType, string> = {
   section: '列表容器',
   image: '图片',
   text: '文本块',
-  label: 'label',
+  label: '模块标题',
 }
 
 const typeToSVG: Record<uiType, any> = {

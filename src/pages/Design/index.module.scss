@@ -50,7 +50,7 @@
     min-height: 400px;
     width: 90%;
     box-sizing: border-box;
-    padding: 20px;
+    padding: 8px;
   }
 }
 
@@ -67,7 +67,8 @@
   }
 
   legend {
-    padding: 0 10px; /* 控制文字与边框的间距 */
+    padding: 0 4px; /* 控制文字与边框的间距 */
+    font-size: 12px;
   }
 
   .module-name {

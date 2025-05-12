@@ -54,7 +54,7 @@ export type singleNode = {
   bind: string
   tag: string
   nodeKey: string
-  style: object
+  style: React.CSSProperties
   children?: singleNode[]
 }
 
@@ -68,5 +68,10 @@ export type designStoreType = {
     nodeKey: string,
     key: T,
     val: singleNode[T]
+  ) => void
+  changeStyle: (
+    nodeKey: string,
+    styleKey: keyof React.CSSProperties,
+    newCssStyle: any
   ) => void
 }

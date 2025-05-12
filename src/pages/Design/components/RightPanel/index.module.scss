@@ -59,23 +59,4 @@
     padding: 12px 10px;
     border-bottom: 1px solid #e4e4e7;
   }
-
-  .custom-raw {
-    display: flex;
-    height: 40px;
-    align-items: center;
-    justify-content: space-between;
-
-    .raw-left {
-      font-weight: 600;
-      width: 100px;
-    }
-
-    .raw-right {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-  }
 }

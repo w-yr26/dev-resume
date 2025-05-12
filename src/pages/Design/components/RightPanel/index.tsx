@@ -2,11 +2,21 @@ import Icon from '@ant-design/icons'
 import dataSVG from '@/assets/svg/design/database.svg?react'
 import themeSVG from '@/assets/svg/dev/theme.svg?react'
 import SettingSVG from '@/assets/svg/setting.svg?react'
-import { Cascader, Input, Radio, Select, Tag } from 'antd'
+import {
+  Cascader,
+  ColorPicker,
+  ConfigProvider,
+  Input,
+  Radio,
+  Select,
+  Slider,
+  Tag,
+} from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
 import { useDesignStore } from '@/store'
 import { useMemo } from 'react'
+import CustomRaw from '../CustomRaw'
 
 interface Option {
   value: string
@@ -138,6 +148,7 @@ const RightPanel = ({ prevBind }: { prevBind: string }) => {
   console.log('prevBind', prevBind)
 
   const setConfig = useDesignStore((state) => state.setConfig)
+  const changeStyle = useDesignStore((state) => state.changeStyle)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
   console.log('singleNode', singleNode)
@@ -203,99 +214,144 @@ const RightPanel = ({ prevBind }: { prevBind: string }) => {
         <div
           className={`${styles['component-info']} ${styles['custom-setting-box']}`}
         >
-          <div className={styles['custom-raw']}>
-            <div className={styles['raw-left']}>组件信息</div>
-            <div className={styles['raw-right']}>
-              <Tag>{singleNode?.type}</Tag>
-            </div>
-          </div>
-          <div className={styles['custom-raw']}>
-            <div className={styles['raw-left']}>ID</div>
-            <div className={styles['raw-right']}>
-              <Input disabled value={singleNode?.nodeKey} />
-            </div>
-          </div>
-          <div className={styles['custom-raw']}>
-            <div className={styles['raw-left']}>名称</div>
-            <div className={styles['raw-right']}>
-              <Input
-                placeholder="请输入文本信息(可选)"
-                value={singleNode?.tag}
-                onChange={(e) => {
-                  if (singleNode)
-                    setConfig(singleNode.nodeKey, 'tag', e.target.value)
-                }}
-              />
-            </div>
-          </div>
+          <CustomRaw label="组件信息">
+            <Tag>{singleNode?.type}</Tag>
+          </CustomRaw>
+          <CustomRaw label="ID">
+            <Input disabled value={singleNode?.nodeKey} />
+          </CustomRaw>
+          <CustomRaw label="名称">
+            <Input
+              placeholder="请输入文本信息(可选)"
+              value={singleNode?.tag}
+              onChange={(e) => {
+                if (singleNode)
+                  setConfig(singleNode.nodeKey, 'tag', e.target.value)
+              }}
+            />
+          </CustomRaw>
         </div>
         {singleNode?.type === 'root' ? null : (
           <div
             className={`${styles['data-bind-container']} ${styles['custom-setting-box']}`}
           >
             {singleNode?.type === 'module' ? (
-              <div className={styles['custom-raw']}>
-                <div className={styles['raw-left']}>布局结构</div>
-                <div className={styles['raw-right']}>
-                  <Radio.Group
-                    block
-                    options={options}
-                    value={singleNode?.layout}
-                    defaultValue="vertical"
-                    optionType="button"
-                    onChange={(e) => {
-                      if (singleNode)
-                        setConfig(singleNode.nodeKey, 'layout', e.target.value)
-                    }}
-                  />
-                </div>
-              </div>
+              <CustomRaw label="布局结构">
+                <Radio.Group
+                  block
+                  options={options}
+                  value={singleNode?.layout}
+                  defaultValue="vertical"
+                  optionType="button"
+                  onChange={(e) => {
+                    if (singleNode)
+                      setConfig(singleNode.nodeKey, 'layout', e.target.value)
+                  }}
+                />
+              </CustomRaw>
             ) : null}
             {singleNode?.type === 'module' ? (
-              <div className={styles['custom-raw']}>
-                <div className={styles['raw-left']}>绑定字段(模块)</div>
-                <div className={styles['raw-right']}>
-                  <Select
-                    defaultValue="BASE_INFO"
-                    value={singleNode?.bind}
-                    style={{
-                      width: '100%',
-                    }}
-                    options={moduleOptions}
-                    onSelect={(bind) => {
-                      if (singleNode)
-                        setConfig(singleNode.nodeKey, 'bind', bind)
-                    }}
-                  />
-                </div>
-              </div>
+              <CustomRaw label="绑定字段(模块)">
+                <Select
+                  defaultValue="BASE_INFO"
+                  value={singleNode?.bind}
+                  style={{
+                    width: '100%',
+                  }}
+                  options={moduleOptions}
+                  onSelect={(bind) => {
+                    if (singleNode) setConfig(singleNode.nodeKey, 'bind', bind)
+                  }}
+                />
+              </CustomRaw>
             ) : null}
             {singleNode?.type !== 'module' &&
             singleNode?.type !== 'container' ? (
-              <div className={styles['custom-raw']}>
-                <div className={styles['raw-left']}>绑定字段(模块内)</div>
-                <div className={styles['raw-right']}>
-                  <Cascader
-                    style={{
-                      width: '100%',
-                    }}
-                    value={[singleNode?.bind || '']}
-                    options={filterCascaderOptions}
-                    onChange={(e) => {
-                      if (singleNode)
-                        setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
-                    }}
-                    placeholder="选择绑定字段"
-                  />
-                </div>
-              </div>
+              <CustomRaw label="绑定字段(模块内)">
+                <Cascader
+                  style={{
+                    width: '100%',
+                  }}
+                  value={[singleNode?.bind || '']}
+                  options={filterCascaderOptions}
+                  onChange={(e) => {
+                    if (singleNode)
+                      setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
+                  }}
+                  placeholder="选择绑定字段"
+                />
+              </CustomRaw>
             ) : null}
-            {/* <div className={styles['custom-raw']}>
-            <div className={styles['raw-left']}>字段结构</div>
-            <div className={styles['raw-right']}>代码高亮</div>
-          </div> */}
           </div>
         )}
+
+        <div
+          className={`${styles['style-container']} ${styles['custom-setting-box']}`}
+        >
+          <CustomRaw label="字体大小">
+            <ConfigProvider
+              theme={{
+                components: {
+                  Select: {
+                    activeBorderColor: '#d9d9d9',
+                    hoverBorderColor: '#d9d9d9',
+                  },
+                },
+              }}
+            >
+              <Select
+                style={{ width: '100%' }}
+                options={[
+                  { value: '13px', label: '13px' },
+                  { value: '14px', label: '14px' },
+                  { value: '15px', label: '15px' },
+                  { value: '16px', label: '16px' },
+                ]}
+                value={singleNode?.style.fontSize}
+                onChange={(newFontSize) => {
+                  if (singleNode)
+                    changeStyle(singleNode.nodeKey, 'fontSize', newFontSize)
+                }}
+              />
+            </ConfigProvider>
+          </CustomRaw>
+          <CustomRaw label="字体粗细">
+            <ConfigProvider
+              theme={{
+                components: {
+                  Select: {
+                    activeBorderColor: '#d9d9d9',
+                    hoverBorderColor: '#d9d9d9',
+                  },
+                },
+              }}
+            >
+              <Select
+                style={{ width: '100%' }}
+                options={[
+                  { value: 400, label: 400 },
+                  { value: 500, label: 500 },
+                  { value: 600, label: 600 },
+                  { value: 700, label: 700 },
+                ]}
+                value={singleNode?.style.fontWeight}
+                onChange={(newFontWeight) => {
+                  if (singleNode)
+                    changeStyle(singleNode.nodeKey, 'fontWeight', newFontWeight)
+                }}
+              />
+            </ConfigProvider>
+          </CustomRaw>
+          <CustomRaw label="字体颜色">
+            <ColorPicker
+              value={singleNode?.style.color}
+              defaultValue="red"
+              onChange={(_, color) => {
+                if (singleNode) changeStyle(singleNode.nodeKey, 'color', color)
+              }}
+            />
+          </CustomRaw>
+        </div>
       </div>
     </aside>
   )
