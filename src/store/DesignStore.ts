@@ -23,6 +23,7 @@ const useDesignStore = create<designStoreType>()(
     (set, get) => {
       return {
         currentUISchema: {
+          ableDel: false,
           type: 'root', // 根容器
           isNestedAgain: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
@@ -42,6 +43,7 @@ const useDesignStore = create<designStoreType>()(
           nodeKey: 'root' + '~' + uuidv4(),
           children: [
             {
+              ableDel: true,
               type: 'module', // 根容器
               isNestedAgain: true, // 是否支持嵌套，即children是否有值
               layout: 'vertical',
@@ -68,6 +70,21 @@ const useDesignStore = create<designStoreType>()(
                   nodeKey: `${nodeKey}${targetNode.children.length}`,
                 },
               ]
+            })
+          )
+        },
+        delNode: (prevKey, nodeKey) => {
+          set(
+            produce((state: designStoreType) => {
+              console.log(prevKey, nodeKey)
+
+              const targetNode = findNode(prevKey, state.currentUISchema)
+
+              if (!targetNode) return
+              // 过滤掉待删除的child
+              targetNode.children = (targetNode.children || []).filter(
+                (child) => child.nodeKey !== nodeKey
+              )
             })
           )
         },

@@ -10,6 +10,7 @@ import resumeSVG from '@/assets/svg/resume.svg?react'
 import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
 import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
+import closeSVG from '@/assets/svg/design/close.svg?react'
 import DragBtn from './components/DragBtn'
 import LeftPanel from './components/LeftPanel'
 import RightPanel from './components/RightPanel'
@@ -17,8 +18,8 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React, { useEffect, useState } from 'react'
-import { Button, Drawer, message } from 'antd'
+import React, { useState } from 'react'
+import { Button, Drawer } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 
@@ -50,6 +51,7 @@ const Design = () => {
   const currentUISchema = useDesignStore((state) => state.currentUISchema)
   const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   const insertNode = useDesignStore((state) => state.insertNode)
+  const delNode = useDesignStore((state) => state.delNode)
   const setCurrentSelectedKey = useDesignStore(
     (state) => state.setCurrentSelectedKey
   )
@@ -77,7 +79,8 @@ const Design = () => {
   const renderTemplate = (
     uiSchema: singleNode,
     deep: number,
-    prevBind: string
+    prevBind: string,
+    prevKey: string
   ) => {
     return (
       <>
@@ -96,6 +99,19 @@ const Design = () => {
             setCurrentSelectedKey(uiSchema.nodeKey)
           }}
         >
+          <div
+            className={styles['del-box']}
+            style={{
+              visibility:
+                uiSchema.nodeKey === currentSelectedKey ? 'visible' : 'hidden',
+            }}
+            onClick={() => {
+              const prevKeysArr = prevKey.split('&')
+              delNode(prevKeysArr[prevKeysArr.length - 2], uiSchema.nodeKey)
+            }}
+          >
+            <Icon component={closeSVG} />
+          </div>
           <legend>
             <Icon component={typeToSVG[uiSchema.type]} />
             <span
@@ -122,7 +138,8 @@ const Design = () => {
                     {renderTemplate(
                       nestedChild,
                       deep + 1,
-                      prevBind + '-' + nestedChild.bind
+                      prevBind + '-' + nestedChild.bind, // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
+                      prevKey + '&' + nestedChild.nodeKey
                     )}
                   </React.Fragment>
                 ))
@@ -170,7 +187,12 @@ const Design = () => {
             <LeftPanel />
             <main className={styles['preview-container']}>
               <div className={styles['view-container']}>
-                {renderTemplate(currentUISchema, 1, currentUISchema.bind)}
+                {renderTemplate(
+                  currentUISchema,
+                  1,
+                  currentUISchema.bind,
+                  currentUISchema.nodeKey
+                )}
               </div>
             </main>
             {currentSelectedKey ? (

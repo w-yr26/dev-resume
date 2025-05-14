@@ -49,6 +49,7 @@ export type treeDateType = {
 
 // ====== 以下与简历模板设计有关 ===
 export type singleNode = {
+  ableDel: boolean
   type: uiType
   isNestedAgain: boolean
   layout: layoutType
@@ -64,6 +65,7 @@ export type designStoreType = {
   currentUISchema: singleNode
   currentSelectedKey: string
   insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
+  delNode: (prevKey: string, nodeKey: string) => void
   setCurrentSelectedKey: (key: string) => void
   selectedSchema: () => singleNode | null
   setConfig: <T extends keyof singleNode>(
@@ -76,9 +78,5 @@ export type designStoreType = {
     styleKey: keyof React.CSSProperties,
     newCssStyle: any
   ) => void
-  changeChildWidth: (
-    nodeKey: string,
-    idx: number,
-    proportion: string
-  ) => void
+  changeChildWidth: (nodeKey: string, idx: number, proportion: string) => void
 }

@@ -7,17 +7,14 @@ import {
   ColorPicker,
   ConfigProvider,
   Input,
-  InputNumber,
   Radio,
   Select,
-  Slider,
   Splitter,
   Tag,
 } from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
 import { useDesignStore } from '@/store'
-import { useMemo } from 'react'
 import CustomRaw from '../CustomRaw'
 
 interface Option {
@@ -196,9 +193,9 @@ const RightPanel = ({
   // ]
 
   const columnsOptions: CheckboxGroupProps<string>['options'] = [
-    { label: '居中', value: 'center' },
-    { label: '两侧居中', value: 'space-between' },
-    { label: '居中', value: 'space-around' },
+    { label: 'center', value: 'center' },
+    { label: 'between', value: 'space-between' },
+    { label: 'around', value: 'space-around' },
   ]
 
   // 不属于当前模块的子项都进行禁用 -> 这里使用memo意义不大，用户点击不同的dom导致currentNodeDeep、nodeBind不断变化，这里就得不断计算，反倒增加了缓存的成本
@@ -430,13 +427,14 @@ const RightPanel = ({
         >
           {/* TODO: 宽度占比 */}
           {singleNode &&
+          singleNode.type === 'module' &&
           singleNode.layout === 'horizontal' &&
           singleNode.children &&
-          singleNode.children?.length >= 1 ? (
+          singleNode.children?.length > 1 ? (
             <CustomRaw label="宽度分配">
               <Splitter
                 style={{
-                  height: '40px',
+                  height: '30px',
                   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 }}
                 key={singleNode.children.length}
@@ -470,9 +468,10 @@ const RightPanel = ({
           {singleNode?.type === 'columns' ? (
             <CustomRaw label="主轴排列">
               <Radio.Group
+                style={{ width: '100%' }}
                 block
-                options={options}
-                defaultValue="Apple"
+                options={columnsOptions}
+                defaultValue={singleNode.style.justifyContent}
                 optionType="button"
                 buttonStyle="solid"
               />

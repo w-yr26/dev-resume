@@ -55,6 +55,7 @@
 }
 
 .fieldset-item {
+  position: relative;
   width: 100%;
   height: auto;
   // border-top: none; /* 隐藏顶部边框（由legend替代） */
@@ -74,6 +75,15 @@
   .module-name {
     font-size: 12px;
     color: #71717a;
+  }
+
+  .del-box {
+    position: absolute;
+    top: -16px;
+    right: -4px;
+    font-size: 12px;
+    color: #ff5a43;
+    background: #fff;
   }
 }
 
