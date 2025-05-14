@@ -103,7 +103,9 @@ const Design = () => {
             className={styles['del-box']}
             style={{
               visibility:
-                uiSchema.nodeKey === currentSelectedKey ? 'visible' : 'hidden',
+                uiSchema.ableDel && uiSchema.nodeKey === currentSelectedKey
+                  ? 'visible'
+                  : 'hidden',
             }}
             onClick={() => {
               const prevKeysArr = prevKey.split('&')

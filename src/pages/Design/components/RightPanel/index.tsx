@@ -434,7 +434,7 @@ const RightPanel = ({
             <CustomRaw label="宽度分配">
               <Splitter
                 style={{
-                  height: '30px',
+                  height: '28px',
                   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 }}
                 key={singleNode.children.length}
