@@ -27,6 +27,16 @@ const useDesignStore = create<designStoreType>()(
           isNestedAgain: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
           style: {}, // 即configStyle
+          configStyle: {
+            pagePadding: 14,
+            modulePadding: 8,
+            lineHeight: 1.5,
+            fontSize: 14,
+            mainColor: 'rgb(71, 85, 105)',
+            fontColor: 'rgb(10, 10, 10)',
+            bgColor: 'rgb(255, 255, 255)',
+            borderStyle: 'solid',
+          },
           bind: 'root',
           tag: '',
           nodeKey: 'root' + '~' + uuidv4(),
@@ -51,10 +61,13 @@ const useDesignStore = create<designStoreType>()(
               if (!targetNode) return
               // 理论上，能支持拖拽放入的节点都会有children字段，即 nested = true，此处只是做一个兜底
               targetNode.children = targetNode.children || []
-              targetNode.children.push({
-                ...desUISchema,
-                nodeKey: `${nodeKey}${targetNode.children.length}`,
-              })
+              targetNode.children = [
+                ...targetNode.children,
+                {
+                  ...desUISchema,
+                  nodeKey: `${nodeKey}${targetNode.children.length}`,
+                },
+              ]
             })
           )
         },
@@ -84,6 +97,15 @@ const useDesignStore = create<designStoreType>()(
               const targetNode = findNode(nodeKey, state.currentUISchema)
               if (!targetNode) return
               targetNode.style[styleKey] = newCssStyle
+            })
+          )
+        },
+        changeChildWidth: (nodeKey, idx, proportion) => {
+          set(
+            produce((state: designStoreType) => {
+              const targetNode = findNode(nodeKey, state.currentUISchema)
+              if (!targetNode || !targetNode.children) return
+              targetNode.children[idx].style.width = proportion
             })
           )
         },

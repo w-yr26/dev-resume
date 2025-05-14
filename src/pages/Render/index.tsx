@@ -42,6 +42,7 @@ const Render = memo((props: RenderProps) => {
   let mergedStyle: React.CSSProperties = {
     display:
       type === 'container' ||
+      type === 'columns' ||
       type === 'root' ||
       type === 'module' ||
       type === 'section'
@@ -91,7 +92,7 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
-  if (type === 'container' || type === 'module') {
+  if (type === 'container' || type === 'columns' || type === 'module') {
     // 如果当前是模块，style.padding还要考虑联动
     if (type === 'module') {
       mergedStyle = {

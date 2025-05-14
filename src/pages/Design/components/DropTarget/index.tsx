@@ -25,7 +25,7 @@ const DropTarget = ({
         ? 'module'
         : nodeType === 'module'
         ? ['section', 'text']
-        : ['container', 'md', 'text', 'image', 'label'],
+        : ['container', 'md', 'text', 'image', 'label', 'columns'],
     drop: (item: any) => {
       // 此处可拿的id是因为在 <DraggableBox /> 中传了id字段
       console.log('deepRef.current', deepRef.current)

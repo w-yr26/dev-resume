@@ -8,6 +8,7 @@ import mdBoxSVG from '@/assets/svg/design/mdBox.svg?react'
 import codeSVG from '@/assets/svg/dev/code.svg?react'
 import resumeSVG from '@/assets/svg/resume.svg?react'
 import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
+import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
 import DragBtn from './components/DragBtn'
 import LeftPanel from './components/LeftPanel'
@@ -30,10 +31,12 @@ const typeToComponentName: Record<uiType, string> = {
   image: '图片',
   text: '文本块',
   label: '模块标题',
+  columns: '多列容器',
 }
 
 const typeToSVG: Record<uiType, any> = {
   container: normalBoxSVG,
+  columns: threeColumnSVG,
   module: normalBoxSVG,
   root: normalBoxSVG,
   md: mdBoxSVG,

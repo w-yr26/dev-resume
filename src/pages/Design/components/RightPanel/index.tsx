@@ -11,6 +11,7 @@ import {
   Radio,
   Select,
   Slider,
+  Splitter,
   Tag,
 } from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
@@ -169,26 +170,35 @@ const RightPanel = ({
   // const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   // const currentUISchema = useDesignStore((state) => state.currentUISchema)
   // console.log('currentNodeDeep', currentNodeDeep, 'nodeBind', nodeBind, 'end')
+  // console.log('parentLayoutPath', layoutPath.split('-')[currentNodeDeep - 2])
 
   const setConfig = useDesignStore((state) => state.setConfig)
   const changeStyle = useDesignStore((state) => state.changeStyle)
+  const changeChildWidth = useDesignStore((state) => state.changeChildWidth)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
   // console.log('singleNode==', singleNode?.bind, '==')
+  // layoutType = layoutType.split('-')[currentNodeDeep - 2]
 
   const options: CheckboxGroupProps<string>['options'] = [
     { label: '水平', value: 'horizontal' },
     { label: '垂直', value: 'vertical' },
   ]
 
-  const moduleOptions = [
-    { value: 'BASE_INFO', label: '基础信息' },
-    { value: 'EDU_BG', label: '教育背景' },
-    { value: 'WORK_EXP', label: '实习/工作经历' },
-    { value: 'PROJECT_EXP', label: '项目经历' },
-    { value: 'SKILL_LIST', label: '技能特长' },
-    // { value: 'AWARD_LIST', label: '荣誉奖项' },
-    { value: 'HEART_LIST', label: '兴趣爱好' },
+  // const moduleOptions = [
+  //   { value: 'BASE_INFO', label: '基础信息' },
+  //   { value: 'EDU_BG', label: '教育背景' },
+  //   { value: 'WORK_EXP', label: '实习/工作经历' },
+  //   { value: 'PROJECT_EXP', label: '项目经历' },
+  //   { value: 'SKILL_LIST', label: '技能特长' },
+  //   // { value: 'AWARD_LIST', label: '荣誉奖项' },
+  //   { value: 'HEART_LIST', label: '兴趣爱好' },
+  // ]
+
+  const columnsOptions: CheckboxGroupProps<string>['options'] = [
+    { label: '居中', value: 'center' },
+    { label: '两侧居中', value: 'space-between' },
+    { label: '居中', value: 'space-around' },
   ]
 
   // 不属于当前模块的子项都进行禁用 -> 这里使用memo意义不大，用户点击不同的dom导致currentNodeDeep、nodeBind不断变化，这里就得不断计算，反倒增加了缓存的成本
@@ -230,22 +240,6 @@ const RightPanel = ({
     nodeBind.split('-').filter(Boolean),
     currentNodeDeep - 1
   )
-
-  // const filterCascaderOptions = useMemo(() => {
-  //   const currentModule = nodeBind.split('-').filter(Boolean)[
-  //     currentNodeDeep - 2
-  //   ]
-  //   console.log('currentModule', currentModule)
-
-  //   return cascaderOptions.map((item) => {
-  //     if (item.value === currentModule) return item
-  //     else
-  //       return {
-  //         ...item,
-  //         disabled: true,
-  //       }
-  //   })
-  // }, [nodeBind, currentNodeDeep])
 
   return (
     <aside className={styles['property-container']}>
@@ -434,9 +428,56 @@ const RightPanel = ({
         <div
           className={`${styles['layout-ratio']} ${styles['custom-setting-box']}`}
         >
-          <CustomRaw label="宽度占比">
-            <InputNumber min={15} max={30} step={5} defaultValue={15} />
-          </CustomRaw>
+          {/* TODO: 宽度占比 */}
+          {singleNode &&
+          singleNode.layout === 'horizontal' &&
+          singleNode.children &&
+          singleNode.children?.length >= 1 ? (
+            <CustomRaw label="宽度分配">
+              <Splitter
+                style={{
+                  height: '40px',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                }}
+                key={singleNode.children.length}
+                onResizeEnd={(sizes: number[]) => {
+                  const sum = sizes.reduce((prev, current) => prev + current, 0)
+                  // 计算各子模块所占比例，并设置到style.width属性中
+                  if (singleNode) {
+                    singleNode.children?.forEach((_, index) => {
+                      changeChildWidth(
+                        singleNode.nodeKey,
+                        index,
+                        Number((sizes[index] / sum).toFixed(2)) * 100 + '%'
+                      )
+                    })
+                  }
+                }}
+              >
+                {singleNode.children.map((child, index) => (
+                  <Splitter.Panel
+                    key={child.nodeKey}
+                    defaultSize="20%"
+                    min="15%"
+                    max="70%"
+                  >
+                    {`child-${index}`}
+                  </Splitter.Panel>
+                ))}
+              </Splitter>
+            </CustomRaw>
+          ) : null}
+          {singleNode?.type === 'columns' ? (
+            <CustomRaw label="主轴排列">
+              <Radio.Group
+                block
+                options={options}
+                defaultValue="Apple"
+                optionType="button"
+                buttonStyle="solid"
+              />
+            </CustomRaw>
+          ) : null}
         </div>
       </div>
     </aside>

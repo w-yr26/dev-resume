@@ -9,6 +9,7 @@ export type uiType =
   | 'text'
   | 'label'
   | 'md'
+  | 'columns'
 
 export type layoutType = 'vertical' | 'horizontal' | 'grid'
 
@@ -55,6 +56,7 @@ export type singleNode = {
   tag: string
   nodeKey: string
   style: React.CSSProperties
+  configStyle?: React.CSSProperties
   children?: singleNode[]
 }
 
@@ -73,5 +75,10 @@ export type designStoreType = {
     nodeKey: string,
     styleKey: keyof React.CSSProperties,
     newCssStyle: any
+  ) => void
+  changeChildWidth: (
+    nodeKey: string,
+    idx: number,
+    proportion: string
   ) => void
 }

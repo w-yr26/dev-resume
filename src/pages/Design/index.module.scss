@@ -59,7 +59,7 @@
   height: auto;
   // border-top: none; /* 隐藏顶部边框（由legend替代） */
   // border: none;
-  padding: 20px;
+  padding: 4px;
   box-sizing: border-box;
 
   &:hover {
@@ -85,7 +85,7 @@
 
   & > fieldset {
     // flex: 1;
-    width: 50%;
+    // width: 50%;
   }
 }
 

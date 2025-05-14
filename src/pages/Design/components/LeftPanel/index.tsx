@@ -137,7 +137,7 @@ const LeftPanel = () => {
           desUISchema: {
             type: 'image',
             isNestedAgain: false,
-            // layout: 'vertical',
+            layout: 'vertical',
             style: {},
             bind: '',
             tag: '',
@@ -150,10 +150,12 @@ const LeftPanel = () => {
           title: '三列布局',
           sub: '用于定义三列文本',
           desUISchema: {
-            type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container(目前Render中对于三栏布局，父盒子的type也是container)
+            type: 'columns', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container(目前Render中对于三栏布局，父盒子的type也是container)
             isNestedAgain: false,
             layout: 'horizontal', // 既然是行内多列布局，layout也不再支持选择
-            style: {},
+            style: {
+              justifyContent: 'sapce-between',
+            },
             bind: '', // 不需要(TODO:但是不需要绑定的条件是啥呢？type === 'container'?)
             tag: '', // 不需要
             nodeKey: uuidv4(),
