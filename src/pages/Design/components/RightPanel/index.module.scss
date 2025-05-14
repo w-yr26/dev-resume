@@ -18,29 +18,29 @@
     }
   }
 
-  .tabs-menu {
-    height: 48px;
-    width: 100%;
-    background-color: #f4f4f5;
-    display: grid;
-    align-items: center;
-    grid-template-columns: repeat(3, 1fr);
-    box-sizing: border-box;
-    padding: 8px 10px;
+  // .tabs-menu {
+  //   height: 48px;
+  //   width: 100%;
+  //   background-color: #f4f4f5;
+  //   display: grid;
+  //   align-items: center;
+  //   grid-template-columns: repeat(3, 1fr);
+  //   box-sizing: border-box;
+  //   padding: 8px 10px;
 
-    .tab-item {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 4px;
+  //   .tab-item {
+  //     height: 100%;
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: center;
+  //     border-radius: 4px;
 
-      span {
-        margin-left: 8px;
-        line-height: 1;
-      }
-    }
-  }
+  //     span {
+  //       margin-left: 8px;
+  //       line-height: 1;
+  //     }
+  //   }
+  // }
 }
 
 .tab-active {
@@ -53,10 +53,47 @@
   height: auto;
   overflow-y: auto;
   box-sizing: border-box;
+}
 
-  .custom-setting-box {
-    box-sizing: border-box;
-    padding: 12px 0;
-    border-bottom: 1px solid #e4e4e7;
+/* 以下是CustomRaw的样式 */
+.custom-raw {
+  display: flex;
+  height: 28px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+
+  .raw-left {
+    color: #999;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 183.333% */
   }
+
+  .raw-right {
+    width: 236px;
+    max-width: 236px;
+    height: 30px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+/*以下是ModuleLayout相关样式*/
+.custom-setting-box {
+  box-sizing: border-box;
+  padding: 12px 0;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.custom-title {
+  color: #333;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin-bottom: 8px;
 }

@@ -19,7 +19,7 @@ import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
 import React, { useState } from 'react'
-import { Button, Drawer } from 'antd'
+import { Button, Drawer, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 
@@ -122,9 +122,7 @@ const Design = () => {
               }}
             >
               {typeToComponentName[uiSchema.type]}
-              {uiSchema.bind ? (
-                <span className={styles['module-name']}> {uiSchema.bind}</span>
-              ) : null}
+              {uiSchema.bind ? <Tag>{uiSchema.bind}</Tag> : null}
             </span>
           </legend>
 

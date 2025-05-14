@@ -1,7 +1,8 @@
-import Icon from '@ant-design/icons'
-import dataSVG from '@/assets/svg/design/database.svg?react'
-import themeSVG from '@/assets/svg/dev/theme.svg?react'
-import SettingSVG from '@/assets/svg/setting.svg?react'
+// TODO: Tabs切换已经下掉，有些多余的svg资源未进行清理
+// import Icon from '@ant-design/icons'
+// import dataSVG from '@/assets/svg/design/database.svg?react'
+// import themeSVG from '@/assets/svg/dev/theme.svg?react'
+// import SettingSVG from '@/assets/svg/setting.svg?react'
 import {
   Cascader,
   ColorPicker,
@@ -15,7 +16,9 @@ import {
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
 import { useDesignStore } from '@/store'
-import CustomRaw from '../CustomRaw'
+import CustomRaw from './CustomRaw'
+import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
+import ModuleLayout from './ModuleLayout'
 
 interface Option {
   value: string
@@ -240,87 +243,19 @@ const RightPanel = ({
 
   return (
     <aside className={styles['property-container']}>
-      <div className={styles['property-header']}>
-        <Icon component={SettingSVG} />
-        <h4>属性设置</h4>
-      </div>
-      <div className={styles['tabs-menu']}>
-        <div className={`${styles['tab-item']} ${styles['tab-active']}`}>
-          <Icon
-            component={dataSVG}
-            style={{
-              marginLeft: 0,
-            }}
-          />
-          <span>数据</span>
-        </div>
-        <div className={styles['tab-item']}>
-          <Icon
-            component={themeSVG}
-            style={{
-              marginLeft: 0,
-            }}
-          />
-          <span>样式</span>
-        </div>
-        <div className={styles['tab-item']}>
-          <Icon component={SettingSVG} />
-          <span>事件</span>
-        </div>
-      </div>
       <div className={styles['setting-container']}>
-        <div
-          className={`${styles['component-info']} ${styles['custom-setting-box']}`}
-        >
+        <ModuleLayout title="基础信息">
           <CustomRaw label="组件信息">
             <Tag>{singleNode?.type}</Tag>
           </CustomRaw>
           <CustomRaw label="ID">
             <Input disabled value={singleNode?.nodeKey} />
           </CustomRaw>
-          <CustomRaw label="名称">
-            <Input
-              placeholder="请输入文本信息(可选)"
-              value={singleNode?.tag}
-              onChange={(e) => {
-                if (singleNode)
-                  setConfig(singleNode.nodeKey, 'tag', e.target.value)
-              }}
-            />
-          </CustomRaw>
-        </div>
+        </ModuleLayout>
         {singleNode?.type === 'root' ? null : (
-          <div
-            className={`${styles['data-bind-container']} ${styles['custom-setting-box']}`}
-          >
+          <ModuleLayout title="模块设置">
             {singleNode?.type === 'module' ? (
-              <CustomRaw label="布局结构">
-                <Radio.Group
-                  block
-                  options={options}
-                  value={singleNode?.layout}
-                  defaultValue="vertical"
-                  optionType="button"
-                  onChange={(e) => {
-                    if (singleNode)
-                      setConfig(singleNode.nodeKey, 'layout', e.target.value)
-                  }}
-                />
-              </CustomRaw>
-            ) : null}
-            {singleNode?.type === 'module' ? (
-              <CustomRaw label="绑定字段(模块)">
-                {/* <Select
-                  defaultValue="BASE_INFO"
-                  value={singleNode?.bind}
-                  style={{
-                    width: '100%',
-                  }}
-                  options={moduleOptions}
-                  onSelect={(bind) => {
-                    if (singleNode) setConfig(singleNode.nodeKey, 'bind', bind)
-                  }}
-                /> */}
+              <CustomRaw label="模块字段">
                 <Cascader
                   defaultValue={['BASE_INFO']}
                   style={{
@@ -337,7 +272,7 @@ const RightPanel = ({
               </CustomRaw>
             ) : null}
             {singleNode?.type !== 'module' ? (
-              <CustomRaw label="绑定字段(模块内)">
+              <CustomRaw label="信息字段">
                 <Cascader
                   style={{
                     width: '100%',
@@ -352,12 +287,89 @@ const RightPanel = ({
                 />
               </CustomRaw>
             ) : null}
-          </div>
+          </ModuleLayout>
         )}
 
-        <div
-          className={`${styles['style-container']} ${styles['custom-setting-box']}`}
-        >
+        <ModuleLayout title="排列设置">
+          <div className={styles['custom-title']}></div>
+          {singleNode?.type === 'module' ? (
+            <CustomRaw label="布局结构">
+              <Radio.Group
+                block
+                options={options}
+                value={singleNode?.layout}
+                defaultValue="vertical"
+                optionType="button"
+                onChange={(e) => {
+                  if (singleNode)
+                    setConfig(singleNode.nodeKey, 'layout', e.target.value)
+                }}
+              />
+            </CustomRaw>
+          ) : null}
+          {singleNode &&
+          singleNode.type === 'module' &&
+          singleNode.layout === 'horizontal' &&
+          singleNode.children &&
+          singleNode.children?.length > 1 ? (
+            <CustomField
+              title="宽度分配"
+              style={{
+                color: '#999',
+                fontSize: '13px',
+                fontStyle: 'normal',
+                fontWeight: 400,
+                lineHeight: '22px',
+                marginBottom: '8px',
+              }}
+            >
+              <Splitter
+                style={{
+                  height: '28px',
+                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                }}
+                key={singleNode.children.length}
+                onResizeEnd={(sizes: number[]) => {
+                  const sum = sizes.reduce((prev, current) => prev + current, 0)
+                  // 计算各子模块所占比例，并设置到style.width属性中
+                  if (singleNode) {
+                    singleNode.children?.forEach((_, index) => {
+                      changeChildWidth(
+                        singleNode.nodeKey,
+                        index,
+                        Number((sizes[index] / sum).toFixed(2)) * 100 + '%'
+                      )
+                    })
+                  }
+                }}
+              >
+                {singleNode.children.map((child, index) => (
+                  <Splitter.Panel
+                    key={child.nodeKey}
+                    defaultSize="20%"
+                    min="15%"
+                    max="70%"
+                  >
+                    {`child-${index}`}
+                  </Splitter.Panel>
+                ))}
+              </Splitter>
+            </CustomField>
+          ) : null}
+          {singleNode?.type === 'columns' ? (
+            <CustomRaw label="主轴排列">
+              <Radio.Group
+                style={{ width: '100%' }}
+                block
+                options={columnsOptions}
+                defaultValue={singleNode.style.justifyContent}
+                optionType="button"
+                buttonStyle="solid"
+              />
+            </CustomRaw>
+          ) : null}
+        </ModuleLayout>
+        <ModuleLayout title="样式设置">
           <CustomRaw label="字体大小">
             <ConfigProvider
               theme={{
@@ -421,63 +433,7 @@ const RightPanel = ({
               }}
             />
           </CustomRaw>
-        </div>
-        <div
-          className={`${styles['layout-ratio']} ${styles['custom-setting-box']}`}
-        >
-          {/* TODO: 宽度占比 */}
-          {singleNode &&
-          singleNode.type === 'module' &&
-          singleNode.layout === 'horizontal' &&
-          singleNode.children &&
-          singleNode.children?.length > 1 ? (
-            <CustomRaw label="宽度分配">
-              <Splitter
-                style={{
-                  height: '28px',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                }}
-                key={singleNode.children.length}
-                onResizeEnd={(sizes: number[]) => {
-                  const sum = sizes.reduce((prev, current) => prev + current, 0)
-                  // 计算各子模块所占比例，并设置到style.width属性中
-                  if (singleNode) {
-                    singleNode.children?.forEach((_, index) => {
-                      changeChildWidth(
-                        singleNode.nodeKey,
-                        index,
-                        Number((sizes[index] / sum).toFixed(2)) * 100 + '%'
-                      )
-                    })
-                  }
-                }}
-              >
-                {singleNode.children.map((child, index) => (
-                  <Splitter.Panel
-                    key={child.nodeKey}
-                    defaultSize="20%"
-                    min="15%"
-                    max="70%"
-                  >
-                    {`child-${index}`}
-                  </Splitter.Panel>
-                ))}
-              </Splitter>
-            </CustomRaw>
-          ) : null}
-          {singleNode?.type === 'columns' ? (
-            <CustomRaw label="主轴排列">
-              <Radio.Group
-                style={{ width: '100%' }}
-                block
-                options={columnsOptions}
-                defaultValue={singleNode.style.justifyContent}
-                optionType="button"
-                buttonStyle="solid"
-              />
-            </CustomRaw>
-          ) : null}
-        </div>
+        </ModuleLayout>
       </div>
     </aside>
   )
