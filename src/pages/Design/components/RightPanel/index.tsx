@@ -7,6 +7,7 @@ import {
   ColorPicker,
   ConfigProvider,
   Input,
+  InputNumber,
   Radio,
   Select,
   Slider,
@@ -35,17 +36,22 @@ const cascaderOptions: Option[] = [
         label: '模块文本',
       },
       {
-        value: 'bg',
-        label: '学历',
-      },
-
-      {
-        value: 'school',
-        label: '院校',
-      },
-      {
-        value: 'date',
-        label: '时间',
+        value: 'info',
+        label: '信息',
+        children: [
+          {
+            value: 'bg',
+            label: '学历',
+          },
+          {
+            value: 'school',
+            label: '院校',
+          },
+          {
+            value: 'date',
+            label: '时间',
+          },
+        ],
       },
     ],
   },
@@ -58,26 +64,31 @@ const cascaderOptions: Option[] = [
         label: '模块文本',
       },
       {
-        value: 'company',
-        label: '公司',
-      },
-
-      {
-        value: 'position',
-        label: '职位',
-      },
-      {
-        value: 'date',
-        label: '时间',
-      },
-      {
-        // 这里插个眼，现有的方案中，“项目描述”是会作为label存在的，但是此处未定义给用户
-        value: 'overview',
-        label: '项目描述',
-      },
-      {
-        value: 'output',
-        label: '实习产出',
+        value: 'info',
+        label: '信息',
+        children: [
+          {
+            value: 'company',
+            label: '公司',
+          },
+          {
+            value: 'position',
+            label: '职位',
+          },
+          {
+            value: 'date',
+            label: '时间',
+          },
+          {
+            // 这里插个眼，现有的方案中，“项目描述”是会作为label存在的，但是此处未定义给用户
+            value: 'overview',
+            label: '项目描述',
+          },
+          {
+            value: 'output',
+            label: '实习产出',
+          },
+        ],
       },
     ],
   },
@@ -90,25 +101,31 @@ const cascaderOptions: Option[] = [
         label: '模块文本',
       },
       {
-        value: 'name',
-        label: '项目名称',
-      },
+        value: 'info',
+        label: '信息',
+        children: [
+          {
+            value: 'name',
+            label: '项目名称',
+          },
 
-      {
-        value: 'position',
-        label: '团队位置',
-      },
-      {
-        value: 'date',
-        label: '时间',
-      },
-      {
-        value: 'overview',
-        label: '项目描述',
-      },
-      {
-        value: 'output',
-        label: '实习产出',
+          {
+            value: 'position',
+            label: '团队位置',
+          },
+          {
+            value: 'date',
+            label: '时间',
+          },
+          {
+            value: 'overview',
+            label: '项目描述',
+          },
+          {
+            value: 'output',
+            label: '实习产出',
+          },
+        ],
       },
     ],
   },
@@ -142,16 +159,22 @@ const cascaderOptions: Option[] = [
   },
 ]
 
-const RightPanel = ({ prevBind }: { prevBind: string }) => {
+const RightPanel = ({
+  currentNodeDeep,
+  nodeBind,
+}: {
+  currentNodeDeep: number
+  nodeBind: string
+}) => {
   // const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   // const currentUISchema = useDesignStore((state) => state.currentUISchema)
-  console.log('prevBind', prevBind)
+  // console.log('currentNodeDeep', currentNodeDeep, 'nodeBind', nodeBind, 'end')
 
   const setConfig = useDesignStore((state) => state.setConfig)
   const changeStyle = useDesignStore((state) => state.changeStyle)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
-  console.log('singleNode', singleNode)
+  // console.log('singleNode==', singleNode?.bind, '==')
 
   const options: CheckboxGroupProps<string>['options'] = [
     { label: '水平', value: 'horizontal' },
@@ -168,17 +191,61 @@ const RightPanel = ({ prevBind }: { prevBind: string }) => {
     { value: 'HEART_LIST', label: '兴趣爱好' },
   ]
 
-  // 不属于当前模块的子项都进行禁用
-  const filterCascaderOptions = useMemo(() => {
-    return cascaderOptions.map((item) => {
-      if (item.value === prevBind) return item
-      else
+  // 不属于当前模块的子项都进行禁用 -> 这里使用memo意义不大，用户点击不同的dom导致currentNodeDeep、nodeBind不断变化，这里就得不断计算，反倒增加了缓存的成本
+  function markDisabledByDeep(
+    options: Option[],
+    typePath: string[],
+    deep: number,
+    level = 1
+  ): Option[] {
+    if (level > deep) return options
+    return options.map((item) => {
+      // 由于deep是根据dom嵌套的层级来决定的，有时候很深，不断递归导致level增大，最终typePath[level为undefined
+      const shouldKeep = typePath[level] ? item.value === typePath[level] : true // 当前层级是否命中路径
+
+      const nextChildren = item.children
+        ? markDisabledByDeep(item.children, typePath, deep, level + 1)
+        : []
+
+      // 到达目标层级：只保留匹配的项，其他加 disabled
+      if (level + 1 <= deep) {
         return {
           ...item,
-          disabled: true,
+          disabled: !shouldKeep,
+          children: shouldKeep ? nextChildren : item.children, // 只有当前项的children需要处理
         }
+      }
+
+      // 没到目标层级，继续递归；但如果路径不匹配也应禁用整支
+      return {
+        ...item,
+        disabled: level <= deep && !shouldKeep,
+        children: [],
+      }
     })
-  }, [prevBind])
+  }
+
+  const filterCascaderOptions = markDisabledByDeep(
+    cascaderOptions,
+    nodeBind.split('-').filter(Boolean),
+    currentNodeDeep - 1
+  )
+
+  // const filterCascaderOptions = useMemo(() => {
+  //   const currentModule = nodeBind.split('-').filter(Boolean)[
+  //     currentNodeDeep - 2
+  //   ]
+  //   console.log('currentModule', currentModule)
+
+  //   return cascaderOptions.map((item) => {
+  //     if (item.value === currentModule) return item
+  //     else
+  //       return {
+  //         ...item,
+  //         disabled: true,
+  //       }
+  //   })
+  // }, [nodeBind, currentNodeDeep])
 
   return (
     <aside className={styles['property-container']}>
@@ -252,7 +319,7 @@ const RightPanel = ({ prevBind }: { prevBind: string }) => {
             ) : null}
             {singleNode?.type === 'module' ? (
               <CustomRaw label="绑定字段(模块)">
-                <Select
+                {/* <Select
                   defaultValue="BASE_INFO"
                   value={singleNode?.bind}
                   style={{
@@ -262,11 +329,23 @@ const RightPanel = ({ prevBind }: { prevBind: string }) => {
                   onSelect={(bind) => {
                     if (singleNode) setConfig(singleNode.nodeKey, 'bind', bind)
                   }}
+                /> */}
+                <Cascader
+                  defaultValue={['BASE_INFO']}
+                  style={{
+                    width: '100%',
+                  }}
+                  value={[singleNode?.bind || '']}
+                  options={filterCascaderOptions}
+                  onChange={(e) => {
+                    if (singleNode)
+                      setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
+                  }}
+                  placeholder="选择绑定字段"
                 />
               </CustomRaw>
             ) : null}
-            {singleNode?.type !== 'module' &&
-            singleNode?.type !== 'container' ? (
+            {singleNode?.type !== 'module' ? (
               <CustomRaw label="绑定字段(模块内)">
                 <Cascader
                   style={{
@@ -350,6 +429,13 @@ const RightPanel = ({ prevBind }: { prevBind: string }) => {
                 if (singleNode) changeStyle(singleNode.nodeKey, 'color', color)
               }}
             />
+          </CustomRaw>
+        </div>
+        <div
+          className={`${styles['layout-ratio']} ${styles['custom-setting-box']}`}
+        >
+          <CustomRaw label="宽度占比">
+            <InputNumber min={15} max={30} step={5} defaultValue={15} />
           </CustomRaw>
         </div>
       </div>

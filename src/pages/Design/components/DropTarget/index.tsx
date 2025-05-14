@@ -7,34 +7,30 @@ const DropTarget = ({
   children,
   nodeType,
   nodeKey,
-  parentBind,
+  deep,
 }: {
   children: React.ReactNode
   nodeType: uiType
   nodeKey: string
-  parentBind: string
-  onDrop: (
-    id: string,
-    targetKey: string,
-    desUISchema: any,
-    parentBind: string
-  ) => any
+  deep: number
+  onDrop: (id: string, targetKey: string, desUISchema: any, deep: number) => any
 }) => {
-  // console.log('drop exe==', parentBind)
   const ref = useRef<HTMLDivElement>(null)
   const targetKey = useRef('')
-  const bindRef = useRef('')
-  bindRef.current = parentBind
+  const deepRef = useRef(0)
+  deepRef.current = deep
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept:
       nodeType === 'root'
         ? 'module'
-        : ['container', 'md', 'text', 'section', 'image', 'label'],
+        : nodeType === 'module'
+        ? ['section', 'text']
+        : ['container', 'md', 'text', 'image', 'label'],
     drop: (item: any) => {
       // 此处可拿的id是因为在 <DraggableBox /> 中传了id字段
-      console.log('bindRef.current', bindRef.current)
+      console.log('deepRef.current', deepRef.current)
 
-      onDrop(item.id, targetKey.current, item.desUISchema, bindRef.current)
+      onDrop(item.id, targetKey.current, item.desUISchema, deepRef.current)
     },
     hover: () => {
       // 记录当前选中的、目标存放的元素

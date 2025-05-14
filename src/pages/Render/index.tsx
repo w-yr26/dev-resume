@@ -55,6 +55,7 @@ const Render = memo((props: RenderProps) => {
     ...style,
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
   }
+  console.log(type, mergedStyle)
 
   // 根部
   if (type === 'root') {
@@ -102,6 +103,8 @@ const Render = memo((props: RenderProps) => {
 
     // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
     const data = dataContext[bind] || { ...dataContext }
+    console.log('data==', data)
+
     return (
       <div
         className="block-box"
@@ -140,6 +143,7 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
+  // 此处对应模块标题
   if (type === 'text') {
     let data = dataContext[bind]
     if (!data) {
@@ -159,7 +163,7 @@ const Render = memo((props: RenderProps) => {
       // </BlockWrapper>
     )
   }
-  
+
   if (type === 'md') {
     const data = dataContext[bind] ?? '占位信息...'
     mergedStyle = {
@@ -183,6 +187,7 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
+  // 此处的label对应的是单项的标题，而非模块标题
   if (type === 'label') {
     return <div style={mergedStyle}>{label}</div>
   }

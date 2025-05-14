@@ -5,7 +5,8 @@ import SettingSVG from '@/assets/svg/setting.svg?react'
 import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import arrayBoxSVG from '@/assets/svg/design/arrayBox.svg?react'
 import mdBoxSVG from '@/assets/svg/design/mdBox.svg?react'
-import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
+import codeSVG from '@/assets/svg/dev/code.svg?react'
+import resumeSVG from '@/assets/svg/resume.svg?react'
 import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
 import DragBtn from './components/DragBtn'
@@ -15,9 +16,10 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React, { useState } from 'react'
-import { message } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Button, Drawer, message } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
+import { Editor } from '@monaco-editor/react'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -48,23 +50,32 @@ const Design = () => {
   const setCurrentSelectedKey = useDesignStore(
     (state) => state.setCurrentSelectedKey
   )
-  const [prevBind, setPrevBind] = useState('root')
+  const [nodeDeep, setNodeDeep] = useState(0)
+  const [nodeBind, setNodeBind] = useState('root')
+  const [isOpened, setIsOpened] = useState(false)
 
   const handleDrop = (
     nodeKey: string,
     targetKey: string,
     desUISchema: any,
-    bind: string
+    deep: number
   ) => {
-    // 如果bind字段仍然为root且此时不是模块容器(也就是说不是第二层ui)，则其上一层还未选择绑定的模块，此时不能插入新的ui
+    console.log('deep', deep)
+
+    // 如果deep===2(也就是说不是第二层ui)，则其上一层还未选择绑定的模块，此时不能插入新的ui
     // 因为单个模块内的各元素的bind字段是通过级联组件筛选的，需要先确定模块的bind字段，才能接着确认模块内部的bind字段
-    if (bind === 'root' && desUISchema.type !== 'module') {
-      return message.warning('请先标注父元素模块类型')
-    }
+    // if (deep === 2 && desUISchema.type !== 'module') {
+    //   return message.warning('请先标注父元素模块类型')
+    // }
     insertNode(nodeKey, targetKey, desUISchema)
   }
 
-  const renderTemplate = (uiSchema: singleNode, parentBind: string) => {
+  // 一旦某个节点的bind字段绑定，这个递归函数就会重新执行，此时的uiSchema.bind就直接有值，不再需要onClick事件获取，此时的根据currentKey找到的Node节点的bind字段有值
+  const renderTemplate = (
+    uiSchema: singleNode,
+    deep: number,
+    prevBind: string
+  ) => {
     return (
       <>
         <fieldset
@@ -75,8 +86,11 @@ const Design = () => {
           }`}
           onClick={(e) => {
             e.stopPropagation()
+            // 记录当前选中节点在递归中的层级，用于<RightPanel />中禁用非相关的级联选项
+            setNodeDeep(deep)
+            setNodeBind(prevBind)
+            // 记录当前选中节点的key
             setCurrentSelectedKey(uiSchema.nodeKey)
-            setPrevBind(parentBind)
           }}
         >
           <legend>
@@ -101,9 +115,11 @@ const Design = () => {
             {uiSchema.children?.length
               ? uiSchema.children.map((nestedChild: singleNode) => (
                   <React.Fragment key={nestedChild.nodeKey}>
+                    {/* 这里根据递归的层数拼接bind字段，在后续<RightPanel />中根据拼接路径以及deep层级筛选出所需的bind */}
                     {renderTemplate(
                       nestedChild,
-                      nestedChild.bind || parentBind
+                      deep + 1,
+                      prevBind + '-' + nestedChild.bind
                     )}
                   </React.Fragment>
                 ))
@@ -114,7 +130,7 @@ const Design = () => {
               onDrop={handleDrop}
               nodeType={uiSchema.type}
               nodeKey={uiSchema.nodeKey}
-              parentBind={parentBind}
+              deep={deep}
             >
               <DragBtn />
             </DropTarget>
@@ -125,30 +141,66 @@ const Design = () => {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className={styles['design-container']}>
-        <nav className={styles['design-nav']}>
-          <div className={styles['nav-left']}>
-            <Icon component={SettingSVG} />
-            <span>模板设计器</span>
-          </div>
-        </nav>
-
-        <div className={styles['design-body']}>
-          <LeftPanel />
-          <main className={styles['preview-container']}>
-            <div className={styles['view-container']}>
-              {renderTemplate(currentUISchema, currentUISchema.bind)}
+    <>
+      <DndProvider backend={HTML5Backend}>
+        <div className={styles['design-container']}>
+          <nav className={styles['design-nav']}>
+            <div className={styles['nav-left']}>
+              <Icon component={SettingSVG} />
+              <span>模板设计器</span>
             </div>
-          </main>
-          {currentSelectedKey ? (
-            <RightPanel prevBind={prevBind} />
-          ) : (
-            <GlobalSetting />
-          )}
+            <div className={styles['nav-right']}>
+              <Icon
+                component={codeSVG}
+                style={{
+                  marginRight: '8px',
+                }}
+                onClick={() => setIsOpened(true)}
+              />
+              <Button type="primary" icon={<Icon component={resumeSVG} />}>
+                保存
+              </Button>
+            </div>
+          </nav>
+
+          <div className={styles['design-body']}>
+            <LeftPanel />
+            <main className={styles['preview-container']}>
+              <div className={styles['view-container']}>
+                {renderTemplate(currentUISchema, 1, currentUISchema.bind)}
+              </div>
+            </main>
+            {currentSelectedKey ? (
+              <RightPanel currentNodeDeep={nodeDeep} nodeBind={nodeBind} />
+            ) : (
+              <GlobalSetting />
+            )}
+          </div>
         </div>
-      </div>
-    </DndProvider>
+      </DndProvider>
+      <Drawer
+        title="JSON"
+        closable={{ 'aria-label': 'Close Button' }}
+        width="40%"
+        open={isOpened}
+        onClose={() => setIsOpened(false)}
+      >
+        <Editor
+          width="100%"
+          language="json"
+          defaultValue={JSON.stringify({}, null, 2)}
+          value={JSON.stringify(currentUISchema, null, 2)}
+          onMount={(editor) => {
+            editor.onDidBlurEditorText(() => {
+              const value = editor.getValue()
+              // handleEditorBlur(value)
+              console.log('value', value)
+              // 在这里做失焦后的处理，比如保存
+            })
+          }}
+        />
+      </Drawer>
+    </>
   )
 }
 

@@ -123,9 +123,11 @@ const Dev = () => {
     const getUiSchema = async () => {
       try {
         setLoading(true)
-        const res = await fetch('/test.json')
+        const res = await fetch('/custom.json')
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
         const uiSchemaRes = await res.json()
+        console.log('uiSchemaRes', uiSchemaRes)
+
         setUiSchema(uiSchemaRes)
 
         await initGlobalStyle(uiSchemaRes)

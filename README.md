@@ -48,3 +48,65 @@ TODO：
 目前登录注册仅仅是跑通，存在一些细节未处理，如：
 1. 修改了`<Input />`组件的样式后会与校验信息重叠，需要改动（主要集中在登录页中，可参考注册页进行修改）
 2. 登录页的`<Button>`的`loading`状态处理不正确(先暂时这么写)
+
+## 级联组件根据当前层级实现非关键项禁用
+
+**需求**：
+
+当用户点击不同的`dom`时，需要综合考虑`dom`当前所处的层级、`dom`隶属于哪个模块下，从而动态的禁用非相关的级联组件属性
+
+eg: 当前的大容器绑定的是`EDN_BG`，那么该容器的下一级应该只能选择`label`或`info`字段；如果当前容器选择了`info`字段，那么它的后代就只能选择`bg`、`school`、`date`字段，以此类推
+
+**实现方案**：
+
+由于`renderTemplate`是递归渲染的，那么每一次执行都传入一个递增的`deep`表示当前处于第几层；以及把上一次的`bind`字段拼接上当前层的`bind`字段一并传下去，用于表示`bind`路径；后续对绑定路径进行分割 + `deep`当前层数，即可实现动态过滤级联组件的效果
+
+```tsx
+const renderTemplate = (
+  uiSchema: singleNode,
+  deep: number,
+  prevBind: string
+) => {
+  return (
+    <>
+      <fieldset
+        onClick={(e) => {
+          e.stopPropagation()
+          // 记录当前选中节点在递归中的层级，用于<RightPanel />中禁用非相关的级联选项
+          setNodeDeep(deep)
+          setNodeBind(prevBind)
+          // 记录当前选中节点的key
+          setCurrentSelectedKey(uiSchema.nodeKey)
+        }}
+      >
+        {/* 省略非关键代码 */}
+        <div
+          className={`${
+            uiSchema.layout === 'horizontal' ? styles['flex-fieldset'] : ''
+          }`}
+        >
+          {uiSchema.children?.length
+            ? uiSchema.children.map((nestedChild: singleNode) => (
+                <React.Fragment key={nestedChild.nodeKey}>
+                  {/* 这里根据递归的层数拼接bind字段，在后续<RightPanel />中根据拼接路径以及deep层级筛选出所需的bind */}
+                  {renderTemplate(
+                    nestedChild,
+                    deep + 1,
+                    prevBind + '-' + nestedChild.bind
+                  )}
+                </React.Fragment>
+              ))
+            : null}
+        </div>
+      </fieldset>
+    </>
+  )
+}
+```
+
+### 现存问题：
+
+1. `section`模式下的循环存在一点问题
+2. `tag`、`label`混乱，到底谁才是模块的标题，以及`uiSchema`中的`tag`是否起到了作用
+3. 设置简历模板时，全局容器当前没有`configStyle`导致出现样式偏差
+4. 模板设计时，样式控制不够精细，导致内容可渲染、但UI不符合预期

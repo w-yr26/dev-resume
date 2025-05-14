@@ -54,9 +54,28 @@ const LeftPanel = () => {
       label: '模块组件',
       menu: [
         {
+          svg: textBlockSVG,
+          title: '模块标题',
+          sub: '用于定义模块标题',
+          desUISchema: {
+            type: 'text',
+            isNestedAgain: false,
+            layout: 'vertical',
+            style: {
+              fontSize: '14px',
+              fontWeight: 500,
+              color: '#333',
+            },
+            bind: '',
+            tag: '',
+            nodeKey: uuidv4(),
+            // children: [],
+          },
+        },
+        {
           svg: arrayBoxSVG,
-          title: '列表容器',
-          sub: '用于定义列表数据',
+          title: '数据容器',
+          sub: '用于定义模块数据区域',
           desUISchema: {
             type: 'section',
             isNestedAgain: true,
@@ -70,6 +89,11 @@ const LeftPanel = () => {
             children: [],
           },
         },
+      ],
+    },
+    {
+      label: '数据视图组件',
+      menu: [
         {
           svg: mdBoxSVG,
           title: 'md容器',
@@ -80,25 +104,6 @@ const LeftPanel = () => {
             layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
             style: {
               padding: 0,
-            },
-            bind: '',
-            tag: '',
-            nodeKey: uuidv4(),
-            // children: [],
-          },
-        },
-        {
-          svg: textBlockSVG,
-          title: '模块标题',
-          sub: '用于定义模块标题',
-          desUISchema: {
-            type: 'label',
-            isNestedAgain: false,
-            layout: 'vertical',
-            style: {
-              fontSize: '14px',
-              fontWeight: 500,
-              color: '#333',
             },
             bind: '',
             tag: '',
@@ -140,31 +145,6 @@ const LeftPanel = () => {
             // children: [],
           },
         },
-        // {
-        //   svg: threeColumnSVG,
-        //   title: '两列布局',
-        //   sub: '用于定义两列文本',
-        //   desUISchema: {
-        //     type: 'container', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container
-        //     isNestedAgain: true,
-        //     // layout: 'vertical',
-        //     style: {},
-        //     bind: '',
-        //     tag: '',
-        //     nodeKey: uuidv4(),
-        //     children: [
-        //       {
-        //         type: 'text',
-        //         isNestedAgain: false,
-        //         // layout: 'vertical',
-        //         style: {},
-        //         bind: '',
-        //         tag: '',
-        //         nodeKey: uuidv4(),
-        //       },
-        //     ],
-        //   },
-        // },
         {
           svg: threeColumnSVG,
           title: '三列布局',
