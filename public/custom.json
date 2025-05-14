@@ -1,0 +1,109 @@
+{
+  "type": "root",
+  "isNestedAgain": true,
+  "layout": "vertical",
+  "configStyle": {
+    "pagePadding": 14,
+    "modulePadding": 8,
+    "lineHeight": 1.5,
+    "fontSize": 14,
+    "mainColor": "rgb(71, 85, 105)",
+    "fontColor": "rgb(10, 10, 10)",
+    "bgColor": "rgb(255, 255, 255)",
+    "borderStyle": "solid",
+    "sidebarProportions": [40, 60]
+  },
+  "style": {},
+  "bind": "root",
+  "tag": "",
+  "nodeKey": "root~15f4dfed-0fdb-4fd0-81e8-3f8564a3a2ad",
+  "children": [
+    {
+      "type": "module",
+      "isNestedAgain": true,
+      "layout": "horizontal",
+      "style": {},
+      "bind": "EDU_BG",
+      "tag": "",
+      "nodeKey": "module1~393d282a-0d80-41db-b406-670a4722b258",
+      "children": [
+        {
+          "type": "text",
+          "isNestedAgain": false,
+          "layout": "vertical",
+          "style": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#333"
+          },
+          "bind": "label",
+          "tag": "",
+          "nodeKey": "f885dcdb-dc76-43ec-ba45-17d25fa499410"
+        },
+        {
+          "type": "section",
+          "isNestedAgain": true,
+          "layout": "vertical",
+          "style": {
+            "padding": 0
+          },
+          "bind": "info",
+          "tag": "",
+          "nodeKey": "55db8d27-8af1-44e8-83ad-ed49501607a21",
+          "children": [
+            {
+              "type": "container",
+              "isNestedAgain": false,
+              "layout": "horizontal",
+              "style": {},
+              "bind": "",
+              "tag": "",
+              "nodeKey": "64543a69-ce5f-437f-aa06-c67d8c7fc6ed0",
+              "children": [
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "bg",
+                  "tag": "",
+                  "nodeKey": "1eee8e26-4b06-4eb9-9d4e-418a0d99cddc"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "school",
+                  "tag": "",
+                  "nodeKey": "906bd965-382d-4f4b-8215-518b560a0ca5"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "date",
+                  "tag": "",
+                  "nodeKey": "2f63ae0e-4771-487d-b73d-ac2f94d42196"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
