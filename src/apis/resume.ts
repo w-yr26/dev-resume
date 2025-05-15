@@ -1,5 +1,5 @@
 import { request } from '@/utils'
-import type { resumeListResp } from '@/types/resume'
+import type { resumeDetailType, resumeListResp } from '@/types/resume'
 
 /**
  * 获取简历分页数据
@@ -42,4 +42,12 @@ export const postResumeCreateAPI = (data: {
  */
 export const delResumeAPI = (randomId: string) => {
   return request<null>(`/resume/resume/delete/${randomId}`, 'DELETE')
+}
+
+/**
+ * 获取简历详情
+ * @param randomId 简历随机id
+ */
+export const getResumeDetailsAPI = (randomId: string) => {
+  return request<resumeDetailType>(`/resume/resume/details/${randomId}`)
 }

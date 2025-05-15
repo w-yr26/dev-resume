@@ -16,9 +16,12 @@ import { Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
+import { getResumeDetailsAPI } from '@/apis/resume'
+import { useParams } from 'react-router-dom'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
+  const setDataSource = useDevStore((state) => state.setDataSource)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setPagePadding = useStyleStore((state) => state.setPagePadding)
@@ -50,6 +53,19 @@ const Dev = () => {
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
+  const params = useParams()
+  useEffect(() => {
+    const getDetail = async () => {
+      if (params.randomId) {
+        const { data } = await getResumeDetailsAPI(params.randomId)
+        console.log('content', data.content)
+        console.log('resumeId', data.resumeId)
+        setDataSource(data.content)
+      }
+    }
+
+    getDetail()
+  }, [])
 
   const upWheel = () => {
     if (wheel >= 1) return
@@ -335,10 +351,6 @@ const Dev = () => {
             ref={resumeRef}
           >
             <div className={styles['preview-content']} ref={mainRef}>
-              {/* {comList.map((item, index) => {
-                const Com = comMap[item]
-                return Com ? <Com key={index}></Com> : null
-              })} */}
               {uiSchema && !loading && top ? (
                 <Render dataContext={dataSource} node={uiSchema} />
               ) : null}

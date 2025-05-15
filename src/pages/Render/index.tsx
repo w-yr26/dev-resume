@@ -56,7 +56,6 @@ const Render = memo((props: RenderProps) => {
     ...style,
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
   }
-  console.log(type, mergedStyle)
 
   // 根部
   if (type === 'root') {

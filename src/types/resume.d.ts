@@ -15,3 +15,15 @@ export type resumeListResp = {
   total: number
   records: resumeItem[]
 }
+
+export type moduleDataType = {
+  info: any[]
+  label: string
+  visible: boolean
+}
+
+export type resumeDetailType = {
+  content: Record<allKeyType, moduleDataType>
+  resumeId: string
+  userId: string
+}

@@ -162,6 +162,7 @@ export type InfoStrTypeMap = {
 
 export type devState = {
   devSchema: devInitType
+  setDataSource: (dataSource: any) => void
   immerBaseInfo: (newVal: string, key: string) => void
   immerRichInfo: (newVal: string, key: keyof InfoStrTypeMap) => void
   immerVisible: (id: string, key: keyType) => void

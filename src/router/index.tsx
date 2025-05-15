@@ -18,7 +18,7 @@ const routes = createRoutesFromElements(
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />}></Route>
     </Route>
-    <Route path="/dev/:id" element={<Dev />}></Route>
+    <Route path="/dev/:randomId" element={<Dev />}></Route>
     <Route path="login" element={<Login />}></Route>
     <Route path="register" element={<Register />}></Route>
     <Route path="md" element={<Md />}></Route>
