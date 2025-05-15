@@ -77,7 +77,7 @@
                     },
                     {
                       "type": "text",
-                      "bind": "user_name",
+                      "bind": "userName",
                       "nodeKey": "0-0-0-1-0-1"
                     }
                   ]

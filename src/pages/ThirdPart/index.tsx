@@ -17,7 +17,7 @@ const ThirdPart = () => {
           const { code, data } = await getOauthGiteeAPI(giteeCode)
           if (code === 0) setIsFail(true)
           localStorage.setItem('email', data.email)
-          localStorage.setItem('user_name', data.username)
+          localStorage.setItem('userName', data.username)
           localStorage.setItem('user_id', String(data.id))
           navigate('/')
         } catch (_) {

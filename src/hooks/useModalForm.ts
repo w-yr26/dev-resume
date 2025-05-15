@@ -1,6 +1,8 @@
-import { useDevStore } from '@/store'
+import { postModuleInfoAPI } from '@/apis/resume'
+import { useDevStore, useUserStore } from '@/store'
 import type { keyType } from '@/types/dev'
-import { Form } from 'antd'
+import { Form, message } from 'antd'
+import { Dayjs } from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 
 export function useModalForm<
@@ -8,6 +10,8 @@ export function useModalForm<
     id: string
   }
 >(data: T[], key: keyType) {
+  const resumeId = useDevStore((state) => state.resumeId)
+  const { id: userId } = useUserStore((state) => state.info)
   const setVisible = useDevStore((state) => state.immerVisible)
   const handleDel = useDevStore((state) => state.immerDel)
   const addInfoList = useDevStore((state) => state.addInfoList)
@@ -32,7 +36,7 @@ export function useModalForm<
   }
 
   const currentInfo = useMemo(() => {
-    return data.find((item) => item.id === infoId)
+    return data ? data.find((item) => item.id === infoId) : null
   }, [infoId, data])
 
   useEffect(() => {
@@ -43,13 +47,24 @@ export function useModalForm<
 
   const handleOk = async () => {
     try {
-      const values = await formRef.validateFields()
+      let content = await formRef.validateFields()
+      content = {
+        ...content,
+        date: content.date?.map((item: Dayjs) => item.format('YYYY-MM-DD')),
+      }
+      // 先调用接口，执行创建/更新，再写入store，因为存在接口调用失败的情况下，避免store多次写入
+      await postModuleInfoAPI({
+        resumeId,
+        content,
+        type: key,
+        userId,
+      })
       // 更新
       if (infoId) {
         updateInfo(
           {
             ...currentInfo,
-            ...values,
+            ...content,
           },
           infoId,
           key
@@ -58,7 +73,7 @@ export function useModalForm<
         // 创建
         addInfoList(
           {
-            ...values,
+            ...content,
             id: new Date().getTime(),
             visible: true,
             // output: '<p>内容测试</p>',
@@ -66,6 +81,7 @@ export function useModalForm<
           key
         )
       }
+
       resetState()
     } catch (err) {
       console.log('校验失败', err)

@@ -1,3 +1,5 @@
+import { allKeyType } from './dev'
+
 export type resumeItem = {
   id: string
   randomId: string
@@ -25,5 +27,12 @@ export type moduleDataType = {
 export type resumeDetailType = {
   content: Record<allKeyType, moduleDataType>
   resumeId: string
+  userId: string
+}
+
+export type addModuleType = {
+  content: any
+  resumeId: string
+  type: allKeyType
   userId: string
 }

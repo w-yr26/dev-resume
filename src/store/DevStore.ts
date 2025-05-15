@@ -27,7 +27,7 @@ const initialData: devInitType = {
         // {
         //   avatar:
         //     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrHHBwxiucvXNsuFpXD-gU0T32BHbMcGEcEQ&s',
-        //   user_name: '张柯林',
+        //   userName: '张柯林',
         //   gender: 1,
         //   age: 21,
         //   position: '前端开发实习生',
@@ -117,7 +117,7 @@ const initialData: devInitType = {
   //       {
   //         avatar:
   //           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrHHBwxiucvXNsuFpXD-gU0T32BHbMcGEcEQ&s',
-  //         user_name: '张柯林',
+  //         userName: '张柯林',
   //         gender: 1,
   //         age: 21,
   //         position: '前端开发实习生',
@@ -177,6 +177,7 @@ const useDevStore = create<devState>()(
     (set) => {
       return {
         devSchema: initialData,
+        resumeId: '',
         setDataSource: (dataSource) => {
           return set((state) => {
             return {
@@ -187,7 +188,13 @@ const useDevStore = create<devState>()(
             }
           })
         },
-
+        setResumeId: (id) => {
+          return set(() => {
+            return {
+              resumeId: id,
+            }
+          })
+        },
         immerBaseInfo: (newVal: string, key: string) =>
           set(
             produce((state: devState) => {

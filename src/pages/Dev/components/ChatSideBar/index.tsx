@@ -32,7 +32,7 @@ const ChatSideBar = ({
               chat_content: e.currentTarget.value,
               date: '2025-05-02',
               id: new Date().getTime(),
-              user_name: 'zs',
+              userName: 'zs',
             },
           ],
         },
@@ -74,7 +74,7 @@ const ChatSideBar = ({
                             <div className={styles['right-box']}>
                               <div className={styles['right-top-box']}>
                                 <span className={styles['user-name']}>
-                                  {chatDetainItem.user_name}
+                                  {chatDetainItem.userName}
                                 </span>
                                 <span className={styles['date-box']}>
                                   {chatDetainItem.date}

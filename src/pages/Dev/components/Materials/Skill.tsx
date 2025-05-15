@@ -2,13 +2,16 @@ import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
 import Icon from '@ant-design/icons'
 import SkillSVG from '@/assets/svg/dev/skill.svg?react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore, useGlobalStore, useUserStore } from '@/store'
 import CtxMenu from './components/CtxMenu'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useEffect, useRef } from 'react'
 import MdEditor from '@/components/MdEditor'
+import { postModuleInfoAPI } from '@/apis/resume'
 
 const Skill = () => {
+  const resumeId = useDevStore((state) => state.resumeId)
+  const userId = useUserStore((state) => state.info.id)
   const { info: skillInfo, label } = useDevStore(
     (state) => state.devSchema.dataSource.SKILL_LIST
   )
@@ -38,6 +41,16 @@ const Skill = () => {
       <MdEditor
         value={skillInfo}
         onChange={(val: string) => immerRichInfo(val, 'SKILL_LIST')}
+        onBlur={async (val: string) => {
+          await postModuleInfoAPI({
+            content: {
+              info: val,
+            },
+            resumeId,
+            type: 'SKILL_LIST',
+            userId,
+          })
+        }}
       />
     </CustomLayout>
   )

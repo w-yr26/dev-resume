@@ -32,11 +32,11 @@ export type AddItemType = {
 
 export type BaseInfoType = {
   avatar: string
-  user_name: string
+  userName: string
   position: string
   phone: string
   email: string
-  blob: string
+  tblob: string | null
   gender: 0 | 1
   age: number | undefined
   visible: boolean
@@ -162,6 +162,8 @@ export type InfoStrTypeMap = {
 
 export type devState = {
   devSchema: devInitType
+  resumeId: string // 当前简历的random_id
+  setResumeId: (id: string) => void
   setDataSource: (dataSource: any) => void
   immerBaseInfo: (newVal: string, key: string) => void
   immerRichInfo: (newVal: string, key: keyof InfoStrTypeMap) => void

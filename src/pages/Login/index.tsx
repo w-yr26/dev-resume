@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     })
 
     localStorage.setItem('email', data.email)
-    localStorage.setItem('user_name', data.username)
+    localStorage.setItem('userName', data.username)
     localStorage.setItem('user_id', String(data.id))
     navigate('/')
     setIsLoading(false)

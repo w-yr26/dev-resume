@@ -22,8 +22,9 @@ import { useParams } from 'react-router-dom'
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
   const setDataSource = useDevStore((state) => state.setDataSource)
-  const setUiSchema = useUIStore((state) => state.setUiSchema)
+  const setResumeId = useDevStore((state) => state.setResumeId)
   const uiSchema = useUIStore((state) => state.uiSchema)
+  const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPagePadding = useStyleStore((state) => state.setPagePadding)
   const setModulePadding = useStyleStore((state) => state.setModulePadding)
   const setLineHeight = useStyleStore((state) => state.setLineHeight)
@@ -63,7 +64,7 @@ const Dev = () => {
         setDataSource(data.content)
       }
     }
-
+    setResumeId(params.randomId || 'unknow-randonId')
     getDetail()
   }, [])
 

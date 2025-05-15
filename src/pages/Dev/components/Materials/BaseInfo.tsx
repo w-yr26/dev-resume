@@ -120,9 +120,9 @@ const BaseInfo = () => {
           <CustomInput
             label="姓名"
             placeholder="请输入您的姓名"
-            value={baseInfo?.user_name}
+            value={baseInfo?.userName}
             onChange={(e) => {
-              handleFieldChange(e, 'user_name')
+              handleFieldChange(e, 'userName')
             }}
           />
         </div>
@@ -197,9 +197,9 @@ const BaseInfo = () => {
       <CustomInput
         label="个人博客"
         placeholder="https://example.com"
-        value={baseInfo?.blob}
+        value={baseInfo?.tblob}
         onChange={(e) => {
-          handleFieldChange(e, 'blob')
+          handleFieldChange(e, 'tblob')
         }}
       />
       {/* {addFieldsList.map((item) => {

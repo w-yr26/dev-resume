@@ -1,5 +1,9 @@
 import { request } from '@/utils'
-import type { resumeDetailType, resumeListResp } from '@/types/resume'
+import type {
+  addModuleType,
+  resumeDetailType,
+  resumeListResp,
+} from '@/types/resume'
 
 /**
  * 获取简历分页数据
@@ -50,4 +54,13 @@ export const delResumeAPI = (randomId: string) => {
  */
 export const getResumeDetailsAPI = (randomId: string) => {
   return request<resumeDetailType>(`/resume/resume/details/${randomId}`)
+}
+
+/**
+ * 新增某个模块的信息
+ * @param data
+ * @returns
+ */
+export const postModuleInfoAPI = (data: addModuleType) => {
+  return request<any>('/resume/resume/module', 'POST', data)
 }

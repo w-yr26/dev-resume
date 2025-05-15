@@ -37,7 +37,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const navigate = useNavigate()
-  const { user_name } = useUserStore((state) => state.info)
+  const { userName } = useUserStore((state) => state.info)
   const userId = useUserStore((state) => state.info.id)
 
   const [page] = useState(1)
@@ -144,8 +144,8 @@ const Home = () => {
           {/* 左边账号栏目 */}
           <div className={styles['left-bottom']}>
             <div className={styles['account-box']}>
-              <Avatar size={24}>{user_name}</Avatar>
-              <div className={styles['account']}>{user_name}</div>
+              <Avatar size={24}>{userName}</Avatar>
+              <div className={styles['account']}>{userName}</div>
             </div>
             <p className={styles['version-box']}>DevResume 1.0.0</p>
           </div>
