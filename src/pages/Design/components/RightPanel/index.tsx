@@ -19,6 +19,7 @@ import { useDesignStore } from '@/store'
 import CustomRaw from './CustomRaw'
 import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
 import ModuleLayout from './ModuleLayout'
+import { useEffect, useState } from 'react'
 
 interface Option {
   value: string
@@ -167,22 +168,16 @@ const RightPanel = ({
   currentNodeDeep: number
   nodeBind: string
 }) => {
-  // const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
-  // const currentUISchema = useDesignStore((state) => state.currentUISchema)
-  // console.log('currentNodeDeep', currentNodeDeep, 'nodeBind', nodeBind, 'end')
-  // console.log('parentLayoutPath', layoutPath.split('-')[currentNodeDeep - 2])
-
   const setConfig = useDesignStore((state) => state.setConfig)
   const changeStyle = useDesignStore((state) => state.changeStyle)
   const changeChildWidth = useDesignStore((state) => state.changeChildWidth)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
-  // console.log('singleNode==', singleNode?.bind, '==')
-  // layoutType = layoutType.split('-')[currentNodeDeep - 2]
+  const [sizes, setSizes] = useState<(number | string)[]>(['30%', '70%'])
 
-  const options: CheckboxGroupProps<string>['options'] = [
-    { label: '水平', value: 'horizontal' },
-    { label: '垂直', value: 'vertical' },
+  const layoutOptions: CheckboxGroupProps<string>['options'] = [
+    { label: '双列布局', value: 'horizontal' },
+    { label: '单列布局', value: 'vertical' },
   ]
 
   // const moduleOptions = [
@@ -241,6 +236,21 @@ const RightPanel = ({
     currentNodeDeep - 1
   )
 
+  useEffect(() => {
+    // 当当前容器为“模块容器”且水平排列的时候，才有必要初始化子元素的宽度占比
+    if (
+      singleNode &&
+      singleNode.type === 'module' &&
+      singleNode.layout === 'horizontal' &&
+      singleNode.children &&
+      singleNode.children.length > 1
+    ) {
+      singleNode.children?.forEach((_, index) => {
+        changeChildWidth(singleNode.nodeKey, index, sizes[index] as string)
+      })
+    }
+  }, [singleNode?.type, singleNode?.layout, singleNode?.children?.length])
+
   return (
     <aside className={styles['property-container']}>
       <div className={styles['setting-container']}>
@@ -292,21 +302,23 @@ const RightPanel = ({
 
         <ModuleLayout title="排列设置">
           <div className={styles['custom-title']}></div>
-          {singleNode?.type === 'module' ? (
-            <CustomRaw label="布局结构">
-              <Radio.Group
-                block
-                options={options}
-                value={singleNode?.layout}
-                defaultValue="vertical"
-                optionType="button"
-                onChange={(e) => {
-                  if (singleNode)
-                    setConfig(singleNode.nodeKey, 'layout', e.target.value)
-                }}
-              />
-            </CustomRaw>
-          ) : null}
+          <CustomRaw label="布局结构">
+            <Radio.Group
+              block
+              style={{
+                height: '28px',
+                width: '100%',
+              }}
+              options={layoutOptions}
+              value={singleNode?.layout}
+              defaultValue="vertical"
+              optionType="button"
+              onChange={(e) => {
+                if (singleNode)
+                  setConfig(singleNode.nodeKey, 'layout', e.target.value)
+              }}
+            />
+          </CustomRaw>
           {singleNode &&
           singleNode.type === 'module' &&
           singleNode.layout === 'horizontal' &&
@@ -329,15 +341,21 @@ const RightPanel = ({
                   boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 }}
                 key={singleNode.children.length}
-                onResizeEnd={(sizes: number[]) => {
-                  const sum = sizes.reduce((prev, current) => prev + current, 0)
+                onResizeEnd={(_sizes: any[]) => {
+                  console.log('sizes', _sizes)
+
+                  setSizes(_sizes)
+                  const sum = _sizes.reduce(
+                    (prev, current) => prev + current,
+                    0
+                  )
                   // 计算各子模块所占比例，并设置到style.width属性中
                   if (singleNode) {
                     singleNode.children?.forEach((_, index) => {
                       changeChildWidth(
                         singleNode.nodeKey,
                         index,
-                        Number((sizes[index] / sum).toFixed(2)) * 100 + '%'
+                        Number((_sizes[index] / sum).toFixed(2)) * 100 + '%'
                       )
                     })
                   }
@@ -346,7 +364,7 @@ const RightPanel = ({
                 {singleNode.children.map((child, index) => (
                   <Splitter.Panel
                     key={child.nodeKey}
-                    defaultSize="20%"
+                    size={sizes[index]}
                     min="15%"
                     max="70%"
                   >

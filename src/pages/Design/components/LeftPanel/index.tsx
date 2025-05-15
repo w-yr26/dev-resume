@@ -87,7 +87,7 @@ const LeftPanel = () => {
             style: {
               padding: 0,
             },
-            bind: '',
+            bind: 'info',
             tag: '',
             nodeKey: uuidv4(),
             children: [],

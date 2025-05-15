@@ -219,7 +219,6 @@ const Design = () => {
             editor.onDidBlurEditorText(() => {
               const value = editor.getValue()
               // handleEditorBlur(value)
-              console.log('value', value)
               // 在这里做失焦后的处理，比如保存
             })
           }}
