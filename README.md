@@ -104,6 +104,67 @@ const renderTemplate = (
 }
 ```
 
+## 绑定字段上下文感知
+
+上一点仅仅是讨论了级联组件角度的可选字段正确禁用(通过路径拼接和层级得到`上一层`的信息，从而过滤出对应的可选项)，但是由于整份`uiSchema`是树+嵌套的关系，在绑定字段时，还需要感知上下文，即：当父容器未进行绑定时，子容器无法拖拽进来
+
+**思路：**
+
+物料的描述信息中，`nodeKey`由`uuid()`生成，可以拼接上当前模块的`type`，并在绑定的时候，将`bind`字段也拼接上，整体结构为:`xxxx?module&EDU_BG`。当执行拖拽的时候，`handleDrop`中，拿到目标放置容器的`nodeKey`，此时便可以得知目标放置容器的类型以及是否绑定了字段，实现上下文感知
+
+```ts
+// 物料描述信息
+{
+  svg: normalBoxSVG,
+  title: '模块容器',
+  sub: '用于定义单个模块',
+  // JSON描述信息
+  desUISchema: {
+    ableDel: true,
+    type: 'module',
+    isNestedAgain: true,
+    layout: 'vertical',
+    style: {},
+    bind: '',
+    tag: '',
+    nodeKey: uuidv4() + '?module',
+    children: [],
+  },
+},
+
+// 执行字段绑定的时候
+setConfig: (nodeKey, key, value) => {
+  set(
+    produce((state: designStoreType) => {
+      const targetNode = findNode(nodeKey, state.currentUISchema)
+      if (!targetNode) return
+      targetNode[key] = value
+      // 如果修改的是字段绑定值，记录当前容器所绑定的字段，用于后续的绑定上下文感知
+      if (key === 'bind') {
+        targetNode.nodeKey += `&${value}`
+      }
+    })
+  )
+}
+
+// 放置在目标容器中
+const handleDrop = (
+  nodeKey: string,
+  targetKey: string,
+  desUISchema: any,
+  deep: number
+) => {
+  console.log('deep', deep, targetKey)
+  const typeAndBind = targetKey.split('?')[1]
+  // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
+  const [type, bind] = typeAndBind.split('&')
+  if (type === 'module' && !bind) {
+    return message.warning('请先标注当前模块类型')
+  }
+  insertNode(nodeKey, targetKey, desUISchema)
+}
+```
+
 ### 现存问题：
 
 1. 

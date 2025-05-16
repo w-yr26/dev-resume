@@ -67,7 +67,7 @@ const useDesignStore = create<designStoreType>()(
                 ...targetNode.children,
                 {
                   ...desUISchema,
-                  nodeKey: `${targetNode.children.length}${nodeKey}`,
+                  nodeKey,
                 },
               ]
             })
