@@ -76,10 +76,7 @@ const useDesignStore = create<designStoreType>()(
         delNode: (prevKey, nodeKey) => {
           set(
             produce((state: designStoreType) => {
-              console.log(prevKey, nodeKey)
-
               const targetNode = findNode(prevKey, state.currentUISchema)
-
               if (!targetNode) return
               // 过滤掉待删除的child
               targetNode.children = (targetNode.children || []).filter(

@@ -185,7 +185,10 @@ const Design = () => {
 
           <div className={styles['design-body']}>
             <LeftPanel />
-            <main className={styles['preview-container']}>
+            <main
+              className={styles['preview-container']}
+              onClick={() => setCurrentSelectedKey('')}
+            >
               <div className={styles['view-container']}>
                 {renderTemplate(
                   currentUISchema,
