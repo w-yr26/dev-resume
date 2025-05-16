@@ -29,7 +29,7 @@ const LeftPanel = () => {
             style: {},
             bind: '',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?module',
             children: [],
           },
         },
@@ -46,7 +46,7 @@ const LeftPanel = () => {
             style: {},
             bind: '',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?container',
             children: [],
           },
         },
@@ -71,7 +71,7 @@ const LeftPanel = () => {
             },
             bind: '',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?text',
             // children: [],
           },
         },
@@ -89,7 +89,7 @@ const LeftPanel = () => {
             },
             bind: 'info',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?section',
             children: [],
           },
         },
@@ -112,7 +112,7 @@ const LeftPanel = () => {
             },
             bind: '',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?md',
             // children: [],
           },
         },
@@ -132,7 +132,7 @@ const LeftPanel = () => {
             },
             bind: '',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?text',
             // children: [],
           },
         },
@@ -148,7 +148,7 @@ const LeftPanel = () => {
             style: {},
             bind: '',
             tag: '',
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?image',
             // children: [],
           },
         },
@@ -166,7 +166,7 @@ const LeftPanel = () => {
             },
             bind: '', // 不需要(TODO:但是不需要绑定的条件是啥呢？type === 'container'?)
             tag: '', // 不需要
-            nodeKey: uuidv4(),
+            nodeKey: uuidv4() + '?columns',
             children: [
               {
                 ableDel: false,
@@ -181,7 +181,7 @@ const LeftPanel = () => {
                 },
                 bind: '',
                 tag: '', // 不需要
-                nodeKey: uuidv4(),
+                nodeKey: uuidv4() + '?text',
               },
               {
                 ableDel: false,
@@ -196,7 +196,7 @@ const LeftPanel = () => {
                 },
                 bind: '',
                 tag: '', // 不需要
-                nodeKey: uuidv4(),
+                nodeKey: uuidv4() + '?text',
               },
               {
                 ableDel: false,
@@ -211,7 +211,7 @@ const LeftPanel = () => {
                 },
                 bind: '',
                 tag: '', // 不需要
-                nodeKey: uuidv4(),
+                nodeKey: uuidv4() + '?text',
               },
             ],
           },

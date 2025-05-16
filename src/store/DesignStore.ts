@@ -40,7 +40,7 @@ const useDesignStore = create<designStoreType>()(
           },
           bind: 'root',
           tag: '',
-          nodeKey: 'root' + '~' + uuidv4(),
+          nodeKey: uuidv4() + '?root',
           children: [
             {
               ableDel: true,
@@ -50,7 +50,7 @@ const useDesignStore = create<designStoreType>()(
               style: {}, // 即configStyle
               bind: '',
               tag: '',
-              nodeKey: 'module1' + '~' + uuidv4(),
+              nodeKey: uuidv4() + '?module',
               children: [],
             },
           ],
@@ -67,7 +67,7 @@ const useDesignStore = create<designStoreType>()(
                 ...targetNode.children,
                 {
                   ...desUISchema,
-                  nodeKey: `${nodeKey}${targetNode.children.length}`,
+                  nodeKey: `${targetNode.children.length}${nodeKey}`,
                 },
               ]
             })
@@ -105,6 +105,10 @@ const useDesignStore = create<designStoreType>()(
               const targetNode = findNode(nodeKey, state.currentUISchema)
               if (!targetNode) return
               targetNode[key] = value
+              // 如果修改的是字段绑定值，记录当前容器所绑定的字段，用于后续的绑定上下文感知
+              if (key === 'bind') {
+                targetNode.nodeKey += `&${value}`
+              }
             })
           )
         },

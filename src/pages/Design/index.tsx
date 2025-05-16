@@ -19,7 +19,7 @@ import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
 import React, { useState } from 'react'
-import { Button, Drawer, Tag } from 'antd'
+import { Button, Drawer, message, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 
@@ -65,13 +65,13 @@ const Design = () => {
     desUISchema: any,
     deep: number
   ) => {
-    console.log('deep', deep)
-
-    // 如果deep===2(也就是说不是第二层ui)，则其上一层还未选择绑定的模块，此时不能插入新的ui
-    // 因为单个模块内的各元素的bind字段是通过级联组件筛选的，需要先确定模块的bind字段，才能接着确认模块内部的bind字段
-    // if (deep === 2 && desUISchema.type !== 'module') {
-    //   return message.warning('请先标注父元素模块类型')
-    // }
+    console.log('deep', deep, targetKey)
+    const typeAndBind = targetKey.split('?')[1]
+    // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
+    const [type, bind] = typeAndBind.split('&')
+    if (type === 'module' && !bind) {
+      return message.warning('请先标注当前模块类型')
+    }
     insertNode(nodeKey, targetKey, desUISchema)
   }
 
