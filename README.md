@@ -165,7 +165,108 @@ const handleDrop = (
 }
 ```
 
-### 现存问题：
+## redo & undo
+
+使用命令模式实现撤销操作，对比"每一步直接保存完整快照数据"的好处：
+
+* 更轻量："每一步直接保存完整快照数据"会随着步骤增多而内存暴涨；而命令模式只是保存每一步对应的命令
+* 更细粒度：命令模式的本质是执行每一步时记录**反向操作**所需的数据即可，而非整份`json`数据，反向操作使得整份`jsonSchema`数据更可细粒度控制
+
+**举个例子：**
+
+当执行删除操作的时候，除了执行逻辑删除，还需记录被删除节点id、父节点id等相关信息，执行撤销的时候，即执行**插入**(前面已经记录节点id、父节点id)
+
+**误区：**
+
+> 看两种命令模式对于删除操作的处理
+
+第一种
+```ts
+export class deleteCommand extends Command {
+  private prevKey: string = ''
+  private nodeKey: string = ''
+  private prevSchema: singleNode | null
+  private currentUISchema: singleNode | null
+  private delNode: (prevKey: string, nodeKey: string) => void
+
+  constructor(
+    prevKey: string, // 父节点id
+    nodeKey: string, // 当前节点id
+    currentUISchema: singleNode, // 当前整份 jsonSchame
+    delNode: (prevKey: string, nodeKey: string) => void, // 删除节点操作
+  ) {
+    super()
+    this.prevKey = prevKey
+    this.nodeKey = nodeKey
+    this.prevSchema = null
+    this.currentUISchema = currentUISchema
+    this.delNode = delNode
+  }
+
+  execute(): void {
+    if (this.currentUISchema) {
+      this.prevSchema = currentUISchema
+      this.delNode(this.prevKey, this.nodeKey)
+    }
+  }
+
+  undo(): void {
+    // 执行直接把 this.prevSchema 赋值给 currentUISchema 的方法
+  }
+}
+```
+第二种
+```ts
+export class deleteCommand extends Command {
+  private prevKey: string = '' // 父节点id
+  private nodeKey: string = '' // 当前节点id
+  private deletedNode: singleNode | null // 被删除节点的json描述信息
+  private currentUISchema: singleNode | null // 当前整份jsonSchema
+  private delNode: (prevKey: string, nodeKey: string) => void // 删除节点方法
+  private insertNode: ( // 插入节点方法
+    nodeKey: string,
+    targetKey: string,
+    schema: singleNode
+  ) => void
+
+  constructor(
+    prevKey: string,
+    nodeKey: string,
+    currentUISchema: singleNode,
+    delNode: (prevKey: string, nodeKey: string) => void,
+    insertNode: (nodeKey: string, targetKey: string, schema: singleNode) => void
+  ) {
+    super()
+    this.prevKey = prevKey
+    this.nodeKey = nodeKey
+    // this.prevSchema = null
+    this.deletedNode = null
+    this.currentUISchema = currentUISchema
+    this.delNode = delNode
+    this.insertNode = insertNode
+  }
+
+  execute(): void {
+    if (this.currentUISchema) {
+      const parent = findNode(this.prevKey, this.currentUISchema)
+      if (parent && parent.children) {
+        this.deletedNode =
+          parent.children.find((item) => item.nodeKey === this.nodeKey) ?? null
+      }
+      this.delNode(this.prevKey, this.nodeKey)
+    }
+  }
+
+  undo(): void {
+    if (this.deletedNode) {
+      this.insertNode(this.nodeKey, this.prevKey, this.deletedNode)
+    }
+  }
+}
+```
+虽然二者都使用了命令模式，但第一种是**伪实现**。命令模式的本质是保存命令+对立操作，而方法一中仍然保存的是命令执行前的整份`jsonSchema`；我们应该记录被删除节点的描述信息，在执行撤销的时候拿着这些描述信息做反向操作(插入)
+
+## 现存问题：
 
 1. 
 2. 
