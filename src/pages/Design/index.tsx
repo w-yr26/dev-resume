@@ -1,16 +1,15 @@
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Icon from '@ant-design/icons'
-import SettingSVG from '@/assets/svg/setting.svg?react'
 import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import arrayBoxSVG from '@/assets/svg/design/arrayBox.svg?react'
 import mdBoxSVG from '@/assets/svg/design/mdBox.svg?react'
-import codeSVG from '@/assets/svg/dev/code.svg?react'
-import resumeSVG from '@/assets/svg/resume.svg?react'
+
 import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
 import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
 import closeSVG from '@/assets/svg/design/close.svg?react'
+
 import DragBtn from './components/DragBtn'
 import LeftPanel from './components/LeftPanel'
 import RightPanel from './components/RightPanel'
@@ -19,11 +18,12 @@ import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
 import React, { useState } from 'react'
-import { Button, Drawer, message, Tag } from 'antd'
+import { Drawer, message, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 import { commandManager } from './command/commandManager'
 import { register } from './command'
+import NavBar from './components/NavBar'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -177,38 +177,7 @@ const Design = () => {
     <>
       <DndProvider backend={HTML5Backend}>
         <div className={styles['design-container']}>
-          <nav className={styles['design-nav']}>
-            <div className={styles['nav-left']}>
-              <Icon component={SettingSVG} />
-              <span>模板设计器</span>
-            </div>
-            <div className={styles['nav-right']}>
-              <span
-                onClick={() => {
-                  commandManager.undo()
-                }}
-              >
-                撤销
-              </span>
-              <span
-                onClick={() => {
-                  commandManager.redo()
-                }}
-              >
-                重做
-              </span>
-              <Icon
-                component={codeSVG}
-                style={{
-                  marginRight: '8px',
-                }}
-                onClick={() => setIsOpened(true)}
-              />
-              <Button type="primary" icon={<Icon component={resumeSVG} />}>
-                保存
-              </Button>
-            </div>
-          </nav>
+          <NavBar setIsOpened={setIsOpened} />
 
           <div className={styles['design-body']}>
             <LeftPanel />
