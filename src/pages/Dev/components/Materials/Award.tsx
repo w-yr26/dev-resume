@@ -60,6 +60,7 @@ const Award = () => {
         <AddBtn handleAdd={handleOpen} />
       ) : (
         <List
+          type="AWARD_LIST"
           data={storeAwardList}
           handleAdd={handleOpen}
           handleVisible={handleVisible}
@@ -71,7 +72,7 @@ const Award = () => {
             subTitle: 'describe',
             visible: 'visible',
           }}
-        ></List>
+        />
       )}
 
       <Modal

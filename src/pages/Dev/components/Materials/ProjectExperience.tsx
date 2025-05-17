@@ -59,6 +59,7 @@ const ProjectExperience = () => {
         <AddBtn handleAdd={handleOpen} />
       ) : (
         <List
+          type="PROJECT_EXP"
           data={storeProjectList}
           handleAdd={handleOpen}
           handleVisible={handleVisible}

@@ -62,6 +62,7 @@ const EduBg = () => {
             <div key={eduItem.id} className={styles['edu-item']}>
               {eduInfo.length ? (
                 <List
+                  type="EDU_BG"
                   data={eduInfo}
                   fieldMap={{
                     id: 'id',
