@@ -37,7 +37,7 @@ export type uiStoreType = {
   ) => void
 }
 
-// 树形结构的数据类型
+// style编辑器树形结构的数据类型
 export type treeDateType = {
   key: string
   nodeKey: string
@@ -45,6 +45,13 @@ export type treeDateType = {
   children: treeDateType[]
   cssStyle: React.CSSProperties
   rawNode: nodeType
+}
+
+// 接口返回的模板列表的数据结构
+export type templateListType = {
+  id: string
+  style_config: nodeType
+  templateName: string
 }
 
 // ====== 以下与简历模板设计有关 ===

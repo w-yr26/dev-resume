@@ -16,8 +16,9 @@ import { Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
-import { getResumeDetailsAPI } from '@/apis/resume'
+import { getResumeDetailsAPI, getTemplatesAPI } from '@/apis/resume'
 import { useParams } from 'react-router-dom'
+import { templateListType } from '@/types/ui'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
@@ -50,6 +51,7 @@ const Dev = () => {
   const [lineShow, setLineShow] = useState(false)
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
+  const [temList, setTemList] = useState<templateListType[]>([])
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -58,9 +60,13 @@ const Dev = () => {
   useEffect(() => {
     const getDetail = async () => {
       if (params.randomId) {
-        const { data } = await getResumeDetailsAPI(params.randomId)
-        console.log('content', data.content)
-        console.log('resumeId', data.resumeId)
+        const [{ data }, { data: temList }] = await Promise.all([
+          getResumeDetailsAPI(params.randomId),
+          getTemplatesAPI(),
+        ])
+        console.log('temList', temList)
+        setTemList(temList)
+        // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
       }
     }
@@ -369,7 +375,7 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <Setting isRightUnExpand={isRightUnExpand} />
+      <Setting isRightUnExpand={isRightUnExpand} temList={temList} />
       <RightMenu
         isRightUnExpand={isRightUnExpand}
         setisRightUnExpand={setisRightUnExpand}

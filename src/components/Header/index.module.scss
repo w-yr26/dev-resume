@@ -6,10 +6,12 @@
   margin-bottom: 8px;
 
   .header-left {
+    height: 100%;
     display: flex;
     align-items: center;
 
     .label {
+      line-height: 1.2;
       color: #09090b;
       font-weight: bold;
       font-size: 24px;

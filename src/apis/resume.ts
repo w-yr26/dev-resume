@@ -6,6 +6,7 @@ import type {
   resumeListResp,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
+import { templateListType } from '@/types/ui'
 
 /**
  * 获取简历分页数据
@@ -78,7 +79,7 @@ export const delModuleSingleInfoAPI = (
   resumeId: string,
   type: keyType
 ) => {
-  return request<any>(
+  return request<null>(
     `/resume/resume/delete/module?id=${id}&resumeId=${resumeId}&type=${type}`,
     'DELETE'
   )
@@ -94,4 +95,11 @@ export const delModuleSingleInfoAPI = (
  */
 export const postSaveTemplateAPI = (data: addTemplateType) => {
   return request<any>('/resume/templates/saveTemplate', 'POST', data)
+}
+
+/**
+ * 获取所有模板列表
+ */
+export const getTemplatesAPI = () => {
+  return request<templateListType[]>('/resume/templates/getAll')
 }
