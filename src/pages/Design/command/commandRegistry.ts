@@ -1,3 +1,4 @@
+import { findNode } from '@/store/DesignStore'
 import { Command } from './command'
 import { singleNode } from '@/types/ui'
 
@@ -21,33 +22,85 @@ export class CommandRegistry {
 export class deleteCommand extends Command {
   private prevKey: string = ''
   private nodeKey: string = ''
-  private prevSchema: singleNode | null
+  private deletedNode: singleNode | null
   private currentUISchema: singleNode | null
   private delNode: (prevKey: string, nodeKey: string) => void
-  private setCurrentUISchema: (schema: singleNode) => void
+  private insertNode: (
+    nodeKey: string,
+    targetKey: string,
+    schema: singleNode
+  ) => void
 
   constructor(
     prevKey: string,
     nodeKey: string,
     currentUISchema: singleNode,
     delNode: (prevKey: string, nodeKey: string) => void,
-    setCurrentUISchema: (schema: singleNode) => void
+    insertNode: (nodeKey: string, targetKey: string, schema: singleNode) => void
   ) {
     super()
     this.prevKey = prevKey
     this.nodeKey = nodeKey
-    this.prevSchema = null
+    // this.prevSchema = null
+    this.deletedNode = null
     this.currentUISchema = currentUISchema
     this.delNode = delNode
-    this.setCurrentUISchema = setCurrentUISchema
+    this.insertNode = insertNode
   }
 
   execute(): void {
-    if (this.currentUISchema) this.prevSchema = { ...this.currentUISchema }
-    this.delNode(this.prevKey, this.nodeKey)
+    if (this.currentUISchema) {
+      const parent = findNode(this.prevKey, this.currentUISchema)
+      if (parent && parent.children) {
+        this.deletedNode =
+          parent.children.find((item) => item.nodeKey === this.nodeKey) ?? null
+      }
+      this.delNode(this.prevKey, this.nodeKey)
+    }
   }
 
   undo(): void {
-    if (this.prevSchema) this.setCurrentUISchema(this.prevSchema)
+    if (this.deletedNode) {
+      this.insertNode(this.nodeKey, this.prevKey, this.deletedNode)
+    }
+  }
+}
+
+// 新增命令
+export class dropCommand extends Command {
+  private nodeKey: string
+  private targetKey: string
+  private desUISchema: singleNode | null
+  // private currentUISchema: singleNode | null
+  private delNode: (prevKey: string, nodeKey: string) => void
+  private insertNode: (
+    nodeKey: string,
+    targetKey: string,
+    desUISchema: any
+  ) => void
+  constructor(
+    nodeKey: string,
+    targetKey: string,
+    desUISchema: singleNode,
+    // currentUISchema: singleNode,
+    delNode: (prevKey: string, nodeKey: string) => void,
+    insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
+  ) {
+    super()
+    this.nodeKey = nodeKey
+    this.targetKey = targetKey
+    this.desUISchema = desUISchema
+    // this.currentUISchema = currentUISchema
+    this.delNode = delNode
+    this.insertNode = insertNode
+  }
+
+  execute(): void {
+    // if (this.currentUISchema)
+    this.insertNode(this.nodeKey, this.targetKey, this.desUISchema)
+  }
+
+  undo(): void {
+    this.delNode(this.targetKey, this.nodeKey)
   }
 }

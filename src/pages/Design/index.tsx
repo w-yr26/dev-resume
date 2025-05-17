@@ -4,12 +4,10 @@ import Icon from '@ant-design/icons'
 import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import arrayBoxSVG from '@/assets/svg/design/arrayBox.svg?react'
 import mdBoxSVG from '@/assets/svg/design/mdBox.svg?react'
-
 import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
 import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
 import closeSVG from '@/assets/svg/design/close.svg?react'
-
 import DragBtn from './components/DragBtn'
 import LeftPanel from './components/LeftPanel'
 import RightPanel from './components/RightPanel'
@@ -54,7 +52,6 @@ const Design = () => {
   const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   const insertNode = useDesignStore((state) => state.insertNode)
   const delNode = useDesignStore((state) => state.delNode)
-  const setCurrentUISchema = useDesignStore((state) => state.setCurrentUISchema)
   const setCurrentSelectedKey = useDesignStore(
     (state) => state.setCurrentSelectedKey
   )
@@ -68,14 +65,23 @@ const Design = () => {
     desUISchema: any,
     deep: number
   ) => {
-    console.log('deep', deep, targetKey)
     const typeAndBind = targetKey.split('?')[1]
     // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
     const [type, bind] = typeAndBind.split('&')
     if (type === 'module' && !bind) {
       return message.warning('请先标注当前模块类型')
     }
-    insertNode(nodeKey, targetKey, desUISchema)
+
+    // 获取新增命令
+    const command = register.create(
+      'drop',
+      nodeKey,
+      targetKey,
+      desUISchema,
+      delNode,
+      insertNode
+    )
+    commandManager.executeCommand(command)
   }
 
   // 一旦某个节点的bind字段绑定，这个递归函数就会重新执行，此时的uiSchema.bind就直接有值，不再需要onClick事件获取，此时的根据currentKey找到的Node节点的bind字段有值
@@ -120,7 +126,7 @@ const Design = () => {
                 uiSchema.nodeKey,
                 currentUISchema,
                 delNode,
-                setCurrentUISchema
+                insertNode
               )
               commandManager.executeCommand(command)
             }}
