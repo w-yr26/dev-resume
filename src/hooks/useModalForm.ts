@@ -1,7 +1,7 @@
 import { postModuleInfoAPI } from '@/apis/resume'
 import { useDevStore, useUserStore } from '@/store'
 import type { keyType } from '@/types/dev'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
 import { Dayjs } from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 

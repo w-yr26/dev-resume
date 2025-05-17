@@ -51,3 +51,6 @@ export const postRegisterAPI = (data: {
 export const getOauthGiteeAPI = (code: string) => {
   return request<LoginResponse>(`/resume/user/gitee/callback?code=${code}`)
 }
+
+// /user/common/uploadOne
+export const postUploadOneAPI = () => {}

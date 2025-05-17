@@ -55,15 +55,13 @@ const WorkExperience = () => {
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}
         >
-          <CtxMenu
-            currentKey="WORK_EXP"
-            renameLabel={() => setIsEdit(true)}
-          ></CtxMenu>
+          <CtxMenu currentKey="WORK_EXP" renameLabel={() => setIsEdit(true)} />
         </Header>
         {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />
         ) : (
           <List
+            type="WORK_EXP"
             data={storeWorkList}
             handleAdd={handleOpen}
             handleVisible={handleVisible}
@@ -75,7 +73,7 @@ const WorkExperience = () => {
               subTitle: 'position',
               visible: 'visible',
             }}
-          ></List>
+          />
         )}
       </CustomLayout>
       <Modal

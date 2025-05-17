@@ -1,9 +1,11 @@
 import { request } from '@/utils'
 import type {
   addModuleType,
+  addTemplateType,
   resumeDetailType,
   resumeListResp,
 } from '@/types/resume'
+import { keyType } from '@/types/dev'
 
 /**
  * 获取简历分页数据
@@ -57,10 +59,39 @@ export const getResumeDetailsAPI = (randomId: string) => {
 }
 
 /**
- * 新增某个模块的信息
+ * 新增/更新某个模块的信息
  * @param data
  * @returns
  */
 export const postModuleInfoAPI = (data: addModuleType) => {
   return request<any>('/resume/resume/module', 'POST', data)
+}
+
+/**
+ * 删除某个模块(WORK_EXP、PROJECT_EXP、AWARD_LIST、EDU_BG)单条消息记录
+ * @param id 单条消息的ID
+ * @param resumeId 简历id
+ * @param type 模块类型
+ */
+export const delModuleSingleInfoAPI = (
+  id: string,
+  resumeId: string,
+  type: keyType
+) => {
+  return request<any>(
+    `/resume/resume/delete/module?id=${id}&resumeId=${resumeId}&type=${type}`,
+    'DELETE'
+  )
+}
+
+/**
+ * 保存用户自定义模板
+ * @param fastPhoto 快照链接
+ * @param name 模板名称
+ * @param styleConfig uiJsonSchema
+ * @param userId 用户ID
+ * @returns
+ */
+export const postSaveTemplateAPI = (data: addTemplateType) => {
+  return request<any>('/resume/templates/saveTemplate', 'POST', data)
 }
