@@ -53,12 +53,14 @@ export function useModalForm<
         date: content.date?.map((item: Dayjs) => item.format('YYYY-MM-DD')),
       }
       // 先调用接口，执行创建/更新，再写入store，因为存在接口调用失败的情况下，避免store多次写入
-      await postModuleInfoAPI({
+      const { code } = await postModuleInfoAPI({
         resumeId,
         content,
         type: key,
         userId,
       })
+
+      if (code === 0) return
       // 更新
       if (infoId) {
         updateInfo(
