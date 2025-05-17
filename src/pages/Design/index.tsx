@@ -22,6 +22,8 @@ import React, { useState } from 'react'
 import { Button, Drawer, message, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
+import { commandManager } from './command/commandManager'
+import { register } from './command'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -52,6 +54,7 @@ const Design = () => {
   const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   const insertNode = useDesignStore((state) => state.insertNode)
   const delNode = useDesignStore((state) => state.delNode)
+  const setCurrentUISchema = useDesignStore((state) => state.setCurrentUISchema)
   const setCurrentSelectedKey = useDesignStore(
     (state) => state.setCurrentSelectedKey
   )
@@ -109,7 +112,17 @@ const Design = () => {
             }}
             onClick={() => {
               const prevKeysArr = prevKey.split('&')
-              delNode(prevKeysArr[prevKeysArr.length - 2], uiSchema.nodeKey)
+              const prev = prevKeysArr[prevKeysArr.length - 2]
+              // 获取删除命令
+              const command = register.create(
+                'delete',
+                prev,
+                uiSchema.nodeKey,
+                currentUISchema,
+                delNode,
+                setCurrentUISchema
+              )
+              commandManager.executeCommand(command)
             }}
           >
             <Icon component={closeSVG} />
@@ -170,6 +183,20 @@ const Design = () => {
               <span>模板设计器</span>
             </div>
             <div className={styles['nav-right']}>
+              <span
+                onClick={() => {
+                  commandManager.undo()
+                }}
+              >
+                撤销
+              </span>
+              <span
+                onClick={() => {
+                  commandManager.redo()
+                }}
+              >
+                重做
+              </span>
               <Icon
                 component={codeSVG}
                 style={{
@@ -220,7 +247,7 @@ const Design = () => {
           value={JSON.stringify(currentUISchema, null, 2)}
           onMount={(editor) => {
             editor.onDidBlurEditorText(() => {
-              const value = editor.getValue()
+              // const value = editor.getValue()
               // handleEditorBlur(value)
               // 在这里做失焦后的处理，比如保存
             })
