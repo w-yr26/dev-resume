@@ -233,7 +233,7 @@
                     },
                     {
                       "type": "text",
-                      "bind": "blob",
+                      "bind": "tblob",
                       "nodeKey": "0-0-0-1-6-1"
                     }
                   ]
@@ -386,7 +386,7 @@
                 },
                 {
                   "type": "text",
-                  "bind": "overview",
+                  "bind": "description",
                   "style": {},
                   "nodeKey": "0-2-1-1-1"
                 }
@@ -461,13 +461,13 @@
               "children": [
                 {
                   "type": "text",
-                  "bind": "name",
+                  "bind": "title",
                   "nodeKey": "0-3-1-0-0",
                   "style": { "fontWeight": 600 }
                 },
                 {
                   "type": "text",
-                  "bind": "position",
+                  "bind": "role",
                   "nodeKey": "0-3-1-0-1",
                   "style": { "fontWeight": 600 }
                 },
@@ -494,7 +494,7 @@
                 },
                 {
                   "type": "text",
-                  "bind": "overview",
+                  "bind": "description",
                   "nodeKey": "0-3-1-1-1",
                   "style": {}
                 }
@@ -550,10 +550,19 @@
           }
         },
         {
-          "type": "md",
+          "type": "section",
+          "layout": "horizontal",
           "bind": "info",
           "nodeKey": "0-4-1",
-          "style": { "flex": 1 }
+          "style": {},
+          "children": [
+            {
+              "type": "md",
+              "bind": "content",
+              "nodeKey": "0-4-1-0",
+              "style": { "flex": 1 }
+            }
+          ]
         }
       ]
     },
@@ -582,10 +591,19 @@
           }
         },
         {
-          "type": "md",
+          "type": "section",
+          "layout": "horizontal",
           "bind": "info",
           "nodeKey": "0-5-1",
-          "style": { "flex": 1 }
+          "style": {},
+          "children": [
+            {
+              "type": "md",
+              "bind": "content",
+              "nodeKey": "0-5-1-0",
+              "style": { "flex": 1 }
+            }
+          ]
         }
       ]
     }

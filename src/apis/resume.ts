@@ -6,7 +6,7 @@ import type {
   resumeListResp,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
-import { templateListType } from '@/types/ui'
+import { temDataType } from '@/types/ui'
 
 /**
  * 获取简历分页数据
@@ -100,6 +100,6 @@ export const postSaveTemplateAPI = (data: addTemplateType) => {
 /**
  * 获取所有模板列表
  */
-export const getTemplatesAPI = () => {
-  return request<templateListType[]>('/resume/templates/getAll')
+export const getTemplatesAPI = (userId: string) => {
+  return request<temDataType>(`/resume/templates/getAll/${userId}`)
 }

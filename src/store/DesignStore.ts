@@ -56,13 +56,6 @@ const useDesignStore = create<designStoreType>()(
           ],
         },
         currentSelectedKey: '',
-        setCurrentUISchema: (schema) => {
-          return set(() => {
-            return {
-              currentUISchema: schema,
-            }
-          })
-        },
         insertNode: (nodeKey, targetKey, desUISchema) => {
           set(
             produce((state: designStoreType) => {
@@ -131,6 +124,13 @@ const useDesignStore = create<designStoreType>()(
               const targetNode = findNode(nodeKey, state.currentUISchema)
               if (!targetNode || !targetNode.children) return
               targetNode.children[idx].style.width = proportion
+            })
+          )
+        },
+        setRootStyle: (key, val) => {
+          set(
+            produce((state: designStoreType) => {
+              state.currentUISchema.configStyle[key] = val
             })
           )
         },

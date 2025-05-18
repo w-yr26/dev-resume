@@ -48,6 +48,10 @@ export type treeDateType = {
 }
 
 // 接口返回的模板列表的数据结构
+export type temDataType = {
+  diyTemplateList: templateListType[]
+  templateList: templateListType[]
+}
 export type templateListType = {
   id: string
   style_config: nodeType
@@ -64,14 +68,13 @@ export type singleNode = {
   tag: string
   nodeKey: string
   style: React.CSSProperties
-  configStyle?: React.CSSProperties
+  configStyle?: any
   children?: singleNode[]
 }
 
 export type designStoreType = {
   currentUISchema: singleNode
   currentSelectedKey: string
-  setCurrentUISchema: (schema: singleNode) => void
   insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
   delNode: (prevKey: string, nodeKey: string) => void
   setCurrentSelectedKey: (key: string) => void
@@ -87,4 +90,5 @@ export type designStoreType = {
     newCssStyle: any
   ) => void
   changeChildWidth: (nodeKey: string, idx: number, proportion: string) => void
+  setRootStyle: (key: string, val: any) => void
 }

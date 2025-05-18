@@ -121,7 +121,7 @@ const Render = memo((props: RenderProps) => {
   if (type === 'section') {
     const list = dataContext[bind] || []
     // 此时做两层循环，一层是遍历数据列表，一层是遍历所有的子容器
-    return (
+    return list && list.length ? (
       <div
         className="section-box"
         style={mergedStyle}
@@ -139,7 +139,7 @@ const Render = memo((props: RenderProps) => {
           ) : null
         })}
       </div>
-    )
+    ) : null
   }
 
   // 此处对应模块标题/或者是行内单项值

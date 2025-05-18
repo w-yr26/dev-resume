@@ -12,9 +12,11 @@ import { postModuleInfoAPI } from '@/apis/resume'
 const Skill = () => {
   const resumeId = useDevStore((state) => state.resumeId)
   const userId = useUserStore((state) => state.info.id)
-  const { info: skillInfo, label } = useDevStore(
-    (state) => state.devSchema.dataSource.SKILL_LIST
-  )
+  const {
+    info: [skillInfo],
+    label,
+  } = useDevStore((state) => state.devSchema.dataSource.SKILL_LIST)
+
   const immerRichInfo = useDevStore((state) => state.immerRichInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('SKILL_LIST')
@@ -39,7 +41,7 @@ const Skill = () => {
         <CtxMenu currentKey="SKILL_LIST" renameLabel={() => setIsEdit(true)} />
       </Header>
       <MdEditor
-        value={skillInfo}
+        value={skillInfo?.content || ''}
         onChange={(val: string) => immerRichInfo(val, 'SKILL_LIST')}
         onBlur={async (val: string) => {
           await postModuleInfoAPI({

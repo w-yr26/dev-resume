@@ -1,14 +1,17 @@
-import { Avatar, Input } from 'antd'
+import { Input, Upload } from 'antd'
+import type { UploadProps } from 'antd'
 import Header from '@/components/Header/index'
 import Icon from '@ant-design/icons'
-import userSVG from '@/assets/svg/dev/user.svg?react'
 import InfoSVG from '@/assets/svg/dev/info.svg?react'
+import uploadSVG from '@/assets/svg/dev/upload.svg?react'
 import CustomInput from './components/CustomInput'
 import CustomLayout from '@/components/CustomLayout/index'
 import React, { useEffect, useRef } from 'react'
 // import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
+import './custom.scss'
 import { useDevStore, useGlobalStore } from '@/store'
+import { postUploadOneAPI } from '@/apis/user'
 
 const BaseInfo = () => {
   const baseinfoRef = useRef<HTMLDivElement>(null)
@@ -25,53 +28,6 @@ const BaseInfo = () => {
     }
   }, [])
 
-  // const [addFieldsList, setAddFieldsList] = useState<AddItemType[]>([])
-  // const [isShow, setIsShow] = useState(false)
-  // const [customLabel, setCustomLabel] = useState('')
-  // const [customVal, setCustomVal] = useState('')
-
-  // const handleLabelBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-  //   setCustomLabel(e.target.value)
-  // }
-  // const handleLabelEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   setCustomLabel(e.currentTarget.value)
-  // }
-
-  // const handleValBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-  //   setCustomVal(e.target.value)
-  // }
-
-  // const handleCustomFieldChange = (
-  //   e: React.ChangeEvent<HTMLInputElement>,
-  //   id: number
-  // ) => {
-  //   setAddFieldsList(
-  //     addFieldsList.map((field) => {
-  //       if (field.id === id) {
-  //         return {
-  //           ...field,
-  //           value: e.target.value,
-  //         }
-  //       } else return field
-  //     })
-  //   )
-  // }
-
-  // useEffect(() => {
-  //   if (customLabel && customVal) {
-  //     setAddFieldsList([
-  //       ...addFieldsList,
-  //       {
-  //         label: customLabel,
-  //         value: customVal,
-  //         id: new Date().getTime(),
-  //       },
-  //     ])
-  //     setCustomLabel('')
-  //     setCustomVal('')
-  //   }
-  // }, [customLabel, customVal])
-
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
@@ -79,9 +35,22 @@ const BaseInfo = () => {
     changeBaseInfo(e.target.value, key)
   }
 
-  // const handleDelItem = (id: number) => {
-  //   setItemList(itemList.filter((item) => item.id !== id))
-  // }
+  const uploadButton = (
+    <button
+      style={{ border: 0, background: 'none', fontSize: '18px' }}
+      type="button"
+    >
+      <Icon component={uploadSVG}></Icon>
+    </button>
+  )
+
+  const handleUpload: UploadProps['customRequest'] = async (options) => {
+    const file = options.file
+    const fd = new FormData()
+    fd.append('image', file)
+    const { data } = await postUploadOneAPI(fd)
+    console.log('data', data)
+  }
 
   return (
     <CustomLayout ref={baseinfoRef}>
@@ -92,11 +61,28 @@ const BaseInfo = () => {
       />
       <div className={styles['avatar-name-box']}>
         <div className="avatar-img">
-          <Avatar
+          {/* <Avatar
             shape="circle"
             size={54}
             icon={<Icon component={userSVG} />}
-          />
+          /> */}
+          <Upload
+            name="avatar"
+            listType="picture-circle"
+            className="avatar-uploader"
+            showUploadList={false}
+            customRequest={handleUpload}
+          >
+            {baseInfo?.avatar ? (
+              <img
+                src={baseInfo?.avatar}
+                alt="avatar"
+                style={{ width: '80px', height: '80px', borderRadius: '50%' }}
+              />
+            ) : (
+              uploadButton
+            )}
+          </Upload>
         </div>
         <div className={styles['img-url-box']}>
           <p className={styles['label']}>头像</p>
@@ -202,52 +188,6 @@ const BaseInfo = () => {
           handleFieldChange(e, 'tblob')
         }}
       />
-      {/* {addFieldsList.map((item) => {
-        return (
-          <React.Fragment key={item.id}>
-            <CustomInput
-              label={item.label}
-              placeholder="请输入文本"
-              value={item.value}
-              onChange={(e) => handleCustomFieldChange(e, item.id)}
-            />
-          </React.Fragment>
-        )
-      })}
-      {isShow ? (
-        <div className={styles['info-list-item']}>
-          <CheckSquareOutlined />
-          <Input
-            style={{
-              height: '36px',
-              width: '40%',
-            }}
-            placeholder="输入字段名"
-            autoFocus
-            defaultValue={customLabel}
-            onBlur={handleLabelBlur}
-          />
-          <Input
-            style={{
-              height: '36px',
-              width: '40%',
-            }}
-            placeholder="输入字段值"
-            defaultValue={customVal}
-            onBlur={handleValBlur}
-          />
-          <CloseOutlined className="hover:cursor-help" />
-        </div>
-      ) : null} */}
-      {/* <div className={styles['custom-field-box']}>
-        <PlusOutlined color="#3f3f46" />
-        <span
-          className={styles['custom-label']}
-          onClick={() => setIsShow(true)}
-        >
-          添加自定义字段
-        </span>
-      </div> */}
     </CustomLayout>
   )
 }

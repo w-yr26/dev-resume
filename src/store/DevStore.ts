@@ -7,7 +7,6 @@ import type {
   keyType,
 } from '@/types/dev'
 import { produce } from 'immer'
-import dayjs from 'dayjs'
 import { devtools } from 'zustand/middleware'
 
 const defaultInfoMap: Record<allKeyType, any> = {
@@ -101,12 +100,12 @@ const initialData: devInitType = {
       label: '荣誉奖项',
     },
     SKILL_LIST: {
-      info: '- 掌握Web开发基础，掌握 HTML，CSS，JavaScript\n- 熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验\n- 掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等\n- 熟悉 HTTP 协议，DNS/CDN 等网络相关知识\n- 掌握基本的 git 命令进行代码版本管理\n- 掌握Web开发基础，掌握 HTML，CSS，JavaScript\n- 熟悉 Vue2、Vue3 及全家桶，有实际项目开发经验\n- 掌握 ES6 新特性；擅长 flex 布局，理解 Promise、原型链、事件循环等\n- 熟悉 HTTP 协议，DNS/CDN 等网络相关知识\n- 掌握基本的 git 命令进行代码版本管理\n',
+      info: [],
       visible: true,
       label: '技能特长',
     },
     HEART_LIST: {
-      info: '打球',
+      info: [],
       visible: true,
       label: '兴趣爱好',
     },
@@ -169,7 +168,6 @@ const initialData: devInitType = {
     'SKILL_LIST',
     'HEART_LIST',
   ],
-  curTemplate: '01',
 }
 
 const useDevStore = create<devState>()(
@@ -178,6 +176,7 @@ const useDevStore = create<devState>()(
       return {
         devSchema: initialData,
         resumeId: '',
+        templateId: '',
         setDataSource: (dataSource) => {
           return set((state) => {
             return {
@@ -192,6 +191,13 @@ const useDevStore = create<devState>()(
           return set(() => {
             return {
               resumeId: id,
+            }
+          })
+        },
+        setTemplateId: (id) => {
+          return set(() => {
+            return {
+              templateId: id,
             }
           })
         },
@@ -210,13 +216,17 @@ const useDevStore = create<devState>()(
               // }
             })
           ),
-        // 此处就包含了“教育背景”、“技能特长”、“兴趣爱好”的info字段的修改(因为这三者都是直接渲染标签内容，无需特殊处理)
-        immerRichInfo: (newVal, key) =>
+        // 此处就包含了“教育背景”、“技能特长”、“兴趣爱好”的info字段的修改
+        immerRichInfo: (newVal, primaryKey) =>
           set(
             produce((state: devState) => {
-              console.log('newVal', newVal)
-
-              state.devSchema.dataSource[key].info = newVal
+              // console.log('newVal', newVal)
+              if (primaryKey === 'HEART_LIST') {
+                state.devSchema.dataSource.HEART_LIST.info[0].interest = newVal
+              } else if (primaryKey === 'SKILL_LIST') {
+                state.devSchema.dataSource.SKILL_LIST.info[0].content = newVal
+              }
+              // state.devSchema.dataSource[primaryKey].info. = newVal
             })
           ),
         immerVisible: <T extends keyof InfoArrTypeMap>(id: string, key: T) =>
