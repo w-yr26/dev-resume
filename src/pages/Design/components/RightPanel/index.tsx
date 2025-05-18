@@ -83,7 +83,7 @@ const cascaderOptions: Option[] = [
           },
           {
             // 这里插个眼，现有的方案中，“项目描述”是会作为label存在的，但是此处未定义给用户
-            value: 'overview',
+            value: 'description',
             label: '项目描述',
           },
           {
@@ -107,12 +107,12 @@ const cascaderOptions: Option[] = [
         label: '信息',
         children: [
           {
-            value: 'name',
+            value: 'title',
             label: '项目名称',
           },
 
           {
-            value: 'position',
+            value: 'role',
             label: '团队位置',
           },
           {
@@ -120,7 +120,7 @@ const cascaderOptions: Option[] = [
             label: '时间',
           },
           {
-            value: 'overview',
+            value: 'description',
             label: '项目描述',
           },
           {
@@ -141,7 +141,13 @@ const cascaderOptions: Option[] = [
       },
       {
         value: 'info',
-        label: '技能特长描述',
+        label: '信息',
+        children: [
+          {
+            value: 'content',
+            label: '详细描述',
+          },
+        ],
       },
     ],
   },
@@ -155,7 +161,41 @@ const cascaderOptions: Option[] = [
       },
       {
         value: 'info',
-        label: '爱好描述',
+        label: '信息',
+        children: [
+          {
+            value: 'interest',
+            label: '详细描述',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'AWARD_LIST',
+    label: '荣誉奖项',
+    children: [
+      {
+        value: 'label',
+        label: '模块文本',
+      },
+      {
+        value: 'info',
+        label: '信息',
+        children: [
+          {
+            value: 'title',
+            label: '荣誉名称',
+          },
+          {
+            value: 'date',
+            label: '获奖时间',
+          },
+          {
+            value: 'description',
+            label: '相关描述',
+          },
+        ],
       },
     ],
   },
@@ -300,158 +340,167 @@ const RightPanel = ({
           </ModuleLayout>
         )}
 
-        <ModuleLayout title="排列设置">
-          <div className={styles['custom-title']}></div>
-          <CustomRaw label="布局结构">
-            <Radio.Group
-              block
-              style={{
-                height: '28px',
-                width: '100%',
-              }}
-              options={layoutOptions}
-              value={singleNode?.layout}
-              defaultValue="vertical"
-              optionType="button"
-              onChange={(e) => {
-                if (singleNode)
-                  setConfig(singleNode.nodeKey, 'layout', e.target.value)
-              }}
-            />
-          </CustomRaw>
-          {singleNode &&
-          singleNode.type === 'module' &&
-          singleNode.layout === 'horizontal' &&
-          singleNode.children &&
-          singleNode.children?.length > 1 ? (
-            <CustomField
-              title="宽度分配"
-              style={{
-                color: '#999',
-                fontSize: '13px',
-                fontStyle: 'normal',
-                fontWeight: 400,
-                lineHeight: '22px',
-                marginBottom: '8px',
-              }}
-            >
-              <Splitter
+        {singleNode?.type !== 'root' ? (
+          <ModuleLayout title="排列设置">
+            <div className={styles['custom-title']}></div>
+            <CustomRaw label="布局结构">
+              <Radio.Group
+                block
                 style={{
                   height: '28px',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                  width: '100%',
                 }}
-                key={singleNode.children.length}
-                onResizeEnd={(_sizes: any[]) => {
-                  console.log('sizes', _sizes)
-
-                  setSizes(_sizes)
-                  const sum = _sizes.reduce(
-                    (prev, current) => prev + current,
-                    0
-                  )
-                  // 计算各子模块所占比例，并设置到style.width属性中
-                  if (singleNode) {
-                    singleNode.children?.forEach((_, index) => {
-                      changeChildWidth(
-                        singleNode.nodeKey,
-                        index,
-                        Number((_sizes[index] / sum).toFixed(2)) * 100 + '%'
-                      )
-                    })
-                  }
-                }}
-              >
-                {singleNode.children.map((child, index) => (
-                  <Splitter.Panel
-                    key={child.nodeKey}
-                    size={sizes[index]}
-                    min="15%"
-                    max="70%"
-                  >
-                    {`child-${index}`}
-                  </Splitter.Panel>
-                ))}
-              </Splitter>
-            </CustomField>
-          ) : null}
-          {singleNode?.type === 'columns' ? (
-            <CustomRaw label="主轴排列">
-              <Radio.Group
-                style={{ width: '100%' }}
-                block
-                options={columnsOptions}
-                defaultValue={singleNode.style.justifyContent}
+                options={layoutOptions}
+                value={singleNode?.layout}
+                defaultValue="vertical"
                 optionType="button"
-                buttonStyle="solid"
+                onChange={(e) => {
+                  if (singleNode)
+                    setConfig(singleNode.nodeKey, 'layout', e.target.value)
+                }}
               />
             </CustomRaw>
-          ) : null}
-        </ModuleLayout>
-        <ModuleLayout title="样式设置">
-          <CustomRaw label="字体大小">
-            <ConfigProvider
-              theme={{
-                components: {
-                  Select: {
-                    activeBorderColor: '#d9d9d9',
-                    hoverBorderColor: '#d9d9d9',
+            {singleNode &&
+            singleNode.layout === 'horizontal' &&
+            singleNode.children &&
+            singleNode.children?.length > 1 ? (
+              <CustomField
+                title="宽度分配"
+                style={{
+                  color: '#999',
+                  fontSize: '13px',
+                  fontStyle: 'normal',
+                  fontWeight: 400,
+                  lineHeight: '22px',
+                  marginBottom: '8px',
+                }}
+              >
+                <Splitter
+                  style={{
+                    height: '28px',
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                  }}
+                  key={singleNode.children.length}
+                  onResizeEnd={(_sizes: any[]) => {
+                    console.log('sizes', _sizes)
+
+                    setSizes(_sizes)
+                    const sum = _sizes.reduce(
+                      (prev, current) => prev + current,
+                      0
+                    )
+                    // 计算各子模块所占比例，并设置到style.width属性中
+                    if (singleNode) {
+                      singleNode.children?.forEach((_, index) => {
+                        changeChildWidth(
+                          singleNode.nodeKey,
+                          index,
+                          Number((_sizes[index] / sum).toFixed(2)) * 100 + '%'
+                        )
+                      })
+                    }
+                  }}
+                >
+                  {singleNode.children.map((child, index) => (
+                    <Splitter.Panel
+                      key={child.nodeKey}
+                      size={sizes[index]}
+                      min="15%"
+                      max="70%"
+                    >
+                      {`child-${index}`}
+                    </Splitter.Panel>
+                  ))}
+                </Splitter>
+              </CustomField>
+            ) : null}
+            {singleNode?.type === 'columns' ? (
+              <CustomRaw label="主轴排列">
+                <Radio.Group
+                  style={{ width: '100%' }}
+                  block
+                  options={columnsOptions}
+                  defaultValue={singleNode.style.justifyContent}
+                  optionType="button"
+                  buttonStyle="solid"
+                />
+              </CustomRaw>
+            ) : null}
+          </ModuleLayout>
+        ) : null}
+
+        {singleNode?.type !== 'root' ? (
+          <ModuleLayout title="样式设置">
+            <CustomRaw label="字体大小">
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Select: {
+                      activeBorderColor: '#d9d9d9',
+                      hoverBorderColor: '#d9d9d9',
+                    },
                   },
-                },
-              }}
-            >
-              <Select
-                style={{ width: '100%' }}
-                options={[
-                  { value: '13px', label: '13px' },
-                  { value: '14px', label: '14px' },
-                  { value: '15px', label: '15px' },
-                  { value: '16px', label: '16px' },
-                ]}
-                value={singleNode?.style.fontSize}
-                onChange={(newFontSize) => {
+                }}
+              >
+                <Select
+                  style={{ width: '100%' }}
+                  options={[
+                    { value: '13px', label: '13px' },
+                    { value: '14px', label: '14px' },
+                    { value: '15px', label: '15px' },
+                    { value: '16px', label: '16px' },
+                  ]}
+                  value={singleNode?.style.fontSize}
+                  onChange={(newFontSize) => {
+                    if (singleNode)
+                      changeStyle(singleNode.nodeKey, 'fontSize', newFontSize)
+                  }}
+                />
+              </ConfigProvider>
+            </CustomRaw>
+            <CustomRaw label="字体粗细">
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Select: {
+                      activeBorderColor: '#d9d9d9',
+                      hoverBorderColor: '#d9d9d9',
+                    },
+                  },
+                }}
+              >
+                <Select
+                  style={{ width: '100%' }}
+                  options={[
+                    { value: 400, label: 400 },
+                    { value: 500, label: 500 },
+                    { value: 600, label: 600 },
+                    { value: 700, label: 700 },
+                  ]}
+                  value={singleNode?.style.fontWeight}
+                  onChange={(newFontWeight) => {
+                    if (singleNode)
+                      changeStyle(
+                        singleNode.nodeKey,
+                        'fontWeight',
+                        newFontWeight
+                      )
+                  }}
+                />
+              </ConfigProvider>
+            </CustomRaw>
+            <CustomRaw label="字体颜色">
+              <ColorPicker
+                value={singleNode?.style.color}
+                defaultValue="red"
+                onChange={(_, color) => {
                   if (singleNode)
-                    changeStyle(singleNode.nodeKey, 'fontSize', newFontSize)
+                    changeStyle(singleNode.nodeKey, 'color', color)
                 }}
               />
-            </ConfigProvider>
-          </CustomRaw>
-          <CustomRaw label="字体粗细">
-            <ConfigProvider
-              theme={{
-                components: {
-                  Select: {
-                    activeBorderColor: '#d9d9d9',
-                    hoverBorderColor: '#d9d9d9',
-                  },
-                },
-              }}
-            >
-              <Select
-                style={{ width: '100%' }}
-                options={[
-                  { value: 400, label: 400 },
-                  { value: 500, label: 500 },
-                  { value: 600, label: 600 },
-                  { value: 700, label: 700 },
-                ]}
-                value={singleNode?.style.fontWeight}
-                onChange={(newFontWeight) => {
-                  if (singleNode)
-                    changeStyle(singleNode.nodeKey, 'fontWeight', newFontWeight)
-                }}
-              />
-            </ConfigProvider>
-          </CustomRaw>
-          <CustomRaw label="字体颜色">
-            <ColorPicker
-              value={singleNode?.style.color}
-              defaultValue="red"
-              onChange={(_, color) => {
-                if (singleNode) changeStyle(singleNode.nodeKey, 'color', color)
-              }}
-            />
-          </CustomRaw>
-        </ModuleLayout>
+            </CustomRaw>
+          </ModuleLayout>
+        ) : null}
       </div>
     </aside>
   )

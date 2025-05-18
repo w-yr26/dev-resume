@@ -67,8 +67,8 @@ const ProjectExperience = () => {
           handleEdit={handleEdit}
           fieldMap={{
             id: 'id',
-            title: 'name',
-            subTitle: 'position',
+            title: 'title',
+            subTitle: 'role',
             visible: 'visible',
           }}
         ></List>
@@ -92,7 +92,7 @@ const ProjectExperience = () => {
           <div className="flex justify-between items-center gap-[10px]">
             <Form.Item
               label="项目名称"
-              name="name"
+              name="title"
               layout="vertical"
               rules={[{ required: true }]}
               style={{
@@ -103,7 +103,7 @@ const ProjectExperience = () => {
             </Form.Item>
             <Form.Item
               label="项目角色"
-              name="position"
+              name="role"
               layout="vertical"
               rules={[{ required: true }]}
               style={{
@@ -124,7 +124,7 @@ const ProjectExperience = () => {
               <RangePicker />
             </Form.Item>
           </div>
-          <Form.Item label="项目概述" name="overview" layout="vertical">
+          <Form.Item label="项目概述" name="description" layout="vertical">
             <Input.TextArea />
           </Form.Item>
           <Form.Item

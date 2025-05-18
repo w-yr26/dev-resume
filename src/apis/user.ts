@@ -52,5 +52,9 @@ export const getOauthGiteeAPI = (code: string) => {
   return request<LoginResponse>(`/resume/user/gitee/callback?code=${code}`)
 }
 
-// /user/common/uploadOne
-export const postUploadOneAPI = () => {}
+/**
+ * 单文件上传
+ */
+export const postUploadOneAPI = (data: FormData) => {
+  return request<any>('/user/common/uploadOne', 'POST', data)
+}

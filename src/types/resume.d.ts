@@ -27,6 +27,7 @@ export type moduleDataType = {
 export type resumeDetailType = {
   content: Record<allKeyType, moduleDataType>
   resumeId: string
+  templateId: string
   userId: string
 }
 

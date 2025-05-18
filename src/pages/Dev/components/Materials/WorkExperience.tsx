@@ -130,7 +130,7 @@ const WorkExperience = () => {
             </Form.Item>
             <Form.Item
               label="技术栈"
-              name="tecStack"
+              name="techStack"
               layout="vertical"
               style={{
                 flex: 1,
@@ -139,7 +139,7 @@ const WorkExperience = () => {
               <Input />
             </Form.Item>
           </div>
-          <Form.Item label="项目概述" name="overview" layout="vertical">
+          <Form.Item label="项目概述" name="description" layout="vertical">
             <Input.TextArea />
           </Form.Item>
           <Form.Item
@@ -153,9 +153,6 @@ const WorkExperience = () => {
           >
             <MdEditor />
           </Form.Item>
-          {/* <div>
-            <div className={styles['rich-text-field']}>实习产出</div>
-          </div> */}
         </Form>
       </Modal>
     </>

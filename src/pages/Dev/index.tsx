@@ -4,7 +4,7 @@ import Materials from './components/Materials'
 import configStyle from '@/config/templates'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
-import { useDevStore, useStyleStore, useUIStore } from '@/store'
+import { useDevStore, useStyleStore, useUIStore, useUserStore } from '@/store'
 import { pxToMm } from '@/utils'
 import Setting from './components/Setting'
 import BottomBar from './components/BottomBar'
@@ -12,7 +12,7 @@ import Render from '../Render'
 import StyleEditor from './components/StyleEditor'
 import type { drawerMethods, ButtonPanelPosition } from '@/types/materials'
 import { useExportPDF } from '@/hooks/useExportPDF'
-import { Spin } from 'antd'
+import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
@@ -21,9 +21,11 @@ import { useParams } from 'react-router-dom'
 import { templateListType } from '@/types/ui'
 
 const Dev = () => {
+  const userId = useUserStore((state) => state.info.id)
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
   const setDataSource = useDevStore((state) => state.setDataSource)
   const setResumeId = useDevStore((state) => state.setResumeId)
+  const setTemplateId = useDevStore((state) => state.setTemplateId)
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPagePadding = useStyleStore((state) => state.setPagePadding)
@@ -44,6 +46,7 @@ const Dev = () => {
 
   const pageWidth = 794
   const pageHeight = 1120
+  const [loading, setLoading] = useState<boolean>(false)
   const [dragging, setDragging] = useState(false)
   const [wheel, setWheel] = useState(0.7)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
@@ -60,19 +63,114 @@ const Dev = () => {
   useEffect(() => {
     const getDetail = async () => {
       if (params.randomId) {
-        const [{ data }, { data: temList }] = await Promise.all([
+        setLoading(true)
+        const [
+          { data },
+          {
+            data: { templateList },
+          },
+        ] = await Promise.all([
           getResumeDetailsAPI(params.randomId),
-          getTemplatesAPI(),
+          getTemplatesAPI(userId),
         ])
-        console.log('temList', temList)
-        setTemList(temList)
+
+        // console.log('temList', temList)
+        setTemList(templateList)
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
+        setTemplateId(data.templateId)
+        const { code, temSchema } = await fetchUISchema(
+          data.templateId,
+          templateList
+        )
+        if (code) {
+          setUiSchema(temSchema)
+          // const res = await fetch('/test.json')
+          // const uiSchemaRes = await res.json()
+          // setUiSchema(uiSchemaRes)
+          await initGlobalStyle(temSchema)
+        } else {
+          return message.error('未找到对应的模板')
+        }
+        setLoading(false)
       }
     }
     setResumeId(params.randomId || 'unknow-randonId')
     getDetail()
   }, [])
+
+  // 适配对于的uiSchema
+  const fetchUISchema = (
+    templateId: string,
+    temList: templateListType[]
+  ): Promise<{
+    code: 0 | 1
+    temSchema: any | null
+  }> => {
+    return new Promise((resolve, reject) => {
+      const temSchema = temList.find((tem) => tem.id === templateId)
+      if (temSchema)
+        resolve({
+          code: 1,
+          temSchema: temSchema.style_config,
+        })
+      else
+        reject({
+          code: 0,
+          temSchema: null,
+        })
+    })
+  }
+
+  // useEffect(() => {
+  //   const getUiSchema = async () => {
+  //     try {
+  //       setLoading(true)
+  //       const res = await fetch('/custom.json')
+  //       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
+  //       const uiSchemaRes = await res.json()
+  //       console.log('uiSchemaRes', uiSchemaRes)
+
+  //       setUiSchema(uiSchemaRes)
+
+  //       await initGlobalStyle(uiSchemaRes)
+  //     } catch (error) {
+  //       console.log('err', error)
+  //       setUiSchema(null)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   getUiSchema()
+  // }, [])
+
+  const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
+    return new Promise((resolve) => {
+      const {
+        configStyle: {
+          pagePadding,
+          modulePadding,
+          lineHeight,
+          fontSize,
+          fontColor,
+          bgColor,
+          mainColor,
+          borderStyle,
+          sidebarProportions,
+        },
+      } = uiSchemaRes
+      setPagePadding(pagePadding)
+      setModulePadding(modulePadding)
+      setLineHeight(lineHeight)
+      setFontSize(fontSize)
+      setFontColor(fontColor)
+      setBgColor(bgColor)
+      setMainColor(mainColor)
+      setBorderStyle(borderStyle)
+      setSidebarProportions(sidebarProportions)
+      resolve('success')
+    })
+  }
 
   const upWheel = () => {
     if (wheel >= 1) return
@@ -140,57 +238,6 @@ const Dev = () => {
       window.removeEventListener('mouseup', endDrag)
     }
   }, [dragging])
-
-  const [loading, setLoading] = useState<boolean>(false)
-  useEffect(() => {
-    const getUiSchema = async () => {
-      try {
-        setLoading(true)
-        const res = await fetch('/custom.json')
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
-        const uiSchemaRes = await res.json()
-        console.log('uiSchemaRes', uiSchemaRes)
-
-        setUiSchema(uiSchemaRes)
-
-        await initGlobalStyle(uiSchemaRes)
-      } catch (error) {
-        console.log('err', error)
-        setUiSchema(null)
-      } finally {
-        setLoading(false)
-      }
-    }
-    getUiSchema()
-  }, [])
-
-  const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
-    return new Promise((resolve) => {
-      const {
-        configStyle: {
-          pagePadding,
-          modulePadding,
-          lineHeight,
-          fontSize,
-          fontColor,
-          bgColor,
-          mainColor,
-          borderStyle,
-          sidebarProportions,
-        },
-      } = uiSchemaRes
-      setPagePadding(pagePadding)
-      setModulePadding(modulePadding)
-      setLineHeight(lineHeight)
-      setFontSize(fontSize)
-      setFontColor(fontColor)
-      setBgColor(bgColor)
-      setMainColor(mainColor)
-      setBorderStyle(borderStyle)
-      setSidebarProportions(sidebarProportions)
-      resolve('success')
-    })
-  }
 
   // 滚动至具体位置
   const handleScroll = (position: number) => {

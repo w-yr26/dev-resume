@@ -9,9 +9,10 @@ import { useEffect, useRef } from 'react'
 import MdEditor from '@/components/MdEditor'
 
 const Heart = () => {
-  const { info: heartInfo, label } = useDevStore(
-    (state) => state.devSchema.dataSource.HEART_LIST
-  )
+  const {
+    info: [heartInfo],
+    label,
+  } = useDevStore((state) => state.devSchema.dataSource.HEART_LIST)
   const immerRichInfo = useDevStore((state) => state.immerRichInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('SKILL_LIST')
@@ -36,7 +37,7 @@ const Heart = () => {
         <CtxMenu currentKey="HEART_LIST" renameLabel={() => setIsEdit(true)} />
       </Header>
       <MdEditor
-        value={heartInfo}
+        value={heartInfo?.interest}
         onChange={(val: string) => immerRichInfo(val, 'HEART_LIST')}
       />
     </CustomLayout>
