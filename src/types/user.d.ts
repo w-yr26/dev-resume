@@ -1,6 +1,6 @@
 export type infoType = {
   token: string
-  user_name: string
+  userName: string
   email: string
   id: string
 }

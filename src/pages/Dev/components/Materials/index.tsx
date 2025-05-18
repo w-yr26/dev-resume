@@ -10,13 +10,13 @@ import styles from './index.module.scss'
 const Materials = forwardRef<
   HTMLDivElement,
   {
-    isLeftExpand: boolean
+    isLeftUnExpand: boolean
   }
->(({ isLeftExpand }, ref) => {
+>(({ isLeftUnExpand }, ref) => {
   return (
     <div
       className={`${styles['materials-contaienr']} ${
-        isLeftExpand && styles['active-translate']
+        isLeftUnExpand && styles['active-translate']
       }`}
       ref={ref}
     >

@@ -3,11 +3,11 @@ import styles from './index.module.scss'
 import { useDevStore } from '@/store'
 
 const labelMap = {
-  user_name: '姓名',
+  userName: '姓名',
   position: '职位',
   phone: '手机',
   email: '邮箱',
-  blob: '个人博客',
+  tblob: '个人博客',
   gender: '性别',
   age: '年龄',
 }

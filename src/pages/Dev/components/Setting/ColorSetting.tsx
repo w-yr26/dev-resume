@@ -94,7 +94,6 @@ const ColorSetting = () => {
           <Select
             value={borderStyle}
             onChange={(val) => {
-              console.log('val', val)
               setBorderStyle(val)
             }}
             style={{ width: '100%', margin: '12px 0' }}

@@ -4,13 +4,13 @@ import Icon from '@ant-design/icons'
 import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
-import RichInput from './components/RichInput'
 import List from './components/List'
 import { useEffect, useRef } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
+import MdEditor from '@/components/MdEditor'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
@@ -59,6 +59,7 @@ const ProjectExperience = () => {
         <AddBtn handleAdd={handleOpen} />
       ) : (
         <List
+          type="PROJECT_EXP"
           data={storeProjectList}
           handleAdd={handleOpen}
           handleVisible={handleVisible}
@@ -66,8 +67,8 @@ const ProjectExperience = () => {
           handleEdit={handleEdit}
           fieldMap={{
             id: 'id',
-            title: 'name',
-            subTitle: 'position',
+            title: 'title',
+            subTitle: 'role',
             visible: 'visible',
           }}
         ></List>
@@ -91,7 +92,7 @@ const ProjectExperience = () => {
           <div className="flex justify-between items-center gap-[10px]">
             <Form.Item
               label="项目名称"
-              name="name"
+              name="title"
               layout="vertical"
               rules={[{ required: true }]}
               style={{
@@ -102,7 +103,7 @@ const ProjectExperience = () => {
             </Form.Item>
             <Form.Item
               label="项目角色"
-              name="position"
+              name="role"
               layout="vertical"
               rules={[{ required: true }]}
               style={{
@@ -123,7 +124,7 @@ const ProjectExperience = () => {
               <RangePicker />
             </Form.Item>
           </div>
-          <Form.Item label="项目概述" name="overview" layout="vertical">
+          <Form.Item label="项目概述" name="description" layout="vertical">
             <Input.TextArea />
           </Form.Item>
           <Form.Item
@@ -135,7 +136,7 @@ const ProjectExperience = () => {
             rules={[{ required: true, message: '请输入产出内容' }]}
             layout="vertical"
           >
-            <RichInput />
+            <MdEditor />
           </Form.Item>
         </Form>
       </Modal>

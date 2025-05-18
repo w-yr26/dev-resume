@@ -53,19 +53,18 @@ const iconMenu = [
 
 const LeftMenu = ({
   iconClick,
-  isLeftExpand,
-  setIsLeftExpand,
+  isLeftUnExpand,
+  setisLeftUnExpand,
 }: {
   iconClick: (position: number) => void
-  isLeftExpand: boolean
-  setIsLeftExpand: (isExpand: boolean) => void
+  isLeftUnExpand: boolean
+  setisLeftUnExpand: (isExpand: boolean) => void
 }) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
   const handleClick = (key: optionalCom | 'ADD_MORE') => {
     if (key === 'ADD_MORE') {
       console.log('add')
     } else {
-      console.log(keyToPosition[key])
       iconClick(keyToPosition[key] || 0)
     }
   }
@@ -74,9 +73,9 @@ const LeftMenu = ({
     <div className={styles['left-container']}>
       <div
         className={styles['theme-box']}
-        onClick={() => setIsLeftExpand(!isLeftExpand)}
+        onClick={() => setisLeftUnExpand(!isLeftUnExpand)}
       >
-        {isLeftExpand ? (
+        {isLeftUnExpand ? (
           <Icon component={extendSVG} />
         ) : (
           <Icon component={shrinkSVG} />

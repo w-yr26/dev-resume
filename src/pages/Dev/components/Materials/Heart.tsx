@@ -2,16 +2,17 @@ import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
 import Icon from '@ant-design/icons'
 import HeartSVG from '@/assets/svg/dev/heart.svg?react'
-import RichInput from './components/RichInput'
 import { useDevStore, useGlobalStore } from '@/store'
 import CtxMenu from './components/CtxMenu'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useEffect, useRef } from 'react'
+import MdEditor from '@/components/MdEditor'
 
 const Heart = () => {
-  const { info: heartInfo, label } = useDevStore(
-    (state) => state.devSchema.dataSource.HEART_LIST
-  )
+  const {
+    info: [heartInfo],
+    label,
+  } = useDevStore((state) => state.devSchema.dataSource.HEART_LIST)
   const immerRichInfo = useDevStore((state) => state.immerRichInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('SKILL_LIST')
@@ -33,15 +34,12 @@ const Heart = () => {
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu
-          currentKey="HEART_LIST"
-          renameLabel={() => setIsEdit(true)}
-        ></CtxMenu>
+        <CtxMenu currentKey="HEART_LIST" renameLabel={() => setIsEdit(true)} />
       </Header>
-      <RichInput
-        value={heartInfo}
+      <MdEditor
+        value={heartInfo?.interest}
         onChange={(val: string) => immerRichInfo(val, 'HEART_LIST')}
-      ></RichInput>
+      />
     </CustomLayout>
   )
 }

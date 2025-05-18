@@ -32,11 +32,11 @@ export type AddItemType = {
 
 export type BaseInfoType = {
   avatar: string
-  user_name: string
+  userName: string
   position: string
   phone: string
   email: string
-  blob: string
+  tblob: string | null
   gender: 0 | 1
   age: number | undefined
   visible: boolean
@@ -54,18 +54,19 @@ export type WorkExpItemType = {
   company: string
   position: string
   date: [Dayjs, Dayjs]
-  overview: string
+  description: string
   output: string
-  tecStack: string
+  techStack: string
   id: string
   visible: boolean
 }
 
 export type PeojectExpItemType = Pick<
   WorkExpItemType,
-  'id' | 'date' | 'position' | 'overview' | 'output' | 'visible'
+  'id' | 'date' | 'description' | 'output' | 'visible'
 > & {
-  name: string
+  title: string
+  role: string
 }
 
 export type AwardItemType = {
@@ -77,11 +78,23 @@ export type AwardItemType = {
 }
 
 export type SkillType = {
-  skill: string
+  content: string
+  id: string
+  visible: boolean
 }
 
 export type HeartType = {
-  heart: string
+  interest: string
+  id: string
+  visible: boolean
+}
+
+export type AwardType = {
+  title: string
+  description: string
+  date: string
+  id: string
+  visible: boolean
 }
 
 export type optionalCom =
@@ -131,18 +144,17 @@ export type devInitType = {
       label?: string
     }
     SKILL_LIST: {
-      info: string
+      info: SkillType[]
       visible: boolean
       label?: string
     }
     HEART_LIST: {
-      info: string
+      info: HeartType[]
       visible: boolean
       label?: string
     }
   }
   componentList: optionalCom[]
-  curTemplate: string // 当前使用的简历模板id
 }
 
 // 这个Map存放info为数组的字段
@@ -162,6 +174,11 @@ export type InfoStrTypeMap = {
 
 export type devState = {
   devSchema: devInitType
+  resumeId: string // 当前简历的random_id
+  templateId: string // 模板id
+  setResumeId: (id: string) => void
+  setTemplateId: (id: string) => void
+  setDataSource: (dataSource: any) => void
   immerBaseInfo: (newVal: string, key: string) => void
   immerRichInfo: (newVal: string, key: keyof InfoStrTypeMap) => void
   immerVisible: (id: string, key: keyType) => void
