@@ -7,8 +7,12 @@ import {
 } from '@ant-design/icons'
 import { Button, Popover } from 'antd'
 import styles from './index.module.scss'
+import { delModuleSingleInfoAPI } from '@/apis/resume'
+import { useDevStore } from '@/store'
+import { keyType } from '@/types/dev'
 
 type ListProps<T> = {
+  type?: keyType
   data: T[]
   fieldMap: {
     id: keyof T
@@ -30,6 +34,21 @@ const List = <T,>({
   handleDel,
   handleEdit,
 }: ListProps<T>) => {
+  const resumeId = useDevStore((state) => state.resumeId)
+  const delSingleInfo = async (item: T) => {
+    const singleInfoId = item[fieldMap.id] as string
+    // 调用API删除数据库记录
+    const { code } = await delModuleSingleInfoAPI(
+      singleInfoId,
+      resumeId,
+      'WORK_EXP'
+    )
+    // 数据库正确删除了，才能删store的
+    if (code === 1)
+      // store删除
+      handleDel(singleInfoId)
+  }
+
   const content = (item: T) => (
     <div className={styles['menu-list']}>
       <div
@@ -52,7 +71,7 @@ const List = <T,>({
       </div>
       <div
         className={`${styles['menu-item']} ${styles['menu-item-del']}`}
-        onClick={() => handleDel(item[fieldMap.id] as string)}
+        onClick={() => delSingleInfo(item)}
       >
         <div className={styles['menu-icon-box']}>
           <DeleteOutlined color="#c83c2d" />

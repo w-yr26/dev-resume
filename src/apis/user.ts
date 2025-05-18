@@ -7,10 +7,9 @@ export const loginAPI = (data: loginInfoType) => {
 
 // 和密码相关password.ts
 export const getVerificationCodeAPI = (email: string) => {
-  return request(
-    `/resume/user/sendCode?email=${encodeURIComponent(email)}`,
-    'POST'
-  )
+  return request<null>(`/resume/user/sendCode`, 'POST', {
+    email,
+  })
 }
 
 export const postNewPwdAPI = (data: {
@@ -20,3 +19,38 @@ export const postNewPwdAPI = (data: {
 }) => {
   return request<null>('/resume/user/forgot-password', 'POST', data)
 }
+
+/**
+ * 获取邮箱验证码
+ * @param email
+ * @returns
+ */
+export const postRegisterCodeAPI = (email: string) => {
+  return request<null>(`/resume/user/RegisterCode?email=${email}`, 'POST')
+}
+
+/**
+ * 用户注册
+ * @param data
+ * @returns
+ */
+export const postRegisterAPI = (data: {
+  avatar?: string
+  email: string
+  password: string
+  username: string
+  verificationCode: string
+}) => {
+  return request<any>('/resume/user/register', 'POST', data)
+}
+
+/**
+ * Gitee三方登录
+ * @param code gitee授权的code
+ */
+export const getOauthGiteeAPI = (code: string) => {
+  return request<LoginResponse>(`/resume/user/gitee/callback?code=${code}`)
+}
+
+// /user/common/uploadOne
+export const postUploadOneAPI = () => {}

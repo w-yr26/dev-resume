@@ -3,6 +3,9 @@ import { Dayjs, isDayjs } from 'dayjs'
 import styled from './index.module.scss'
 import { useStyleStore, useUIStore } from '@/store'
 import { nodeType } from '@/types/ui'
+import { tokenizer } from '@/components/MdEditor/utils/tokens'
+import { buildAST } from '@/components/MdEditor/utils/ast'
+import { renderAST } from '@/components/MdEditor/utils/render'
 // import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
@@ -39,6 +42,7 @@ const Render = memo((props: RenderProps) => {
   let mergedStyle: React.CSSProperties = {
     display:
       type === 'container' ||
+      type === 'columns' ||
       type === 'root' ||
       type === 'module' ||
       type === 'section'
@@ -87,7 +91,7 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
-  if (type === 'container' || type === 'module') {
+  if (type === 'container' || type === 'columns' || type === 'module') {
     // 如果当前是模块，style.padding还要考虑联动
     if (type === 'module') {
       mergedStyle = {
@@ -99,6 +103,7 @@ const Render = memo((props: RenderProps) => {
 
     // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
     const data = dataContext[bind] || { ...dataContext }
+
     return (
       <div
         className="block-box"
@@ -137,6 +142,7 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
+  // 此处对应模块标题/或者是行内单项值
   if (type === 'text') {
     let data = dataContext[bind]
     if (!data) {
@@ -157,24 +163,30 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
-  if (type === 'html') {
+  if (type === 'md') {
     const data = dataContext[bind] ?? '占位信息...'
     mergedStyle = {
       ...mergedStyle,
       listStylePosition: 'inside',
     }
 
+    const tokens = tokenizer.tokenize(data)
+    const ast = buildAST(tokens)
+    const mdStr = renderAST(ast)
+    if (!mdStr) return null
+
     return (
       <div
         style={mergedStyle}
         dangerouslySetInnerHTML={{
-          __html: data,
+          __html: mdStr,
         }}
         data-node-key={node.nodeKey}
       />
     )
   }
 
+  // 此处的label对应的是单项的标题，而非模块标题
   if (type === 'label') {
     return <div style={mergedStyle}>{label}</div>
   }

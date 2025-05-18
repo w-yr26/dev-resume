@@ -17,7 +17,7 @@ export type sideBarType = {
 
 export type chatItem = {
   id: string | number
-  user_name: string
+  userName: string
   date: string
   avatar: string
   chat_content: string

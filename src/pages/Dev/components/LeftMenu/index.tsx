@@ -65,7 +65,6 @@ const LeftMenu = ({
     if (key === 'ADD_MORE') {
       console.log('add')
     } else {
-      console.log(keyToPosition[key])
       iconClick(keyToPosition[key] || 0)
     }
   }

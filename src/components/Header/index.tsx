@@ -36,7 +36,7 @@ const Header = (props: HeaderType) => {
             className={styles['rename-input']}
           />
         ) : (
-          <span className={styles['label']}>{label}</span>
+          <div className={styles['label']}>{label}</div>
         )}
       </div>
       {opMenu && children}

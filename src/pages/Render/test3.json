@@ -58,7 +58,7 @@
                     },
                     {
                       "type": "text",
-                      "bind": "user_name"
+                      "bind": "userName"
                     }
                   ]
                 },

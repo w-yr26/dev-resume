@@ -1,0 +1,351 @@
+{
+  "type": "root",
+  "isNestedAgain": true,
+  "layout": "vertical",
+  "style": {},
+  "configStyle": {
+    "pagePadding": 14,
+    "modulePadding": 8,
+    "lineHeight": 1.5,
+    "fontSize": 14,
+    "mainColor": "rgb(71, 85, 105)",
+    "fontColor": "rgb(10, 10, 10)",
+    "bgColor": "rgb(255, 255, 255)",
+    "borderStyle": "solid"
+  },
+  "bind": "root",
+  "tag": "",
+  "nodeKey": "root~7acb2cb5-dc95-4656-8a81-62a02398cadf",
+  "children": [
+    {
+      "type": "module",
+      "isNestedAgain": true,
+      "layout": "horizontal",
+      "style": {},
+      "bind": "EDU_BG",
+      "tag": "",
+      "nodeKey": "module1~8505943a-e961-44bb-ab00-6e868cf31721",
+      "children": [
+        {
+          "type": "text",
+          "isNestedAgain": false,
+          "layout": "vertical",
+          "style": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#333",
+            "width": "30%"
+          },
+          "bind": "label",
+          "tag": "",
+          "nodeKey": "90f6db88-32e1-41ab-b173-bf1af4cb44480"
+        },
+        {
+          "type": "section",
+          "isNestedAgain": true,
+          "layout": "vertical",
+          "style": {
+            "padding": 0,
+            "width": "70%"
+          },
+          "bind": "info",
+          "tag": "",
+          "nodeKey": "81ef1374-fb8c-4da8-bc52-319a18c46f581",
+          "children": [
+            {
+              "type": "columns",
+              "isNestedAgain": false,
+              "layout": "horizontal",
+              "style": {
+                "justifyContent": "space-between"
+              },
+              "bind": "",
+              "tag": "",
+              "nodeKey": "5b3bd8be-6fb4-4b3d-9df6-86d2eb1de0330",
+              "children": [
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "bg",
+                  "tag": "",
+                  "nodeKey": "f8b1f019-78a6-4597-9ca8-e53be4c6b566"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "school",
+                  "tag": "",
+                  "nodeKey": "0fbc588b-8590-48dc-945a-5a63da50975c"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "date",
+                  "tag": "",
+                  "nodeKey": "4382da30-cfba-428b-9b99-ee49248c52e5"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "module",
+      "isNestedAgain": true,
+      "layout": "horizontal",
+      "style": {},
+      "bind": "WORK_EXP",
+      "tag": "",
+      "nodeKey": "ecee690a-4acf-41e4-a388-a93b637fc5b21",
+      "children": [
+        {
+          "type": "text",
+          "isNestedAgain": false,
+          "layout": "vertical",
+          "style": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#333",
+            "width": "30%"
+          },
+          "bind": "label",
+          "tag": "",
+          "nodeKey": "7de3405d-4ddb-4ef4-859a-caa3025923a10"
+        },
+        {
+          "type": "section",
+          "isNestedAgain": true,
+          "layout": "vertical",
+          "style": {
+            "padding": 0,
+            "width": "70%"
+          },
+          "bind": "info",
+          "tag": "",
+          "nodeKey": "6b6d1ba8-de2f-4c93-9e83-c2ca6c16d5941",
+          "children": [
+            {
+              "type": "columns",
+              "isNestedAgain": false,
+              "layout": "horizontal",
+              "style": {
+                "justifyContent": "space-between"
+              },
+              "bind": "",
+              "tag": "",
+              "nodeKey": "8210100b-db9c-4636-9478-04f1f90113f30",
+              "children": [
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "company",
+                  "tag": "",
+                  "nodeKey": "f57f61bc-d417-4e1e-a077-83e8b9eec2b7"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "position",
+                  "tag": "",
+                  "nodeKey": "0857a2be-ffca-455b-b576-1cdec77cdc75"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "date",
+                  "tag": "",
+                  "nodeKey": "14f794e3-ab49-4614-bcb8-cd314acf2110"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "isNestedAgain": false,
+              "layout": "vertical",
+              "style": {
+                "fontSize": "14px",
+                "fontWeight": 400,
+                "color": "#333"
+              },
+              "bind": "overview",
+              "tag": "",
+              "nodeKey": "64e7da24-dbe6-41ed-8a7d-cd2b2c5e12ac1"
+            },
+            {
+              "type": "md",
+              "isNestedAgain": false,
+              "layout": "vertical",
+              "style": {
+                "padding": 0
+              },
+              "bind": "output",
+              "tag": "",
+              "nodeKey": "524934de-3e54-4715-b139-2ffb1b610abf2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "module",
+      "isNestedAgain": true,
+      "layout": "horizontal",
+      "style": {},
+      "bind": "PROJECT_EXP",
+      "tag": "",
+      "nodeKey": "cd137561-b75e-4469-b955-3be9eee3576a2",
+      "children": [
+        {
+          "type": "text",
+          "isNestedAgain": false,
+          "layout": "vertical",
+          "style": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#333",
+            "width": "30%"
+          },
+          "bind": "label",
+          "tag": "",
+          "nodeKey": "16b2a62d-1642-47d7-bc5b-733988ea08580"
+        },
+        {
+          "type": "section",
+          "isNestedAgain": true,
+          "layout": "vertical",
+          "style": {
+            "padding": 0,
+            "width": "70%"
+          },
+          "bind": "info",
+          "tag": "",
+          "nodeKey": "3d52d61f-515b-4b6c-bf24-2d6c60555a3c1",
+          "children": [
+            {
+              "type": "columns",
+              "isNestedAgain": false,
+              "layout": "horizontal",
+              "style": {
+                "justifyContent": "space-between"
+              },
+              "bind": "",
+              "tag": "",
+              "nodeKey": "8703cfc6-55d9-448e-9c1e-8c907927d6950",
+              "children": [
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "name",
+                  "tag": "",
+                  "nodeKey": "b9b318b6-9651-4219-936c-ac18a09a148a"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "position",
+                  "tag": "",
+                  "nodeKey": "1c69da4f-9ac6-4d0d-9bcc-59d8ec5efe4e"
+                },
+                {
+                  "type": "text",
+                  "isNestedAgain": false,
+                  "layout": "horizontal",
+                  "style": {
+                    "flex": 1,
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "date",
+                  "tag": "",
+                  "nodeKey": "e0989215-7221-44cc-bfa6-a20b9b451d7c"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "isNestedAgain": false,
+              "layout": "vertical",
+              "style": {
+                "fontSize": "14px",
+                "fontWeight": 400,
+                "color": "#333"
+              },
+              "bind": "overview",
+              "tag": "",
+              "nodeKey": "20e84df4-121c-48ab-88c7-120814bd0b871"
+            },
+            {
+              "type": "md",
+              "isNestedAgain": false,
+              "layout": "vertical",
+              "style": {
+                "padding": 0
+              },
+              "bind": "output",
+              "tag": "",
+              "nodeKey": "c6224f31-521a-46e6-beae-3313311320322"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

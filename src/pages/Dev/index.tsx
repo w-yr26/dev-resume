@@ -16,11 +16,16 @@ import { Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
+import { getResumeDetailsAPI, getTemplatesAPI } from '@/apis/resume'
+import { useParams } from 'react-router-dom'
+import { templateListType } from '@/types/ui'
 
 const Dev = () => {
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
-  const setUiSchema = useUIStore((state) => state.setUiSchema)
+  const setDataSource = useDevStore((state) => state.setDataSource)
+  const setResumeId = useDevStore((state) => state.setResumeId)
   const uiSchema = useUIStore((state) => state.uiSchema)
+  const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPagePadding = useStyleStore((state) => state.setPagePadding)
   const setModulePadding = useStyleStore((state) => state.setModulePadding)
   const setLineHeight = useStyleStore((state) => state.setLineHeight)
@@ -46,10 +51,28 @@ const Dev = () => {
   const [lineShow, setLineShow] = useState(false)
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
+  const [temList, setTemList] = useState<templateListType[]>([])
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
+  const params = useParams()
+  useEffect(() => {
+    const getDetail = async () => {
+      if (params.randomId) {
+        const [{ data }, { data: temList }] = await Promise.all([
+          getResumeDetailsAPI(params.randomId),
+          getTemplatesAPI(),
+        ])
+        console.log('temList', temList)
+        setTemList(temList)
+        // const { data } = await getResumeDetailsAPI(params.randomId)
+        setDataSource(data.content)
+      }
+    }
+    setResumeId(params.randomId || 'unknow-randonId')
+    getDetail()
+  }, [])
 
   const upWheel = () => {
     if (wheel >= 1) return
@@ -123,9 +146,11 @@ const Dev = () => {
     const getUiSchema = async () => {
       try {
         setLoading(true)
-        const res = await fetch('/test.json')
+        const res = await fetch('/custom.json')
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
         const uiSchemaRes = await res.json()
+        console.log('uiSchemaRes', uiSchemaRes)
+
         setUiSchema(uiSchemaRes)
 
         await initGlobalStyle(uiSchemaRes)
@@ -290,16 +315,11 @@ const Dev = () => {
   useEffect(() => {
     if (selectedEl) {
       selectedEl.style.backgroundColor = '#fef6d5'
-      // 获取自定义属性 node-key，用于标识当前被评论的简历内容
-      let currentNode = selectedEl
-      let currentNodeKey
-      while (!currentNodeKey) {
-        if (!currentNode.parentElement) break
-        currentNodeKey = currentNode.getAttribute('data-node-key')
-        currentNode = currentNode.parentElement
-      }
+      // 获取自定义属性 node-key，用于标识当前被评论的简历内容\
+      // 项目已替换成自定义md编辑器，生成的每一个标签都已使用uuid生成随机id
+      const currentNodeKey = selectedEl.getAttribute('data-node-key')
       // 记录当前评论节点的id
-      setCurrentNodeKey(currentNodeKey || 'notNodeKey')
+      setCurrentNodeKey(currentNodeKey || 'not_node_key')
       // 记录当前评论节点的内容
       setCurrentText(selectedEl.innerText)
     }
@@ -338,10 +358,6 @@ const Dev = () => {
             ref={resumeRef}
           >
             <div className={styles['preview-content']} ref={mainRef}>
-              {/* {comList.map((item, index) => {
-                const Com = comMap[item]
-                return Com ? <Com key={index}></Com> : null
-              })} */}
               {uiSchema && !loading && top ? (
                 <Render dataContext={dataSource} node={uiSchema} />
               ) : null}
@@ -359,7 +375,7 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <Setting isRightUnExpand={isRightUnExpand} />
+      <Setting isRightUnExpand={isRightUnExpand} temList={temList} />
       <RightMenu
         isRightUnExpand={isRightUnExpand}
         setisRightUnExpand={setisRightUnExpand}

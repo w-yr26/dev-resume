@@ -11,6 +11,7 @@ import CtxMenu from './components/CtxMenu'
 import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
+import { Dayjs } from 'dayjs'
 const { RangePicker } = DatePicker
 
 const EduBg = () => {
@@ -54,27 +55,32 @@ const EduBg = () => {
         >
           <CtxMenu currentKey="EDU_BG" renameLabel={() => setIsEdit(true)} />
         </Header>
-        {eduInfo.map((eduItem) => (
-          <div key={eduItem.id} className={styles['edu-item']}>
-            {eduInfo.length ? (
-              <List
-                data={eduInfo}
-                fieldMap={{
-                  id: 'id',
-                  title: 'school',
-                  subTitle: 'bg',
-                  visible: 'visible',
-                }}
-                handleAdd={handleOpen}
-                handleDel={handleDelItem}
-                handleEdit={handleEdit}
-                handleVisible={handleVisible}
-              />
-            ) : (
-              <AddBtn handleAdd={() => {}} />
-            )}
-          </div>
-        ))}
+        {eduInfo.length === 0 ? (
+          <AddBtn handleAdd={handleOpen} />
+        ) : (
+          eduInfo.map((eduItem) => (
+            <div key={eduItem.id} className={styles['edu-item']}>
+              {eduInfo.length ? (
+                <List
+                  type="EDU_BG"
+                  data={eduInfo}
+                  fieldMap={{
+                    id: 'id',
+                    title: 'school',
+                    subTitle: 'bg',
+                    visible: 'visible',
+                  }}
+                  handleAdd={handleOpen}
+                  handleDel={handleDelItem}
+                  handleEdit={handleEdit}
+                  handleVisible={handleVisible}
+                />
+              ) : (
+                <AddBtn handleAdd={() => {}} />
+              )}
+            </div>
+          ))
+        )}
       </CustomLayout>
       <Modal
         title={infoId ? '编辑条目' : '创建新条目'}

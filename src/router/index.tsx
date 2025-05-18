@@ -9,15 +9,21 @@ import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Dev from '@/pages/Dev'
 import Register from '@/pages/Register'
+import Md from '@/pages/Md'
+import ThirdPart from '@/pages/ThirdPart'
+import Design from '@/pages/Design'
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />}></Route>
     </Route>
-    <Route path="/dev/:id" element={<Dev />}></Route>
+    <Route path="/dev/:randomId" element={<Dev />}></Route>
     <Route path="login" element={<Login />}></Route>
     <Route path="register" element={<Register />}></Route>
+    <Route path="md" element={<Md />}></Route>
+    <Route path="/third/login" element={<ThirdPart />}></Route>
+    <Route path="/design" element={<Design />}></Route>
   </Route>
 )
 

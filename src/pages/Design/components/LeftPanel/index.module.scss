@@ -1,0 +1,55 @@
+/* 左侧物料 */
+.materiel-container {
+  width: 450px;
+  height: 100%;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 20px 10px;
+  border-right: 1px solid #e4e4e7;
+  box-sizing: border-box;
+}
+
+.module-box {
+  margin-bottom: 8px;
+
+  h4 {
+    margin-bottom: 8px;
+  }
+
+  .materiel-list {
+    box-sizing: border-box;
+    padding: 0 4px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+
+    .module-item {
+      width: 100%;
+      aspect-ratio: 1/1;
+      box-sizing: border-box;
+      border: 1px solid #e4e4e7;
+      border-radius: 8px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: #f6f6f7;
+      }
+
+      .top {
+        color: #333;
+        font-weight: 600;
+        // display: flex;
+
+        span {
+          margin-left: 8px;
+        }
+      }
+
+      .footer {
+        font-size: 12px;
+        color: #71717a;
+      }
+    }
+  }
+}

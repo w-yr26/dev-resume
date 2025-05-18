@@ -3,20 +3,32 @@ import DownloadSetting from './DownloadSetting'
 import styles from './index.module.scss'
 import PageSetting from './PageSetting'
 import TypeSetting from './TypeSetting'
+import Templates from './Templates'
+import type { templateListType } from '@/types/ui'
+import { memo } from 'react'
 
-const Setting = ({ isRightUnExpand }: { isRightUnExpand: boolean }) => {
-  return (
-    <div
-      className={`${styles['setting-contaienr']} ${
-        isRightUnExpand && styles['active-translate']
-      }`}
-    >
-      <TypeSetting />
-      <PageSetting />
-      <ColorSetting />
-      <DownloadSetting />
-    </div>
-  )
-}
+const Setting = memo(
+  ({
+    isRightUnExpand,
+    temList,
+  }: {
+    isRightUnExpand: boolean
+    temList: templateListType[]
+  }) => {
+    return (
+      <div
+        className={`${styles['setting-contaienr']} ${
+          isRightUnExpand && styles['active-translate']
+        }`}
+      >
+        <Templates temList={temList} />
+        <TypeSetting />
+        <PageSetting />
+        <ColorSetting />
+        <DownloadSetting />
+      </div>
+    )
+  }
+)
 
 export default Setting

@@ -2,7 +2,6 @@ import Icon from '@ant-design/icons'
 import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
-import RichInput from './components/RichInput'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
 import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
@@ -14,6 +13,7 @@ import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useModalForm } from '@/hooks/useModalForm'
 import type { WorkExpItemType } from '@/types/dev'
 import styles from './index.module.scss'
+import MdEditor from '@/components/MdEditor'
 
 const WorkExperience = () => {
   const storeWorkList = useDevStore(
@@ -55,15 +55,13 @@ const WorkExperience = () => {
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}
         >
-          <CtxMenu
-            currentKey="WORK_EXP"
-            renameLabel={() => setIsEdit(true)}
-          ></CtxMenu>
+          <CtxMenu currentKey="WORK_EXP" renameLabel={() => setIsEdit(true)} />
         </Header>
         {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />
         ) : (
           <List
+            type="WORK_EXP"
             data={storeWorkList}
             handleAdd={handleOpen}
             handleVisible={handleVisible}
@@ -75,7 +73,7 @@ const WorkExperience = () => {
               subTitle: 'position',
               visible: 'visible',
             }}
-          ></List>
+          />
         )}
       </CustomLayout>
       <Modal
@@ -153,7 +151,7 @@ const WorkExperience = () => {
             rules={[{ required: true, message: '请输入产出内容' }]}
             layout="vertical"
           >
-            <RichInput />
+            <MdEditor />
           </Form.Item>
           {/* <div>
             <div className={styles['rich-text-field']}>实习产出</div>

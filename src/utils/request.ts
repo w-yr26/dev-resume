@@ -5,7 +5,7 @@ import { useUserStore } from '@/store'
 
 // 请求实例
 const instance = axios.create({
-  baseURL: 'http://123.207.71.32:8086',
+  baseURL: 'http://5d0cfcb7.r39.cpolar.top',
   timeout: 5000,
 })
 
@@ -35,17 +35,20 @@ instance.interceptors.response.use(
     const { code, msg } = response.data
     const { authorization } = response.headers
     const store = useUserStore.getState()
-    const token = store.info.token
+    // const token = store.info.token
     const updateInfo = store.updateInfo
     // 无token，则存储
-    if (!token) {
-      updateInfo('token', authorization)
-      localStorage.setItem('token', authorization)
-    }
+    // if (!token) {
+    updateInfo('token', authorization)
+    localStorage.setItem('token', authorization)
+    // }
 
     // 业务统一状态码出错
     if (code !== 1) {
       message.error(msg || '请求出错, 请稍后再试')
+      return
+    } else if (code === 1) {
+      if (msg) message.success(msg)
     }
 
     // 数据剥离
