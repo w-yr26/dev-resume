@@ -1,4 +1,3 @@
-import type { Dayjs } from 'dayjs'
 import React from 'react'
 
 // 自定义局部布局
@@ -47,13 +46,13 @@ export type EduBgType = {
   bg: string
   id: string
   visible: boolean
-  date: [Dayjs, Dayjs]
+  date: string
 }
 
 export type WorkExpItemType = {
   company: string
   position: string
-  date: [Dayjs, Dayjs]
+  date: string
   description: string
   output: string
   techStack: string
@@ -72,7 +71,7 @@ export type PeojectExpItemType = Pick<
 export type AwardItemType = {
   id: string
   award: string
-  date: [Dayjs, Dayjs]
+  date: string
   describe: string
   visible: boolean
 }
