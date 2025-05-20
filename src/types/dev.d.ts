@@ -21,6 +21,7 @@ export type CustomIptType = {
   label: string
   value?: any
   onChange?: (val: any) => void
+  onBlur?: (val: any) => void
 }
 
 export type AddItemType = {
@@ -39,6 +40,7 @@ export type BaseInfoType = {
   gender: 0 | 1
   age: number | undefined
   visible: boolean
+  id: string
 }
 
 export type EduBgType = {

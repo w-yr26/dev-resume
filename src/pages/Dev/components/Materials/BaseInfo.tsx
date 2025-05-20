@@ -10,14 +10,17 @@ import React, { useEffect, useRef } from 'react'
 // import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import './custom.scss'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore, useGlobalStore, useUserStore } from '@/store'
 import { postUploadOneAPI } from '@/apis/user'
+import { postModuleInfoAPI } from '@/apis/resume'
 
 const BaseInfo = () => {
   const baseinfoRef = useRef<HTMLDivElement>(null)
   const {
     info: [baseInfo],
   } = useDevStore((state) => state.devSchema.dataSource.BASE_INFO)
+  const userId = useUserStore((state) => state.info.id)
+  const resumeId = useDevStore((state) => state.resumeId)
   const changeBaseInfo = useDevStore((state) => state.immerBaseInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
 
@@ -35,6 +38,21 @@ const BaseInfo = () => {
     changeBaseInfo(e.target.value, key)
   }
 
+  const updateDBInfo = async (
+    e: React.FocusEvent<HTMLInputElement>,
+    key: string
+  ) => {
+    await postModuleInfoAPI({
+      type: 'BASE_INFO',
+      resumeId,
+      userId,
+      content: {
+        id: baseInfo.id,
+        [key]: e.target.value,
+      },
+    })
+  }
+
   const uploadButton = (
     <button
       style={{ border: 0, background: 'none', fontSize: '18px' }}
@@ -47,9 +65,21 @@ const BaseInfo = () => {
   const handleUpload: UploadProps['customRequest'] = async (options) => {
     const file = options.file
     const fd = new FormData()
-    fd.append('image', file)
-    const { data } = await postUploadOneAPI(fd)
-    console.log('data', data)
+    fd.append('file', file)
+    const { data: avatar } = await postUploadOneAPI(fd, userId)
+
+    // 保存数据库
+    await postModuleInfoAPI({
+      type: 'BASE_INFO',
+      resumeId,
+      userId,
+      content: {
+        id: baseInfo.id,
+        avatar,
+      },
+    })
+    // 更新store
+    changeBaseInfo(avatar, 'avatar')
   }
 
   return (
@@ -110,6 +140,9 @@ const BaseInfo = () => {
             onChange={(e) => {
               handleFieldChange(e, 'userName')
             }}
+            onBlur={(e) => {
+              updateDBInfo(e, 'userName')
+            }}
           />
         </div>
         <div
@@ -124,7 +157,10 @@ const BaseInfo = () => {
             onChange={(e) => {
               handleFieldChange(e, 'gender')
             }}
-          ></CustomInput>
+            onBlur={(e) => {
+              updateDBInfo(e, 'gender')
+            }}
+          />
         </div>
         <div
           style={{
@@ -138,7 +174,10 @@ const BaseInfo = () => {
             onChange={(e) => {
               handleFieldChange(e, 'age')
             }}
-          ></CustomInput>
+            onBlur={(e) => {
+              updateDBInfo(e, 'age')
+            }}
+          />
         </div>
       </div>
       <CustomInput
@@ -147,6 +186,9 @@ const BaseInfo = () => {
         value={baseInfo?.position}
         onChange={(e) => {
           handleFieldChange(e, 'position')
+        }}
+        onBlur={(e) => {
+          updateDBInfo(e, 'position')
         }}
       />
       <div className={styles['row-form-item']}>
@@ -162,7 +204,10 @@ const BaseInfo = () => {
             onChange={(e) => {
               handleFieldChange(e, 'phone')
             }}
-          ></CustomInput>
+            onBlur={(e) => {
+              updateDBInfo(e, 'phone')
+            }}
+          />
         </div>
         <div
           style={{
@@ -176,7 +221,10 @@ const BaseInfo = () => {
             onChange={(e) => {
               handleFieldChange(e, 'email')
             }}
-          ></CustomInput>
+            onBlur={(e) => {
+              updateDBInfo(e, 'email')
+            }}
+          />
         </div>
       </div>
 
@@ -186,6 +234,9 @@ const BaseInfo = () => {
         value={baseInfo?.tblob}
         onChange={(e) => {
           handleFieldChange(e, 'tblob')
+        }}
+        onBlur={(e) => {
+          updateDBInfo(e, 'tblob')
         }}
       />
     </CustomLayout>
