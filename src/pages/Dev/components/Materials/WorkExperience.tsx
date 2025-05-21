@@ -18,14 +18,17 @@ import {
 } from 'antd'
 const { RangePicker } = DatePicker
 import { useEffect, useRef, useState } from 'react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore, useGlobalStore, useUserStore } from '@/store'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useModalForm } from '@/hooks/useModalForm'
-import type { WorkExpItemType } from '@/types/dev'
+import type { allKeyType, WorkExpItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import MdEditor from '@/components/MdEditor'
 
 const WorkExperience = () => {
+  const userId = useUserStore((state) => state.info.id)
+  const token = useUserStore((state) => state.info.token)
+  const resumeId = useDevStore((state) => state.resumeId)
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
@@ -56,10 +59,67 @@ const WorkExperience = () => {
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   const [isPolish, setIsPolish] = useState(false)
+  const [respText, setRespText] = useState('')
+  const handleBrush = async (type: string) => {
+    const message = formRef.getFieldValue(type)
+
+    const response = await fetch(
+      'http://7b395403.r39.cpolar.top/resume/AI/stream',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          message,
+          resumeId,
+          userId: Number(userId),
+          type: 'WORK_EXP',
+        }),
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    if (!response.body) return
+    // 获取可读流
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      const chunk = decoder.decode(value)
+      // 解析事件字段(以换行符为分割)
+      const lines = chunk.split('\n')
+
+      for (const line of lines) {
+        if (line.startsWith('data:')) {
+          const cleanData = line
+            .slice(5)
+            .trim()
+            .replace(/^"|"$/g, '')
+            .replace(/\\n/g, '\n')
+          console.log('cleanData', cleanData)
+          await new Promise((resolve) => setTimeout(resolve, 50))
+          setRespText((prev) => prev + cleanData)
+        }
+      }
+    }
+  }
 
   const aiChatModal = () => (
     <div className={styles['ai-chat-modal']}>
-      <div className={styles['chat-content']}></div>
+      <pre
+        className={styles['chat-content']}
+        style={{ whiteSpace: 'pre-wrap' }}
+      >
+        {respText}
+      </pre>
+
       <div className={styles['chat-footer']}>
         <Button
           style={{
@@ -203,7 +263,7 @@ const WorkExperience = () => {
                         height: '30px',
                         boxSizing: 'border-box',
                       }}
-                      onClick={() => setIsPolish(true)}
+                      onClick={() => handleBrush('output')}
                     >
                       AI 润色
                     </Button>

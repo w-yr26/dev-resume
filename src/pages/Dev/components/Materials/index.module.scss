@@ -119,6 +119,7 @@
     box-sizing: border-box;
     height: 240px;
     overflow-y: auto;
+    white-space: pre-wrap !important; /* 保留空格和换行 */
   }
 
   .chat-footer {
