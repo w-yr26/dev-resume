@@ -1,13 +1,23 @@
 import Icon from '@ant-design/icons'
 import WorkSVG from '@/assets/svg/dev/work.svg?react'
+import brushSVG from '@/assets/svg/dev/brush.svg?react'
+import copySVG from '@/assets/svg/copy.svg?react'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
 import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
-import { Form, Input, Modal, DatePicker, Button } from 'antd'
+import {
+  Form,
+  Input,
+  Modal,
+  DatePicker,
+  Button,
+  Popover,
+  ConfigProvider,
+} from 'antd'
 const { RangePicker } = DatePicker
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDevStore, useGlobalStore } from '@/store'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useModalForm } from '@/hooks/useModalForm'
@@ -44,6 +54,33 @@ const WorkExperience = () => {
     handleOpen,
   } = useModalForm<WorkExpItemType>(storeWorkList, 'WORK_EXP')
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
+
+  const [isPolish, setIsPolish] = useState(false)
+
+  const aiChatModal = () => (
+    <div className={styles['ai-chat-modal']}>
+      <div className={styles['chat-content']}></div>
+      <div className={styles['chat-footer']}>
+        <Button
+          style={{
+            height: '30px',
+            boxSizing: 'border-box',
+          }}
+        >
+          应用润色结果
+        </Button>
+      </div>
+    </div>
+  )
+
+  const aiChatTitle = () => (
+    <div className={styles['ai-chat-title']}>
+      <span>润色结果</span>
+      <span>
+        <Icon component={copySVG} />
+      </span>
+    </div>
+  )
 
   return (
     <>
@@ -143,7 +180,37 @@ const WorkExperience = () => {
             <Input.TextArea />
           </Form.Item>
           <Form.Item
-            label="实习产出"
+            label={
+              <div className={styles['form-item-header']}>
+                <span className={styles['item-label']}>实习产出</span>
+                <ConfigProvider
+                  theme={{
+                    components: {
+                      Popover: {
+                        colorBgElevated: '#f0fdf4',
+                      },
+                    },
+                  }}
+                >
+                  <Popover
+                    content={aiChatModal}
+                    title={aiChatTitle}
+                    trigger="click"
+                  >
+                    <Button
+                      icon={<Icon component={brushSVG} />}
+                      style={{
+                        height: '30px',
+                        boxSizing: 'border-box',
+                      }}
+                      onClick={() => setIsPolish(true)}
+                    >
+                      AI 润色
+                    </Button>
+                  </Popover>
+                </ConfigProvider>
+              </div>
+            }
             name="output"
             valuePropName="value"
             trigger="onChange"
