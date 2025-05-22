@@ -2,6 +2,7 @@ import Icon from '@ant-design/icons'
 import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import brushSVG from '@/assets/svg/dev/brush.svg?react'
 import copySVG from '@/assets/svg/copy.svg?react'
+import refreshSVG from '@/assets/svg/dev/refresh.svg?react'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
 import AddBtn from './components/AddBtn'
@@ -15,13 +16,14 @@ import {
   Button,
   Popover,
   ConfigProvider,
+  Spin,
 } from 'antd'
 const { RangePicker } = DatePicker
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDevStore, useGlobalStore, useUserStore } from '@/store'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useModalForm } from '@/hooks/useModalForm'
-import type { allKeyType, WorkExpItemType } from '@/types/dev'
+import type { WorkExpItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import MdEditor from '@/components/MdEditor'
 
@@ -57,12 +59,35 @@ const WorkExperience = () => {
     handleOpen,
   } = useModalForm<WorkExpItemType>(storeWorkList, 'WORK_EXP')
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
-
+  // AI润色准备完毕
+  const [isPending, setIsPending] = useState(true)
+  // 润色中
   const [isPolish, setIsPolish] = useState(false)
   const [respText, setRespText] = useState('')
-  const handleBrush = async (type: string) => {
-    const message = formRef.getFieldValue(type)
+  const brushRef = useRef<HTMLDivElement>(null)
 
+  const aiChatRes = useMemo(
+    () => storeWorkList.find((i) => i.id === infoId)?.aiDescription,
+    [infoId, storeWorkList]
+  )
+
+  useEffect(() => {
+    if (brushRef.current) {
+      brushRef.current.scrollTop = brushRef.current.scrollHeight
+    }
+  }, [respText])
+
+  // 处理流式输出
+  const handleBrush = async (type: string, isRefresh: boolean = false) => {
+    if (aiChatRes && !isRefresh) {
+      setRespText(aiChatRes)
+      setIsPolish(false)
+      return
+    }
+    if (isRefresh) setRespText('')
+    const message = formRef.getFieldValue(type)
+    setIsPolish(true)
+    setIsPending(true)
     const response = await fetch(
       'http://7b395403.r39.cpolar.top/resume/AI/stream',
       {
@@ -79,7 +104,7 @@ const WorkExperience = () => {
         }),
       }
     )
-
+    setIsPending(false)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
@@ -90,45 +115,48 @@ const WorkExperience = () => {
 
     while (true) {
       const { done, value } = await reader.read()
-      if (done) break
 
       const chunk = decoder.decode(value)
       // 解析事件字段(以换行符为分割)
-      const lines = chunk.split('\n')
+      const lines = chunk.split('\n').filter((i) => i)
 
       for (const line of lines) {
-        if (line.startsWith('data:')) {
+        if (line.startsWith('data:') && !line.includes('[DONE]')) {
           const cleanData = line
             .slice(5)
             .trim()
             .replace(/^"|"$/g, '')
             .replace(/\\n/g, '\n')
-          console.log('cleanData', cleanData)
           await new Promise((resolve) => setTimeout(resolve, 50))
           setRespText((prev) => prev + cleanData)
         }
       }
+
+      if (chunk.includes('[DONE]')) break
     }
+    setIsPolish(false)
+  }
+
+  // 处理重新获取AI润色内容
+  const handleRefresh = async (type: string, isRefresh: boolean) => {
+    if (isPolish) return
+    await handleBrush(type, isRefresh)
+  }
+
+  const handleCopy = async () => {
+    if (isPolish) return
+    await navigator.clipboard.writeText(respText)
   }
 
   const aiChatModal = () => (
     <div className={styles['ai-chat-modal']}>
-      <pre
+      {isPending ? <Spin tip="思考中" /> : null}
+      <div
         className={styles['chat-content']}
         style={{ whiteSpace: 'pre-wrap' }}
+        ref={brushRef}
       >
         {respText}
-      </pre>
-
-      <div className={styles['chat-footer']}>
-        <Button
-          style={{
-            height: '30px',
-            boxSizing: 'border-box',
-          }}
-        >
-          应用润色结果
-        </Button>
       </div>
     </div>
   )
@@ -137,7 +165,19 @@ const WorkExperience = () => {
     <div className={styles['ai-chat-title']}>
       <span>润色结果</span>
       <span>
-        <Icon component={copySVG} />
+        {aiChatRes ? (
+          <Icon
+            component={refreshSVG}
+            onClick={() => handleRefresh('output', true)}
+          />
+        ) : null}
+        <Icon
+          component={copySVG}
+          style={{
+            marginLeft: '8px',
+          }}
+          onClick={handleCopy}
+        />
       </span>
     </div>
   )
@@ -247,7 +287,7 @@ const WorkExperience = () => {
                   theme={{
                     components: {
                       Popover: {
-                        colorBgElevated: '#f0fdf4',
+                        // colorBgElevated: '#f0fdf4',
                       },
                     },
                   }}

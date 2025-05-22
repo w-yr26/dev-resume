@@ -60,6 +60,7 @@ export type WorkExpItemType = {
   techStack: string
   id: string
   visible: boolean
+  aiDescription: string
 }
 
 export type PeojectExpItemType = Pick<
