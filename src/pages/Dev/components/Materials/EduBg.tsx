@@ -11,7 +11,7 @@ import CtxMenu from './components/CtxMenu'
 import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
-import { Dayjs } from 'dayjs'
+import type { EduBgType } from '@/types/dev'
 const { RangePicker } = DatePicker
 
 const EduBg = () => {
@@ -30,7 +30,7 @@ const EduBg = () => {
     handleVisible,
     resetState,
     handleOpen,
-  } = useModalForm(eduInfo, 'EDU_BG')
+  } = useModalForm<EduBgType>(eduInfo, 'EDU_BG')
 
   useEffect(() => {
     if (edubgRef.current) {

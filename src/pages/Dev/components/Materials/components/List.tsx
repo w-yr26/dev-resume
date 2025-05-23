@@ -27,6 +27,7 @@ type ListProps<T> = {
 }
 
 const List = <T,>({
+  type,
   data,
   fieldMap,
   handleAdd,
@@ -38,11 +39,7 @@ const List = <T,>({
   const delSingleInfo = async (item: T) => {
     const singleInfoId = item[fieldMap.id] as string
     // 调用API删除数据库记录
-    const { code } = await delModuleSingleInfoAPI(
-      singleInfoId,
-      resumeId,
-      'WORK_EXP'
-    )
+    const { code } = await delModuleSingleInfoAPI(singleInfoId, resumeId, type!)
     // 数据库正确删除了，才能删store的
     if (code === 1)
       // store删除

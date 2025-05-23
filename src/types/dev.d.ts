@@ -1,4 +1,3 @@
-import type { Dayjs } from 'dayjs'
 import React from 'react'
 
 // 自定义局部布局
@@ -22,6 +21,7 @@ export type CustomIptType = {
   label: string
   value?: any
   onChange?: (val: any) => void
+  onBlur?: (val: any) => void
 }
 
 export type AddItemType = {
@@ -40,6 +40,7 @@ export type BaseInfoType = {
   gender: 0 | 1
   age: number | undefined
   visible: boolean
+  id: string
 }
 
 export type EduBgType = {
@@ -47,18 +48,19 @@ export type EduBgType = {
   bg: string
   id: string
   visible: boolean
-  date: [Dayjs, Dayjs]
+  date: string
 }
 
 export type WorkExpItemType = {
   company: string
   position: string
-  date: [Dayjs, Dayjs]
+  date: string
   description: string
   output: string
   techStack: string
   id: string
   visible: boolean
+  aiDescription: string
 }
 
 export type PeojectExpItemType = Pick<
@@ -72,7 +74,7 @@ export type PeojectExpItemType = Pick<
 export type AwardItemType = {
   id: string
   award: string
-  date: [Dayjs, Dayjs]
+  date: string
   describe: string
   visible: boolean
 }

@@ -55,6 +55,10 @@ export const getOauthGiteeAPI = (code: string) => {
 /**
  * 单文件上传
  */
-export const postUploadOneAPI = (data: FormData) => {
-  return request<any>('/user/common/uploadOne', 'POST', data)
+export const postUploadOneAPI = (data: FormData, userId: string) => {
+  return request<string>(
+    `/user/common/uploadAvatar?userId=${userId}`,
+    'POST',
+    data
+  )
 }
