@@ -30,8 +30,9 @@ const DraggableBox = ({
         opacity: isDragging ? 0.5 : 1,
         border: '1px solid #ccc',
         borderRadius: '4px',
-        width: '100px',
+        width: '100%',
         textAlign: 'center',
+        marginBottom: '8px',
       }}
     >
       {children}

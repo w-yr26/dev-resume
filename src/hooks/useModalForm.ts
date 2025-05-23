@@ -2,14 +2,13 @@ import { postModuleInfoAPI } from '@/apis/resume'
 import { useDevStore, useUserStore } from '@/store'
 import type { keyType } from '@/types/dev'
 import { Form } from 'antd'
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 
-export function useModalForm<
-  T extends {
-    id: string
-  }
->(data: T[], key: keyType) {
+export function useModalForm<T extends { id: string; date: string }>(
+  data: T[],
+  key: keyType
+) {
   const resumeId = useDevStore((state) => state.resumeId)
   const { id: userId } = useUserStore((state) => state.info)
   const setVisible = useDevStore((state) => state.immerVisible)
@@ -41,7 +40,10 @@ export function useModalForm<
 
   useEffect(() => {
     if (currentInfo) {
-      formRef.setFieldsValue(currentInfo)
+      formRef.setFieldsValue({
+        ...currentInfo,
+        date: currentInfo.date.split('~').map((item) => dayjs(item)),
+      })
     }
   }, [currentInfo, formRef])
 
@@ -50,7 +52,9 @@ export function useModalForm<
       let content = await formRef.validateFields()
       content = {
         ...content,
-        date: content.date?.map((item: Dayjs) => item.format('YYYY-MM-DD')),
+        date: content.date
+          ?.map((item: Dayjs) => item.format('YYYY-MM-DD'))
+          .join('~'),
       }
       // 先调用接口，执行创建/更新，再写入store，因为存在接口调用失败的情况下，避免store多次写入
       const { code } = await postModuleInfoAPI({
