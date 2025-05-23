@@ -103,9 +103,11 @@ const useDesignStore = create<designStoreType>()(
               if (!targetNode) return
               targetNode[key] = value
               // 如果修改的是字段绑定值，记录当前容器所绑定的字段，用于后续的绑定上下文感知
-              if (key === 'bind') {
-                targetNode.nodeKey += `&${value}`
-              }
+              // if (key === 'bind') {
+              //   targetNode.path = targetNode.path
+              //     ? value
+              //     : targetNode.path + `&${value}`
+              // }
             })
           )
         },

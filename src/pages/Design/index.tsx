@@ -65,12 +65,12 @@ const Design = () => {
     desUISchema: any,
     deep: number
   ) => {
-    const typeAndBind = targetKey.split('?')[1]
-    // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
-    const [type, bind] = typeAndBind.split('&')
-    if (type === 'module' && !bind) {
-      return message.warning('请先标注当前模块类型')
-    }
+    // const typeAndBind = targetKey.split('?')[1]
+    // // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
+    // const [type, bind] = typeAndBind.split('&')
+    // if (type === 'module' && !bind) {
+    //   return message.warning('请先标注当前模块类型')
+    // }
 
     // 获取新增命令
     const command = register.create(

@@ -70,6 +70,7 @@ export type singleNode = {
   style: React.CSSProperties
   configStyle?: any
   children?: singleNode[]
+  path?: string
 }
 
 export type designStoreType = {
