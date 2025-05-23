@@ -37,10 +37,3 @@ export type addModuleType = {
   type: allKeyType
   userId: string
 }
-
-export type addTemplateType = {
-  name?: string
-  styleConfig: string
-  fastPhoto?: string
-  userId: string
-}

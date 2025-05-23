@@ -1,12 +1,10 @@
 import { request } from '@/utils'
 import type {
   addModuleType,
-  addTemplateType,
   resumeDetailType,
   resumeListResp,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
-import { temDataType } from '@/types/ui'
 
 /**
  * 获取简历分页数据
@@ -83,23 +81,4 @@ export const delModuleSingleInfoAPI = (
     `/resume/resume/delete/module?id=${id}&resumeId=${resumeId}&type=${type}`,
     'DELETE'
   )
-}
-
-/**
- * 保存用户自定义模板
- * @param fastPhoto 快照链接
- * @param name 模板名称
- * @param styleConfig uiJsonSchema
- * @param userId 用户ID
- * @returns
- */
-export const postSaveTemplateAPI = (data: addTemplateType) => {
-  return request<any>('/resume/templates/saveTemplate', 'POST', data)
-}
-
-/**
- * 获取所有模板列表
- */
-export const getTemplatesAPI = (userId: string) => {
-  return request<temDataType>(`/resume/templates/getAll/${userId}`)
 }

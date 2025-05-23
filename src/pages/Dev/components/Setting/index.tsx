@@ -24,7 +24,7 @@ const Setting = memo(
         <Templates temList={temList} />
         <TypeSetting />
         <PageSetting />
-        <ColorSetting />
+        {/* <ColorSetting /> */}
         <DownloadSetting />
       </div>
     )

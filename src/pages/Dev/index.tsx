@@ -16,9 +16,10 @@ import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
-import { getResumeDetailsAPI, getTemplatesAPI } from '@/apis/resume'
+import { getResumeDetailsAPI } from '@/apis/resume'
 import { useParams } from 'react-router-dom'
 import { templateListType } from '@/types/ui'
+import { getTemplatesAPI } from '@/apis/template'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
