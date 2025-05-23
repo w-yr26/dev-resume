@@ -9,16 +9,18 @@ import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import styles from './index.module.scss'
 import { v4 as uuidv4 } from 'uuid'
 import type { uiType } from '@/types/ui'
+import { Collapse, ConfigProvider } from 'antd'
+import Item from './Item'
 
 const LeftPanel = () => {
   // 说明：tag字段仅仅是用来描述模块，而不是每个字段都要描述，但是bind就是每个字段都要绑定
   const draggableList = [
     {
       label: '容器组件',
-      menu: [
+      children: [
         {
           svg: normalBoxSVG,
-          title: '模块容器',
+          label: '模块容器',
           sub: '用于定义单个模块',
           // JSON描述信息
           desUISchema: {
@@ -35,7 +37,7 @@ const LeftPanel = () => {
         },
         {
           svg: normalBoxSVG,
-          title: '普通容器',
+          label: '普通容器',
           sub: '用于定义container',
           // JSON描述信息
           desUISchema: {
@@ -54,10 +56,10 @@ const LeftPanel = () => {
     },
     {
       label: '模块组件',
-      menu: [
+      children: [
         {
           svg: textBlockSVG,
-          title: '模块标题',
+          label: '模块标题',
           sub: '用于定义模块标题',
           desUISchema: {
             ableDel: true,
@@ -77,7 +79,7 @@ const LeftPanel = () => {
         },
         {
           svg: arrayBoxSVG,
-          title: '数据容器',
+          label: '数据容器',
           sub: '用于定义模块数据区域',
           desUISchema: {
             ableDel: true,
@@ -97,10 +99,10 @@ const LeftPanel = () => {
     },
     {
       label: '数据视图组件',
-      menu: [
+      children: [
         {
           svg: mdBoxSVG,
-          title: 'md容器',
+          label: 'md容器',
           sub: '用于定义md数据',
           desUISchema: {
             ableDel: true,
@@ -118,7 +120,7 @@ const LeftPanel = () => {
         },
         {
           svg: textBlockSVG,
-          title: '普通文本',
+          label: '普通文本',
           sub: '用于定义文本内容',
           desUISchema: {
             ableDel: true,
@@ -138,7 +140,7 @@ const LeftPanel = () => {
         },
         {
           svg: imageSVG,
-          title: '图片',
+          label: '图片',
           sub: '用于定义图片',
           desUISchema: {
             ableDel: true,
@@ -154,7 +156,7 @@ const LeftPanel = () => {
         },
         {
           svg: threeColumnSVG,
-          title: '三列布局',
+          label: '三列布局',
           sub: '用于定义三列文本',
           desUISchema: {
             ableDel: true,
@@ -220,36 +222,46 @@ const LeftPanel = () => {
     },
   ]
 
+  const collapseItems = draggableList.map((group, index) => ({
+    key: String(index + 1),
+    label: group.label,
+    children: (
+      <div className={styles['draggable-group']}>
+        {group.children.map((item) => (
+          <DraggableBox
+            key={item.desUISchema.nodeKey}
+            id={item.desUISchema.nodeKey}
+            desUISchema={item.desUISchema}
+            nodeType={item.desUISchema.type as uiType}
+          >
+            <Item
+              svg={<Icon component={item.svg} />}
+              label={item.label}
+              sub={item.sub}
+              nodeType={item.desUISchema.type as uiType}
+            />
+          </DraggableBox>
+        ))}
+      </div>
+    ),
+  }))
+
   return (
     <aside className={styles['materiel-container']}>
-      {draggableList.length
-        ? draggableList.map((listItem, index) => (
-            <div className={styles['module-box']} key={index}>
-              <h4>{listItem.label}</h4>
-              <div className={styles['materiel-list']}>
-                {listItem.menu.length
-                  ? listItem.menu.map((item) => (
-                      // 这里的id后续在拖放进target容器时会读取到，应该是使用uuid
-                      <DraggableBox
-                        id={item.desUISchema.nodeKey}
-                        key={item.desUISchema.nodeKey}
-                        desUISchema={item.desUISchema}
-                        nodeType={item.desUISchema.type as uiType}
-                      >
-                        <div className={styles['module-item']}>
-                          <div className={styles['top']}>
-                            <Icon component={item.svg} />
-                            <span>{item.title}</span>
-                          </div>
-                          <div className={styles['footer']}>{item.sub}</div>
-                        </div>
-                      </DraggableBox>
-                    ))
-                  : null}
-              </div>
-            </div>
-          ))
-        : null}
+      {draggableList.length ? (
+        <ConfigProvider
+          theme={{
+            components: {
+              Collapse: {
+                headerBg: '#fff',
+                contentPadding: 8,
+              },
+            },
+          }}
+        >
+          <Collapse defaultActiveKey={['1']} items={collapseItems} />
+        </ConfigProvider>
+      ) : null}
     </aside>
   )
 }
