@@ -37,3 +37,8 @@ export type addModuleType = {
   type: allKeyType
   userId: string
 }
+
+export type updateNameType = {
+  randomId: string
+  title: string
+}

@@ -30,6 +30,7 @@ import {
   delResumeAPI,
   getResumePageAPI,
   postResumeCreateAPI,
+  putUpdateNameAPI,
 } from '@/apis/resume'
 import type { resumeItem } from '@/types/resume'
 import CustomBtn from '@/components/CustomBtn'
@@ -46,6 +47,7 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [resumeTitle, setResumeTitle] = useState('')
   const [slug, setSlug] = useState('')
+  const [selectId, setSelectId] = useState('')
 
   // 获取列表数据
   const getResumeList = useCallback(async () => {
@@ -59,13 +61,23 @@ const Home = () => {
 
   const handleCreateResume = async () => {
     if (!resumeTitle) return message.warning('请输入简历名称')
-    await postResumeCreateAPI({
-      randomId: uuidv4(),
-      userId: userId,
-      title: resumeTitle,
-      slug,
-      template_id: '1',
-    })
+    if (selectId) {
+      // 更新
+      await putUpdateNameAPI({
+        randomId: selectId,
+        title: resumeTitle,
+      })
+    } else {
+      // 创建
+      await postResumeCreateAPI({
+        randomId: uuidv4(),
+        userId: userId,
+        title: resumeTitle,
+        slug,
+        template_id: '1',
+      })
+    }
+
     await getResumeList()
     setIsModalOpen(false)
   }
@@ -85,13 +97,20 @@ const Home = () => {
     await getResumeList()
   }
 
-  const menuContent = (id: string) => (
+  const menuContent = (id: string, title: string) => (
     <div className={styles['menu-list']}>
       <div className={styles['menu-item-box']} onClick={() => handleOpen(id)}>
         <Icon component={openSVG} />
         <span className={styles['item-label']}>打开</span>
       </div>
-      <div className={styles['menu-item-box']}>
+      <div
+        className={styles['menu-item-box']}
+        onClick={() => {
+          setSelectId(id)
+          setResumeTitle(title)
+          setIsModalOpen(true)
+        }}
+      >
         <Icon component={editSVG} />
         <span className={styles['item-label']}>重命名</span>
       </div>
@@ -212,7 +231,7 @@ const Home = () => {
                     key={item.id}
                   >
                     <Popover
-                      content={() => menuContent(item.randomId)}
+                      content={() => menuContent(item.randomId, item.title)}
                       title={null}
                       trigger="click"
                     >
@@ -268,13 +287,15 @@ const Home = () => {
           title={
             <>
               <Icon component={AddSVG} />
-              <span style={{ marginLeft: '8px' }}>创建新条目</span>
+              <span style={{ marginLeft: '8px' }}>
+                {selectId ? '编辑条目' : '创建新条目'}
+              </span>
             </>
           }
           footer={[
             <CustomBtn
               key="create"
-              label="创建"
+              label={selectId ? '更新' : '创建'}
               style={{
                 width: '80px',
               }}
