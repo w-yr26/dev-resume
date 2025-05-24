@@ -1,36 +1,22 @@
 import Icon from '@ant-design/icons'
 import WorkSVG from '@/assets/svg/dev/work.svg?react'
-import brushSVG from '@/assets/svg/dev/brush.svg?react'
-import copySVG from '@/assets/svg/copy.svg?react'
-import refreshSVG from '@/assets/svg/dev/refresh.svg?react'
 import Header from '@/components/Header/index'
 import CustomLayout from '@/components/CustomLayout/index'
 import AddBtn from './components/AddBtn'
 import List from './components/List'
 import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
-import {
-  Form,
-  Input,
-  Modal,
-  DatePicker,
-  Button,
-  Popover,
-  ConfigProvider,
-  Spin,
-} from 'antd'
+import { Form, Input, Modal, DatePicker, Button } from 'antd'
 const { RangePicker } = DatePicker
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useDevStore, useGlobalStore, useUserStore } from '@/store'
+import { useEffect, useRef } from 'react'
+import { useDevStore, useGlobalStore } from '@/store'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useModalForm } from '@/hooks/useModalForm'
 import type { WorkExpItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import MdEditor from '@/components/MdEditor'
+import AIBrush from '@/components/AIBrush'
 
 const WorkExperience = () => {
-  const userId = useUserStore((state) => state.info.id)
-  const token = useUserStore((state) => state.info.token)
-  const resumeId = useDevStore((state) => state.resumeId)
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
   )
@@ -59,128 +45,6 @@ const WorkExperience = () => {
     handleOpen,
   } = useModalForm<WorkExpItemType>(storeWorkList, 'WORK_EXP')
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
-  // AI润色准备完毕
-  const [isPending, setIsPending] = useState(true)
-  // 润色中
-  const [isPolish, setIsPolish] = useState(false)
-  const [respText, setRespText] = useState('')
-  const brushRef = useRef<HTMLDivElement>(null)
-
-  const aiChatRes = useMemo(
-    () => storeWorkList.find((i) => i.id === infoId)?.aiDescription,
-    [infoId, storeWorkList]
-  )
-
-  useEffect(() => {
-    if (brushRef.current) {
-      brushRef.current.scrollTop = brushRef.current.scrollHeight
-    }
-  }, [respText])
-
-  // 处理流式输出
-  const handleBrush = async (type: string, isRefresh: boolean = false) => {
-    if (aiChatRes && !isRefresh) {
-      setRespText(aiChatRes)
-      setIsPolish(false)
-      return
-    }
-    if (isRefresh) setRespText('')
-    const message = formRef.getFieldValue(type)
-    setIsPolish(true)
-    setIsPending(true)
-    const response = await fetch(
-      'http://7b395403.r39.cpolar.top/resume/AI/stream',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          message,
-          resumeId,
-          userId: Number(userId),
-          type: 'WORK_EXP',
-        }),
-      }
-    )
-    setIsPending(false)
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    if (!response.body) return
-    // 获取可读流
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-
-    while (true) {
-      const { done, value } = await reader.read()
-
-      const chunk = decoder.decode(value)
-      // 解析事件字段(以换行符为分割)
-      const lines = chunk.split('\n').filter((i) => i)
-
-      for (const line of lines) {
-        if (line.startsWith('data:') && !line.includes('[DONE]')) {
-          const cleanData = line
-            .slice(5)
-            .trim()
-            .replace(/^"|"$/g, '')
-            .replace(/\\n/g, '\n')
-          await new Promise((resolve) => setTimeout(resolve, 50))
-          setRespText((prev) => prev + cleanData)
-        }
-      }
-
-      if (chunk.includes('[DONE]')) break
-    }
-    setIsPolish(false)
-  }
-
-  // 处理重新获取AI润色内容
-  const handleRefresh = async (type: string, isRefresh: boolean) => {
-    if (isPolish) return
-    await handleBrush(type, isRefresh)
-  }
-
-  const handleCopy = async () => {
-    if (isPolish) return
-    await navigator.clipboard.writeText(respText)
-  }
-
-  const aiChatModal = () => (
-    <div className={styles['ai-chat-modal']}>
-      {isPending ? <Spin tip="思考中" /> : null}
-      <div
-        className={styles['chat-content']}
-        style={{ whiteSpace: 'pre-wrap' }}
-        ref={brushRef}
-      >
-        {respText}
-      </div>
-    </div>
-  )
-
-  const aiChatTitle = () => (
-    <div className={styles['ai-chat-title']}>
-      <span>润色结果</span>
-      <span>
-        {aiChatRes ? (
-          <Icon
-            component={refreshSVG}
-            onClick={() => handleRefresh('output', true)}
-          />
-        ) : null}
-        <Icon
-          component={copySVG}
-          style={{
-            marginLeft: '8px',
-          }}
-          onClick={handleCopy}
-        />
-      </span>
-    </div>
-  )
 
   return (
     <>
@@ -283,32 +147,13 @@ const WorkExperience = () => {
             label={
               <div className={styles['form-item-header']}>
                 <span className={styles['item-label']}>实习产出</span>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Popover: {
-                        // colorBgElevated: '#f0fdf4',
-                      },
-                    },
-                  }}
-                >
-                  <Popover
-                    content={aiChatModal}
-                    title={aiChatTitle}
-                    trigger="click"
-                  >
-                    <Button
-                      icon={<Icon component={brushSVG} />}
-                      style={{
-                        height: '30px',
-                        boxSizing: 'border-box',
-                      }}
-                      onClick={() => handleBrush('output')}
-                    >
-                      AI 润色
-                    </Button>
-                  </Popover>
-                </ConfigProvider>
+                <AIBrush
+                  formRef={formRef}
+                  fieldType="output"
+                  infoId={infoId}
+                  infoList={storeWorkList}
+                  moduleType="WORK_EXP"
+                />
               </div>
             }
             name="output"
