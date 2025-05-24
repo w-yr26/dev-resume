@@ -158,6 +158,9 @@
     height: 200px;
     background-color: #fff;
     box-sizing: border-box;
+    background-size: cover; /* 覆盖整个盒子 */
+    background-position: center; /* 图片居中 */
+    background-repeat: no-repeat; /* 不重复 */
 
     .title-box {
       position: absolute;

@@ -39,6 +39,9 @@ const Templates = ({
             className={`${styles['template-item']} ${
               templateId === item.id ? styles['active-template'] : ''
             }`}
+            style={{
+              backgroundImage: `url(${item.fastPhoto})`,
+            }}
             key={item.id}
             onClick={() => changeTemplate(item.id)}
           >

@@ -57,6 +57,7 @@ export type templateListType = {
   style_config: nodeType
   templateName?: string
   name?: string
+  fastPhoto: string
 }
 
 // ====== 以下与简历模板设计有关 ===
