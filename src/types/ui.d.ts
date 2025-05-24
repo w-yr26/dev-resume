@@ -55,7 +55,8 @@ export type temDataType = {
 export type templateListType = {
   id: string
   style_config: nodeType
-  templateName: string
+  templateName?: string
+  name?: string
 }
 
 // ====== 以下与简历模板设计有关 ===

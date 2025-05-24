@@ -11,9 +11,17 @@ const Setting = memo(
   ({
     isRightUnExpand,
     temList,
+    fetchUISchema,
   }: {
     isRightUnExpand: boolean
     temList: templateListType[]
+    fetchUISchema: (
+      templateId: string,
+      temList: templateListType[]
+    ) => Promise<{
+      code: 0 | 1
+      temSchema: any | null
+    }>
   }) => {
     return (
       <div
@@ -21,7 +29,7 @@ const Setting = memo(
           isRightUnExpand && styles['active-translate']
         }`}
       >
-        <Templates temList={temList} />
+        <Templates temList={temList} fetchUISchema={fetchUISchema} />
         <TypeSetting />
         <PageSetting />
         {/* <ColorSetting /> */}
