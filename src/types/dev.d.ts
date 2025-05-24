@@ -30,6 +30,11 @@ export type AddItemType = {
   id: number
 }
 
+export type AIBrushType = {
+  aiContent?: string
+  aiDescription?: string
+}
+
 export type BaseInfoType = {
   avatar: string
   userName: string
@@ -60,8 +65,7 @@ export type WorkExpItemType = {
   techStack: string
   id: string
   visible: boolean
-  aiDescription: string
-}
+} & AIBrushType
 
 export type PeojectExpItemType = Pick<
   WorkExpItemType,
@@ -69,7 +73,7 @@ export type PeojectExpItemType = Pick<
 > & {
   title: string
   role: string
-}
+} & AIBrushType
 
 export type AwardItemType = {
   id: string
@@ -83,7 +87,7 @@ export type SkillType = {
   content: string
   id: string
   visible: boolean
-}
+} & AIBrushType
 
 export type HeartType = {
   interest: string

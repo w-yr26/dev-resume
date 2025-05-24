@@ -11,6 +11,8 @@ import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
 import MdEditor from '@/components/MdEditor'
+import AIBrush from '@/components/AIBrush'
+import styles from './index.module.scss'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
@@ -128,7 +130,18 @@ const ProjectExperience = () => {
             <Input.TextArea />
           </Form.Item>
           <Form.Item
-            label="实习产出"
+            label={
+              <div className={styles['form-item-header']}>
+                <span className={styles['item-label']}>实习产出</span>
+                <AIBrush
+                  formRef={formRef}
+                  fieldType="output"
+                  infoId={infoId}
+                  infoList={storeProjectList}
+                  moduleType="PROJECT_EXP"
+                />
+              </div>
+            }
             name="output"
             valuePropName="value"
             trigger="onChange"
