@@ -15,8 +15,8 @@ import {
   DatePicker,
   Button,
   Popover,
-  ConfigProvider,
   Spin,
+  Tooltip,
 } from 'antd'
 const { RangePicker } = DatePicker
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -77,10 +77,15 @@ const WorkExperience = () => {
     }
   }, [respText])
 
-  // 处理流式输出
+  /**
+   * 处理流式输出
+   * @param type 当前选择润色的表单项名称
+   * @param isRefresh 是否重新获取润色内容
+   */
   const handleBrush = async (type: string, isRefresh: boolean = false) => {
     if (aiChatRes && !isRefresh) {
       setRespText(aiChatRes)
+      setIsPending(false)
       setIsPolish(false)
       return
     }
@@ -283,32 +288,18 @@ const WorkExperience = () => {
             label={
               <div className={styles['form-item-header']}>
                 <span className={styles['item-label']}>实习产出</span>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Popover: {
-                        // colorBgElevated: '#f0fdf4',
-                      },
-                    },
-                  }}
+                <Popover
+                  content={aiChatModal}
+                  title={aiChatTitle}
+                  trigger="click"
                 >
-                  <Popover
-                    content={aiChatModal}
-                    title={aiChatTitle}
-                    trigger="click"
-                  >
-                    <Button
-                      icon={<Icon component={brushSVG} />}
-                      style={{
-                        height: '30px',
-                        boxSizing: 'border-box',
-                      }}
+                  <Tooltip title="AI 润色">
+                    <Icon
+                      component={brushSVG}
                       onClick={() => handleBrush('output')}
-                    >
-                      AI 润色
-                    </Button>
-                  </Popover>
-                </ConfigProvider>
+                    />
+                  </Tooltip>
+                </Popover>
               </div>
             }
             name="output"
