@@ -4,9 +4,13 @@ import jsPDF from 'jspdf'
 import type { RGBAData } from 'jspdf'
 import { sleep } from '@/utils'
 
+/**
+ * @param mainRef 待转换为canvas图像的容器
+ * @param setWheel 重置缩放大小函数(有传则重置容器缩放大小)
+ */
 export function useExportPDF(
   mainRef: React.RefObject<HTMLDivElement | null>,
-  setWheel: (wheel: number) => void
+  setWheel?: (wheel: number) => void
 ) {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -44,7 +48,7 @@ export function useExportPDF(
 
   const savePDF = async () => {
     // 页面先重置缩放，且一定要在转换为 canvas 图像之前缩放
-    setWheel(1)
+    if (setWheel) setWheel(1)
     await sleep()
     const {
       base64URL,

@@ -18,5 +18,12 @@ export const getTemplatesAPI = (userId: string) => {
  * @returns
  */
 export const postSaveTemplateAPI = (data: addTemplateType) => {
-  return request<any>('/resume/templates/saveTemplate', 'POST', data)
+  return request<null>('/resume/templates/saveTemplate', 'POST', data)
+}
+
+/**
+ * 简历模板上传
+ */
+export const postTemplatesAPI = (data: FormData) => {
+  return request<string>('/user/common/uploadTemplates', 'POST', data)
 }

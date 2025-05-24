@@ -15,13 +15,15 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React, { useState } from 'react'
-import { Drawer, message, Tag } from 'antd'
+import React, { useRef, useState } from 'react'
+import { Drawer, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 import { commandManager } from './command/commandManager'
 import { register } from './command'
 import NavBar from './components/NavBar'
+import html2canvas from 'html2canvas'
+import { postTemplatesAPI } from '@/apis/template'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -58,6 +60,43 @@ const Design = () => {
   const [nodeDeep, setNodeDeep] = useState(0)
   const [nodeBind, setNodeBind] = useState('root')
   const [isOpened, setIsOpened] = useState(false)
+
+  const designRef = useRef<HTMLDivElement>(null)
+
+  const generateShot = async (fileName: string) => {
+    return new Promise((resolve, reject) => {
+      if (!designRef.current) {
+        reject('无法获取快照')
+        return
+      }
+      html2canvas(designRef.current, {
+        useCORS: true, // 允许图片跨域，后续换掉
+        scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
+      })
+        .then((canvas) => {
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              reject('Blob转换失败')
+              return
+            }
+            const file = new File([blob], fileName, {
+              type: 'image/jpeg',
+            })
+            const fd = new FormData()
+            fd.append('file', file)
+            try {
+              const { data } = await postTemplatesAPI(fd)
+              resolve(data)
+            } catch (_) {
+              reject('快照上传失败')
+            }
+          })
+        })
+        .catch(() => {
+          reject('canvas生成失败')
+        })
+    })
+  }
 
   const handleDrop = (
     nodeKey: string,
@@ -183,11 +222,11 @@ const Design = () => {
     <>
       <DndProvider backend={HTML5Backend}>
         <div className={styles['design-container']}>
-          <NavBar setIsOpened={setIsOpened} />
-
+          <NavBar setIsOpened={setIsOpened} generateShot={generateShot} />
           <div className={styles['design-body']}>
             <LeftPanel />
             <main
+              ref={designRef}
               className={styles['preview-container']}
               onClick={() => setCurrentSelectedKey('')}
             >
