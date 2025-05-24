@@ -1,0 +1,92 @@
+// 头部部分
+.container-top {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+// 底部盒子 新建 导入 对已有简历操作
+.container-bottom {
+  height: calc(100% - 48px);
+  box-sizing: border-box;
+  padding: 12px 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.resume-item {
+  position: relative;
+  width: 230px;
+  height: 330px;
+  padding: 8px;
+  box-sizing: border-box;
+  background: linear-gradient(to bottom, #efeff1, #f6f6f6);
+  margin-right: 24px;
+  // margin-bottom: 24px;
+  gap: 24px;
+  box-shadow: 0px 0px 9px -3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease;
+
+  &:hover {
+    transform: scale(1.05) rotateY(15deg);
+    cursor: pointer;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  .icon-box {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    svg {
+      width: 64px !important;
+      height: 64px !important;
+    }
+  }
+
+  .resume-bottom {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    width: 100%;
+
+    .resume-name {
+      color: #333;
+      line-height: 1.2;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .update-time {
+      color: #4c4c4d;
+      font-size: 10px;
+      line-height: 1.2;
+    }
+  }
+}
+
+.icon-box {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  svg {
+    width: 64px !important;
+    height: 64px !important;
+  }
+}

@@ -3,8 +3,6 @@ import { useUserStore } from '@/store'
 import styles from './index.module.scss'
 // 引入icon图标
 import Icon from '@ant-design/icons'
-import ResumeSvg from '@/assets/svg/resume.svg?react'
-import SettingSVG from '@/assets/svg/setting.svg?react'
 import DownloadSVG from '@/assets/svg/download.svg?react'
 import ListSVG from '@/assets/svg/list.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
@@ -16,7 +14,6 @@ import copySVG from '@/assets/svg/copy.svg?react'
 import deleteSVG from '@/assets/svg/delete.svg?react'
 
 import {
-  Avatar,
   Button,
   ConfigProvider,
   Input,
@@ -38,7 +35,6 @@ import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const navigate = useNavigate()
-  const { userName } = useUserStore((state) => state.info)
   const userId = useUserStore((state) => state.info.id)
 
   const [page] = useState(1)
