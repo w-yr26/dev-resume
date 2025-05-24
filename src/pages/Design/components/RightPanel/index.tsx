@@ -213,6 +213,7 @@ const RightPanel = ({
   const changeChildWidth = useDesignStore((state) => state.changeChildWidth)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
+
   const [sizes, setSizes] = useState<(number | string)[]>(['30%', '70%'])
 
   const layoutOptions: CheckboxGroupProps<string>['options'] = [

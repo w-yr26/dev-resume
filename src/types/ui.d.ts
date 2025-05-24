@@ -55,7 +55,9 @@ export type temDataType = {
 export type templateListType = {
   id: string
   style_config: nodeType
-  templateName: string
+  templateName?: string
+  name?: string
+  fastPhoto: string
 }
 
 // ====== 以下与简历模板设计有关 ===
@@ -70,6 +72,7 @@ export type singleNode = {
   style: React.CSSProperties
   configStyle?: any
   children?: singleNode[]
+  path?: string
 }
 
 export type designStoreType = {

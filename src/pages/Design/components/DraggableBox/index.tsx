@@ -32,7 +32,7 @@ const DraggableBox = ({
         borderRadius: '4px',
         width: '100%',
         textAlign: 'center',
-        marginBottom: '8px',
+        margin: '8px 0',
       }}
     >
       {children}

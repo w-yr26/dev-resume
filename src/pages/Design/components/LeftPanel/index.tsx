@@ -254,7 +254,7 @@ const LeftPanel = () => {
             components: {
               Collapse: {
                 headerBg: '#fff',
-                contentPadding: 8,
+                contentPadding: '0 8px',
               },
             },
           }}

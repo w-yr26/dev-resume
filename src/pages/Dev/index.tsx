@@ -16,9 +16,10 @@ import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
-import { getResumeDetailsAPI, getTemplatesAPI } from '@/apis/resume'
+import { getResumeDetailsAPI } from '@/apis/resume'
 import { useParams } from 'react-router-dom'
 import { templateListType } from '@/types/ui'
+import { getTemplatesAPI } from '@/apis/template'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -67,27 +68,23 @@ const Dev = () => {
         const [
           { data },
           {
-            data: { templateList },
+            data: { templateList, diyTemplateList },
           },
         ] = await Promise.all([
           getResumeDetailsAPI(params.randomId),
           getTemplatesAPI(userId),
         ])
 
-        // console.log('temList', temList)
-        setTemList(templateList)
+        setTemList([...templateList, ...diyTemplateList])
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
         setTemplateId(data.templateId)
-        const { code, temSchema } = await fetchUISchema(
-          data.templateId,
-          templateList
-        )
+        const { code, temSchema } = await fetchUISchema(data.templateId, [
+          ...templateList,
+          ...diyTemplateList,
+        ])
         if (code) {
           setUiSchema(temSchema)
-          // const res = await fetch('/test.json')
-          // const uiSchemaRes = await res.json()
-          // setUiSchema(uiSchemaRes)
           await initGlobalStyle(temSchema)
         } else {
           return message.error('未找到对应的模板')
@@ -99,7 +96,7 @@ const Dev = () => {
     getDetail()
   }, [])
 
-  // 适配对于的uiSchema
+  // 适配对应的uiSchema
   const fetchUISchema = (
     templateId: string,
     temList: templateListType[]
@@ -121,28 +118,6 @@ const Dev = () => {
         })
     })
   }
-
-  // useEffect(() => {
-  //   const getUiSchema = async () => {
-  //     try {
-  //       setLoading(true)
-  //       const res = await fetch('/custom.json')
-  //       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
-  //       const uiSchemaRes = await res.json()
-  //       console.log('uiSchemaRes', uiSchemaRes)
-
-  //       setUiSchema(uiSchemaRes)
-
-  //       await initGlobalStyle(uiSchemaRes)
-  //     } catch (error) {
-  //       console.log('err', error)
-  //       setUiSchema(null)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-  //   getUiSchema()
-  // }, [])
 
   const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
     return new Promise((resolve) => {
@@ -422,7 +397,12 @@ const Dev = () => {
           </div>
         </div>
       </main>
-      <Setting isRightUnExpand={isRightUnExpand} temList={temList} />
+
+      <Setting
+        isRightUnExpand={isRightUnExpand}
+        temList={temList}
+        fetchUISchema={fetchUISchema}
+      />
       <RightMenu
         isRightUnExpand={isRightUnExpand}
         setisRightUnExpand={setisRightUnExpand}
