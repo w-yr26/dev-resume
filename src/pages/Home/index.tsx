@@ -130,138 +130,94 @@ const Home = () => {
 
   return (
     <>
-      <div className={styles['layout-container']}>
-        {/* 左边栏 */}
-        <div className={styles['left-container']}>
-          {/* logo区域 */}
-          <div className={styles['logo-area']} />
+      {/* 头部 */}
+      <div className={styles['container-top']}>
+        <h1>简历</h1>
+        <div>
+          <Button
+            icon={<Icon component={GridSVG} />}
+            style={{
+              marginRight: '8px',
+            }}
+          >
+            网格
+          </Button>
+          <Button icon={<Icon component={ListSVG} />}>列表</Button>
+        </div>
+      </div>
 
-          {/* 左边栏目导航区域 */}
-          <div className={styles['left-nav']}>
-            <ul>
-              <li className={`${styles['left-nav-item']} ${styles['active']}`}>
-                <Icon
-                  component={ResumeSvg}
-                  style={{
-                    rotate: '20deg',
-                  }}
-                />
-                &nbsp;&nbsp; 简历
-              </li>
-              <li className={styles['left-nav-item']}>
-                <Icon
-                  component={SettingSVG}
-                  style={{
-                    rotate: '20deg',
-                  }}
-                />
-                &nbsp;&nbsp; 设置
-              </li>
-            </ul>
+      {/* 底部 */}
+      <div className={styles['container-bottom']}>
+        {/* 新建部分 */}
+        <div
+          className={styles['resume-item']}
+          onClick={() => setIsModalOpen(true)}
+        >
+          <div className={styles['icon-box']}>
+            <Icon component={AddSVG} />
           </div>
 
-          {/* 左边账号栏目 */}
-          <div className={styles['left-bottom']}>
-            <div className={styles['account-box']}>
-              <Avatar size={24}>{userName}</Avatar>
-              <div className={styles['account']}>{userName}</div>
-            </div>
-            <p className={styles['version-box']}>DevResume 1.0.0</p>
+          <div className={styles['resume-bottom']}>
+            <p className={styles['resume-name']}>创建新简历</p>
+            <p className={styles['update-time']}>从头开始构建</p>
           </div>
         </div>
 
-        {/* 右边简历栏目部分 */}
-        <div className={styles['right-container']}>
-          {/* 头部 */}
-          <div className={styles['top']}>
-            <h1>简历</h1>
-            <div>
-              <Button
-                icon={<Icon component={GridSVG} />}
-                style={{
-                  marginRight: '8px',
+        {/* 导入部分 */}
+        <div className={styles['resume-item']}>
+          <div className={styles['icon-box']}>
+            <Icon component={DownloadSVG} className={styles['svg']} />
+          </div>
+
+          <div className={styles['resume-bottom']}>
+            <p className={styles['resume-name']}>导入现有简历</p>
+            <p className={styles['update-time']}>LinkedIn、JSON简历等</p>
+          </div>
+        </div>
+
+        {/* 简历列表 */}
+        {resumeList.length
+          ? resumeList.map((item, index) => (
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Popover: {
+                      boxShadowSecondary: 'none',
+                    },
+                  },
                 }}
+                key={item.id}
               >
-                网格
-              </Button>
-              <Button icon={<Icon component={ListSVG} />}>列表</Button>
-            </div>
-          </div>
-
-          {/* 底部 */}
-          <div className={styles['bottom']}>
-            {/* 新建部分 */}
-            <div
-              className={styles['resume-item']}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <div className={styles['icon-box']}>
-                <Icon component={AddSVG} />
-              </div>
-
-              <div className={styles['resume-bottom']}>
-                <p className={styles['resume-name']}>创建新简历</p>
-                <p className={styles['update-time']}>从头开始构建</p>
-              </div>
-            </div>
-
-            {/* 导入部分 */}
-            <div className={styles['resume-item']}>
-              <div className={styles['icon-box']}>
-                <Icon component={DownloadSVG} className={styles['svg']} />
-              </div>
-
-              <div className={styles['resume-bottom']}>
-                <p className={styles['resume-name']}>导入现有简历</p>
-                <p className={styles['update-time']}>LinkedIn、JSON简历等</p>
-              </div>
-            </div>
-
-            {/* 简历列表 */}
-            {resumeList.length
-              ? resumeList.map((item, index) => (
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Popover: {
-                          boxShadowSecondary: 'none',
-                        },
-                      },
+                <Popover
+                  content={() => menuContent(item.randomId, item.title)}
+                  title={null}
+                  trigger="click"
+                >
+                  <div
+                    className={`${styles['resume-item']} ${styles['animation-item']}`}
+                    style={{
+                      animationDelay: `0.${index + 1}s`,
                     }}
-                    key={item.id}
                   >
-                    <Popover
-                      content={() => menuContent(item.randomId, item.title)}
-                      title={null}
-                      trigger="click"
-                    >
-                      <div
-                        className={`${styles['resume-item']} ${styles['animation-item']}`}
-                        style={{
-                          animationDelay: `0.${index + 1}s`,
-                        }}
-                      >
-                        <div className={styles['resume-bottom']}>
-                          <p className={styles['resume-name']}>{item.title}</p>
-                          <p className={styles['update-time']}>
-                            最后更新于&nbsp;
-                            <span
-                              style={{
-                                color: '#333',
-                              }}
-                            >
-                              {item.updateTime}
-                            </span>
-                            &nbsp;前
-                          </p>
-                        </div>
-                      </div>
-                    </Popover>
-                  </ConfigProvider>
-                ))
-              : null}
-          </div>
-        </div>
+                    <div className={styles['resume-bottom']}>
+                      <p className={styles['resume-name']}>{item.title}</p>
+                      <p className={styles['update-time']}>
+                        最后更新于&nbsp;
+                        <span
+                          style={{
+                            color: '#333',
+                          }}
+                        >
+                          {item.updateTime}
+                        </span>
+                        &nbsp;前
+                      </p>
+                    </div>
+                  </div>
+                </Popover>
+              </ConfigProvider>
+            ))
+          : null}
       </div>
       <ConfigProvider
         theme={{
