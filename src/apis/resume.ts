@@ -3,6 +3,7 @@ import type {
   addModuleType,
   resumeDetailType,
   resumeListResp,
+  updateNameType,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
 
@@ -81,4 +82,11 @@ export const delModuleSingleInfoAPI = (
     `/resume/resume/delete/module?id=${id}&resumeId=${resumeId}&type=${type}`,
     'DELETE'
   )
+}
+
+/**
+ * 更新简历名称
+ */
+export const putUpdateNameAPI = (data: updateNameType) => {
+  return request<null>('/resume/resume/updateName', 'PUT', data)
 }

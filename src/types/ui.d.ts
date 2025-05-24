@@ -58,6 +58,8 @@ export type templateListType = {
   templateName?: string
   name?: string
   fastPhoto: string
+  updateTime: string
+  createTime: string
 }
 
 // ====== 以下与简历模板设计有关 ===
