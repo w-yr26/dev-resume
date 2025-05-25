@@ -26,7 +26,9 @@ export const postNewPwdAPI = (data: {
  * @returns
  */
 export const postRegisterCodeAPI = (email: string) => {
-  return request<null>(`/resume/user/RegisterCode?email=${email}`, 'POST')
+  return request<null>(`/resume/user/RegisterCode`, 'POST', {
+    email,
+  })
 }
 
 /**

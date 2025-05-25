@@ -58,28 +58,29 @@ const EduBg = () => {
         {eduInfo.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />
         ) : (
-          eduInfo.map((eduItem) => (
-            <div key={eduItem.id} className={styles['edu-item']}>
-              {eduInfo.length ? (
-                <List
-                  type="EDU_BG"
-                  data={eduInfo}
-                  fieldMap={{
-                    id: 'id',
-                    title: 'school',
-                    subTitle: 'bg',
-                    visible: 'visible',
-                  }}
-                  handleAdd={handleOpen}
-                  handleDel={handleDelItem}
-                  handleEdit={handleEdit}
-                  handleVisible={handleVisible}
-                />
-              ) : (
-                <AddBtn handleAdd={() => {}} />
-              )}
-            </div>
-          ))
+          // eduInfo.map((eduItem) => (
+          //   <div key={eduItem.id} className={styles['edu-item']}>
+          //     {eduInfo.length ? (
+
+          //     ) : (
+          //       <AddBtn handleAdd={() => {}} />
+          //     )}
+          //   </div>
+          // ))
+          <List
+            type="EDU_BG"
+            data={eduInfo}
+            fieldMap={{
+              id: 'id',
+              title: 'school',
+              subTitle: 'bg',
+              visible: 'visible',
+            }}
+            handleAdd={handleOpen}
+            handleDel={handleDelItem}
+            handleEdit={handleEdit}
+            handleVisible={handleVisible}
+          />
         )}
       </CustomLayout>
       <Modal
