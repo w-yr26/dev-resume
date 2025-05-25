@@ -8,11 +8,12 @@ $light-border-color: #e4e4e7;
 $light-cardBg-color: #ffffff;
 
 .dev-container {
+  position: relative;
   height: 100vh;
   display: flex;
   justify-content: space-between;
   background: $light-bg-color;
-  // overflow: hidden;
+  overflow: hidden;
 
   .main-container {
     flex: 1;

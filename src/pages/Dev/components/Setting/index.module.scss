@@ -1,11 +1,13 @@
 .setting-contaienr {
-  // min-width: 25%;
+  position: absolute;
+  top: 0;
+  right: 48px;
   width: 390px;
   height: 100%;
   padding: 0 14px;
   background-color: #f8f8f9;
   overflow-y: auto;
-  transition: display 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 
   &::-webkit-scrollbar {
     width: 8px; /* 滚动条宽度 */
@@ -27,8 +29,7 @@
 }
 
 .active-translate {
-  // transform: translateX(440px);
-  display: none;
+  transform: translateX(440px);
 }
 
 .custom-line {
