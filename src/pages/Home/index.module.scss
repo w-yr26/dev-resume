@@ -146,30 +146,3 @@
     }
   }
 }
-
-.menu-list {
-  width: 120px;
-
-  .menu-item-box {
-    display: flex;
-    align-items: center;
-    line-height: 32px;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
-
-    .item-label {
-      margin-left: 8px;
-      font-size: 13px;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background-color: #fafafa;
-    }
-  }
-
-  .del-item-box {
-    border-top: 1px solid #f0f0f2;
-    color: #f9425f;
-  }
-}

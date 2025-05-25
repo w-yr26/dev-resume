@@ -27,3 +27,13 @@ export const postSaveTemplateAPI = (data: addTemplateType) => {
 export const postTemplatesAPI = (data: FormData) => {
   return request<string>('/user/common/uploadTemplates', 'POST', data)
 }
+
+/**
+ * 删除模板
+ */
+export const delTemAPI = (temId: string) => {
+  return request<null>(
+    `/resume/templates/deleteDiyTemplates?templatesId=${temId}`,
+    'DELETE'
+  )
+}

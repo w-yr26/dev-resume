@@ -25,7 +25,7 @@ const routes = createRoutesFromElements(
     <Route path="login" element={<Login />}></Route>
     <Route path="register" element={<Register />}></Route>
     <Route path="/third/login" element={<ThirdPart />}></Route>
-    <Route path="/design" element={<Design />}></Route>
+    <Route path="/design/:temId" element={<Design />}></Route>
   </Route>
 )
 
