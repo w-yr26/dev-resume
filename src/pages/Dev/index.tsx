@@ -435,6 +435,7 @@ const Dev = () => {
         </div>
       )}
       <ChatSideBar
+        resumeId={params.randomId!}
         selectedNodeKey={currentNodeKey}
         currentText={currentText}
         sidebarOpened={sidebarOpened}

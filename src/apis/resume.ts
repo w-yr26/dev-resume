@@ -1,8 +1,10 @@
 import { request } from '@/utils'
 import type {
   addModuleType,
+  chatRespType,
   resumeDetailType,
   resumeListResp,
+  SendChatType,
   updateNameType,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
@@ -89,4 +91,18 @@ export const delModuleSingleInfoAPI = (
  */
 export const putUpdateNameAPI = (data: updateNameType) => {
   return request<null>('/resume/resume/updateName', 'PUT', data)
+}
+
+/**
+ * 获取简历评论
+ */
+export const getAllCommentAPI = (resumeId: string) => {
+  return request<chatRespType[]>(`/comment/getAllComment?randomId=${resumeId}`)
+}
+
+/**
+ * 发送新评论
+ */
+export const postNewCommentAPI = (data: SendChatType) => {
+  return request<null>('/comment/sendNewComment', 'POST', data)
 }

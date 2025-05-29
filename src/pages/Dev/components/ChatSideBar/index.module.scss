@@ -54,6 +54,7 @@
     .chat-content-box {
       color: #3f3f46;
       font-size: 13px;
+      line-height: 1.5;
     }
   }
 }
@@ -72,6 +73,24 @@
   color: #71717a;
 
   &:hover {
+    opacity: 1;
+  }
+}
+
+.comment-item-box {
+  position: relative;
+
+  .menu-box {
+    position: absolute;
+    right: 4px;
+    top: 0;
+    font-size: 12px;
+    color: #646a73;
+    height: auto;
+    background-color: #fff;
+    opacity: 0;
+  }
+  &:hover .menu-box {
     opacity: 1;
   }
 }

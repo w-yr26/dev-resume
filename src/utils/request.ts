@@ -6,15 +6,16 @@ import { useUserStore } from '@/store'
 // 请求实例
 const instance = axios.create({
   baseURL: 'http://7b395403.r39.cpolar.top',
-  timeout: 5000,
+  timeout: 10000,
 })
 
 // 请求拦截器
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前校验token令牌，并在请求头添加token
-    const store = useUserStore.getState()
-    const token = store.info.token
+    // const store = useUserStore.getState()
+    const token = localStorage.getItem('token')
+    // const token = store.info.token
     if (token) {
       config.headers.Authorization = token
     }
@@ -34,13 +35,15 @@ instance.interceptors.response.use(
     // 注意，请求状态码!==业务状态码
     const { code, msg } = response.data
     const { authorization } = response.headers
+    console.log('authorization', authorization, response)
+
     const store = useUserStore.getState()
     // const token = store.info.token
     const updateInfo = store.updateInfo
     // 无token，则存储
     // if (!token) {
-    updateInfo('token', authorization)
     localStorage.setItem('token', authorization)
+    updateInfo('token', authorization)
     // }
 
     // 业务统一状态码出错

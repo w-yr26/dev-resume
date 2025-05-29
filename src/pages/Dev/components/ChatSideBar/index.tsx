@@ -1,44 +1,59 @@
 import { Avatar, Drawer, Input } from 'antd'
 import styles from './index.module.scss'
-import type { commentItem, sideBarType } from '@/types/materials'
-import React, { useState } from 'react'
+import type { sideBarType } from '@/types/materials'
+import React, { useEffect, useState } from 'react'
+import { getAllCommentAPI, postNewCommentAPI } from '@/apis/resume'
+import { chatRespType } from '@/types/resume'
+import { useUserStore } from '@/store'
+import Icon from '@ant-design/icons'
+import commentSVG from '@/assets/svg/dev/comment.svg?react'
+import ChatItem from './ChatItem'
 
 const ChatSideBar = ({
+  resumeId,
   sidebarOpened,
   currentText,
   selectedNodeKey,
   setSidebarOpened,
   setCurrentText,
 }: sideBarType) => {
-  const [chatList, setChatList] = useState<commentItem[]>([])
-  const [isInputShow, setIsInputShow] = useState(false)
+  const userName = useUserStore((state) => state.info.userName)
+  const userId = useUserStore((state) => state.info.id)
+  const [chatList, setChatList] = useState<chatRespType[]>([])
+  const [isInputShow, setIsInputShow] = useState(true)
+  const [chatVal, setChatVal] = useState('')
+
+  useEffect(() => {
+    const getChatList = async () => {
+      const { data } = await getAllCommentAPI(resumeId)
+      setChatList(data)
+    }
+
+    getChatList()
+  }, [resumeId])
 
   // 新增评论
-  const pressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const pressEnter = async (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+    isMain: 0 | 1 = 1
+  ) => {
     if (!e.shiftKey) {
       e.preventDefault() // 阻止换行
-      console.log('提交评论:', e.currentTarget.value)
+      const content = e.currentTarget.value
       // 调用接口提交评论
-      // 更新评论列表
-      setChatList([
-        ...chatList,
-        {
-          id: new Date().getTime(),
-          nodeKey: selectedNodeKey,
-          quote_content: currentText,
-          chat_list: [
-            {
-              avatar: 'U',
-              chat_content: e.currentTarget.value,
-              date: '2025-05-02',
-              id: new Date().getTime(),
-              userName: 'zs',
-            },
-          ],
-        },
-      ])
+      await postNewCommentAPI({
+        commentMapId: selectedNodeKey,
+        commentatorId: Number(userId),
+        content,
+        isMain,
+        nodeText: currentText,
+        resumeRandomId: resumeId,
+      })
+
+      // TODO:更新评论列表
+      setIsInputShow(false)
+      setChatVal('')
       setCurrentText('')
-      // 这里触发你的评论提交逻辑
     }
   }
 
@@ -59,75 +74,41 @@ const ChatSideBar = ({
       >
         {chatList.length
           ? chatList.map((chatItem) => (
-              <React.Fragment key={chatItem.id}>
-                <div className={styles['bottom-chat']}>
-                  <div className={styles['quote-box']}>
-                    {chatItem.quote_content}
-                  </div>
-                  {chatItem.chat_list
-                    ? chatItem.chat_list.map((chatDetainItem) => (
-                        <React.Fragment key={chatDetainItem.id}>
-                          <div className={styles['body-box']}>
-                            <div className={styles['left-box']}>
-                              <Avatar size="small">{chatDetainItem.id}</Avatar>
-                            </div>
-                            <div className={styles['right-box']}>
-                              <div className={styles['right-top-box']}>
-                                <span className={styles['user-name']}>
-                                  {chatDetainItem.userName}
-                                </span>
-                                <span className={styles['date-box']}>
-                                  {chatDetainItem.date}
-                                </span>
-                              </div>
-                              <div className="chat-content-box">
-                                {chatDetainItem.chat_content}
-                              </div>
-                            </div>
-                          </div>
-                          {isInputShow ? (
-                            <div className={styles['input-box']}>
-                              <Input.TextArea
-                                placeholder="输入评论"
-                                autoFocus
-                                autoSize
-                                onPressEnter={handleReplay}
-                              />
-                            </div>
-                          ) : (
-                            <div
-                              className={styles['reply-box']}
-                              onClick={() => setIsInputShow(true)}
-                            >
-                              回复...
-                            </div>
-                          )}
-                        </React.Fragment>
-                      ))
-                    : null}
-                </div>
-              </React.Fragment>
+              <ChatItem chatItem={chatItem} key={chatItem.mainCommentId} />
             ))
           : null}
-        {currentText ? (
-          <div className={styles['bottom-chat']}>
-            <div className={styles['quote-box']}>{currentText}</div>
-            <div className={styles['body-box']}>
-              <div className={styles['left-box']}>
-                <Avatar size="small">User</Avatar>
-              </div>
-              <div className={styles['right-box']}>吴昱锐</div>
+
+        <div className={styles['bottom-chat']}>
+          <div className={styles['quote-box']}>{currentText}</div>
+          <div
+            className={`${styles['body-box']} ${styles['comment-item-box']}`}
+          >
+            <div className={styles['left-box']}>
+              <Avatar size="small">{userName}</Avatar>
             </div>
-            <div className={styles['input-box']}>
-              <Input.TextArea
-                placeholder="输入评论"
-                autoFocus
-                autoSize
-                onPressEnter={pressEnter}
-              />
+            <div className={`${styles['right-box']}`}>
+              <div className={styles['right-top-box']}>
+                <span className={styles['user-name']}>{userName}</span>
+                {/* <span className={styles['date-box']}>
+                  {chatItem.createTime}
+                </span> */}
+              </div>
+              {/* <div className="chat-content-box">{chatItem.content}</div> */}
             </div>
           </div>
-        ) : null}
+          {isInputShow ? (
+            <div className={styles['input-box']}>
+              <Input.TextArea
+                autoFocus
+                autoSize
+                value={chatVal}
+                placeholder="输入您的评论内容"
+                onPressEnter={pressEnter}
+                onChange={(e) => setChatVal(e.target.value)}
+              />
+            </div>
+          ) : null}
+        </div>
       </Drawer>
     </div>
   )
