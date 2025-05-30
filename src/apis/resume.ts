@@ -97,12 +97,14 @@ export const putUpdateNameAPI = (data: updateNameType) => {
  * 获取简历评论
  */
 export const getAllCommentAPI = (resumeId: string) => {
-  return request<chatRespType[]>(`/comment/getAllComment?randomId=${resumeId}`)
+  return request<chatRespType[]>(
+    `/resume/comment/getAllComment?randomId=${resumeId}`
+  )
 }
 
 /**
  * 发送新评论
  */
 export const postNewCommentAPI = (data: SendChatType) => {
-  return request<null>('/comment/sendNewComment', 'POST', data)
+  return request<null>('/resume/comment/sendNewComment', 'POST', data)
 }

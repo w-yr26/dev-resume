@@ -5,7 +5,7 @@ import { useUserStore } from '@/store'
 
 // 请求实例
 const instance = axios.create({
-  baseURL: 'http://7b395403.r39.cpolar.top',
+  baseURL: 'http://7723d77e.r40.cpolar.top',
   timeout: 10000,
 })
 
