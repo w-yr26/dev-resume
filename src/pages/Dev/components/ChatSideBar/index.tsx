@@ -3,11 +3,11 @@ import styles from './index.module.scss'
 import type { sideBarType } from '@/types/materials'
 import React, { useEffect, useState } from 'react'
 import { getAllCommentAPI, postNewCommentAPI } from '@/apis/resume'
-import { chatRespType } from '@/types/resume'
+import { chatRespType, subChatItemType } from '@/types/resume'
 import { useUserStore } from '@/store'
-import Icon from '@ant-design/icons'
-import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatItem from './ChatItem'
+import dayjs from 'dayjs'
+import { v4 as uuidv4 } from 'uuid'
 
 const ChatSideBar = ({
   resumeId,
@@ -40,6 +40,24 @@ const ChatSideBar = ({
     if (!e.shiftKey) {
       e.preventDefault() // 阻止换行
       const content = e.currentTarget.value
+      // 乐观更新
+      setChatList([
+        ...chatList,
+        {
+          commentatorId: userId,
+          commentMapId: selectedNodeKey,
+          content,
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          mainCommentId: uuidv4(),
+          resumeRandomId: resumeId,
+          subCommentVOList: [],
+          nodeText: currentText,
+          username: userName,
+        },
+      ])
+      setIsInputShow(false)
+      setChatVal('')
+      setCurrentText('')
       // 调用接口提交评论
       await postNewCommentAPI({
         commentMapId: selectedNodeKey,
@@ -49,19 +67,29 @@ const ChatSideBar = ({
         nodeText: currentText,
         resumeRandomId: resumeId,
       })
-
-      // TODO:更新评论列表
-      setIsInputShow(false)
-      setChatVal('')
-      setCurrentText('')
     }
   }
 
-  // 评论回复
-  const handleReplay = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!e.shiftKey) {
-      setIsInputShow(false)
-    }
+  const updateSubChatList = (mainChatId: string, subChat: subChatItemType) => {
+    const newChatList = chatList.map((i) => {
+      if (i.mainCommentId !== mainChatId) return i
+      else {
+        return {
+          ...i,
+          subCommentVOList: i.subCommentVOList
+            ? [...i.subCommentVOList, subChat]
+            : [subChat],
+        }
+      }
+    })
+
+    setChatList(newChatList)
+  }
+
+  // 关闭抽屉，重置状态
+  const onCloseDrawer = () => {
+    setSidebarOpened(false)
+    setIsInputShow(true)
   }
 
   return (
@@ -70,36 +98,36 @@ const ChatSideBar = ({
         title="评论列表"
         placement="left"
         open={sidebarOpened}
-        onClose={() => setSidebarOpened(false)}
+        onClose={onCloseDrawer}
       >
         {chatList.length
           ? chatList.map((chatItem) => (
-              <ChatItem chatItem={chatItem} key={chatItem.mainCommentId} />
+              <ChatItem
+                chatItem={chatItem}
+                key={chatItem.mainCommentId}
+                updateSubChatList={updateSubChatList}
+              />
             ))
           : null}
 
-        <div className={styles['bottom-chat']}>
-          <div className={styles['quote-box']}>{currentText}</div>
-          <div
-            className={`${styles['body-box']} ${styles['comment-item-box']}`}
-          >
-            <div className={styles['left-box']}>
-              <Avatar size="small">{userName}</Avatar>
-            </div>
-            <div className={`${styles['right-box']}`}>
-              <div className={styles['right-top-box']}>
-                <span className={styles['user-name']}>{userName}</span>
-                {/* <span className={styles['date-box']}>
-                  {chatItem.createTime}
-                </span> */}
+        {isInputShow ? (
+          <div className={styles['bottom-chat']}>
+            <div className={styles['quote-box']}>{currentText}</div>
+            <div
+              className={`${styles['body-box']} ${styles['comment-item-box']}`}
+            >
+              <div className={styles['left-box']}>
+                <Avatar size="small">{userName}</Avatar>
               </div>
-              {/* <div className="chat-content-box">{chatItem.content}</div> */}
+              <div className={`${styles['right-box']}`}>
+                <div className={styles['right-top-box']}>
+                  <span className={styles['user-name']}>{userName}</span>
+                </div>
+              </div>
             </div>
-          </div>
-          {isInputShow ? (
             <div className={styles['input-box']}>
               <Input.TextArea
-                autoFocus
+                autoFocus={true}
                 autoSize
                 value={chatVal}
                 placeholder="输入您的评论内容"
@@ -107,8 +135,8 @@ const ChatSideBar = ({
                 onChange={(e) => setChatVal(e.target.value)}
               />
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </Drawer>
     </div>
   )

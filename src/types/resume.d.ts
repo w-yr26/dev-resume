@@ -53,7 +53,7 @@ export type subChatItemType = {
   replyUsername: string
   // 副评论id
   subCommentId: string
-  userAvatar: string
+  userAvatar?: string
   // 评论其他评论的用户的id
   userId: string
   username: string
@@ -73,7 +73,7 @@ export type chatRespType = {
   // 主评论id
   mainCommentId: string
   resumeRandomId: string
-  userAvatar: string
+  userAvatar?: string
   username: string
   // 子评论列表
   subCommentVOList: subChatItemType[] | null

@@ -35,7 +35,6 @@ instance.interceptors.response.use(
     // 注意，请求状态码!==业务状态码
     const { code, msg } = response.data
     const { authorization } = response.headers
-    console.log('authorization', authorization, response)
 
     const store = useUserStore.getState()
     // const token = store.info.token

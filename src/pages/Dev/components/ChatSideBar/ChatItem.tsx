@@ -3,17 +3,54 @@ import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import React, { useState } from 'react'
-import { chatRespType } from '@/types/resume'
+import { chatRespType, subChatItemType } from '@/types/resume'
 import { postNewCommentAPI } from '@/apis/resume'
 import { useDevStore, useUserStore } from '@/store'
 import ReplyBox from './ReplyBox'
+import dayjs from 'dayjs'
+import { v4 as uuidv4 } from 'uuid'
 
-const ChatItem = ({ chatItem }: { chatItem: chatRespType }) => {
+const ChatItem = ({
+  chatItem,
+  updateSubChatList,
+}: {
+  chatItem: chatRespType
+  updateSubChatList: (mainChatId: string, subChat: subChatItemType) => void
+}) => {
   const userId = useUserStore((state) => state.info.id)
+  const userName = useUserStore((state) => state.info.userName)
   const resumeId = useDevStore((state) => state.resumeId)
   const [isInputShow, setIsInputShow] = useState(false)
   const [chatVal, setChatVal] = useState('')
   const [placeholder, setPlaceholder] = useState('输入评论')
+  const [currentSubChat, setCurrentSubChat] = useState<subChatItemType | null>(
+    null
+  )
+
+  const optimisticUpdateSub = (content: string) => {
+    updateSubChatList(chatItem.mainCommentId, {
+      content,
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      replyId: currentSubChat!.userId,
+      replyUsername: currentSubChat!.username,
+      subCommentId: uuidv4(),
+      userId: userId,
+      username: userName,
+    })
+  }
+
+  const optimisticUpdateMain = (content: string) => {
+    updateSubChatList(chatItem.mainCommentId, {
+      content,
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      replyId: chatItem.commentatorId,
+      replyUsername: chatItem.username,
+      subCommentId: uuidv4(),
+      userId,
+      username: userName,
+    })
+  }
+
   const pressEnter = async (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     isMain: 0 | 1 = 0
@@ -21,24 +58,29 @@ const ChatItem = ({ chatItem }: { chatItem: chatRespType }) => {
     if (!e.shiftKey) {
       e.preventDefault() // 阻止换行
       const content = e.currentTarget.value
+      // 乐观更新
+      if (currentSubChat) {
+        optimisticUpdateSub(content)
+      } else {
+        optimisticUpdateMain(content)
+      }
+      setChatVal('')
+      setIsInputShow(false)
       // 回复评论的评论，需要带上 mainCommentId 和 replyId
-      const { data } = await postNewCommentAPI({
+      await postNewCommentAPI({
         commentMapId: chatItem.commentMapId,
         commentatorId: Number(userId),
         content,
         isMain,
         resumeRandomId: resumeId,
         mainCommentId: Number(chatItem.mainCommentId),
-        replyId: Number(chatItem.commentatorId),
+        // 若currentSubChat有值，说明此时的是回复子评论的评论；反之，为回复主评论的评论，此时的“被评论者”的id要做区分
+        replyId: !currentSubChat
+          ? Number(chatItem.commentatorId)
+          : Number(currentSubChat.userId),
       })
-      console.log('data', data)
-      setChatVal('')
-      // 更新评论列表
+      if (currentSubChat) setCurrentSubChat(null)
     }
-  }
-  // 回复评论 -> 回复主/副评论
-  const handleReplay = () => {
-    // await postNewCommentAPI()
   }
 
   return (
@@ -93,6 +135,7 @@ const ChatItem = ({ chatItem }: { chatItem: chatRespType }) => {
                     onClick={() => {
                       setPlaceholder(`reply ${chatItem.username}: `)
                       setIsInputShow(true)
+                      setCurrentSubChat(subItem)
                     }}
                   />
                 </div>
