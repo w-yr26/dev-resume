@@ -2,9 +2,10 @@ import { Avatar, Input } from 'antd'
 import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
+import deleteSVG from '@/assets/svg/delete.svg?react'
 import React, { useState } from 'react'
 import { chatRespType, subChatItemType } from '@/types/resume'
-import { postNewCommentAPI } from '@/apis/resume'
+import { delCommentAPI, postNewCommentAPI } from '@/apis/resume'
 import { useDevStore, useUserStore } from '@/store'
 import ReplyBox from './ReplyBox'
 import dayjs from 'dayjs'
@@ -13,9 +14,17 @@ import { v4 as uuidv4 } from 'uuid'
 const ChatItem = ({
   chatItem,
   updateSubChatList,
+  delSubChatList,
 }: {
   chatItem: chatRespType
-  updateSubChatList: (mainChatId: string, subChat: subChatItemType) => void
+  updateSubChatList: (
+    mainChmainCommentIdatId: string,
+    subChat: subChatItemType
+  ) => void
+  delSubChatList: (
+    mainCommentId: string,
+    subCommentId?: string | undefined
+  ) => void
 }) => {
   const userId = useUserStore((state) => state.info.id)
   const userName = useUserStore((state) => state.info.userName)
@@ -27,30 +36,7 @@ const ChatItem = ({
     null
   )
 
-  const optimisticUpdateSub = (content: string) => {
-    updateSubChatList(chatItem.mainCommentId, {
-      content,
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      replyId: currentSubChat!.userId,
-      replyUsername: currentSubChat!.username,
-      subCommentId: uuidv4(),
-      userId: userId,
-      username: userName,
-    })
-  }
-
-  const optimisticUpdateMain = (content: string) => {
-    updateSubChatList(chatItem.mainCommentId, {
-      content,
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      replyId: chatItem.commentatorId,
-      replyUsername: chatItem.username,
-      subCommentId: uuidv4(),
-      userId,
-      username: userName,
-    })
-  }
-
+  // 确认发布
   const pressEnter = async (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     isMain: 0 | 1 = 0
@@ -59,11 +45,19 @@ const ChatItem = ({
       e.preventDefault() // 阻止换行
       const content = e.currentTarget.value
       // 乐观更新
-      if (currentSubChat) {
-        optimisticUpdateSub(content)
-      } else {
-        optimisticUpdateMain(content)
-      }
+      updateSubChatList(chatItem.mainCommentId, {
+        content,
+        createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        replyId: currentSubChat // 通过currentSubChat判断当前回复的是主评论还是子评论
+          ? currentSubChat.userId
+          : chatItem.commentatorId,
+        replyUsername: currentSubChat
+          ? currentSubChat.username
+          : chatItem.username,
+        subCommentId: uuidv4(),
+        userId,
+        username: userName,
+      })
       setChatVal('')
       setIsInputShow(false)
       // 回复评论的评论，需要带上 mainCommentId 和 replyId
@@ -81,6 +75,26 @@ const ChatItem = ({
       })
       if (currentSubChat) setCurrentSubChat(null)
     }
+  }
+
+  // 删除主评论
+  const handleMainDel = async (
+    commentMapId: string,
+    isMain: 0 | 1,
+    mainCommentId: string,
+    resumeId: string,
+    subCommentId: string | undefined = undefined
+  ) => {
+    // 乐观删除(删除主评论，其对应的子评论都要被删除；删除子评论，仅需删除它自身)
+    delSubChatList(mainCommentId, subCommentId)
+    // 接口调用删除
+    await delCommentAPI(
+      commentMapId,
+      isMain,
+      mainCommentId,
+      resumeId,
+      subCommentId
+    )
   }
 
   return (
@@ -103,6 +117,17 @@ const ChatItem = ({
             onClick={() => {
               setIsInputShow(true)
             }}
+          />
+          <Icon
+            component={deleteSVG}
+            onClick={() =>
+              handleMainDel(
+                chatItem.commentMapId,
+                1,
+                chatItem.mainCommentId,
+                resumeId
+              )
+            }
           />
         </div>
       </div>
@@ -137,6 +162,18 @@ const ChatItem = ({
                       setIsInputShow(true)
                       setCurrentSubChat(subItem)
                     }}
+                  />
+                  <Icon
+                    component={deleteSVG}
+                    onClick={() =>
+                      handleMainDel(
+                        chatItem.commentMapId,
+                        0,
+                        chatItem.mainCommentId,
+                        resumeId,
+                        subItem.subCommentId
+                      )
+                    }
                   />
                 </div>
               </div>

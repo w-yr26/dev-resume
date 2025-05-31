@@ -108,3 +108,24 @@ export const getAllCommentAPI = (resumeId: string) => {
 export const postNewCommentAPI = (data: SendChatType) => {
   return request<null>('/resume/comment/sendNewComment', 'POST', data)
 }
+
+/**
+ * 删除评论
+ * @param commentMapId 节点id
+ * @param isMain 是否为主评论
+ * @param mainCommentId 主评论id
+ * @param resumeId 简历id
+ * @param subCommentId 副评论id(非必选)
+ */
+export const delCommentAPI = (
+  commentMapId: string,
+  isMain: 0 | 1,
+  mainCommentId: string,
+  resumeId: string,
+  subCommentId: string = ''
+) => {
+  return request<null>(
+    `/resume/comment/deleteComment?commentMapId=${commentMapId}&isMain=${isMain}&mainCommentId=${mainCommentId}&resumeId=${resumeId}&subCommentId=${subCommentId}`,
+    'DELETE'
+  )
+}

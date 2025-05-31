@@ -70,6 +70,7 @@ const ChatSideBar = ({
     }
   }
 
+  // 更新评论列表
   const updateSubChatList = (mainChatId: string, subChat: subChatItemType) => {
     const newChatList = chatList.map((i) => {
       if (i.mainCommentId !== mainChatId) return i
@@ -84,6 +85,35 @@ const ChatSideBar = ({
     })
 
     setChatList(newChatList)
+  }
+
+  // 删除评论列表
+  const delSubChatList = (
+    mainCommentId: string,
+    subCommentId: string | undefined = undefined
+  ) => {
+    if (!subCommentId) {
+      // 没有副评论id，说明此时删除的是主评论
+      const newChatList = chatList.filter(
+        (i) => i.mainCommentId !== mainCommentId
+      )
+      setChatList(newChatList)
+    } else {
+      // 删除某一条子评论，无需考虑连带关系，只需删除对应的评论数据即可
+      const newChatList = chatList.map((i) => {
+        if (i.mainCommentId !== mainCommentId) return i
+        else {
+          return {
+            ...i,
+            subCommentVOList:
+              i.subCommentVOList?.filter(
+                (sub) => sub.subCommentId !== subCommentId
+              ) || [],
+          }
+        }
+      })
+      setChatList(newChatList)
+    }
   }
 
   // 关闭抽屉，重置状态
@@ -106,6 +136,7 @@ const ChatSideBar = ({
                 chatItem={chatItem}
                 key={chatItem.mainCommentId}
                 updateSubChatList={updateSubChatList}
+                delSubChatList={delSubChatList}
               />
             ))
           : null}
