@@ -6,6 +6,7 @@ import TypeSetting from './TypeSetting'
 import Templates from './Templates'
 import type { templateListType } from '@/types/ui'
 import { memo } from 'react'
+import Share from './Share'
 
 const Setting = memo(
   ({
@@ -34,6 +35,7 @@ const Setting = memo(
         <PageSetting />
         {/* <ColorSetting /> */}
         <DownloadSetting />
+        <Share />
       </div>
     )
   }
