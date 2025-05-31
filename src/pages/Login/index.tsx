@@ -22,6 +22,8 @@ const Login: React.FC = () => {
     localStorage.setItem('email', data.email)
     localStorage.setItem('userName', data.username)
     localStorage.setItem('user_id', String(data.id))
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('refreshToken', data.refreshToken)
     navigate('/')
     setIsLoading(false)
   }

@@ -5,6 +5,7 @@ const useUserStore = create<userStoreType>((set) => {
   return {
     info: {
       token: localStorage.getItem('token') || '',
+      refreshToken: localStorage.getItem('refreshToken') || '',
       email: localStorage.getItem('email') || '',
       userName: localStorage.getItem('userName') || '',
       id: localStorage.getItem('user_id') || '',
