@@ -1,4 +1,4 @@
-import { Avatar, Drawer, Input } from 'antd'
+import { Avatar, Input } from 'antd'
 import styles from './index.module.scss'
 import type { sideBarType } from '@/types/materials'
 import React, { useEffect, useState } from 'react'
@@ -8,6 +8,8 @@ import { useUserStore } from '@/store'
 import ChatItem from './ChatItem'
 import dayjs from 'dayjs'
 import { v4 as uuidv4 } from 'uuid'
+import Icon from '@ant-design/icons'
+import ArrowLeftSVG from '@/assets/svg/dev/arrowLeft.svg?react'
 
 const ChatSideBar = ({
   resumeId,
@@ -116,20 +118,30 @@ const ChatSideBar = ({
     }
   }
 
-  // 关闭抽屉，重置状态
+  // 关闭评论列表，重置状态
   const onCloseDrawer = () => {
     setSidebarOpened(false)
     setIsInputShow(true)
   }
 
   return (
-    <div className={styles['chat-side-container']}>
-      <Drawer
-        title="评论列表"
-        placement="left"
-        open={sidebarOpened}
-        onClose={onCloseDrawer}
-      >
+    <div
+      className={`${styles['chat-side-container']} ${
+        sidebarOpened ? styles['expand-box'] : styles['shrink-box']
+      }`}
+    >
+      <div className={styles['chat-list-title']}>
+        <div>评论({chatList.length})</div>
+        <div
+          style={{
+            cursor: 'pointer',
+          }}
+          onClick={onCloseDrawer}
+        >
+          <Icon component={ArrowLeftSVG} />
+        </div>
+      </div>
+      <div className={styles['chat-list-body']}>
         {chatList.length
           ? chatList.map((chatItem) => (
               <ChatItem
@@ -141,7 +153,7 @@ const ChatSideBar = ({
             ))
           : null}
 
-        {isInputShow ? (
+        {isInputShow && currentText ? (
           <div className={styles['bottom-chat']}>
             <div className={styles['quote-box']}>{currentText}</div>
             <div
@@ -168,7 +180,7 @@ const ChatSideBar = ({
             </div>
           </div>
         ) : null}
-      </Drawer>
+      </div>
     </div>
   )
 }

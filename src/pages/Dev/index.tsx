@@ -442,6 +442,12 @@ const Dev = () => {
         setSidebarOpened={setSidebarOpened}
         setCurrentText={setCurrentText}
       />
+      <div
+        className={styles['open-chat-tool-box']}
+        onClick={() => setSidebarOpened(true)}
+      >
+        <Icon component={commentSVG} />
+      </div>
     </div>
   )
 }
