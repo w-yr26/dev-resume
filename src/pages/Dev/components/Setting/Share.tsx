@@ -7,11 +7,13 @@ import RandomSVG from '@/assets/svg/random.svg?react'
 import styles from './index.module.scss'
 import { ConfigProvider, Input, message, Modal, Select, Tooltip } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { postShareLinkAPI } from '@/apis/resume'
+import { getLinkListsAPI, postShareLinkAPI } from '@/apis/resume'
 import { useDevStore, useUserStore } from '@/store'
 import dayjs from 'dayjs'
+import { linkItem } from '@/types/resume'
+import LinkItem from './components/LinkItem'
 
 const durationOptions = [
   {
@@ -62,6 +64,22 @@ const Share = () => {
   const [emailList, setEmailList] = useState('')
   const [count, setCount] = useState(5)
   const [hour, setHour] = useState(4)
+  const [linkList, setLinkList] = useState<linkItem[]>([])
+  const [activeTab, setActiveTab] = useState<'setting' | 'history'>('setting')
+
+  useEffect(() => {
+    const getLinksList = async () => {
+      if (linkList.length) return
+      const { data } = await getLinkListsAPI(userId)
+      setLinkList(data)
+    }
+    getLinksList()
+  }, [])
+
+  const handleDelLinkList = (id: number) => {
+    setLinkList(linkList.filter((i) => i.id !== id))
+  }
+
   // 分割、校验
   const validateAndSplitUsers = () => {
     // 1. 标准化分隔符
@@ -98,31 +116,35 @@ const Share = () => {
     setIsModalOpen(false)
   }
 
-  const generatorShareLink = async () => {
-    const { userList, isValid } = validateAndSplitUsers()
-    if (!isValid) return message.warning('请按正确格式输入邮箱列表')
+  const handleCopy = async (url: string) => {
     try {
-      const { data } = await postShareLinkAPI({
-        resourceType: 'resume',
-        maxVisits: count === -1 ? undefined : count,
-        password: pwd ?? undefined,
-        expireAt: dayjs().add(hour, 'hours').format('YYYY-MM-DD HH:mm:ss'),
-        accessType: userList.length ? 'private' : 'public',
-        targetList: userList.length
-          ? userList.map((i) => ({
-              targetType: 'email',
-              targetValue: i,
-            }))
-          : [],
-        resourceId: resumeId,
-        userId,
-      })
-      await navigator.clipboard.writeText(data.share_url)
-      resetState()
+      await navigator.clipboard.writeText(url)
       message.success('分享链接已复制至剪切板')
     } catch (_) {
       message.error('分享失败，请稍后再试')
     }
+  }
+
+  const generatorShareLink = async () => {
+    const { userList, isValid } = validateAndSplitUsers()
+    if (!isValid) return message.warning('请按正确格式输入邮箱列表')
+    const { data } = await postShareLinkAPI({
+      resourceType: 'resume',
+      maxVisits: count === -1 ? undefined : count,
+      password: pwd ?? undefined,
+      expireAt: dayjs().add(hour, 'hours').format('YYYY-MM-DD HH:mm:ss'),
+      accessType: userList.length ? 'private' : 'public',
+      targetList: userList.length
+        ? userList.map((i) => ({
+            targetType: 'email',
+            targetValue: i,
+          }))
+        : [],
+      resourceId: resumeId,
+      userId,
+    })
+    await handleCopy(data.share_url)
+    resetState()
   }
 
   return (
@@ -169,125 +191,163 @@ const Share = () => {
           title="分享设置"
           width={600}
           footer={[
-            <CustomBtn
-              key="create"
-              label="生成分享链接"
-              onClick={generatorShareLink}
-            />,
+            activeTab === 'setting' ? (
+              <CustomBtn
+                key="create"
+                label="生成分享链接"
+                onClick={generatorShareLink}
+              />
+            ) : null,
           ]}
           open={isModalOpen}
           onCancel={() => resetState()}
         >
-          <div className={styles['create-form-container']}>
-            <div className={styles['raw-box']}>
-              <div className={styles['create-form-item']}>
-                <p className={styles['label']}>链接过期时间</p>
-                <div className={styles['body']}>
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Select: {
-                          activeBorderColor: '#18181b',
-                          hoverBorderColor: '#18181b',
-                          activeOutlineColor: 'none',
-                          optionSelectedBg: 'none',
-                          selectorBg: '#fafafa',
-                          optionHeight: 35,
-                        },
-                      },
-                    }}
-                  >
-                    <Select
-                      className={styles['custom-input']}
-                      value={hour}
-                      options={durationOptions}
-                      onChange={(e) => setHour(e)}
-                    />
-                  </ConfigProvider>
-                </div>
-              </div>
-              <div className={styles['create-form-item']}>
-                <p className={styles['label']}>最大访问次数</p>
-                <div className={styles['body']}>
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Select: {
-                          activeBorderColor: '#18181b',
-                          hoverBorderColor: '#18181b',
-                          activeOutlineColor: 'none',
-                          optionSelectedBg: 'none',
-                          selectorBg: '#fafafa',
-                          optionHeight: 35,
-                        },
-                      },
-                    }}
-                  >
-                    <Select
-                      className={styles['custom-input']}
-                      value={count}
-                      options={countOptions}
-                      onChange={(e) => setCount(e)}
-                    />
-                  </ConfigProvider>
-                </div>
-              </div>
+          <div className={styles['tab-bar']}>
+            <div
+              className={`${styles['tab-item-box']} ${
+                styles[activeTab === 'setting' ? 'active-tab' : '']
+              }`}
+              onClick={() => setActiveTab('setting')}
+            >
+              分享设置
             </div>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>访问密码(可选)</p>
-              <div className={`${styles['body']} ${styles['raw-box']}`}>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        activeBorderColor: '#18181b',
-                        hoverBorderColor: '#18181b',
-                        activeShadow: 'none',
-                      },
-                    },
-                  }}
-                >
-                  <Input
-                    className={styles['custom-input']}
-                    placeholder="设置访问密码"
-                    value={pwd}
-                    onChange={(e) => setPwd(e.target.value)}
-                  />
-                </ConfigProvider>
-                <div
-                  className={styles['random-box']}
-                  onClick={() => setPwd(uuidv4())}
-                >
-                  <Tooltip title="点击生成随机密码">
-                    <Icon component={RandomSVG} />
-                  </Tooltip>
-                </div>
-              </div>
-            </div>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>分享人员邮箱</p>
-              <div className={styles['body']}>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        activeBorderColor: '#18181b',
-                        hoverBorderColor: '#18181b',
-                        activeShadow: 'none',
-                      },
-                    },
-                  }}
-                >
-                  <Input
-                    className={styles['custom-input']}
-                    placeholder="输入邮箱地址(@163.com)，按分号或逗号分隔"
-                    value={emailList}
-                    onChange={(e) => setEmailList(e.target.value)}
-                  />
-                </ConfigProvider>
-              </div>
+            <div
+              className={`${styles['tab-item-box']} ${
+                styles[activeTab === 'history' ? 'active-tab' : '']
+              }`}
+              onClick={() => setActiveTab('history')}
+            >
+              分享历史
             </div>
           </div>
+          {activeTab === 'setting' ? (
+            <div className={styles['create-form-container']}>
+              <div className={styles['raw-box']}>
+                <div className={styles['create-form-item']}>
+                  <p className={styles['label']}>链接过期时间</p>
+                  <div className={styles['body']}>
+                    <ConfigProvider
+                      theme={{
+                        components: {
+                          Select: {
+                            activeBorderColor: '#18181b',
+                            hoverBorderColor: '#18181b',
+                            activeOutlineColor: 'none',
+                            optionSelectedBg: 'none',
+                            selectorBg: '#fafafa',
+                            optionHeight: 35,
+                          },
+                        },
+                      }}
+                    >
+                      <Select
+                        className={styles['custom-input']}
+                        value={hour}
+                        options={durationOptions}
+                        onChange={(e) => setHour(e)}
+                      />
+                    </ConfigProvider>
+                  </div>
+                </div>
+                <div className={styles['create-form-item']}>
+                  <p className={styles['label']}>最大访问次数</p>
+                  <div className={styles['body']}>
+                    <ConfigProvider
+                      theme={{
+                        components: {
+                          Select: {
+                            activeBorderColor: '#18181b',
+                            hoverBorderColor: '#18181b',
+                            activeOutlineColor: 'none',
+                            optionSelectedBg: 'none',
+                            selectorBg: '#fafafa',
+                            optionHeight: 35,
+                          },
+                        },
+                      }}
+                    >
+                      <Select
+                        className={styles['custom-input']}
+                        value={count}
+                        options={countOptions}
+                        onChange={(e) => setCount(e)}
+                      />
+                    </ConfigProvider>
+                  </div>
+                </div>
+              </div>
+              <div className={styles['create-form-item']}>
+                <p className={styles['label']}>访问密码(可选)</p>
+                <div className={`${styles['body']} ${styles['raw-box']}`}>
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Input: {
+                          activeBorderColor: '#18181b',
+                          hoverBorderColor: '#18181b',
+                          activeShadow: 'none',
+                        },
+                      },
+                    }}
+                  >
+                    <Input
+                      className={styles['custom-input']}
+                      placeholder="设置访问密码"
+                      value={pwd}
+                      onChange={(e) => setPwd(e.target.value)}
+                    />
+                  </ConfigProvider>
+                  <div
+                    className={styles['random-box']}
+                    onClick={() => setPwd(uuidv4())}
+                  >
+                    <Tooltip title="点击生成随机密码">
+                      <Icon component={RandomSVG} />
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+              <div className={styles['create-form-item']}>
+                <p className={styles['label']}>分享人员邮箱</p>
+                <div className={styles['body']}>
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Input: {
+                          activeBorderColor: '#18181b',
+                          hoverBorderColor: '#18181b',
+                          activeShadow: 'none',
+                        },
+                      },
+                    }}
+                  >
+                    <Input
+                      className={styles['custom-input']}
+                      placeholder="输入邮箱地址(@163.com)，按分号或逗号分隔"
+                      value={emailList}
+                      onChange={(e) => setEmailList(e.target.value)}
+                    />
+                  </ConfigProvider>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className={styles['history-box']}>
+              <p>共 {linkList.length} 条分享记录</p>
+              <div className={styles['history-list-box']}>
+                {linkList.length
+                  ? linkList.map((link, index) => (
+                      <LinkItem
+                        link={link}
+                        index={index}
+                        handleDelLinkList={handleDelLinkList}
+                        handleCopy={handleCopy}
+                      />
+                    ))
+                  : null}
+              </div>
+            </div>
+          )}
         </Modal>
       </ConfigProvider>
     </>

@@ -3,9 +3,11 @@ import type {
   addModuleType,
   chatRespType,
   createLinkType,
+  linkItem,
   resumeDetailType,
   resumeListResp,
   SendChatType,
+  shareLinkInfoType,
   shareRespType,
   updateNameType,
 } from '@/types/resume'
@@ -137,4 +139,35 @@ export const delCommentAPI = (
  */
 export const postShareLinkAPI = (data: createLinkType) => {
   return request<shareRespType>('/resume/shareLink/createLink', 'POST', data)
+}
+
+/**
+ * 获取分享链接列表
+ */
+export const getLinkListsAPI = (userId: string) => {
+  return request<linkItem[]>(`/resume/shareLink/listMyLinks/${userId}`)
+}
+
+/**
+ * 获取分享链接的权限信息
+ */
+export const getLinkInfoAPI = (shareToken: string) => {
+  return request<shareLinkInfoType>(`/resume/shareLink/getLink/${shareToken}`)
+}
+
+/**
+ * 启用/关闭分享链接
+ */
+export const postLinkStatusAPI = (data: {
+  isActive: 0 | 1
+  shareToken: string
+}) => {
+  return request('/resume/shareLink/setStatus', 'PUT', data)
+}
+
+/**
+ * 删除分享链接
+ */
+export const delShareLink = (shareToken: string) => {
+  return request<null>(`/resume/shareLink/deleteLink/${shareToken}`, 'DELETE')
 }

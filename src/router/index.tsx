@@ -22,6 +22,7 @@ const routes = createRoutesFromElements(
       <Route path="/templates" element={<Templates />}></Route>
     </Route>
     <Route path="/dev/:randomId" element={<Dev />}></Route>
+    <Route path="/share/:randomId" element={<Dev />}></Route>
     <Route path="login" element={<Login />}></Route>
     <Route path="register" element={<Register />}></Route>
     <Route path="/third/login" element={<ThirdPart />}></Route>

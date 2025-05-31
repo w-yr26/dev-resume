@@ -193,9 +193,41 @@
   border: 2px solid #333;
 }
 
+.tab-bar {
+  width: 100%;
+  height: 48px;
+  background-color: #f4f4f5;
+  border-radius: 8px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  .tab-item-box {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #71717a;
+    font-weight: 600;
+    transition: all 0.5s ease;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.active-tab {
+  background-color: #fff;
+  color: #000;
+}
+
 .create-form-container {
   width: 100%;
   margin-top: 8px;
+  height: 260px;
 
   .raw-box {
     display: flex;
@@ -240,5 +272,40 @@
   &:hover {
     cursor: pointer;
     background-color: #e4e4e7;
+  }
+}
+
+.history-box {
+  width: 100%;
+  height: 308px;
+  overflow-y: scroll;
+  padding: 0 12px;
+  box-sizing: border-box;
+
+  p {
+    line-height: 1.2;
+    font-size: 12px;
+    font-weight: 500;
+    color: #787880;
+    margin: 8px 0;
+  }
+
+  
+  &::-webkit-scrollbar {
+    width: 8px; /* 滚动条宽度 */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #e9e9e9; /* 滚动条轨道颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #8b8b8b; /* 滚动条颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #bfbfbf; /* 滚动条悬停时颜色 */
   }
 }

@@ -109,3 +109,36 @@ export type createLinkType = {
 export type shareRespType = {
   share_url: string
 }
+
+export type shareTargetType = 'resume' | 'article' | 'project'
+
+export type sharedUserItem = {
+  createTime: string
+  updateTime: string
+  id: number
+  isDeleted: 0 | 1
+  shareToken: string
+  targetType: shareTargetType
+  targetValue: string
+}
+
+export type shareLinkInfoType = {
+  shareLink: linkItem
+  targets: sharedUserItem[]
+}
+
+export type linkItem = {
+  accessType: 'public' | 'private'
+  expireAt: string
+  maxVisits: number
+  resourceId: string
+  userId: number
+  visitCount: number // 已访问数量
+  createTime: string
+  shareToken: string
+  isDeleted: number // 是否删除
+  isActive: number // 是否活跃
+  id: number
+  permissions: string // 权限字段
+  shareUrl: string
+}
