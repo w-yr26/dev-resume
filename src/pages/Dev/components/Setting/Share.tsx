@@ -9,18 +9,21 @@ import { ConfigProvider, Input, message, Modal, Select, Tooltip } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import { postShareLinkAPI } from '@/apis/resume'
+import { useDevStore, useUserStore } from '@/store'
+import dayjs from 'dayjs'
 
 const durationOptions = [
   {
-    value: '4h',
+    value: 4,
     label: '4小时',
   },
   {
-    value: '24h',
+    value: 24,
     label: '24小时',
   },
   {
-    value: '3d',
+    value: 72,
     label: '3天',
   },
 ]
@@ -52,10 +55,13 @@ const normalizeSeparators = (input: string) => {
 }
 
 const Share = () => {
+  const resumeId = useDevStore((state) => state.resumeId)
+  const userId = useUserStore((state) => state.info.id)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pwd, setPwd] = useState('')
   const [emailList, setEmailList] = useState('')
-
+  const [count, setCount] = useState(5)
+  const [hour, setHour] = useState(4)
   // 分割、校验
   const validateAndSplitUsers = () => {
     // 1. 标准化分隔符
@@ -84,11 +90,39 @@ const Share = () => {
     }
   }
 
-  const generatorShareLink = () => {
-    if (!emailList) return message.warning('请输入目标分享用户邮箱')
+  const resetState = () => {
+    setCount(5)
+    setHour(4)
+    setPwd('')
+    setEmailList('')
+    setIsModalOpen(false)
+  }
+
+  const generatorShareLink = async () => {
     const { userList, isValid } = validateAndSplitUsers()
     if (!isValid) return message.warning('请按正确格式输入邮箱列表')
-    console.log(userList)
+    try {
+      const { data } = await postShareLinkAPI({
+        resourceType: 'resume',
+        maxVisits: count === -1 ? undefined : count,
+        password: pwd ?? undefined,
+        expireAt: dayjs().add(hour, 'hours').format('YYYY-MM-DD HH:mm:ss'),
+        accessType: userList.length ? 'private' : 'public',
+        targetList: userList.length
+          ? userList.map((i) => ({
+              targetType: 'email',
+              targetValue: i,
+            }))
+          : [],
+        resourceId: resumeId,
+        userId,
+      })
+      await navigator.clipboard.writeText(data.share_url)
+      resetState()
+      message.success('分享链接已复制至剪切板')
+    } catch (_) {
+      message.error('分享失败，请稍后再试')
+    }
   }
 
   return (
@@ -142,7 +176,7 @@ const Share = () => {
             />,
           ]}
           open={isModalOpen}
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={() => resetState()}
         >
           <div className={styles['create-form-container']}>
             <div className={styles['raw-box']}>
@@ -165,8 +199,9 @@ const Share = () => {
                   >
                     <Select
                       className={styles['custom-input']}
-                      defaultValue="4h"
+                      value={hour}
                       options={durationOptions}
+                      onChange={(e) => setHour(e)}
                     />
                   </ConfigProvider>
                 </div>
@@ -190,8 +225,9 @@ const Share = () => {
                   >
                     <Select
                       className={styles['custom-input']}
-                      defaultValue={5}
+                      value={count}
                       options={countOptions}
+                      onChange={(e) => setCount(e)}
                     />
                   </ConfigProvider>
                 </div>

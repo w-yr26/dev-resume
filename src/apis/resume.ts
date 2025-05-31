@@ -2,9 +2,11 @@ import { request } from '@/utils'
 import type {
   addModuleType,
   chatRespType,
+  createLinkType,
   resumeDetailType,
   resumeListResp,
   SendChatType,
+  shareRespType,
   updateNameType,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
@@ -128,4 +130,11 @@ export const delCommentAPI = (
     `/resume/comment/deleteComment?commentMapId=${commentMapId}&isMain=${isMain}&mainCommentId=${mainCommentId}&resumeId=${resumeId}&subCommentId=${subCommentId}`,
     'DELETE'
   )
+}
+
+/**
+ * 生成分享链接
+ */
+export const postShareLinkAPI = (data: createLinkType) => {
+  return request<shareRespType>('/resume/shareLink/createLink', 'POST', data)
 }

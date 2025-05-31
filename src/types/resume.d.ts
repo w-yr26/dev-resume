@@ -89,3 +89,23 @@ export type SendChatType = {
   replyId?: number
   resumeRandomId: string
 }
+
+export type shareUserItem = {
+  targetType: 'user' | 'email' | 'phone'
+  targetValue: string
+}
+
+export type createLinkType = {
+  accessType: 'public' | 'private'
+  expireAt?: string
+  maxVisits?: number
+  password?: string
+  resourceId: string
+  resourceType: 'resume' | 'article' | 'project'
+  targetList?: shareUserItem[]
+  userId: string
+}
+
+export type shareRespType = {
+  share_url: string
+}
