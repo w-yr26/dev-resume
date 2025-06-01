@@ -1,6 +1,5 @@
 import { Avatar, Input } from 'antd'
 import styles from './index.module.scss'
-import ReplyBox from './ReplyBox'
 import React from 'react'
 
 const ChatLayout = ({
@@ -8,11 +7,11 @@ const ChatLayout = ({
   userName,
   isPublishMain,
   chatVal,
+  placeholder,
   createTime,
   chatContent,
   isInputShow,
   menuBar,
-  replyBox,
   children,
   pressEnter,
   setChatVal,
@@ -21,12 +20,12 @@ const ChatLayout = ({
   userName: string
   isPublishMain: boolean
   chatVal: string
+  placeholder?: string
   createTime?: string
   chatContent?: string
   isInputShow?: boolean
   children?: React.ReactNode
   menuBar?: React.ReactNode
-  replyBox?: React.ReactNode
   pressEnter: (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     isMain: 0 | 1
@@ -48,10 +47,7 @@ const ChatLayout = ({
             ) : null}
           </div>
           {chatContent ? (
-            <div className={styles['chat-content-box']}>
-              {replyBox ? replyBox : null}
-              {chatContent}
-            </div>
+            <div className={styles['chat-content-box']}>{chatContent}</div>
           ) : null}
           {menuBar ?? null}
         </div>
@@ -63,7 +59,7 @@ const ChatLayout = ({
             autoFocus={true}
             autoSize
             value={chatVal}
-            placeholder="输入您的评论内容"
+            placeholder={placeholder ?? '输入您的评论内容'}
             onPressEnter={(e) => pressEnter(e, isPublishMain ? 1 : 0)}
             onChange={(e) => setChatVal(e.target.value)}
           />
