@@ -4,6 +4,17 @@ import router from '@/router'
 import { useUserStore } from '@/store'
 import { postRefreshTokenAPI } from '@/apis/user'
 
+// 路由白名单
+const WHITE_LIST = [
+  '/resume/user/login', // 登录
+  '/resume/user/register', // 注册
+  '/resume/user/RegisterCode', // 获取注册的验证码
+  '/resume/user/gitee/callback', // gitee授权回调
+  '/resume/user/refreshToken', // 无感刷新
+  '/resume/user/forgot-password', // 忘记密码
+  '/resume/user/sendCode', // 找回密码
+]
+
 // 请求实例
 const instance = axios.create({
   baseURL: 'http://7723d77e.r40.cpolar.top',
@@ -16,7 +27,8 @@ instance.interceptors.request.use(
     // 在发送请求之前校验token令牌，并在请求头添加token
     const store = useUserStore.getState()
     const token = store.info.token
-    if (token) {
+
+    if (token && !WHITE_LIST.includes(config.url || '')) {
       config.headers.Authorization = token
     }
 
