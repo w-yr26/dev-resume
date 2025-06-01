@@ -8,11 +8,12 @@ $light-border-color: #e4e4e7;
 $light-cardBg-color: #ffffff;
 
 .dev-container {
+  position: relative;
   height: 100vh;
   display: flex;
   justify-content: space-between;
   background: $light-bg-color;
-  // overflow: hidden;
+  overflow: hidden;
 
   .main-container {
     flex: 1;
@@ -97,5 +98,30 @@ $light-cardBg-color: #ffffff;
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+.open-chat-tool-box {
+  position: absolute;
+  top: 48px;
+  left: 40px;
+  background-color: #fff;
+  width: 45px;
+  height: 35px;
+  font-size: 13px;
+  color: #2b2f36;
+  font-weight: 500;
+  border: 1px solid #dee0e3;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #fafafa;
+    transform: translateX(8px) scale(1.03);
   }
 }

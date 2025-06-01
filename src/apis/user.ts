@@ -1,17 +1,29 @@
 import { request } from '@/utils'
-import type { loginInfoType, LoginResponse } from '@/types/user'
+import type {
+  loginInfoType,
+  LoginResponse,
+  refreshLoginResp,
+} from '@/types/user'
 
+/**
+ * 表单登录
+ */
 export const loginAPI = (data: loginInfoType) => {
   return request<LoginResponse>('/resume/user/login', 'POST', data)
 }
 
-// 和密码相关password.ts
+/**
+ * 获取验证码 - 重置密码
+ */
 export const getVerificationCodeAPI = (email: string) => {
   return request<null>(`/resume/user/sendCode`, 'POST', {
     email,
   })
 }
 
+/**
+ * 修改密码
+ */
 export const postNewPwdAPI = (data: {
   email: string
   password: string
@@ -21,9 +33,7 @@ export const postNewPwdAPI = (data: {
 }
 
 /**
- * 获取邮箱验证码
- * @param email
- * @returns
+ * 获取邮箱验证码 - 注册
  */
 export const postRegisterCodeAPI = (email: string) => {
   return request<null>(`/resume/user/RegisterCode`, 'POST', {
@@ -52,6 +62,15 @@ export const postRegisterAPI = (data: {
  */
 export const getOauthGiteeAPI = (code: string) => {
   return request<LoginResponse>(`/resume/user/gitee/callback?code=${code}`)
+}
+
+/**
+ * 无感刷新
+ */
+export const postRefreshTokenAPI = (refreshToken: string) => {
+  return request<refreshLoginResp>('/resume/user/refreshToken', 'POST', {
+    refreshToken,
+  })
 }
 
 /**

@@ -1,13 +1,14 @@
 .materials-contaienr {
-  // min-width: 25%;
-  // width: 30%;
-  // flex: 1;
+  position: absolute;
+  top: 0;
+  left: 48px;
   width: 390px;
   height: 100%;
   padding: 0 1rem;
   background-color: #fff;
   overflow-y: scroll;
-  transition: display 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  z-index: 2;
 
   &::-webkit-scrollbar {
     width: 8px; /* 滚动条宽度 */
@@ -29,8 +30,7 @@
 }
 
 .active-translate {
-  // transform: translateX(-440px);
-  display: none;
+  transform: translateX(-500px);
 }
 
 /* 水平多表单项排列 */

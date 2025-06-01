@@ -2,11 +2,23 @@ import { message } from 'antd'
 import axios, { type AxiosError, type Method } from 'axios'
 import router from '@/router'
 import { useUserStore } from '@/store'
+import { postRefreshTokenAPI } from '@/apis/user'
+
+// 路由白名单
+const WHITE_LIST = [
+  '/resume/user/login', // 登录
+  '/resume/user/register', // 注册
+  '/resume/user/RegisterCode', // 获取注册的验证码
+  '/resume/user/gitee/callback', // gitee授权回调
+  '/resume/user/refreshToken', // 无感刷新
+  '/resume/user/forgot-password', // 忘记密码
+  '/resume/user/sendCode', // 找回密码
+]
 
 // 请求实例
 const instance = axios.create({
-  baseURL: 'http://7b395403.r39.cpolar.top',
-  timeout: 5000,
+  baseURL: 'http://7723d77e.r40.cpolar.top',
+  timeout: 10000,
 })
 
 // 请求拦截器
@@ -15,7 +27,8 @@ instance.interceptors.request.use(
     // 在发送请求之前校验token令牌，并在请求头添加token
     const store = useUserStore.getState()
     const token = store.info.token
-    if (token) {
+
+    if (token && !WHITE_LIST.includes(config.url || '')) {
       config.headers.Authorization = token
     }
 
@@ -33,35 +46,45 @@ instance.interceptors.response.use(
     // 2xx 范围内的状态码都会触发该函数
     // 注意，请求状态码!==业务状态码
     const { code, msg } = response.data
-    const { authorization } = response.headers
-    const store = useUserStore.getState()
-    // const token = store.info.token
-    const updateInfo = store.updateInfo
-    // 无token，则存储
-    // if (!token) {
-    updateInfo('token', authorization)
-    localStorage.setItem('token', authorization)
-    // }
 
     // 业务统一状态码出错
     if (code !== 1) {
+      // 如果是刷新token的请求出现业务状态码错误，需要拦截到登录页
+      if (response.config.url === '/resume/user/refreshToken') {
+        jumpToLogin()
+        return
+      }
       message.error(msg || '请求出错, 请稍后再试')
       return
-    } else if (code === 1) {
-      if (msg) message.success(msg)
     }
 
     // 数据剥离
     return response.data
   },
-  function (error: AxiosError) {
-    const { status } = error
-    // 401错误, token失效
+  async function (error: AxiosError) {
+    const { status, config } = error
+    // 401错误
     if (status === 401) {
-      message.warning('当前登录状态有误, 请重新登录')
-      router.navigate('/login', {
-        replace: true,
-      })
+      // refreshToken过期，说明真的要重新登陆了
+      if (config?.url === '/resume/user/refreshToken') {
+        jumpToLogin()
+      } else {
+        // 无感刷新
+        if (!config) {
+          jumpToLogin()
+          return
+        }
+        const store = useUserStore.getState()
+        const refreshToken = store.info.refreshToken
+        // 更新token的接口如果请求状态码也出错，会被新的响应错误拦截器拦截；如果业务状态码出错，会被新的响应成功拦截器拦截
+        const { data } = await postRefreshTokenAPI(refreshToken || '')
+        // 更新token
+        store.info.token = data.token
+        store.info.refreshToken = data.refreshToken
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('refreshToken', data.refreshToken)
+        return instance(config!)
+      }
     } else {
       message.error(JSON.stringify(error))
     }
@@ -70,6 +93,15 @@ instance.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+// 跳转登录
+// TODO: 根据历史栈，在登录成功之后回跳到上次访问的页面
+const jumpToLogin = () => {
+  message.warning('当前登录状态有误, 请重新登录')
+  router.navigate('/login', {
+    replace: true,
+  })
+}
 
 type Data<T> = {
   data: T

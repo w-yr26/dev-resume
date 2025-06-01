@@ -1,134 +1,186 @@
-import { Avatar, Drawer, Input } from 'antd'
+import { Avatar, Input } from 'antd'
 import styles from './index.module.scss'
-import type { commentItem, sideBarType } from '@/types/materials'
-import React, { useState } from 'react'
+import type { sideBarType } from '@/types/materials'
+import React, { useEffect, useState } from 'react'
+import { getAllCommentAPI, postNewCommentAPI } from '@/apis/resume'
+import { chatRespType, subChatItemType } from '@/types/resume'
+import { useUserStore } from '@/store'
+import ChatItem from './ChatItem'
+import dayjs from 'dayjs'
+import { v4 as uuidv4 } from 'uuid'
+import Icon from '@ant-design/icons'
+import ArrowLeftSVG from '@/assets/svg/dev/arrowLeft.svg?react'
 
 const ChatSideBar = ({
+  resumeId,
   sidebarOpened,
   currentText,
   selectedNodeKey,
   setSidebarOpened,
   setCurrentText,
 }: sideBarType) => {
-  const [chatList, setChatList] = useState<commentItem[]>([])
-  const [isInputShow, setIsInputShow] = useState(false)
+  const userName = useUserStore((state) => state.info.userName)
+  const userId = useUserStore((state) => state.info.id)
+  const [chatList, setChatList] = useState<chatRespType[]>([])
+  const [isInputShow, setIsInputShow] = useState(true)
+  const [chatVal, setChatVal] = useState('')
+
+  useEffect(() => {
+    const getChatList = async () => {
+      const { data } = await getAllCommentAPI(resumeId)
+      setChatList(data)
+    }
+
+    getChatList()
+  }, [resumeId])
 
   // 新增评论
-  const pressEnter = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const pressEnter = async (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+    isMain: 0 | 1 = 1
+  ) => {
     if (!e.shiftKey) {
       e.preventDefault() // 阻止换行
-      console.log('提交评论:', e.currentTarget.value)
-      // 调用接口提交评论
-      // 更新评论列表
+      const content = e.currentTarget.value
+      // 乐观更新
       setChatList([
         ...chatList,
         {
-          id: new Date().getTime(),
-          nodeKey: selectedNodeKey,
-          quote_content: currentText,
-          chat_list: [
-            {
-              avatar: 'U',
-              chat_content: e.currentTarget.value,
-              date: '2025-05-02',
-              id: new Date().getTime(),
-              userName: 'zs',
-            },
-          ],
+          commentatorId: userId,
+          commentMapId: selectedNodeKey,
+          content,
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          mainCommentId: uuidv4(),
+          resumeRandomId: resumeId,
+          subCommentVOList: [],
+          nodeText: currentText,
+          username: userName,
         },
       ])
+      setIsInputShow(false)
+      setChatVal('')
       setCurrentText('')
-      // 这里触发你的评论提交逻辑
+      // 调用接口提交评论
+      await postNewCommentAPI({
+        commentMapId: selectedNodeKey,
+        commentatorId: Number(userId),
+        content,
+        isMain,
+        nodeText: currentText,
+        resumeRandomId: resumeId,
+      })
     }
   }
 
-  // 评论回复
-  const handleReplay = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!e.shiftKey) {
-      setIsInputShow(false)
+  // 更新评论列表
+  const updateSubChatList = (mainChatId: string, subChat: subChatItemType) => {
+    const newChatList = chatList.map((i) => {
+      if (i.mainCommentId !== mainChatId) return i
+      else {
+        return {
+          ...i,
+          subCommentVOList: i.subCommentVOList
+            ? [...i.subCommentVOList, subChat]
+            : [subChat],
+        }
+      }
+    })
+
+    setChatList(newChatList)
+  }
+
+  // 删除评论列表
+  const delSubChatList = (
+    mainCommentId: string,
+    subCommentId: string | undefined = undefined
+  ) => {
+    if (!subCommentId) {
+      // 没有副评论id，说明此时删除的是主评论
+      const newChatList = chatList.filter(
+        (i) => i.mainCommentId !== mainCommentId
+      )
+      setChatList(newChatList)
+    } else {
+      // 删除某一条子评论，无需考虑连带关系，只需删除对应的评论数据即可
+      const newChatList = chatList.map((i) => {
+        if (i.mainCommentId !== mainCommentId) return i
+        else {
+          return {
+            ...i,
+            subCommentVOList:
+              i.subCommentVOList?.filter(
+                (sub) => sub.subCommentId !== subCommentId
+              ) || [],
+          }
+        }
+      })
+      setChatList(newChatList)
     }
+  }
+
+  // 关闭评论列表，重置状态
+  const onCloseDrawer = () => {
+    setSidebarOpened(false)
+    setIsInputShow(true)
   }
 
   return (
-    <div className={styles['chat-side-container']}>
-      <Drawer
-        title="评论列表"
-        placement="left"
-        open={sidebarOpened}
-        onClose={() => setSidebarOpened(false)}
-      >
+    <div
+      className={`${styles['chat-side-container']} ${
+        sidebarOpened ? styles['expand-box'] : styles['shrink-box']
+      }`}
+    >
+      <div className={styles['chat-list-title']}>
+        <div>评论({chatList.length})</div>
+        <div
+          style={{
+            cursor: 'pointer',
+          }}
+          onClick={onCloseDrawer}
+        >
+          <Icon component={ArrowLeftSVG} />
+        </div>
+      </div>
+      <div className={styles['chat-list-body']}>
         {chatList.length
           ? chatList.map((chatItem) => (
-              <React.Fragment key={chatItem.id}>
-                <div className={styles['bottom-chat']}>
-                  <div className={styles['quote-box']}>
-                    {chatItem.quote_content}
-                  </div>
-                  {chatItem.chat_list
-                    ? chatItem.chat_list.map((chatDetainItem) => (
-                        <React.Fragment key={chatDetainItem.id}>
-                          <div className={styles['body-box']}>
-                            <div className={styles['left-box']}>
-                              <Avatar size="small">{chatDetainItem.id}</Avatar>
-                            </div>
-                            <div className={styles['right-box']}>
-                              <div className={styles['right-top-box']}>
-                                <span className={styles['user-name']}>
-                                  {chatDetainItem.userName}
-                                </span>
-                                <span className={styles['date-box']}>
-                                  {chatDetainItem.date}
-                                </span>
-                              </div>
-                              <div className="chat-content-box">
-                                {chatDetainItem.chat_content}
-                              </div>
-                            </div>
-                          </div>
-                          {isInputShow ? (
-                            <div className={styles['input-box']}>
-                              <Input.TextArea
-                                placeholder="输入评论"
-                                autoFocus
-                                autoSize
-                                onPressEnter={handleReplay}
-                              />
-                            </div>
-                          ) : (
-                            <div
-                              className={styles['reply-box']}
-                              onClick={() => setIsInputShow(true)}
-                            >
-                              回复...
-                            </div>
-                          )}
-                        </React.Fragment>
-                      ))
-                    : null}
-                </div>
-              </React.Fragment>
+              <ChatItem
+                chatItem={chatItem}
+                key={chatItem.mainCommentId}
+                updateSubChatList={updateSubChatList}
+                delSubChatList={delSubChatList}
+              />
             ))
           : null}
-        {currentText ? (
+
+        {isInputShow && currentText ? (
           <div className={styles['bottom-chat']}>
             <div className={styles['quote-box']}>{currentText}</div>
-            <div className={styles['body-box']}>
+            <div
+              className={`${styles['body-box']} ${styles['comment-item-box']}`}
+            >
               <div className={styles['left-box']}>
-                <Avatar size="small">User</Avatar>
+                <Avatar size="small">{userName}</Avatar>
               </div>
-              <div className={styles['right-box']}>吴昱锐</div>
+              <div className={`${styles['right-box']}`}>
+                <div className={styles['right-top-box']}>
+                  <span className={styles['user-name']}>{userName}</span>
+                </div>
+              </div>
             </div>
             <div className={styles['input-box']}>
               <Input.TextArea
-                placeholder="输入评论"
-                autoFocus
+                autoFocus={true}
                 autoSize
+                value={chatVal}
+                placeholder="输入您的评论内容"
                 onPressEnter={pressEnter}
+                onChange={(e) => setChatVal(e.target.value)}
               />
             </div>
           </div>
         ) : null}
-      </Drawer>
+      </div>
     </div>
   )
 }

@@ -8,6 +8,9 @@ $light-border-color: #e4e4e7;
 $light-cardBg-color: #ffffff;
 
 .right-container {
+  position: fixed;
+  top: 0;
+  right: 0;
   width: 48px;
   height: 100%;
   padding: 16px;
@@ -17,7 +20,7 @@ $light-cardBg-color: #ffffff;
   justify-content: space-between;
   align-items: center;
   background-color: #f8f8f9;
-  z-index: 2;
+  z-index: 3;
 
   .list-box {
     display: flex;

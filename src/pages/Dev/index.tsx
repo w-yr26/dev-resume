@@ -16,8 +16,8 @@ import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
-import { getResumeDetailsAPI } from '@/apis/resume'
-import { useParams } from 'react-router-dom'
+import { getLinkInfoAPI, getResumeDetailsAPI } from '@/apis/resume'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 
@@ -61,6 +61,20 @@ const Dev = () => {
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
   const params = useParams()
+  const [searchParams] = useSearchParams()
+
+  // 判断是否从分享页进入
+  useEffect(() => {
+    // const getShareLinkInfo = async () => {
+    //   const token = searchParams.get('token')
+    //   if (token) {
+    //     const { data } = await getLinkInfoAPI(token)
+    //     console.log(data)
+    //   }
+    // }
+    // getShareLinkInfo()
+  }, [])
+
   useEffect(() => {
     const getDetail = async () => {
       if (params.randomId) {
@@ -435,12 +449,19 @@ const Dev = () => {
         </div>
       )}
       <ChatSideBar
+        resumeId={params.randomId!}
         selectedNodeKey={currentNodeKey}
         currentText={currentText}
         sidebarOpened={sidebarOpened}
         setSidebarOpened={setSidebarOpened}
         setCurrentText={setCurrentText}
       />
+      <div
+        className={styles['open-chat-tool-box']}
+        onClick={() => setSidebarOpened(true)}
+      >
+        <Icon component={commentSVG} />
+      </div>
     </div>
   )
 }

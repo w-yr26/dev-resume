@@ -1,8 +1,14 @@
 import { request } from '@/utils'
 import type {
   addModuleType,
+  chatRespType,
+  createLinkType,
+  linkItem,
   resumeDetailType,
   resumeListResp,
+  SendChatType,
+  shareLinkInfoType,
+  shareRespType,
   updateNameType,
 } from '@/types/resume'
 import { keyType } from '@/types/dev'
@@ -89,4 +95,79 @@ export const delModuleSingleInfoAPI = (
  */
 export const putUpdateNameAPI = (data: updateNameType) => {
   return request<null>('/resume/resume/updateName', 'PUT', data)
+}
+
+/**
+ * 获取简历评论
+ */
+export const getAllCommentAPI = (resumeId: string) => {
+  return request<chatRespType[]>(
+    `/resume/comment/getAllComment?randomId=${resumeId}`
+  )
+}
+
+/**
+ * 发送新评论
+ */
+export const postNewCommentAPI = (data: SendChatType) => {
+  return request<null>('/resume/comment/sendNewComment', 'POST', data)
+}
+
+/**
+ * 删除评论
+ * @param commentMapId 节点id
+ * @param isMain 是否为主评论
+ * @param mainCommentId 主评论id
+ * @param resumeId 简历id
+ * @param subCommentId 副评论id(非必选)
+ */
+export const delCommentAPI = (
+  commentMapId: string,
+  isMain: 0 | 1,
+  mainCommentId: string,
+  resumeId: string,
+  subCommentId: string = ''
+) => {
+  return request<null>(
+    `/resume/comment/deleteComment?commentMapId=${commentMapId}&isMain=${isMain}&mainCommentId=${mainCommentId}&resumeId=${resumeId}&subCommentId=${subCommentId}`,
+    'DELETE'
+  )
+}
+
+/**
+ * 生成分享链接
+ */
+export const postShareLinkAPI = (data: createLinkType) => {
+  return request<shareRespType>('/resume/shareLink/createLink', 'POST', data)
+}
+
+/**
+ * 获取分享链接列表
+ */
+export const getLinkListsAPI = (userId: string) => {
+  return request<linkItem[]>(`/resume/shareLink/listMyLinks/${userId}`)
+}
+
+/**
+ * 获取分享链接的权限信息
+ */
+export const getLinkInfoAPI = (shareToken: string) => {
+  return request<shareLinkInfoType>(`/resume/shareLink/getLink/${shareToken}`)
+}
+
+/**
+ * 启用/关闭分享链接
+ */
+export const postLinkStatusAPI = (data: {
+  isActive: 0 | 1
+  shareToken: string
+}) => {
+  return request('/resume/shareLink/setStatus', 'PUT', data)
+}
+
+/**
+ * 删除分享链接
+ */
+export const delShareLink = (shareToken: string) => {
+  return request<null>(`/resume/shareLink/deleteLink/${shareToken}`, 'DELETE')
 }

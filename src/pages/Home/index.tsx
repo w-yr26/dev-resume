@@ -8,20 +8,8 @@ import ListSVG from '@/assets/svg/list.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
-import openSVG from '@/assets/svg/open.svg?react'
-import editSVG from '@/assets/svg/edit.svg?react'
-import copySVG from '@/assets/svg/copy.svg?react'
-import deleteSVG from '@/assets/svg/delete.svg?react'
 
-import {
-  Button,
-  ConfigProvider,
-  Input,
-  message,
-  Modal,
-  Popover,
-  Tooltip,
-} from 'antd'
+import { Button, ConfigProvider, Input, message, Modal, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import {
   delResumeAPI,
@@ -32,6 +20,8 @@ import {
 import type { resumeItem } from '@/types/resume'
 import CustomBtn from '@/components/CustomBtn'
 import { useNavigate } from 'react-router-dom'
+import WorkItem from '@/components/WorkItem'
+import DevModalFormItem from '@/components/DevModalFormItem'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -76,6 +66,8 @@ const Home = () => {
 
     await getResumeList()
     setIsModalOpen(false)
+    setSelectId('')
+    setResumeTitle('')
   }
 
   const produceRandomTitle = () => {
@@ -92,37 +84,6 @@ const Home = () => {
     await delResumeAPI(id)
     await getResumeList()
   }
-
-  const menuContent = (id: string, title: string) => (
-    <div className={styles['menu-list']}>
-      <div className={styles['menu-item-box']} onClick={() => handleOpen(id)}>
-        <Icon component={openSVG} />
-        <span className={styles['item-label']}>打开</span>
-      </div>
-      <div
-        className={styles['menu-item-box']}
-        onClick={() => {
-          setSelectId(id)
-          setResumeTitle(title)
-          setIsModalOpen(true)
-        }}
-      >
-        <Icon component={editSVG} />
-        <span className={styles['item-label']}>重命名</span>
-      </div>
-      <div className={styles['menu-item-box']}>
-        <Icon component={copySVG} />
-        <span className={styles['item-label']}>复制</span>
-      </div>
-      <div
-        className={`${styles['menu-item-box']} ${styles['del-item-box']}`}
-        onClick={() => handleDel(id)}
-      >
-        <Icon component={deleteSVG} />
-        <span className={styles['item-label']}>删除</span>
-      </div>
-    </div>
-  )
 
   return (
     <>
@@ -174,44 +135,56 @@ const Home = () => {
         {/* 简历列表 */}
         {resumeList.length
           ? resumeList.map((item, index) => (
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Popover: {
-                      boxShadowSecondary: 'none',
-                    },
-                  },
-                }}
-                key={item.id}
-              >
-                <Popover
-                  content={() => menuContent(item.randomId, item.title)}
-                  title={null}
-                  trigger="click"
-                >
-                  <div
-                    className={`${styles['resume-item']} ${styles['animation-item']}`}
-                    style={{
-                      animationDelay: `0.${index + 1}s`,
-                    }}
-                  >
-                    <div className={styles['resume-bottom']}>
-                      <p className={styles['resume-name']}>{item.title}</p>
-                      <p className={styles['update-time']}>
-                        最后更新于&nbsp;
-                        <span
-                          style={{
-                            color: '#333',
-                          }}
-                        >
-                          {item.updateTime}
-                        </span>
-                        &nbsp;前
-                      </p>
-                    </div>
-                  </div>
-                </Popover>
-              </ConfigProvider>
+              // <ConfigProvider
+              //   theme={{
+              //     components: {
+              //       Popover: {
+              //         boxShadowSecondary: 'none',
+              //       },
+              //     },
+              //   }}
+              //   key={item.id}
+              // >
+              //   <Popover
+              //     content={() => menuContent(item.randomId, item.title)}
+              //     title={null}
+              //     trigger="click"
+              //   >
+              //     <div
+              //       className={`${styles['resume-item']} ${styles['animation-item']}`}
+              //       style={{
+              //         animationDelay: `0.${index + 1}s`,
+              //       }}
+              //     >
+              //       <div className={styles['resume-bottom']}>
+              //         <p className={styles['resume-name']}>{item.title}</p>
+              //         <p className={styles['update-time']}>
+              //           最后更新于&nbsp;
+              //           <span
+              //             style={{
+              //               color: '#333',
+              //             }}
+              //           >
+              //             {item.updateTime}
+              //           </span>
+              //           &nbsp;前
+              //         </p>
+              //       </div>
+              //     </div>
+              //   </Popover>
+              // </ConfigProvider>
+              <WorkItem
+                key={item.randomId}
+                workId={item.randomId}
+                title={item.title}
+                updateTime={item.updateTime}
+                index={index}
+                handleDel={handleDel}
+                handleOpen={handleOpen}
+                setSelectId={setSelectId}
+                setIsModalOpen={setIsModalOpen}
+                setWorkTitle={setResumeTitle}
+              />
             ))
           : null}
       </div>
@@ -258,9 +231,9 @@ const Home = () => {
           onCancel={() => setIsModalOpen(false)}
         >
           <div className={styles['create-form-container']}>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>标题</p>
-              <div className={styles['body']}>
+            <DevModalFormItem
+              title="标题"
+              primary={
                 <ConfigProvider
                   theme={{
                     components: {
@@ -278,22 +251,22 @@ const Home = () => {
                     onChange={(e) => setResumeTitle(e.target.value)}
                   />
                 </ConfigProvider>
-                <div
-                  className={styles['random-box']}
-                  onClick={produceRandomTitle}
-                >
-                  <Tooltip title="点击生成随机标题">
-                    <Icon component={RandomSVG} />
-                  </Tooltip>
+              }
+              sub={
+                <div className={styles['sub-label']}>
+                  提示: 您可以根据职位来命名简历
                 </div>
-              </div>
-              <div className={styles['sub-label']}>
-                提示: 您可以根据职位来命名简历
-              </div>
-            </div>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>备注</p>
-              <div className={styles['body']}>
+              }
+              icon={
+                <Tooltip title="点击生成随机标题">
+                  <Icon component={RandomSVG} />
+                </Tooltip>
+              }
+              handleRandom={produceRandomTitle}
+            />
+            <DevModalFormItem
+              title="备注"
+              primary={
                 <ConfigProvider
                   theme={{
                     components: {
@@ -311,8 +284,8 @@ const Home = () => {
                     onChange={(e) => setSlug(e.target.value)}
                   />
                 </ConfigProvider>
-              </div>
-            </div>
+              }
+            />
           </div>
         </Modal>
       </ConfigProvider>

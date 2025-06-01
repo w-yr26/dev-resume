@@ -8,6 +8,7 @@ export type ButtonPanelPosition = {
 }
 
 export type sideBarType = {
+  resumeId: string
   sidebarOpened: boolean
   currentText: string
   selectedNodeKey: string
@@ -21,11 +22,4 @@ export type chatItem = {
   date: string
   avatar: string
   chat_content: string
-}
-
-export type commentItem = {
-  id: string | number
-  nodeKey: string
-  quote_content: string
-  chat_list: chatItem[]
 }
