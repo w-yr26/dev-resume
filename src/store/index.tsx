@@ -4,6 +4,7 @@ import useUserStore from './UserStore'
 import useStyleStore from './StyleStore'
 import useUIStore from './UiStore'
 import useDesignStore from './DesignStore'
+import useShareStore from './ShareStore'
 
 export {
   useDevStore,
@@ -12,4 +13,5 @@ export {
   useStyleStore,
   useUIStore,
   useDesignStore,
+  useShareStore,
 }

@@ -125,7 +125,8 @@ export type sharedUserItem = {
 
 export type shareLinkInfoType = {
   shareLink: linkItem
-  targets: sharedUserItem[]
+  targets: sharedUserItem[] | null
+  permissions: string
 }
 
 export type linkItem = {
@@ -142,4 +143,11 @@ export type linkItem = {
   id: number
   permissions: string // 权限字段
   shareUrl: string
+}
+
+export type shareStoreType = {
+  permissions: number[]
+  targetUsers: sharedUserItem[] | null
+  updateTarget: (val: sharedUserItem[] | null) => void
+  updatePermissions: (val: number[]) => void
 }

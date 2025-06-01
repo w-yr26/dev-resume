@@ -16,11 +16,12 @@ import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
-import { getLinkInfoAPI, getResumeDetailsAPI } from '@/apis/resume'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getResumeDetailsAPI } from '@/apis/resume'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
-import Unauthorized from './components/Unauthorized'
+import InvalidHoc from './components/InvalidHoc'
+import AuthorizationHoc from './components/AuthorizationHoc'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -57,30 +58,17 @@ const Dev = () => {
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
   const [temList, setTemList] = useState<templateListType[]>([])
-  const [isUnauthorization, setIsUnauthorization] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
   const params = useParams()
   const [searchParams] = useSearchParams()
+  const token = searchParams.get('token')
 
-  // 判断是否从分享页进入
-  useEffect(() => {
-    const getShareLinkInfo = async () => {
-      const token = searchParams.get('token')
-      if (token) {
-        try {
-          const { data } = await getLinkInfoAPI(token)
-          console.log('permissionInfo', data)
-        } catch (_) {
-          setIsUnauthorization(true)
-
-        }
-      }
-    }
-    getShareLinkInfo()
-  }, [])
+  const isOrigin = useMemo(() => {
+    return !searchParams.get('token')
+  }, [searchParams])
 
   useEffect(() => {
     const getDetail = async () => {
@@ -372,57 +360,58 @@ const Dev = () => {
   }, [selectedEl])
 
   return (
-    <>
-      {isUnauthorization ? (
-        <Unauthorized />
-      ) : (
-        <div className={styles['dev-container']}>
+    <InvalidHoc token={token}>
+      <div className={styles['dev-container']}>
+        <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <LeftMenu
             iconClick={handleScroll}
             isLeftUnExpand={isLeftUnExpand}
             setisLeftUnExpand={setisLeftUnExpand}
           />
           <Materials ref={scrollRef} isLeftUnExpand={isLeftUnExpand} />
-          <main
-            className={`${styles['main-container']}
+        </AuthorizationHoc>
+
+        <main
+          className={`${styles['main-container']}
         ${isLeftUnExpand && isRightUnExpand && styles['not-edit']}
         `}
+        >
+          <div
+            className={styles['preview-container']}
+            onWheel={(e) => handleWheel(e)}
+            onMouseDown={(e) => startDrag(e)}
           >
             <div
-              className={styles['preview-container']}
-              onWheel={(e) => handleWheel(e)}
-              onMouseDown={(e) => startDrag(e)}
+              className={styles['resume-container']}
+              style={{
+                ...configStyle['commonStyle'],
+                width: pageWidth,
+                height: pageHeight,
+                transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
+                cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
+              }}
+              ref={resumeRef}
             >
-              <div
-                className={styles['resume-container']}
-                style={{
-                  ...configStyle['commonStyle'],
-                  width: pageWidth,
-                  height: pageHeight,
-                  transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-                  cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
-                }}
-                ref={resumeRef}
-              >
-                <div className={styles['preview-content']} ref={mainRef}>
-                  {uiSchema && !loading && top ? (
-                    <Render dataContext={dataSource} node={uiSchema} />
-                  ) : null}
-                </div>
-                {lineShow && (
-                  <div className={styles['page-line']}>
-                    <span>分页线</span>
-                  </div>
-                )}
-                {isLoading ? (
-                  <div className={styles['loading-box']}>
-                    <Spin />
-                  </div>
+              <div className={styles['preview-content']} ref={mainRef}>
+                {uiSchema && !loading && top ? (
+                  <Render dataContext={dataSource} node={uiSchema} />
                 ) : null}
               </div>
+              {lineShow && (
+                <div className={styles['page-line']}>
+                  <span>分页线</span>
+                </div>
+              )}
+              {isLoading ? (
+                <div className={styles['loading-box']}>
+                  <Spin />
+                </div>
+              ) : null}
             </div>
-          </main>
+          </div>
+        </main>
 
+        <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <Setting
             isRightUnExpand={isRightUnExpand}
             temList={temList}
@@ -432,50 +421,50 @@ const Dev = () => {
             isRightUnExpand={isRightUnExpand}
             setisRightUnExpand={setisRightUnExpand}
           />
-          <BottomBar
-            upWheel={upWheel}
-            reduceWheel={reduceWheel}
-            handleModeSwitch={handleModeSwitch}
-            resetWheel={resetWheel}
-            isLeftUnExpand={isLeftUnExpand}
-            isRightUnExpand={isRightUnExpand}
-            isReadMode={isReadMode}
-            setisLeftUnExpand={setisLeftUnExpand}
-            setisRightUnExpand={setisRightUnExpand}
-            savePDF={savePDF}
-          />
-          <StyleEditor ref={drawerRef} />
-          {panelPos && (
-            <div
-              ref={panelRef}
-              style={{
-                top: panelPos.top + 'px',
-                left: panelPos.left + 'px',
-              }}
-              className={styles['panel-box']}
-              onClick={() => setSidebarOpened(true)}
-            >
-              {/* 功能按钮面板 */}
-              <Icon component={commentSVG} />
-            </div>
-          )}
-          <ChatSideBar
-            resumeId={params.randomId!}
-            selectedNodeKey={currentNodeKey}
-            currentText={currentText}
-            sidebarOpened={sidebarOpened}
-            setSidebarOpened={setSidebarOpened}
-            setCurrentText={setCurrentText}
-          />
+        </AuthorizationHoc>
+        <BottomBar
+          upWheel={upWheel}
+          reduceWheel={reduceWheel}
+          handleModeSwitch={handleModeSwitch}
+          resetWheel={resetWheel}
+          isLeftUnExpand={isLeftUnExpand}
+          isRightUnExpand={isRightUnExpand}
+          isReadMode={isReadMode}
+          setisLeftUnExpand={setisLeftUnExpand}
+          setisRightUnExpand={setisRightUnExpand}
+          savePDF={savePDF}
+        />
+        <StyleEditor ref={drawerRef} />
+        {panelPos && (
           <div
-            className={styles['open-chat-tool-box']}
+            ref={panelRef}
+            style={{
+              top: panelPos.top + 'px',
+              left: panelPos.left + 'px',
+            }}
+            className={styles['panel-box']}
             onClick={() => setSidebarOpened(true)}
           >
+            {/* 功能按钮面板 */}
             <Icon component={commentSVG} />
           </div>
+        )}
+        <ChatSideBar
+          resumeId={params.randomId!}
+          selectedNodeKey={currentNodeKey}
+          currentText={currentText}
+          sidebarOpened={sidebarOpened}
+          setSidebarOpened={setSidebarOpened}
+          setCurrentText={setCurrentText}
+        />
+        <div
+          className={styles['open-chat-tool-box']}
+          onClick={() => setSidebarOpened(true)}
+        >
+          <Icon component={commentSVG} />
         </div>
-      )}
-    </>
+      </div>
+    </InvalidHoc>
   )
 }
 
