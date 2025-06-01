@@ -10,6 +10,7 @@ import { useDevStore, useUserStore } from '@/store'
 import ReplyBox from './ReplyBox'
 import dayjs from 'dayjs'
 import { v4 as uuidv4 } from 'uuid'
+import ChatLayout from './ChatLayout'
 
 const ChatItem = ({
   chatItem,
@@ -98,101 +99,185 @@ const ChatItem = ({
   }
 
   return (
-    <div className={styles['bottom-chat']}>
-      <div className={styles['quote-box']}>{chatItem.nodeText}</div>
-      <div className={`${styles['body-box']} ${styles['comment-item-box']}`}>
-        <div className={styles['left-box']}>
-          <Avatar size="small">{chatItem.username}</Avatar>
-        </div>
-        <div className={`${styles['right-box']}`}>
-          <div className={styles['right-top-box']}>
-            <span className={styles['user-name']}>{chatItem.username}</span>
-            <span className={styles['date-box']}>{chatItem.createTime}</span>
+    <>
+      <ChatLayout
+        currentText={chatItem.nodeText}
+        chatVal={chatVal}
+        isPublishMain={false}
+        userName={chatItem.username}
+        createTime={chatItem.createTime}
+        chatContent={chatItem.content}
+        isInputShow={isInputShow}
+        pressEnter={pressEnter}
+        setChatVal={setChatVal}
+        menuBar={
+          <div className={styles['menu-box']}>
+            <Icon
+              component={commentSVG}
+              onClick={() => {
+                setIsInputShow(true)
+              }}
+            />
+            <Icon
+              component={deleteSVG}
+              onClick={() =>
+                handleMainDel(
+                  chatItem.commentMapId,
+                  1,
+                  chatItem.mainCommentId,
+                  resumeId
+                )
+              }
+            />
           </div>
-          <div className="chat-content-box">{chatItem.content}</div>
-        </div>
-        <div className={styles['menu-box']}>
-          <Icon
-            component={commentSVG}
-            onClick={() => {
-              setIsInputShow(true)
-            }}
-          />
-          <Icon
-            component={deleteSVG}
-            onClick={() =>
-              handleMainDel(
-                chatItem.commentMapId,
-                1,
-                chatItem.mainCommentId,
-                resumeId
-              )
-            }
-          />
-        </div>
-      </div>
-      {chatItem.subCommentVOList
-        ? [...chatItem.subCommentVOList].map((subItem) => (
-            <React.Fragment key={subItem.subCommentId}>
-              <div
-                className={`${styles['body-box']} ${styles['comment-item-box']}`}
-              >
-                <div className={styles['left-box']}>
-                  <Avatar size="small">{chatItem.username}</Avatar>
-                </div>
-                <div className={styles['right-box']}>
-                  <div className={styles['right-top-box']}>
-                    <span className={styles['user-name']}>
-                      {subItem.username}
-                    </span>
-                    <span className={styles['date-box']}>
-                      {subItem.createTime}
-                    </span>
+        }
+      >
+        {chatItem.subCommentVOList
+          ? [...chatItem.subCommentVOList].map((subItem) => (
+              <React.Fragment key={subItem.subCommentId}>
+                <div
+                  className={`${styles['body-box']} ${styles['comment-item-box']}`}
+                >
+                  <div className={styles['left-box']}>
+                    <Avatar size="small">{chatItem.username}</Avatar>
                   </div>
-                  <div className={styles['chat-content-box']}>
-                    <ReplyBox userName={subItem.replyUsername} />{' '}
-                    {subItem.content}
+                  <div className={styles['right-box']}>
+                    <div className={styles['right-top-box']}>
+                      <span className={styles['user-name']}>
+                        {subItem.username}
+                      </span>
+                      <span className={styles['date-box']}>
+                        {subItem.createTime}
+                      </span>
+                    </div>
+                    <div className={styles['chat-content-box']}>
+                      <ReplyBox userName={subItem.replyUsername} />{' '}
+                      {subItem.content}
+                    </div>
+                  </div>
+                  <div className={styles['menu-box']}>
+                    <Icon
+                      component={commentSVG}
+                      onClick={() => {
+                        setPlaceholder(`reply ${chatItem.username}: `)
+                        setIsInputShow(true)
+                        setCurrentSubChat(subItem)
+                      }}
+                    />
+                    <Icon
+                      component={deleteSVG}
+                      onClick={() =>
+                        handleMainDel(
+                          chatItem.commentMapId,
+                          0,
+                          chatItem.mainCommentId,
+                          resumeId,
+                          subItem.subCommentId
+                        )
+                      }
+                    />
                   </div>
                 </div>
-                <div className={styles['menu-box']}>
-                  <Icon
-                    component={commentSVG}
-                    onClick={() => {
-                      setPlaceholder(`reply ${chatItem.username}: `)
-                      setIsInputShow(true)
-                      setCurrentSubChat(subItem)
-                    }}
-                  />
-                  <Icon
-                    component={deleteSVG}
-                    onClick={() =>
-                      handleMainDel(
-                        chatItem.commentMapId,
-                        0,
-                        chatItem.mainCommentId,
-                        resumeId,
-                        subItem.subCommentId
-                      )
-                    }
-                  />
-                </div>
-              </div>
-            </React.Fragment>
-          ))
-        : null}
-      {isInputShow ? (
-        <div className={styles['input-box']}>
-          <Input.TextArea
-            autoFocus
-            autoSize
-            value={chatVal}
-            placeholder={placeholder}
-            onPressEnter={pressEnter}
-            onChange={(e) => setChatVal(e.target.value)}
-          />
+              </React.Fragment>
+            ))
+          : null}
+      </ChatLayout>
+      {/* <div className={styles['bottom-chat']}>
+        <div className={styles['quote-box']}>{chatItem.nodeText}</div>
+        <div className={`${styles['body-box']} ${styles['comment-item-box']}`}>
+          <div className={styles['left-box']}>
+            <Avatar size="small">{chatItem.username}</Avatar>
+          </div>
+          <div className={`${styles['right-box']}`}>
+            <div className={styles['right-top-box']}>
+              <span className={styles['user-name']}>{chatItem.username}</span>
+              <span className={styles['date-box']}>{chatItem.createTime}</span>
+            </div>
+            <div className={styles['chat-content-box']}>{chatItem.content}</div>
+          </div>
+          <div className={styles['menu-box']}>
+            <Icon
+              component={commentSVG}
+              onClick={() => {
+                setIsInputShow(true)
+              }}
+            />
+            <Icon
+              component={deleteSVG}
+              onClick={() =>
+                handleMainDel(
+                  chatItem.commentMapId,
+                  1,
+                  chatItem.mainCommentId,
+                  resumeId
+                )
+              }
+            />
+          </div>
         </div>
-      ) : null}
-    </div>
+        {chatItem.subCommentVOList
+          ? [...chatItem.subCommentVOList].map((subItem) => (
+              <React.Fragment key={subItem.subCommentId}>
+                <div
+                  className={`${styles['body-box']} ${styles['comment-item-box']}`}
+                >
+                  <div className={styles['left-box']}>
+                    <Avatar size="small">{chatItem.username}</Avatar>
+                  </div>
+                  <div className={styles['right-box']}>
+                    <div className={styles['right-top-box']}>
+                      <span className={styles['user-name']}>
+                        {subItem.username}
+                      </span>
+                      <span className={styles['date-box']}>
+                        {subItem.createTime}
+                      </span>
+                    </div>
+                    <div className={styles['chat-content-box']}>
+                      <ReplyBox userName={subItem.replyUsername} />{' '}
+                      {subItem.content}
+                    </div>
+                  </div>
+                  <div className={styles['menu-box']}>
+                    <Icon
+                      component={commentSVG}
+                      onClick={() => {
+                        setPlaceholder(`reply ${chatItem.username}: `)
+                        setIsInputShow(true)
+                        setCurrentSubChat(subItem)
+                      }}
+                    />
+                    <Icon
+                      component={deleteSVG}
+                      onClick={() =>
+                        handleMainDel(
+                          chatItem.commentMapId,
+                          0,
+                          chatItem.mainCommentId,
+                          resumeId,
+                          subItem.subCommentId
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </React.Fragment>
+            ))
+          : null}
+        {isInputShow ? (
+          <div className={styles['input-box']}>
+            <Input.TextArea
+              autoFocus
+              autoSize
+              value={chatVal}
+              placeholder={placeholder}
+              onPressEnter={pressEnter}
+              onChange={(e) => setChatVal(e.target.value)}
+            />
+          </div>
+        ) : null}
+      </div> */}
+    </>
   )
 }
 
