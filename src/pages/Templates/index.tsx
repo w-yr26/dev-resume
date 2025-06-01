@@ -11,6 +11,7 @@ import { ConfigProvider, Input, Modal, Tooltip } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import CustomBtn from '@/components/CustomBtn'
 import WorkItem from '@/components/WorkItem'
+import DevModalFormItem from '@/components/DevModalFormItem'
 
 const Templates = () => {
   const navigate = useNavigate()
@@ -60,7 +61,7 @@ const Templates = () => {
       <div className={styles['container-bottom']}>
         <div
           className={styles['resume-item']}
-          onClick={() => navigate('/design')}
+          onClick={() => setIsModalOpen(true)}
         >
           <div className={styles['icon-box']}>
             <Icon component={AddSVG} />
@@ -72,30 +73,6 @@ const Templates = () => {
         </div>
         {temList.length
           ? temList.map((tem, index) => (
-              // <div
-              //   className={`${styles['resume-item']} ${styles['animation-item']}`}
-              //   style={{
-              //     animationDelay: `0.${index + 1}s`,
-              //   }}
-              //   key={tem.id}
-              // >
-              //   <div className={styles['resume-bottom']}>
-              //     <p className={styles['resume-name']}>
-              //       {tem.name || tem.templateName}
-              //     </p>
-              //     <p className={styles['update-time']}>
-              //       最后更新于&nbsp;
-              //       <span
-              //         style={{
-              //           color: '#333',
-              //         }}
-              //       >
-              //         {tem.updateTime}
-              //       </span>
-              //       &nbsp;前
-              //     </p>
-              //   </div>
-              // </div>
               <WorkItem
                 key={tem.id}
                 handleOpen={handleOpen}
@@ -155,9 +132,9 @@ const Templates = () => {
           onCancel={() => setIsModalOpen(false)}
         >
           <div className={styles['create-form-container']}>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>标题</p>
-              <div className={styles['body']}>
+            <DevModalFormItem
+              title="标题"
+              primary={
                 <ConfigProvider
                   theme={{
                     components: {
@@ -175,22 +152,17 @@ const Templates = () => {
                     onChange={(e) => setTemTitle(e.target.value)}
                   />
                 </ConfigProvider>
-                <div
-                  className={styles['random-box']}
-                  onClick={produceRandomTitle}
-                >
-                  <Tooltip title="点击生成随机标题">
-                    <Icon component={RandomSVG} />
-                  </Tooltip>
-                </div>
-              </div>
-              <div className={styles['sub-label']}>
-                提示: 您可以根据职位来命名简历
-              </div>
-            </div>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>备注</p>
-              <div className={styles['body']}>
+              }
+              icon={
+                <Tooltip title="点击生成随机标题">
+                  <Icon component={RandomSVG} />
+                </Tooltip>
+              }
+              handleRandom={produceRandomTitle}
+            />
+            <DevModalFormItem
+              title="备注"
+              primary={
                 <ConfigProvider
                   theme={{
                     components: {
@@ -208,8 +180,8 @@ const Templates = () => {
                     onChange={(e) => setSlug(e.target.value)}
                   />
                 </ConfigProvider>
-              </div>
-            </div>
+              }
+            />
           </div>
         </Modal>
       </ConfigProvider>
