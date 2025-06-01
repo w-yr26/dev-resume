@@ -17,9 +17,10 @@ import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
 import { getLinkInfoAPI, getResumeDetailsAPI } from '@/apis/resume'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
+import Unauthorized from './components/Unauthorized'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -56,6 +57,7 @@ const Dev = () => {
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
   const [temList, setTemList] = useState<templateListType[]>([])
+  const [isUnauthorization, setIsUnauthorization] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -65,14 +67,19 @@ const Dev = () => {
 
   // 判断是否从分享页进入
   useEffect(() => {
-    // const getShareLinkInfo = async () => {
-    //   const token = searchParams.get('token')
-    //   if (token) {
-    //     const { data } = await getLinkInfoAPI(token)
-    //     console.log(data)
-    //   }
-    // }
-    // getShareLinkInfo()
+    const getShareLinkInfo = async () => {
+      const token = searchParams.get('token')
+      if (token) {
+        try {
+          const { data } = await getLinkInfoAPI(token)
+          console.log('permissionInfo', data)
+        } catch (_) {
+          setIsUnauthorization(true)
+
+        }
+      }
+    }
+    getShareLinkInfo()
   }, [])
 
   useEffect(() => {
@@ -365,104 +372,110 @@ const Dev = () => {
   }, [selectedEl])
 
   return (
-    <div className={styles['dev-container']}>
-      <LeftMenu
-        iconClick={handleScroll}
-        isLeftUnExpand={isLeftUnExpand}
-        setisLeftUnExpand={setisLeftUnExpand}
-      />
-      <Materials ref={scrollRef} isLeftUnExpand={isLeftUnExpand} />
-      <main
-        className={`${styles['main-container']}
+    <>
+      {isUnauthorization ? (
+        <Unauthorized />
+      ) : (
+        <div className={styles['dev-container']}>
+          <LeftMenu
+            iconClick={handleScroll}
+            isLeftUnExpand={isLeftUnExpand}
+            setisLeftUnExpand={setisLeftUnExpand}
+          />
+          <Materials ref={scrollRef} isLeftUnExpand={isLeftUnExpand} />
+          <main
+            className={`${styles['main-container']}
         ${isLeftUnExpand && isRightUnExpand && styles['not-edit']}
         `}
-      >
-        <div
-          className={styles['preview-container']}
-          onWheel={(e) => handleWheel(e)}
-          onMouseDown={(e) => startDrag(e)}
-        >
-          <div
-            className={styles['resume-container']}
-            style={{
-              ...configStyle['commonStyle'],
-              width: pageWidth,
-              height: pageHeight,
-              transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-              cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
-            }}
-            ref={resumeRef}
           >
-            <div className={styles['preview-content']} ref={mainRef}>
-              {uiSchema && !loading && top ? (
-                <Render dataContext={dataSource} node={uiSchema} />
-              ) : null}
+            <div
+              className={styles['preview-container']}
+              onWheel={(e) => handleWheel(e)}
+              onMouseDown={(e) => startDrag(e)}
+            >
+              <div
+                className={styles['resume-container']}
+                style={{
+                  ...configStyle['commonStyle'],
+                  width: pageWidth,
+                  height: pageHeight,
+                  transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
+                  cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
+                }}
+                ref={resumeRef}
+              >
+                <div className={styles['preview-content']} ref={mainRef}>
+                  {uiSchema && !loading && top ? (
+                    <Render dataContext={dataSource} node={uiSchema} />
+                  ) : null}
+                </div>
+                {lineShow && (
+                  <div className={styles['page-line']}>
+                    <span>分页线</span>
+                  </div>
+                )}
+                {isLoading ? (
+                  <div className={styles['loading-box']}>
+                    <Spin />
+                  </div>
+                ) : null}
+              </div>
             </div>
-            {lineShow && (
-              <div className={styles['page-line']}>
-                <span>分页线</span>
-              </div>
-            )}
-            {isLoading ? (
-              <div className={styles['loading-box']}>
-                <Spin />
-              </div>
-            ) : null}
+          </main>
+
+          <Setting
+            isRightUnExpand={isRightUnExpand}
+            temList={temList}
+            fetchUISchema={fetchUISchema}
+          />
+          <RightMenu
+            isRightUnExpand={isRightUnExpand}
+            setisRightUnExpand={setisRightUnExpand}
+          />
+          <BottomBar
+            upWheel={upWheel}
+            reduceWheel={reduceWheel}
+            handleModeSwitch={handleModeSwitch}
+            resetWheel={resetWheel}
+            isLeftUnExpand={isLeftUnExpand}
+            isRightUnExpand={isRightUnExpand}
+            isReadMode={isReadMode}
+            setisLeftUnExpand={setisLeftUnExpand}
+            setisRightUnExpand={setisRightUnExpand}
+            savePDF={savePDF}
+          />
+          <StyleEditor ref={drawerRef} />
+          {panelPos && (
+            <div
+              ref={panelRef}
+              style={{
+                top: panelPos.top + 'px',
+                left: panelPos.left + 'px',
+              }}
+              className={styles['panel-box']}
+              onClick={() => setSidebarOpened(true)}
+            >
+              {/* 功能按钮面板 */}
+              <Icon component={commentSVG} />
+            </div>
+          )}
+          <ChatSideBar
+            resumeId={params.randomId!}
+            selectedNodeKey={currentNodeKey}
+            currentText={currentText}
+            sidebarOpened={sidebarOpened}
+            setSidebarOpened={setSidebarOpened}
+            setCurrentText={setCurrentText}
+          />
+          <div
+            className={styles['open-chat-tool-box']}
+            onClick={() => setSidebarOpened(true)}
+          >
+            <Icon component={commentSVG} />
           </div>
         </div>
-      </main>
-
-      <Setting
-        isRightUnExpand={isRightUnExpand}
-        temList={temList}
-        fetchUISchema={fetchUISchema}
-      />
-      <RightMenu
-        isRightUnExpand={isRightUnExpand}
-        setisRightUnExpand={setisRightUnExpand}
-      />
-      <BottomBar
-        upWheel={upWheel}
-        reduceWheel={reduceWheel}
-        handleModeSwitch={handleModeSwitch}
-        resetWheel={resetWheel}
-        isLeftUnExpand={isLeftUnExpand}
-        isRightUnExpand={isRightUnExpand}
-        isReadMode={isReadMode}
-        setisLeftUnExpand={setisLeftUnExpand}
-        setisRightUnExpand={setisRightUnExpand}
-        savePDF={savePDF}
-      />
-      <StyleEditor ref={drawerRef} />
-      {panelPos && (
-        <div
-          ref={panelRef}
-          style={{
-            top: panelPos.top + 'px',
-            left: panelPos.left + 'px',
-          }}
-          className={styles['panel-box']}
-          onClick={() => setSidebarOpened(true)}
-        >
-          {/* 功能按钮面板 */}
-          <Icon component={commentSVG} />
-        </div>
       )}
-      <ChatSideBar
-        resumeId={params.randomId!}
-        selectedNodeKey={currentNodeKey}
-        currentText={currentText}
-        sidebarOpened={sidebarOpened}
-        setSidebarOpened={setSidebarOpened}
-        setCurrentText={setCurrentText}
-      />
-      <div
-        className={styles['open-chat-tool-box']}
-        onClick={() => setSidebarOpened(true)}
-      >
-        <Icon component={commentSVG} />
-      </div>
-    </div>
+    </>
   )
 }
 

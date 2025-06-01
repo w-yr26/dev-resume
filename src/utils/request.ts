@@ -45,7 +45,7 @@ instance.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数
     // 注意，请求状态码!==业务状态码
-    const { code, msg } = response.data
+    const { code, msg, data } = response.data
 
     // 业务统一状态码出错
     if (code !== 1) {
@@ -55,7 +55,11 @@ instance.interceptors.response.use(
         return
       }
       message.error(msg || '请求出错, 请稍后再试')
-      return
+      return Promise.reject({
+        code,
+        msg,
+        data,
+      })
     }
 
     // 数据剥离

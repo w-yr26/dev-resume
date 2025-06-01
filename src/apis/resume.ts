@@ -154,7 +154,9 @@ export const getLinkListsAPI = (userId: string, randomId: string) => {
  * 获取分享链接的权限信息
  */
 export const getLinkInfoAPI = (shareToken: string) => {
-  return request<shareLinkInfoType>(`/resume/shareLink/getLink/${shareToken}`)
+  return request<shareLinkInfoType | null>(
+    `/resume/shareLink/getLink/${shareToken}`
+  )
 }
 
 /**
