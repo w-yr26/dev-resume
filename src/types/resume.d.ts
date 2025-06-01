@@ -103,7 +103,7 @@ export type createLinkType = {
   resourceId: string
   resourceType: 'resume' | 'article' | 'project'
   targetList?: shareUserItem[]
-  permission?: number[]
+  permissions?: string
   userId: number
 }
 

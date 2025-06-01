@@ -1,12 +1,4 @@
-import {
-  ConfigProvider,
-  Input,
-  message,
-  Popconfirm,
-  Popover,
-  Switch,
-  Tag,
-} from 'antd'
+import { ConfigProvider, Input, Popconfirm, Switch, Tag } from 'antd'
 import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import LinkSVG from '@/assets/svg/dev/link.svg?react'
@@ -53,8 +45,8 @@ const LinkItem = ({
           <div className={styles['top-left']}>
             <span>分享链接 #{index} </span>
             <Tag>{link.accessType}</Tag>
-            <Tag color={link.isActive ? 'green' : 'gold'}>
-              {link.isActive ? '活跃' : '禁用'}
+            <Tag color={isChecked ? 'green' : 'gold'}>
+              {isChecked ? '活跃' : '禁用'}
             </Tag>
           </div>
           <div className={styles['top-right']}>

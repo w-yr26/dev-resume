@@ -144,8 +144,10 @@ export const postShareLinkAPI = (data: createLinkType) => {
 /**
  * 获取分享链接列表
  */
-export const getLinkListsAPI = (userId: string) => {
-  return request<linkItem[]>(`/resume/shareLink/listMyLinks/${userId}`)
+export const getLinkListsAPI = (userId: string, randomId: string) => {
+  return request<linkItem[]>(
+    `/resume/shareLink/listMyLinks?userId=${userId}&randomId=${randomId}`
+  )
 }
 
 /**

@@ -69,9 +69,11 @@ const normalizeSeparators = (input: string) => {
 
 const Share = () => {
   const resumeId = useDevStore((state) => state.resumeId)
+  console.log('resumeId', resumeId)
+
   const userId = useUserStore((state) => state.info.id)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [pwd, setPwd] = useState('')
+  const [pwd, setPwd] = useState<undefined | string>(undefined)
   const [emailList, setEmailList] = useState('')
   const [count, setCount] = useState(5)
   const [hour, setHour] = useState(4)
@@ -80,13 +82,13 @@ const Share = () => {
   const [permissionArr, setPermissionArr] = useState<number[]>([1])
 
   useEffect(() => {
+    if (!resumeId || !userId) return
     const getLinksList = async () => {
-      if (linkList.length) return
-      const { data } = await getLinkListsAPI(userId)
+      const { data } = await getLinkListsAPI(userId, resumeId)
       setLinkList(data)
     }
     getLinksList()
-  }, [])
+  }, [resumeId, userId])
 
   const handleDelLinkList = (id: number) => {
     setLinkList(linkList.filter((i) => i.id !== id))
@@ -159,7 +161,7 @@ const Share = () => {
         : [],
       resourceId: resumeId,
       userId: Number(userId),
-      permission: permissionArr,
+      permissions: JSON.stringify(permissionArr),
     })
     await handleCopy(data.share_url)
     resetState()
@@ -393,6 +395,7 @@ const Share = () => {
                 {linkList.length
                   ? linkList.map((link, index) => (
                       <LinkItem
+                        key={link.shareUrl}
                         link={link}
                         index={index}
                         handleDelLinkList={handleDelLinkList}
