@@ -52,6 +52,7 @@ const LinkItem = ({
         <div className={styles['body-top']}>
           <div className={styles['top-left']}>
             <span>分享链接 #{index} </span>
+            <Tag>{link.accessType}</Tag>
             <Tag color={link.isActive ? 'green' : 'gold'}>
               {link.isActive ? '活跃' : '禁用'}
             </Tag>
