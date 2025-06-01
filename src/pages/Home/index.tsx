@@ -9,14 +9,7 @@ import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 
-import {
-  Button,
-  ConfigProvider,
-  Input,
-  message,
-  Modal,
-  Tooltip,
-} from 'antd'
+import { Button, ConfigProvider, Input, message, Modal, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import {
   delResumeAPI,
@@ -28,6 +21,7 @@ import type { resumeItem } from '@/types/resume'
 import CustomBtn from '@/components/CustomBtn'
 import { useNavigate } from 'react-router-dom'
 import WorkItem from '@/components/WorkItem'
+import DevModalFormItem from '@/components/DevModalFormItem'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -237,9 +231,9 @@ const Home = () => {
           onCancel={() => setIsModalOpen(false)}
         >
           <div className={styles['create-form-container']}>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>标题</p>
-              <div className={styles['body']}>
+            <DevModalFormItem
+              title="标题"
+              primary={
                 <ConfigProvider
                   theme={{
                     components: {
@@ -257,22 +251,22 @@ const Home = () => {
                     onChange={(e) => setResumeTitle(e.target.value)}
                   />
                 </ConfigProvider>
-                <div
-                  className={styles['random-box']}
-                  onClick={produceRandomTitle}
-                >
-                  <Tooltip title="点击生成随机标题">
-                    <Icon component={RandomSVG} />
-                  </Tooltip>
+              }
+              sub={
+                <div className={styles['sub-label']}>
+                  提示: 您可以根据职位来命名简历
                 </div>
-              </div>
-              <div className={styles['sub-label']}>
-                提示: 您可以根据职位来命名简历
-              </div>
-            </div>
-            <div className={styles['create-form-item']}>
-              <p className={styles['label']}>备注</p>
-              <div className={styles['body']}>
+              }
+              icon={
+                <Tooltip title="点击生成随机标题">
+                  <Icon component={RandomSVG} />
+                </Tooltip>
+              }
+              handleRandom={produceRandomTitle}
+            />
+            <DevModalFormItem
+              title="备注"
+              primary={
                 <ConfigProvider
                   theme={{
                     components: {
@@ -290,8 +284,8 @@ const Home = () => {
                     onChange={(e) => setSlug(e.target.value)}
                   />
                 </ConfigProvider>
-              </div>
-            </div>
+              }
+            />
           </div>
         </Modal>
       </ConfigProvider>

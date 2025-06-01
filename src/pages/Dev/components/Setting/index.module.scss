@@ -224,61 +224,22 @@
   color: #000;
 }
 
-.create-form-container {
-  width: 100%;
-  margin-top: 8px;
-  height: 260px;
-
-  .raw-box {
-    display: flex;
-    gap: 12px;
-  }
-
-  .create-form-item {
-    margin-top: 12px;
-    flex: 1;
-
-    .label {
-      color: #18181b;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .body {
-      height: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .custom-input {
-        width: 100%;
-        height: 40px;
-        background-color: #fafafa;
-      }
-    }
-  }
+.raw-box {
+  display: flex;
+  gap: 12px;
 }
 
-.random-box {
+.custom-input {
+  width: 100%;
   height: 40px;
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border: 1px solid #ebebed;
-  border-radius: 4px;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #e4e4e7;
-  }
+  background-color: #fafafa;
+  flex: 1;
 }
 
 .history-box {
   width: 100%;
-  height: 308px;
-  overflow-y: scroll;
+  height: 383px;
+  overflow-y: auto;
   padding: 0 12px;
   box-sizing: border-box;
 
@@ -290,7 +251,6 @@
     margin: 8px 0;
   }
 
-  
   &::-webkit-scrollbar {
     width: 8px; /* 滚动条宽度 */
   }

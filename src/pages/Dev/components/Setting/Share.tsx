@@ -5,7 +5,17 @@ import OutputSVG from '@/assets/svg/dev/output.svg?react'
 import JsonSVG from '@/assets/svg/dev/json.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 import styles from './index.module.scss'
-import { ConfigProvider, Input, message, Modal, Select, Tooltip } from 'antd'
+import {
+  Checkbox,
+  Col,
+  ConfigProvider,
+  Input,
+  message,
+  Modal,
+  Row,
+  Select,
+  Tooltip,
+} from 'antd'
 import CustomBtn from '@/components/CustomBtn'
 import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -14,6 +24,7 @@ import { useDevStore, useUserStore } from '@/store'
 import dayjs from 'dayjs'
 import { linkItem } from '@/types/resume'
 import LinkItem from './components/LinkItem'
+import DevModalFormItem from '@/components/DevModalFormItem'
 
 const durationOptions = [
   {
@@ -66,6 +77,7 @@ const Share = () => {
   const [hour, setHour] = useState(4)
   const [linkList, setLinkList] = useState<linkItem[]>([])
   const [activeTab, setActiveTab] = useState<'setting' | 'history'>('setting')
+  const [permissionArr, setPermissionArr] = useState<number[]>([1])
 
   useEffect(() => {
     const getLinksList = async () => {
@@ -116,6 +128,11 @@ const Share = () => {
     setIsModalOpen(false)
   }
 
+  // 设置邮箱权限
+  const handleGroupChange = (val: number[]) => {
+    setPermissionArr(val)
+  }
+
   const handleCopy = async (url: string) => {
     try {
       await navigator.clipboard.writeText(url)
@@ -141,7 +158,8 @@ const Share = () => {
           }))
         : [],
       resourceId: resumeId,
-      userId,
+      userId: Number(userId),
+      permission: permissionArr,
     })
     await handleCopy(data.share_url)
     resetState()
@@ -223,9 +241,9 @@ const Share = () => {
           {activeTab === 'setting' ? (
             <div className={styles['create-form-container']}>
               <div className={styles['raw-box']}>
-                <div className={styles['create-form-item']}>
-                  <p className={styles['label']}>链接过期时间</p>
-                  <div className={styles['body']}>
+                <DevModalFormItem
+                  title="访问时间限制"
+                  primary={
                     <ConfigProvider
                       theme={{
                         components: {
@@ -247,11 +265,11 @@ const Share = () => {
                         onChange={(e) => setHour(e)}
                       />
                     </ConfigProvider>
-                  </div>
-                </div>
-                <div className={styles['create-form-item']}>
-                  <p className={styles['label']}>最大访问次数</p>
-                  <div className={styles['body']}>
+                  }
+                />
+                <DevModalFormItem
+                  title="访问次数限制"
+                  primary={
                     <ConfigProvider
                       theme={{
                         components: {
@@ -273,12 +291,12 @@ const Share = () => {
                         onChange={(e) => setCount(e)}
                       />
                     </ConfigProvider>
-                  </div>
-                </div>
+                  }
+                />
               </div>
-              <div className={styles['create-form-item']}>
-                <p className={styles['label']}>访问密码(可选)</p>
-                <div className={`${styles['body']} ${styles['raw-box']}`}>
+              <DevModalFormItem
+                title="访问密码(可选)"
+                primary={
                   <ConfigProvider
                     theme={{
                       components: {
@@ -297,19 +315,56 @@ const Share = () => {
                       onChange={(e) => setPwd(e.target.value)}
                     />
                   </ConfigProvider>
-                  <div
-                    className={styles['random-box']}
-                    onClick={() => setPwd(uuidv4())}
+                }
+                icon={
+                  <Tooltip title="点击生成随机密码">
+                    <Icon component={RandomSVG} />
+                  </Tooltip>
+                }
+                handleRandom={() => setPwd(uuidv4())}
+              />
+              <DevModalFormItem
+                title="分享权限"
+                primary={
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Checkbox: {
+                          colorPrimary: '#18181b',
+                          colorPrimaryHover: '#18181b',
+                          colorPrimaryBorder: '#18181b',
+                        },
+                      },
+                    }}
                   >
-                    <Tooltip title="点击生成随机密码">
-                      <Icon component={RandomSVG} />
-                    </Tooltip>
-                  </div>
-                </div>
-              </div>
-              <div className={styles['create-form-item']}>
-                <p className={styles['label']}>分享人员邮箱</p>
-                <div className={styles['body']}>
+                    <Checkbox.Group
+                      style={{ width: '100%', color: 'red' }}
+                      value={permissionArr}
+                      onChange={(val) => handleGroupChange(val)}
+                    >
+                      <Row>
+                        <Col span={12}>
+                          <Checkbox value={1} disabled>
+                            阅读
+                          </Checkbox>
+                        </Col>
+                        <Col span={12}>
+                          <Checkbox value={2}>评论</Checkbox>
+                        </Col>
+                        <Col span={12}>
+                          <Checkbox value={3}>编辑</Checkbox>
+                        </Col>
+                        <Col span={12}>
+                          <Checkbox value={4}>复制</Checkbox>
+                        </Col>
+                      </Row>
+                    </Checkbox.Group>
+                  </ConfigProvider>
+                }
+              />
+              <DevModalFormItem
+                title="分享人员邮箱"
+                primary={
                   <ConfigProvider
                     theme={{
                       components: {
@@ -328,8 +383,8 @@ const Share = () => {
                       onChange={(e) => setEmailList(e.target.value)}
                     />
                   </ConfigProvider>
-                </div>
-              </div>
+                }
+              />
             </div>
           ) : (
             <div className={styles['history-box']}>
