@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Unauthorized from '../Unauthorized'
 import { useShareStore, useUserStore } from '@/store'
 
-// 校验链接是否失效的高阶组件
+// 校验链接是否失效或者当前用户是否在目标列表的高阶组件
 const InvalidHoc = ({
   children,
   token,

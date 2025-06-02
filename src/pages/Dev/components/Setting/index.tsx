@@ -7,14 +7,17 @@ import Templates from './Templates'
 import type { templateListType } from '@/types/ui'
 import { memo } from 'react'
 import Share from './Share'
+import AuthorizationHoc from '../AuthorizationHoc'
 
 const Setting = memo(
   ({
     isRightUnExpand,
+    isOrigin,
     temList,
     fetchUISchema,
   }: {
     isRightUnExpand: boolean
+    isOrigin: boolean
     temList: templateListType[]
     fetchUISchema: (
       templateId: string,
@@ -35,7 +38,13 @@ const Setting = memo(
         <PageSetting />
         {/* <ColorSetting /> */}
         <DownloadSetting />
-        <Share />
+        <AuthorizationHoc
+          isOrigin={isOrigin}
+          permission={1}
+          isOnlyOrigin={true}
+        >
+          <Share />
+        </AuthorizationHoc>
       </div>
     )
   }

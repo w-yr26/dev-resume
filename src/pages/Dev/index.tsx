@@ -411,6 +411,7 @@ const Dev = () => {
         <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <Setting
             isRightUnExpand={isRightUnExpand}
+            isOrigin={isOrigin}
             temList={temList}
             fetchUISchema={fetchUISchema}
           />
