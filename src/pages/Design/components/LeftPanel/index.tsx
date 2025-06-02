@@ -9,7 +9,7 @@ import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import styles from './index.module.scss'
 import { v4 as uuidv4 } from 'uuid'
 import type { uiType } from '@/types/ui'
-import { Collapse, ConfigProvider } from 'antd'
+import { Collapse } from 'antd'
 import Item from './Item'
 
 const LeftPanel = () => {
@@ -249,18 +249,7 @@ const LeftPanel = () => {
   return (
     <aside className={styles['materiel-container']}>
       {draggableList.length ? (
-        <ConfigProvider
-          theme={{
-            components: {
-              Collapse: {
-                headerBg: '#fff',
-                contentPadding: '0 8px',
-              },
-            },
-          }}
-        >
-          <Collapse defaultActiveKey={['1']} items={collapseItems} />
-        </ConfigProvider>
+        <Collapse defaultActiveKey={['1']} items={collapseItems} />
       ) : null}
     </aside>
   )

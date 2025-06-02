@@ -57,6 +57,7 @@ export type templateListType = {
   style_config: nodeType
   templateName?: string
   name?: string
+  isDefault: boolean
   fastPhoto: string
   updateTime: string
   createTime: string

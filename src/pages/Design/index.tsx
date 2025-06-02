@@ -15,7 +15,7 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Drawer, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
@@ -23,7 +23,8 @@ import { commandManager } from './command/commandManager'
 import { register } from './command'
 import NavBar from './components/NavBar'
 import html2canvas from 'html2canvas'
-import { postTemplatesAPI } from '@/apis/template'
+import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
+import { useParams } from 'react-router-dom'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -62,6 +63,16 @@ const Design = () => {
   const [isOpened, setIsOpened] = useState(false)
 
   const designRef = useRef<HTMLDivElement>(null)
+  const params = useParams()
+
+  useEffect(() => {
+    const getTemDetail = async () => {
+      const { data } = await getTemplateSchemaAPI(params.temId || '')
+      console.log('date', data)
+    }
+
+    getTemDetail()
+  }, [])
 
   const generateShot = async (fileName: string) => {
     return new Promise((resolve, reject) => {

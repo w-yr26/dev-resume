@@ -1,4 +1,4 @@
-import { ConfigProvider, Popover } from 'antd'
+import { Popover } from 'antd'
 import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import openSVG from '@/assets/svg/open.svg?react'
@@ -11,6 +11,7 @@ const WorkItem = ({
   title,
   updateTime,
   workId,
+  snapshot,
   handleOpen,
   setSelectId,
   handleDel,
@@ -21,6 +22,7 @@ const WorkItem = ({
   title: string
   updateTime: string
   workId: string
+  snapshot?: string
   setSelectId: (id: string) => void
   handleDel: (id: string) => void
   setWorkTitle: (title: string) => void
@@ -59,43 +61,36 @@ const WorkItem = ({
   )
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Popover: {
-            boxShadowSecondary: 'none',
-          },
-        },
-      }}
+    <Popover
+      content={() => menuContent(workId, title)}
+      title={null}
+      trigger="click"
     >
-      <Popover
-        content={() => menuContent(workId, title)}
-        title={null}
-        trigger="click"
+      <div
+        className={`${styles['resume-item']} ${styles['animation-item']}`}
+        style={{
+          animationDelay: `0.${index + 1}s`,
+          backgroundImage: snapshot ? `url(${snapshot})` : '',
+          backgroundSize: snapshot ? 'contain' : 'none',
+          backgroundRepeat: snapshot ? 'no-repeat' : 'none',
+        }}
       >
-        <div
-          className={`${styles['resume-item']} ${styles['animation-item']}`}
-          style={{
-            animationDelay: `0.${index + 1}s`,
-          }}
-        >
-          <div className={styles['resume-bottom']}>
-            <p className={styles['resume-name']}>{title}</p>
-            <p className={styles['update-time']}>
-              最后更新于&nbsp;
-              <span
-                style={{
-                  color: '#333',
-                }}
-              >
-                {updateTime}
-              </span>
-              &nbsp;前
-            </p>
-          </div>
+        <div className={styles['resume-bottom']}>
+          <p className={styles['resume-name']}>{title}</p>
+          <p className={styles['update-time']}>
+            最后更新于&nbsp;
+            <span
+              style={{
+                color: '#333',
+              }}
+            >
+              {updateTime}
+            </span>
+            &nbsp;前
+          </p>
         </div>
-      </Popover>
-    </ConfigProvider>
+      </div>
+    </Popover>
   )
 }
 

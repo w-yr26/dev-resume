@@ -9,7 +9,7 @@ import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 
-import { Button, ConfigProvider, Input, message, Modal, Tooltip } from 'antd'
+import { Button, Input, message, Modal, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import {
   delResumeAPI,
@@ -135,44 +135,6 @@ const Home = () => {
         {/* 简历列表 */}
         {resumeList.length
           ? resumeList.map((item, index) => (
-              // <ConfigProvider
-              //   theme={{
-              //     components: {
-              //       Popover: {
-              //         boxShadowSecondary: 'none',
-              //       },
-              //     },
-              //   }}
-              //   key={item.id}
-              // >
-              //   <Popover
-              //     content={() => menuContent(item.randomId, item.title)}
-              //     title={null}
-              //     trigger="click"
-              //   >
-              //     <div
-              //       className={`${styles['resume-item']} ${styles['animation-item']}`}
-              //       style={{
-              //         animationDelay: `0.${index + 1}s`,
-              //       }}
-              //     >
-              //       <div className={styles['resume-bottom']}>
-              //         <p className={styles['resume-name']}>{item.title}</p>
-              //         <p className={styles['update-time']}>
-              //           最后更新于&nbsp;
-              //           <span
-              //             style={{
-              //               color: '#333',
-              //             }}
-              //           >
-              //             {item.updateTime}
-              //           </span>
-              //           &nbsp;前
-              //         </p>
-              //       </div>
-              //     </div>
-              //   </Popover>
-              // </ConfigProvider>
               <WorkItem
                 key={item.randomId}
                 workId={item.randomId}
@@ -188,107 +150,70 @@ const Home = () => {
             ))
           : null}
       </div>
-      <ConfigProvider
-        theme={{
-          components: {
-            Modal: {
-              contentBg: '#fafafa',
-              footerBg: '#fafafa',
-              headerBg: '#fafafa',
-              boxShadow: 'none',
-            },
+      <Modal
+        styles={{
+          mask: {
+            backgroundColor: 'rgba(250, 250, 250, 0.9)',
+          },
+          content: {
+            border: '1px solid #e4e4e7',
           },
         }}
+        title={
+          <>
+            <Icon component={AddSVG} />
+            <span style={{ marginLeft: '8px' }}>
+              {selectId ? '编辑条目' : '创建新条目'}
+            </span>
+          </>
+        }
+        footer={[
+          <CustomBtn
+            key="create"
+            label={selectId ? '更新' : '创建'}
+            style={{
+              width: '80px',
+            }}
+            onClick={handleCreateResume}
+          />,
+        ]}
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
       >
-        <Modal
-          styles={{
-            mask: {
-              backgroundColor: 'rgba(250, 250, 250, 0.9)',
-            },
-            content: {
-              border: '1px solid #e4e4e7',
-            },
-          }}
-          title={
-            <>
-              <Icon component={AddSVG} />
-              <span style={{ marginLeft: '8px' }}>
-                {selectId ? '编辑条目' : '创建新条目'}
-              </span>
-            </>
-          }
-          footer={[
-            <CustomBtn
-              key="create"
-              label={selectId ? '更新' : '创建'}
-              style={{
-                width: '80px',
-              }}
-              onClick={handleCreateResume}
-            />,
-          ]}
-          open={isModalOpen}
-          onCancel={() => setIsModalOpen(false)}
-        >
-          <div className={styles['create-form-container']}>
-            <DevModalFormItem
-              title="标题"
-              primary={
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        activeBorderColor: '#18181b',
-                        hoverBorderColor: '#18181b',
-                        activeShadow: 'none',
-                      },
-                    },
-                  }}
-                >
-                  <Input
-                    className={styles['form-input']}
-                    value={resumeTitle}
-                    onChange={(e) => setResumeTitle(e.target.value)}
-                  />
-                </ConfigProvider>
-              }
-              sub={
-                <div className={styles['sub-label']}>
-                  提示: 您可以根据职位来命名简历
-                </div>
-              }
-              icon={
-                <Tooltip title="点击生成随机标题">
-                  <Icon component={RandomSVG} />
-                </Tooltip>
-              }
-              handleRandom={produceRandomTitle}
-            />
-            <DevModalFormItem
-              title="备注"
-              primary={
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        activeBorderColor: '#18181b',
-                        hoverBorderColor: '#18181b',
-                        activeShadow: 'none',
-                      },
-                    },
-                  }}
-                >
-                  <Input
-                    className={styles['form-input']}
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                  />
-                </ConfigProvider>
-              }
-            />
-          </div>
-        </Modal>
-      </ConfigProvider>
+        <div className={styles['create-form-container']}>
+          <DevModalFormItem
+            title="标题"
+            primary={
+              <Input
+                className={styles['form-input']}
+                value={resumeTitle}
+                onChange={(e) => setResumeTitle(e.target.value)}
+              />
+            }
+            sub={
+              <div className={styles['sub-label']}>
+                提示: 您可以根据职位来命名简历
+              </div>
+            }
+            icon={
+              <Tooltip title="点击生成随机标题">
+                <Icon component={RandomSVG} />
+              </Tooltip>
+            }
+            handleRandom={produceRandomTitle}
+          />
+          <DevModalFormItem
+            title="备注"
+            primary={
+              <Input
+                className={styles['form-input']}
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+              />
+            }
+          />
+        </div>
+      </Modal>
     </>
   )
 }

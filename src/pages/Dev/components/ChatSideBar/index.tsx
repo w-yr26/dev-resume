@@ -10,6 +10,7 @@ import dayjs from 'dayjs'
 import { v4 as uuidv4 } from 'uuid'
 import Icon from '@ant-design/icons'
 import ArrowLeftSVG from '@/assets/svg/dev/arrowLeft.svg?react'
+import ChatLayout from './ChatLayout'
 
 const ChatSideBar = ({
   resumeId,
@@ -154,31 +155,39 @@ const ChatSideBar = ({
           : null}
 
         {isInputShow && currentText ? (
-          <div className={styles['bottom-chat']}>
-            <div className={styles['quote-box']}>{currentText}</div>
-            <div
-              className={`${styles['body-box']} ${styles['comment-item-box']}`}
-            >
-              <div className={styles['left-box']}>
-                <Avatar size="small">{userName}</Avatar>
-              </div>
-              <div className={`${styles['right-box']}`}>
-                <div className={styles['right-top-box']}>
-                  <span className={styles['user-name']}>{userName}</span>
-                </div>
-              </div>
-            </div>
-            <div className={styles['input-box']}>
-              <Input.TextArea
-                autoFocus={true}
-                autoSize
-                value={chatVal}
-                placeholder="输入您的评论内容"
-                onPressEnter={pressEnter}
-                onChange={(e) => setChatVal(e.target.value)}
-              />
-            </div>
-          </div>
+          // <div className={styles['bottom-chat']}>
+          //   <div className={styles['quote-box']}>{currentText}</div>
+          //   <div
+          //     className={`${styles['body-box']} ${styles['comment-item-box']}`}
+          //   >
+          //     <div className={styles['left-box']}>
+          //       <Avatar size="small">{userName}</Avatar>
+          //     </div>
+          //     <div className={`${styles['right-box']}`}>
+          //       <div className={styles['right-top-box']}>
+          //         <span className={styles['user-name']}>{userName}</span>
+          //       </div>
+          //     </div>
+          //   </div>
+          //   <div className={styles['input-box']}>
+          //     <Input.TextArea
+          //       autoFocus={true}
+          //       autoSize
+          //       value={chatVal}
+          //       placeholder="输入您的评论内容"
+          //       onPressEnter={pressEnter}
+          //       onChange={(e) => setChatVal(e.target.value)}
+          //     />
+          //   </div>
+          // </div>
+          <ChatLayout
+            currentText={currentText}
+            isPublishMain={true}
+            userName={userName}
+            chatVal={chatVal}
+            pressEnter={pressEnter}
+            setChatVal={setChatVal}
+          />
         ) : null}
       </div>
     </div>

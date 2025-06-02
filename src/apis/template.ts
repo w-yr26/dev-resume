@@ -37,3 +37,20 @@ export const delTemAPI = (temId: string) => {
     'DELETE'
   )
 }
+
+/**
+ * 获取某一份模板的Schema信息
+ */
+export const getTemplateSchemaAPI = (template_id: string) => {
+  return request(`/resume/templates/${template_id}`)
+}
+
+/**
+ * 更新自定义模板的重命名
+ */
+export const putDiyTemplatesNameAPI = (data: {
+  id: string
+  newName: string
+}) => {
+  return request('/resume/templates/updateDiyTemplatesName', 'PUT', data)
+}

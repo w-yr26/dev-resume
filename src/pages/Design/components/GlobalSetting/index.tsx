@@ -1,8 +1,8 @@
-import { useDesignStore, useUIStore } from '@/store'
+import { useDesignStore } from '@/store'
 import ModuleLayout from '../RightPanel/ModuleLayout'
 import styles from './index.module.scss'
 import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
-import { ConfigProvider, Slider } from 'antd'
+import { Slider } from 'antd'
 
 const GlobalSetting = () => {
   const { pagePadding, modulePadding, lineHeight, fontSize } = useDesignStore(
@@ -24,28 +24,12 @@ const GlobalSetting = () => {
             marginBottom: '8px',
           }}
         >
-          <ConfigProvider
-            theme={{
-              components: {
-                Slider: {
-                  railSize: 8,
-                  handleColor: '#18181b',
-                  handleActiveColor: '#18181b',
-                  handleSizeHover: 10,
-                  handleLineWidthHover: 2,
-                  trackBg: '#18181b',
-                  trackHoverBg: '#18181b',
-                },
-              },
-            }}
-          >
-            <Slider
-              min={0}
-              max={25}
-              value={pagePadding}
-              onChange={(val: number) => setRootStyle('pagePadding', val)}
-            />
-          </ConfigProvider>
+          <Slider
+            min={0}
+            max={25}
+            value={pagePadding}
+            onChange={(val: number) => setRootStyle('pagePadding', val)}
+          />
         </CustomField>
         <CustomField
           title="模块内边距"
@@ -58,78 +42,30 @@ const GlobalSetting = () => {
             marginBottom: '8px',
           }}
         >
-          <ConfigProvider
-            theme={{
-              components: {
-                Slider: {
-                  railSize: 8,
-                  handleColor: '#18181b',
-                  handleActiveColor: '#18181b',
-                  handleSizeHover: 10,
-                  handleLineWidthHover: 2,
-                  trackBg: '#18181b',
-                  trackHoverBg: '#18181b',
-                },
-              },
-            }}
-          >
-            <Slider
-              min={1}
-              max={20}
-              value={modulePadding}
-              onChange={(val: number) => setRootStyle('modulePadding', val)}
-            />
-          </ConfigProvider>
+          <Slider
+            min={1}
+            max={20}
+            value={modulePadding}
+            onChange={(val: number) => setRootStyle('modulePadding', val)}
+          />
         </CustomField>
 
         <CustomField title="字号">
-          <ConfigProvider
-            theme={{
-              components: {
-                Slider: {
-                  railSize: 8,
-                  handleColor: '#18181b',
-                  handleActiveColor: '#18181b',
-                  handleSizeHover: 10,
-                  handleLineWidthHover: 2,
-                  trackBg: '#18181b',
-                  trackHoverBg: '#18181b',
-                },
-              },
-            }}
-          >
-            <Slider
-              min={10}
-              max={20}
-              value={fontSize}
-              onChange={(val: number) => setRootStyle('fontSize', val)}
-            />
-          </ConfigProvider>
+          <Slider
+            min={10}
+            max={20}
+            value={fontSize}
+            onChange={(val: number) => setRootStyle('fontSize', val)}
+          />
         </CustomField>
         <CustomField title="行高">
-          <ConfigProvider
-            theme={{
-              components: {
-                Slider: {
-                  railSize: 8,
-                  handleColor: '#18181b',
-                  handleActiveColor: '#18181b',
-                  handleSizeHover: 10,
-                  handleLineWidthHover: 2,
-                  trackBg: '#18181b',
-                  trackHoverBg: '#18181b',
-                },
-              },
-            }}
-          >
-            <Slider
-              step={0.1}
-              min={1.2}
-              max={2}
-              value={lineHeight}
-              onChange={(val: number) => setRootStyle('lineHeight', val)}
-            />
-          </ConfigProvider>
+          <Slider
+            step={0.1}
+            min={1.2}
+            max={2}
+            value={lineHeight}
+            onChange={(val: number) => setRootStyle('lineHeight', val)}
+          />
         </CustomField>
       </ModuleLayout>
     </div>

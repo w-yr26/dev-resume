@@ -144,15 +144,19 @@ export const postShareLinkAPI = (data: createLinkType) => {
 /**
  * 获取分享链接列表
  */
-export const getLinkListsAPI = (userId: string) => {
-  return request<linkItem[]>(`/resume/shareLink/listMyLinks/${userId}`)
+export const getLinkListsAPI = (userId: string, randomId: string) => {
+  return request<linkItem[]>(
+    `/resume/shareLink/listMyLinks?userId=${userId}&randomId=${randomId}`
+  )
 }
 
 /**
  * 获取分享链接的权限信息
  */
 export const getLinkInfoAPI = (shareToken: string) => {
-  return request<shareLinkInfoType>(`/resume/shareLink/getLink/${shareToken}`)
+  return request<shareLinkInfoType | null>(
+    `/resume/shareLink/getLink/${shareToken}`
+  )
 }
 
 /**
@@ -170,4 +174,14 @@ export const postLinkStatusAPI = (data: {
  */
 export const delShareLink = (shareToken: string) => {
   return request<null>(`/resume/shareLink/deleteLink/${shareToken}`, 'DELETE')
+}
+
+/**
+ * 验证分享链接密码
+ */
+export const postVerifyLinkAPI = (data: {
+  password: string
+  shareToken: string
+}) => {
+  return request('/resume/shareLink/verifyLink', 'POST', data)
 }

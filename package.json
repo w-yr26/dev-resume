@@ -18,6 +18,7 @@
     "axios": "^1.8.4",
     "css-unit-converter": "^1.1.2",
     "dayjs": "^1.11.13",
+    "framer-motion": "^12.15.0",
     "html2canvas": "^1.4.1",
     "immer": "^10.1.1",
     "jspdf": "^3.0.1",

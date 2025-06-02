@@ -1,12 +1,4 @@
-import {
-  ConfigProvider,
-  Input,
-  message,
-  Popconfirm,
-  Popover,
-  Switch,
-  Tag,
-} from 'antd'
+import {  Input, Popconfirm, Switch, Tag } from 'antd'
 import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import LinkSVG from '@/assets/svg/dev/link.svg?react'
@@ -53,29 +45,17 @@ const LinkItem = ({
           <div className={styles['top-left']}>
             <span>分享链接 #{index} </span>
             <Tag>{link.accessType}</Tag>
-            <Tag color={link.isActive ? 'green' : 'gold'}>
-              {link.isActive ? '活跃' : '禁用'}
+            <Tag color={isChecked ? 'green' : 'gold'}>
+              {isChecked ? '活跃' : '禁用'}
             </Tag>
           </div>
           <div className={styles['top-right']}>
             <div className={styles['switch-box']}>
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Switch: {
-                      handleShadow: 'none',
-                      colorPrimary: '#18181b',
-                      colorPrimaryHover: '#18181b',
-                    },
-                  },
-                }}
-              >
-                <Switch
-                  size="small"
-                  checked={isChecked}
-                  onChange={handleChecked}
-                />
-              </ConfigProvider>
+              <Switch
+                size="small"
+                checked={isChecked}
+                onChange={handleChecked}
+              />
             </div>
             <div className={styles['del-box']}>
               <Popconfirm
@@ -96,7 +76,9 @@ const LinkItem = ({
             <span>过期时间: {link.expireAt}</span>
             <span>
               访问限制:{' '}
-              <span style={{ color: '#ff5848' }}>{link.maxVisits}</span>
+              <span style={{ color: '#ff5848' }}>
+                {link.maxVisits ?? '无限制'}
+              </span>
             </span>
             <span>已访问: {link.visitCount}</span>
           </div>

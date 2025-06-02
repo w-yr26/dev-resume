@@ -39,6 +39,7 @@ const AIBrush = <
   const brushRef = useRef<HTMLDivElement>(null)
 
   const aiChatRes = useMemo(() => {
+    if (!infoList) return undefined
     const infoItem = infoList.find((i) => i.id === infoId)
     return infoItem?.aiDescription || infoItem?.aiContent
   }, [infoId, infoList])

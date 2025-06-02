@@ -5,8 +5,10 @@ import { LoginForm } from './components/LoginForm'
 import { ThirdPartyLogin } from './components/ThirdPartyLogin'
 import { ResetPasswordForm } from './components/ResetPasswordForm'
 import styles from './index.module.scss'
+import { useUserStore } from '@/store'
 
 const Login: React.FC = () => {
+  const updateInfo = useUserStore((state) => state.updateInfo)
   const [isLoading, setIsLoading] = useState(false)
   const [showResetPassword, setShowResetPassword] = useState(false)
   const navigate = useNavigate()
@@ -24,6 +26,11 @@ const Login: React.FC = () => {
     localStorage.setItem('user_id', String(data.id))
     localStorage.setItem('token', data.token)
     localStorage.setItem('refreshToken', data.refreshToken)
+    updateInfo('email', data.email)
+    updateInfo('userName', data.username)
+    updateInfo('id', String(data.id))
+    updateInfo('token', data.token)
+    updateInfo('refreshToken', data.refreshToken)
     navigate('/')
     setIsLoading(false)
   }

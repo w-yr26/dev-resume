@@ -6,7 +6,6 @@
 import {
   Cascader,
   ColorPicker,
-  ConfigProvider,
   Input,
   Radio,
   Select,
@@ -433,62 +432,36 @@ const RightPanel = ({
         {singleNode?.type !== 'root' ? (
           <ModuleLayout title="样式设置">
             <CustomRaw label="字体大小">
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      activeBorderColor: '#d9d9d9',
-                      hoverBorderColor: '#d9d9d9',
-                    },
-                  },
+              <Select
+                style={{ width: '100%' }}
+                options={[
+                  { value: '13px', label: '13px' },
+                  { value: '14px', label: '14px' },
+                  { value: '15px', label: '15px' },
+                  { value: '16px', label: '16px' },
+                ]}
+                value={singleNode?.style.fontSize}
+                onChange={(newFontSize) => {
+                  if (singleNode)
+                    changeStyle(singleNode.nodeKey, 'fontSize', newFontSize)
                 }}
-              >
-                <Select
-                  style={{ width: '100%' }}
-                  options={[
-                    { value: '13px', label: '13px' },
-                    { value: '14px', label: '14px' },
-                    { value: '15px', label: '15px' },
-                    { value: '16px', label: '16px' },
-                  ]}
-                  value={singleNode?.style.fontSize}
-                  onChange={(newFontSize) => {
-                    if (singleNode)
-                      changeStyle(singleNode.nodeKey, 'fontSize', newFontSize)
-                  }}
-                />
-              </ConfigProvider>
+              />
             </CustomRaw>
             <CustomRaw label="字体粗细">
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Select: {
-                      activeBorderColor: '#d9d9d9',
-                      hoverBorderColor: '#d9d9d9',
-                    },
-                  },
+              <Select
+                style={{ width: '100%' }}
+                options={[
+                  { value: 400, label: 400 },
+                  { value: 500, label: 500 },
+                  { value: 600, label: 600 },
+                  { value: 700, label: 700 },
+                ]}
+                value={singleNode?.style.fontWeight}
+                onChange={(newFontWeight) => {
+                  if (singleNode)
+                    changeStyle(singleNode.nodeKey, 'fontWeight', newFontWeight)
                 }}
-              >
-                <Select
-                  style={{ width: '100%' }}
-                  options={[
-                    { value: 400, label: 400 },
-                    { value: 500, label: 500 },
-                    { value: 600, label: 600 },
-                    { value: 700, label: 700 },
-                  ]}
-                  value={singleNode?.style.fontWeight}
-                  onChange={(newFontWeight) => {
-                    if (singleNode)
-                      changeStyle(
-                        singleNode.nodeKey,
-                        'fontWeight',
-                        newFontWeight
-                      )
-                  }}
-                />
-              </ConfigProvider>
+              />
             </CustomRaw>
             <CustomRaw label="字体颜色">
               <ColorPicker
