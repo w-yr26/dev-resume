@@ -58,6 +58,8 @@ const Dev = () => {
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
   const [temList, setTemList] = useState<templateListType[]>([])
+  // 当前是否为阅读模式
+  const [isReadMode, setIsReadMode] = useState(false)
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -261,11 +263,6 @@ const Dev = () => {
     return () => observer.disconnect()
   }, [])
 
-  // 当前是否为阅读模式
-  const isReadMode = useMemo(() => {
-    return isLeftUnExpand && isRightUnExpand
-  }, [isLeftUnExpand, isRightUnExpand])
-
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
   const [panelPos, setPanelPos] = useState<ButtonPanelPosition | null>(null)
@@ -422,14 +419,15 @@ const Dev = () => {
             setisRightUnExpand={setisRightUnExpand}
           />
         </AuthorizationHoc>
+
         <BottomBar
+          isReadMode={isReadMode}
+          isOrigin={isOrigin}
+          setIsReadMode={setIsReadMode}
           upWheel={upWheel}
           reduceWheel={reduceWheel}
           handleModeSwitch={handleModeSwitch}
           resetWheel={resetWheel}
-          isLeftUnExpand={isLeftUnExpand}
-          isRightUnExpand={isRightUnExpand}
-          isReadMode={isReadMode}
           setisLeftUnExpand={setisLeftUnExpand}
           setisRightUnExpand={setisRightUnExpand}
           savePDF={savePDF}
@@ -457,12 +455,15 @@ const Dev = () => {
           setSidebarOpened={setSidebarOpened}
           setCurrentText={setCurrentText}
         />
-        <div
-          className={styles['open-chat-tool-box']}
-          onClick={() => setSidebarOpened(true)}
-        >
-          <Icon component={commentSVG} />
-        </div>
+
+        {/* <AuthorizationHoc isOrigin={isOrigin} permission={2} type="test">
+          <div
+            className={styles['open-chat-tool-box']}
+            onClick={() => setSidebarOpened(true)}
+          >
+            <Icon component={commentSVG} />
+          </div>
+        </AuthorizationHoc> */}
       </div>
     </InvalidHoc>
   )

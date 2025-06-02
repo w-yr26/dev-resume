@@ -1,15 +1,17 @@
 import { useShareStore, useUserStore } from '@/store'
 import { useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+// import { motion, AnimatePresence } from 'framer-motion'
 // 按钮/组件级别的权限控制高阶组件
 const AuthorizationHoc = ({
   children,
   permission = 1,
   isOrigin = true,
+  type,
 }: {
   children: React.ReactNode
   permission: 1 | 2 | 3 | 4
   isOrigin: boolean
+  type?: string
 }) => {
   // 权限列表
   // 1：阅读
@@ -38,24 +40,9 @@ const AuthorizationHoc = ({
       permissionsList.includes(permission),
     [shareUsersEmailList, email, permissionsList, permission]
   )
-
   if (isOrigin) return children
 
-  return (
-    <AnimatePresence>
-      {hasAccess ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          style={{ position: 'relative', zIndex: 'inherit' }}
-        >
-          {children}
-        </motion.div>
-      ) : null}
-    </AnimatePresence>
-  )
+  return <>{hasAccess ? children : null}</>
 }
 
 export default AuthorizationHoc

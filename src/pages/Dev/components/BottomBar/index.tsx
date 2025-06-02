@@ -10,17 +10,12 @@ import chatCheckSVG from '@/assets/svg/dev/chat-check.svg?react'
 import chatDeleteSVG from '@/assets/svg/dev/chat-delete.svg?react'
 import styles from './index.module.scss'
 import { ConfigProvider, Switch, Tooltip } from 'antd'
-
-// type toCanvas = {
-//   base64URL: string
-//   width: string
-//   height: string
-// }
+import AuthorizationHoc from '../AuthorizationHoc'
 
 type barType = {
-  isLeftUnExpand: boolean
-  isRightUnExpand: boolean
   isReadMode: boolean
+  isOrigin: boolean
+  setIsReadMode: (val: boolean) => void
   setisLeftUnExpand: (v: boolean) => void
   setisRightUnExpand: (v: boolean) => void
   upWheel: () => void
@@ -31,9 +26,9 @@ type barType = {
 }
 
 const BottomBar = ({
-  isLeftUnExpand,
-  isRightUnExpand,
   isReadMode,
+  isOrigin,
+  setIsReadMode,
   setisLeftUnExpand,
   setisRightUnExpand,
   reduceWheel,
@@ -43,6 +38,7 @@ const BottomBar = ({
   savePDF,
 }: barType) => {
   const changeMode = (isDev: boolean) => {
+    setIsReadMode(isDev)
     setisLeftUnExpand(isDev)
     setisRightUnExpand(isDev)
   }
@@ -52,21 +48,25 @@ const BottomBar = ({
       icon: <Icon component={centerSVG} />,
       label: '重置缩放',
       callback: resetWheel,
+      permission: 1,
     },
     {
       icon: <Icon component={zoomInSVG} />,
       label: '放大',
       callback: upWheel,
+      permission: 1,
     },
     {
       icon: <Icon component={zoomOutSVG} />,
       label: '缩小',
       callback: reduceWheel,
+      permission: 1,
     },
     {
       icon: <Icon component={cssSVG} />,
       label: 'CSS编辑',
       callback: handleModeSwitch,
+      permission: 3,
     },
     {
       icon: <Icon component={isReadMode ? chatCheckSVG : chatDeleteSVG} />,
@@ -74,11 +74,13 @@ const BottomBar = ({
       callback: () => {
         console.log(isReadMode)
       },
+      permission: 1,
     },
     {
       icon: <Icon component={pdfSVG} />,
       label: '下载pdf',
       callback: savePDF,
+      permission: 1,
     },
     {
       icon: (
@@ -96,12 +98,13 @@ const BottomBar = ({
           <Switch
             checkedChildren={<Icon component={normalSVG} />}
             unCheckedChildren={<Icon component={codeSVG} />}
-            checked={isLeftUnExpand && isRightUnExpand}
+            checked={isReadMode}
             onClick={(val) => changeMode(val)}
           />
         </ConfigProvider>
       ),
       callback: () => {},
+      permission: 2,
     },
   ]
 
@@ -109,15 +112,21 @@ const BottomBar = ({
     <div className={styles['bar-container']}>
       {iconArr.map((item, index) => {
         return (
-          <div key={index} className={styles['utile-box']}>
-            {item.label ? (
-              <Tooltip title={item.label}>
+          <AuthorizationHoc
+            isOrigin={isOrigin}
+            permission={item.permission as 1 | 2 | 3 | 4}
+            key={index}
+          >
+            <div className={styles['utile-box']}>
+              {item.label ? (
+                <Tooltip title={item.label}>
+                  <div onClick={item.callback}>{item.icon}</div>
+                </Tooltip>
+              ) : (
                 <div onClick={item.callback}>{item.icon}</div>
-              </Tooltip>
-            ) : (
-              <div onClick={item.callback}>{item.icon}</div>
-            )}
-          </div>
+              )}
+            </div>
+          </AuthorizationHoc>
         )
       })}
     </div>
