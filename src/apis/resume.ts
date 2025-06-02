@@ -175,3 +175,13 @@ export const postLinkStatusAPI = (data: {
 export const delShareLink = (shareToken: string) => {
   return request<null>(`/resume/shareLink/deleteLink/${shareToken}`, 'DELETE')
 }
+
+/**
+ * 验证分享链接密码
+ */
+export const postVerifyLinkAPI = (data: {
+  password: string
+  shareToken: string
+}) => {
+  return request('/resume/shareLink/verifyLink', 'POST', data)
+}

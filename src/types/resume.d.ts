@@ -143,6 +143,7 @@ export type linkItem = {
   id: number
   permissions: string // 权限字段
   shareUrl: string
+  password?: string
 }
 
 export type shareStoreType = {
