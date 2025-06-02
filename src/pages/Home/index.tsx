@@ -135,44 +135,6 @@ const Home = () => {
         {/* 简历列表 */}
         {resumeList.length
           ? resumeList.map((item, index) => (
-              // <ConfigProvider
-              //   theme={{
-              //     components: {
-              //       Popover: {
-              //         boxShadowSecondary: 'none',
-              //       },
-              //     },
-              //   }}
-              //   key={item.id}
-              // >
-              //   <Popover
-              //     content={() => menuContent(item.randomId, item.title)}
-              //     title={null}
-              //     trigger="click"
-              //   >
-              //     <div
-              //       className={`${styles['resume-item']} ${styles['animation-item']}`}
-              //       style={{
-              //         animationDelay: `0.${index + 1}s`,
-              //       }}
-              //     >
-              //       <div className={styles['resume-bottom']}>
-              //         <p className={styles['resume-name']}>{item.title}</p>
-              //         <p className={styles['update-time']}>
-              //           最后更新于&nbsp;
-              //           <span
-              //             style={{
-              //               color: '#333',
-              //             }}
-              //           >
-              //             {item.updateTime}
-              //           </span>
-              //           &nbsp;前
-              //         </p>
-              //       </div>
-              //     </div>
-              //   </Popover>
-              // </ConfigProvider>
               <WorkItem
                 key={item.randomId}
                 workId={item.randomId}

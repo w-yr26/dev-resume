@@ -1,4 +1,8 @@
-import { delTemAPI, getTemplatesAPI } from '@/apis/template'
+import {
+  delTemAPI,
+  getTemplatesAPI,
+  putDiyTemplatesNameAPI,
+} from '@/apis/template'
 import Icon from '@ant-design/icons'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
@@ -22,15 +26,16 @@ const Templates = () => {
   const [selectId, setSelectId] = useState('')
   const [temTitle, setTemTitle] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  // 获取模板列表
+  const getTemList = async (userId: string) => {
+    const {
+      data: { diyTemplateList },
+    } = await getTemplatesAPI(userId)
+
+    setTemList(diyTemplateList)
+  }
 
   useEffect(() => {
-    const getTemList = async (userId: string) => {
-      const {
-        data: { diyTemplateList, templateList },
-      } = await getTemplatesAPI(userId)
-
-      setTemList([...templateList, ...diyTemplateList])
-    }
     getTemList(userId)
   }, [])
 
@@ -50,8 +55,24 @@ const Templates = () => {
     setTemList(temList.filter((i) => i.id !== id))
   }
 
+  const resetState = () => {
+    setTemTitle('')
+    setIsModalOpen(false)
+  }
+
   // 创建/更新
-  const handleClick = () => {}
+  const handleClick = async () => {
+    if (selectId) {
+      await putDiyTemplatesNameAPI({
+        id: selectId,
+        newName: temTitle,
+      })
+    } else {
+      // 创建
+    }
+    await getTemList(userId)
+    resetState()
+  }
 
   return (
     <>
@@ -79,8 +100,9 @@ const Templates = () => {
                 index={index}
                 title={tem.name || tem.templateName || ''}
                 workId={tem.id}
-                setWorkTitle={setTemTitle}
                 updateTime={tem.updateTime}
+                snapshot={tem.fastPhoto}
+                setWorkTitle={setTemTitle}
                 setSelectId={setSelectId}
                 setIsModalOpen={setIsModalOpen}
                 handleDel={handleDel}
@@ -129,7 +151,7 @@ const Templates = () => {
             />,
           ]}
           open={isModalOpen}
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={resetState}
         >
           <div className={styles['create-form-container']}>
             <DevModalFormItem

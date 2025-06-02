@@ -11,6 +11,7 @@ const WorkItem = ({
   title,
   updateTime,
   workId,
+  snapshot,
   handleOpen,
   setSelectId,
   handleDel,
@@ -21,6 +22,7 @@ const WorkItem = ({
   title: string
   updateTime: string
   workId: string
+  snapshot?: string
   setSelectId: (id: string) => void
   handleDel: (id: string) => void
   setWorkTitle: (title: string) => void
@@ -77,6 +79,9 @@ const WorkItem = ({
           className={`${styles['resume-item']} ${styles['animation-item']}`}
           style={{
             animationDelay: `0.${index + 1}s`,
+            backgroundImage: snapshot ? `url(${snapshot})` : '',
+            backgroundSize: snapshot ? 'contain' : 'none',
+            backgroundRepeat: snapshot ? 'no-repeat' : 'none',
           }}
         >
           <div className={styles['resume-bottom']}>
