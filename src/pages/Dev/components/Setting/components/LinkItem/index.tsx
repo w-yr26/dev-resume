@@ -88,7 +88,7 @@ const LinkItem = ({
             <span>过期时间: {link.expireAt}</span>
             <span>
               访问限制:{' '}
-              <span style={{ color: '#ff5848' }}>{link.maxVisits}</span>
+              <span style={{ color: '#ff5848' }}>{link.maxVisits ?? '无限制'}</span>
             </span>
             <span>已访问: {link.visitCount}</span>
           </div>

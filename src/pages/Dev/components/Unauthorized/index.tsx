@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const Unauthorized = () => {
+const Unauthorized = ({ type }: { type: 'expired' | 'beyond' }) => {
   const [count, setCount] = useState(5)
   const navigate = useNavigate()
 
@@ -22,13 +22,13 @@ const Unauthorized = () => {
       navigate('/', { replace: true })
     }
   }, [count, navigate])
-  
+
   return (
     <div className={styles['empty-box']}>
       <Empty
         description={
           <span>
-            链接无效，
+            {type === 'expired' ? '链接无效，' : '不再分享名单范畴内，'}
             <span
               style={{
                 color: '#ff6464',

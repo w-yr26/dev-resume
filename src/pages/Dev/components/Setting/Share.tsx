@@ -22,7 +22,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { getLinkListsAPI, postShareLinkAPI } from '@/apis/resume'
 import { useDevStore, useUserStore } from '@/store'
 import dayjs from 'dayjs'
-import { linkItem } from '@/types/resume'
+import type { linkItem, shareUserItem } from '@/types/resume'
 import LinkItem from './components/LinkItem'
 import DevModalFormItem from '@/components/DevModalFormItem'
 
@@ -69,8 +69,7 @@ const normalizeSeparators = (input: string) => {
 
 const Share = () => {
   const resumeId = useDevStore((state) => state.resumeId)
-  console.log('resumeId', resumeId)
-
+  const personalEmail = useUserStore((state) => state.info.email)
   const userId = useUserStore((state) => state.info.id)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pwd, setPwd] = useState<undefined | string>(undefined)
@@ -147,18 +146,23 @@ const Share = () => {
   const generatorShareLink = async () => {
     const { userList, isValid } = validateAndSplitUsers()
     if (!isValid) return message.warning('请按正确格式输入邮箱列表')
+
+    const targetList = userList.length
+      ? userList.map(
+          (i): shareUserItem => ({
+            targetType: 'email',
+            targetValue: i,
+          })
+        )
+      : []
+
     const { data } = await postShareLinkAPI({
       resourceType: 'resume',
       maxVisits: count === -1 ? undefined : count,
       password: pwd ?? undefined,
       expireAt: dayjs().add(hour, 'hours').format('YYYY-MM-DD HH:mm:ss'),
       accessType: userList.length ? 'private' : 'public',
-      targetList: userList.length
-        ? userList.map((i) => ({
-            targetType: 'email',
-            targetValue: i,
-          }))
-        : [],
+      targetList,
       resourceId: resumeId,
       userId: Number(userId),
       permissions: JSON.stringify(permissionArr),
