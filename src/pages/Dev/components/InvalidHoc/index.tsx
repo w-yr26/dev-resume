@@ -2,7 +2,7 @@ import { getLinkInfoAPI, postVerifyLinkAPI } from '@/apis/resume'
 import { useEffect, useState } from 'react'
 import Unauthorized from '../Unauthorized'
 import { useShareStore, useUserStore } from '@/store'
-import { ConfigProvider, Input, Modal } from 'antd'
+import { Input, Modal } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
 import DevModalFormItem from '@/components/DevModalFormItem'
 import styles from '@/pages/Home/index.module.scss'
@@ -83,23 +83,11 @@ const InvalidHoc = ({
           <DevModalFormItem
             title="标题"
             primary={
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Input: {
-                      activeBorderColor: '#18181b',
-                      hoverBorderColor: '#18181b',
-                      activeShadow: 'none',
-                    },
-                  },
-                }}
-              >
-                <Input
-                  className={styles['form-input']}
-                  value={pwd}
-                  onChange={(e) => setPwd(e.target.value)}
-                />
-              </ConfigProvider>
+              <Input
+                className={styles['form-input']}
+                value={pwd}
+                onChange={(e) => setPwd(e.target.value)}
+              />
             }
           />
         </div>

@@ -11,7 +11,7 @@ import { templateListType } from '@/types/ui'
 import { useEffect, useState } from 'react'
 import styles from '../Home/index.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { ConfigProvider, Input, Modal, Tooltip } from 'antd'
+import { Input, Modal, Tooltip } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import CustomBtn from '@/components/CustomBtn'
 import WorkItem from '@/components/WorkItem'
@@ -110,103 +110,65 @@ const Templates = () => {
             ))
           : null}
       </div>
-
-      <ConfigProvider
-        theme={{
-          components: {
-            Modal: {
-              contentBg: '#fafafa',
-              footerBg: '#fafafa',
-              headerBg: '#fafafa',
-              boxShadow: 'none',
-            },
+      <Modal
+        styles={{
+          mask: {
+            backgroundColor: 'rgba(250, 250, 250, 0.9)',
+          },
+          content: {
+            border: '1px solid #e4e4e7',
           },
         }}
+        title={
+          <>
+            <Icon component={AddSVG} />
+            <span style={{ marginLeft: '8px' }}>
+              {selectId ? '编辑条目' : '创建新条目'}
+            </span>
+          </>
+        }
+        footer={[
+          <CustomBtn
+            key="create"
+            label={selectId ? '更新' : '创建'}
+            style={{
+              width: '80px',
+            }}
+            onClick={handleClick}
+          />,
+        ]}
+        open={isModalOpen}
+        onCancel={resetState}
       >
-        <Modal
-          styles={{
-            mask: {
-              backgroundColor: 'rgba(250, 250, 250, 0.9)',
-            },
-            content: {
-              border: '1px solid #e4e4e7',
-            },
-          }}
-          title={
-            <>
-              <Icon component={AddSVG} />
-              <span style={{ marginLeft: '8px' }}>
-                {selectId ? '编辑条目' : '创建新条目'}
-              </span>
-            </>
-          }
-          footer={[
-            <CustomBtn
-              key="create"
-              label={selectId ? '更新' : '创建'}
-              style={{
-                width: '80px',
-              }}
-              onClick={handleClick}
-            />,
-          ]}
-          open={isModalOpen}
-          onCancel={resetState}
-        >
-          <div className={styles['create-form-container']}>
-            <DevModalFormItem
-              title="标题"
-              primary={
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        activeBorderColor: '#18181b',
-                        hoverBorderColor: '#18181b',
-                        activeShadow: 'none',
-                      },
-                    },
-                  }}
-                >
-                  <Input
-                    className={styles['form-input']}
-                    value={temTitle}
-                    onChange={(e) => setTemTitle(e.target.value)}
-                  />
-                </ConfigProvider>
-              }
-              icon={
-                <Tooltip title="点击生成随机标题">
-                  <Icon component={RandomSVG} />
-                </Tooltip>
-              }
-              handleRandom={produceRandomTitle}
-            />
-            <DevModalFormItem
-              title="备注"
-              primary={
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Input: {
-                        activeBorderColor: '#18181b',
-                        hoverBorderColor: '#18181b',
-                        activeShadow: 'none',
-                      },
-                    },
-                  }}
-                >
-                  <Input
-                    className={styles['form-input']}
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                  />
-                </ConfigProvider>
-              }
-            />
-          </div>
-        </Modal>
-      </ConfigProvider>
+        <div className={styles['create-form-container']}>
+          <DevModalFormItem
+            title="标题"
+            primary={
+              <Input
+                className={styles['form-input']}
+                value={temTitle}
+                onChange={(e) => setTemTitle(e.target.value)}
+              />
+            }
+            icon={
+              <Tooltip title="点击生成随机标题">
+                <Icon component={RandomSVG} />
+              </Tooltip>
+            }
+            handleRandom={produceRandomTitle}
+          />
+          <DevModalFormItem
+            title="备注"
+            primary={
+              <Input
+                className={styles['form-input']}
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+              />
+            }
+          />
+        </div>
+      </Modal>
     </>
   )
 }

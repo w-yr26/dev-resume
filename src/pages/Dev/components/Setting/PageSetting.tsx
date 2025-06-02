@@ -2,7 +2,7 @@ import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
 import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
-import { ConfigProvider, Slider, Splitter } from 'antd'
+import { Slider, Splitter } from 'antd'
 import CustomField from './components/CustomField'
 import { useStyleStore, useUIStore } from '@/store'
 
@@ -30,52 +30,20 @@ const TypeSetting = () => {
     <CustomLayout>
       <Header label="页面" svg={<Icon component={PageSVG} />} />
       <CustomField title="页边距">
-        <ConfigProvider
-          theme={{
-            components: {
-              Slider: {
-                railSize: 8,
-                handleColor: '#18181b',
-                handleActiveColor: '#18181b',
-                handleSizeHover: 10,
-                handleLineWidthHover: 2,
-                trackBg: '#18181b',
-                trackHoverBg: '#18181b',
-              },
-            },
-          }}
-        >
-          <Slider
-            min={0}
-            max={25}
-            value={pagePadding}
-            onChange={(val: number) => setPagePadding(val)}
-          />
-        </ConfigProvider>
+        <Slider
+          min={0}
+          max={25}
+          value={pagePadding}
+          onChange={(val: number) => setPagePadding(val)}
+        />
       </CustomField>
       <CustomField title="模块边距">
-        <ConfigProvider
-          theme={{
-            components: {
-              Slider: {
-                railSize: 8,
-                handleColor: '#18181b',
-                handleActiveColor: '#18181b',
-                handleSizeHover: 10,
-                handleLineWidthHover: 2,
-                trackBg: '#18181b',
-                trackHoverBg: '#18181b',
-              },
-            },
-          }}
-        >
-          <Slider
-            min={1}
-            max={20}
-            value={modulePadding}
-            onChange={(val: number) => setModulePadding(val)}
-          />
-        </ConfigProvider>
+        <Slider
+          min={1}
+          max={20}
+          value={modulePadding}
+          onChange={(val: number) => setModulePadding(val)}
+        />
       </CustomField>
       {isHorizontal ? (
         <CustomField title="主侧比例">

@@ -9,7 +9,7 @@ import codeSVG from '@/assets/svg/dev/code.svg?react'
 import chatCheckSVG from '@/assets/svg/dev/chat-check.svg?react'
 import chatDeleteSVG from '@/assets/svg/dev/chat-delete.svg?react'
 import styles from './index.module.scss'
-import { ConfigProvider, Switch, Tooltip } from 'antd'
+import { Switch, Tooltip } from 'antd'
 import AuthorizationHoc from '../AuthorizationHoc'
 
 type barType = {
@@ -84,24 +84,12 @@ const BottomBar = ({
     },
     {
       icon: (
-        <ConfigProvider
-          theme={{
-            components: {
-              Switch: {
-                colorPrimary: '#09090b',
-                colorPrimaryHover: '#09090b',
-                controlHeight: 24,
-              },
-            },
-          }}
-        >
-          <Switch
-            checkedChildren={<Icon component={normalSVG} />}
-            unCheckedChildren={<Icon component={codeSVG} />}
-            checked={isReadMode}
-            onClick={(val) => changeMode(val)}
-          />
-        </ConfigProvider>
+        <Switch
+          checkedChildren={<Icon component={normalSVG} />}
+          unCheckedChildren={<Icon component={codeSVG} />}
+          checked={isReadMode}
+          onClick={(val) => changeMode(val)}
+        />
       ),
       callback: () => {},
       permission: 2,

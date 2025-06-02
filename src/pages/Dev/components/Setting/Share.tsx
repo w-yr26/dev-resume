@@ -191,227 +191,180 @@ const Share = () => {
           </div>
         </div>
       </CustomLayout>
-      <ConfigProvider
-        theme={{
-          components: {
-            Modal: {
-              contentBg: '#fafafa',
-              footerBg: '#fafafa',
-              headerBg: '#fafafa',
-              boxShadow: 'none',
-            },
+      <Modal
+        styles={{
+          mask: {
+            backgroundColor: 'rgba(250, 250, 250, 0.9)',
+          },
+          content: {
+            border: '1px solid #e4e4e7',
           },
         }}
+        title="分享设置"
+        width={600}
+        footer={[
+          activeTab === 'setting' ? (
+            <CustomBtn
+              key="create"
+              label="生成分享链接"
+              onClick={generatorShareLink}
+            />
+          ) : null,
+        ]}
+        open={isModalOpen}
+        onCancel={() => resetState()}
       >
-        <Modal
-          styles={{
-            mask: {
-              backgroundColor: 'rgba(250, 250, 250, 0.9)',
-            },
-            content: {
-              border: '1px solid #e4e4e7',
-            },
-          }}
-          title="分享设置"
-          width={600}
-          footer={[
-            activeTab === 'setting' ? (
-              <CustomBtn
-                key="create"
-                label="生成分享链接"
-                onClick={generatorShareLink}
+        <div className={styles['tab-bar']}>
+          <div
+            className={`${styles['tab-item-box']} ${
+              styles[activeTab === 'setting' ? 'active-tab' : '']
+            }`}
+            onClick={() => setActiveTab('setting')}
+          >
+            分享设置
+          </div>
+          <div
+            className={`${styles['tab-item-box']} ${
+              styles[activeTab === 'history' ? 'active-tab' : '']
+            }`}
+            onClick={() => setActiveTab('history')}
+          >
+            分享历史
+          </div>
+        </div>
+        {activeTab === 'setting' ? (
+          <div className={styles['create-form-container']}>
+            <div className={styles['raw-box']}>
+              <DevModalFormItem
+                title="访问时间限制"
+                primary={
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Select: {
+                          activeBorderColor: '#18181b',
+                          hoverBorderColor: '#18181b',
+                          activeOutlineColor: 'none',
+                          optionSelectedBg: 'none',
+                          selectorBg: '#fafafa',
+                          optionHeight: 35,
+                        },
+                      },
+                    }}
+                  >
+                    <Select
+                      className={styles['custom-input']}
+                      value={hour}
+                      options={durationOptions}
+                      onChange={(e) => setHour(e)}
+                    />
+                  </ConfigProvider>
+                }
               />
-            ) : null,
-          ]}
-          open={isModalOpen}
-          onCancel={() => resetState()}
-        >
-          <div className={styles['tab-bar']}>
-            <div
-              className={`${styles['tab-item-box']} ${
-                styles[activeTab === 'setting' ? 'active-tab' : '']
-              }`}
-              onClick={() => setActiveTab('setting')}
-            >
-              分享设置
+              <DevModalFormItem
+                title="访问次数限制"
+                primary={
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Select: {
+                          activeBorderColor: '#18181b',
+                          hoverBorderColor: '#18181b',
+                          activeOutlineColor: 'none',
+                          optionSelectedBg: 'none',
+                          selectorBg: '#fafafa',
+                          optionHeight: 35,
+                        },
+                      },
+                    }}
+                  >
+                    <Select
+                      className={styles['custom-input']}
+                      value={count}
+                      options={countOptions}
+                      onChange={(e) => setCount(e)}
+                    />
+                  </ConfigProvider>
+                }
+              />
             </div>
-            <div
-              className={`${styles['tab-item-box']} ${
-                styles[activeTab === 'history' ? 'active-tab' : '']
-              }`}
-              onClick={() => setActiveTab('history')}
-            >
-              分享历史
+            <DevModalFormItem
+              title="访问密码(可选)"
+              primary={
+                <Input
+                  className={styles['custom-input']}
+                  placeholder="设置访问密码"
+                  value={pwd}
+                  onChange={(e) => setPwd(e.target.value)}
+                />
+              }
+              icon={
+                <Tooltip title="点击生成随机密码">
+                  <Icon component={RandomSVG} />
+                </Tooltip>
+              }
+              handleRandom={() => setPwd(uuidv4())}
+            />
+            <DevModalFormItem
+              title="分享权限"
+              primary={
+                <Checkbox.Group
+                  style={{ width: '100%', color: 'red' }}
+                  value={permissionArr}
+                  onChange={(val) => handleGroupChange(val)}
+                >
+                  <Row>
+                    <Col span={12}>
+                      <Checkbox value={1} disabled>
+                        阅读
+                      </Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={2}>评论</Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={3}>编辑</Checkbox>
+                    </Col>
+                    <Col span={12}>
+                      <Checkbox value={4}>复制</Checkbox>
+                    </Col>
+                  </Row>
+                </Checkbox.Group>
+              }
+            />
+            <DevModalFormItem
+              title="分享人员邮箱"
+              primary={
+                <Input
+                  className={styles['custom-input']}
+                  placeholder="输入邮箱地址(@163.com)，按分号或逗号分隔"
+                  value={emailList}
+                  onChange={(e) => setEmailList(e.target.value)}
+                />
+              }
+            />
+          </div>
+        ) : (
+          <div className={styles['history-box']}>
+            <p>共 {linkList.length} 条分享记录</p>
+            <div className={styles['history-list-box']}>
+              {linkList.length ? (
+                linkList.map((link, index) => (
+                  <LinkItem
+                    key={link.shareUrl}
+                    link={link}
+                    index={index}
+                    handleDelLinkList={handleDelLinkList}
+                    handleCopy={handleCopy}
+                  />
+                ))
+              ) : (
+                <Empty />
+              )}
             </div>
           </div>
-          {activeTab === 'setting' ? (
-            <div className={styles['create-form-container']}>
-              <div className={styles['raw-box']}>
-                <DevModalFormItem
-                  title="访问时间限制"
-                  primary={
-                    <ConfigProvider
-                      theme={{
-                        components: {
-                          Select: {
-                            activeBorderColor: '#18181b',
-                            hoverBorderColor: '#18181b',
-                            activeOutlineColor: 'none',
-                            optionSelectedBg: 'none',
-                            selectorBg: '#fafafa',
-                            optionHeight: 35,
-                          },
-                        },
-                      }}
-                    >
-                      <Select
-                        className={styles['custom-input']}
-                        value={hour}
-                        options={durationOptions}
-                        onChange={(e) => setHour(e)}
-                      />
-                    </ConfigProvider>
-                  }
-                />
-                <DevModalFormItem
-                  title="访问次数限制"
-                  primary={
-                    <ConfigProvider
-                      theme={{
-                        components: {
-                          Select: {
-                            activeBorderColor: '#18181b',
-                            hoverBorderColor: '#18181b',
-                            activeOutlineColor: 'none',
-                            optionSelectedBg: 'none',
-                            selectorBg: '#fafafa',
-                            optionHeight: 35,
-                          },
-                        },
-                      }}
-                    >
-                      <Select
-                        className={styles['custom-input']}
-                        value={count}
-                        options={countOptions}
-                        onChange={(e) => setCount(e)}
-                      />
-                    </ConfigProvider>
-                  }
-                />
-              </div>
-              <DevModalFormItem
-                title="访问密码(可选)"
-                primary={
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Input: {
-                          activeBorderColor: '#18181b',
-                          hoverBorderColor: '#18181b',
-                          activeShadow: 'none',
-                        },
-                      },
-                    }}
-                  >
-                    <Input
-                      className={styles['custom-input']}
-                      placeholder="设置访问密码"
-                      value={pwd}
-                      onChange={(e) => setPwd(e.target.value)}
-                    />
-                  </ConfigProvider>
-                }
-                icon={
-                  <Tooltip title="点击生成随机密码">
-                    <Icon component={RandomSVG} />
-                  </Tooltip>
-                }
-                handleRandom={() => setPwd(uuidv4())}
-              />
-              <DevModalFormItem
-                title="分享权限"
-                primary={
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Checkbox: {
-                          colorPrimary: '#18181b',
-                          colorPrimaryHover: '#18181b',
-                          colorPrimaryBorder: '#18181b',
-                        },
-                      },
-                    }}
-                  >
-                    <Checkbox.Group
-                      style={{ width: '100%', color: 'red' }}
-                      value={permissionArr}
-                      onChange={(val) => handleGroupChange(val)}
-                    >
-                      <Row>
-                        <Col span={12}>
-                          <Checkbox value={1} disabled>
-                            阅读
-                          </Checkbox>
-                        </Col>
-                        <Col span={12}>
-                          <Checkbox value={2}>评论</Checkbox>
-                        </Col>
-                        <Col span={12}>
-                          <Checkbox value={3}>编辑</Checkbox>
-                        </Col>
-                        <Col span={12}>
-                          <Checkbox value={4}>复制</Checkbox>
-                        </Col>
-                      </Row>
-                    </Checkbox.Group>
-                  </ConfigProvider>
-                }
-              />
-              <DevModalFormItem
-                title="分享人员邮箱"
-                primary={
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Input: {
-                          activeBorderColor: '#18181b',
-                          hoverBorderColor: '#18181b',
-                          activeShadow: 'none',
-                        },
-                      },
-                    }}
-                  >
-                    <Input
-                      className={styles['custom-input']}
-                      placeholder="输入邮箱地址(@163.com)，按分号或逗号分隔"
-                      value={emailList}
-                      onChange={(e) => setEmailList(e.target.value)}
-                    />
-                  </ConfigProvider>
-                }
-              />
-            </div>
-          ) : (
-            <div className={styles['history-box']}>
-              <p>共 {linkList.length} 条分享记录</p>
-              <div className={styles['history-list-box']}>
-                {linkList.length
-                  ? linkList.map((link, index) => (
-                      <LinkItem
-                        key={link.shareUrl}
-                        link={link}
-                        index={index}
-                        handleDelLinkList={handleDelLinkList}
-                        handleCopy={handleCopy}
-                      />
-                    ))
-                  :  <Empty />}
-              </div>
-            </div>
-          )}
-        </Modal>
-      </ConfigProvider>
+        )}
+      </Modal>
     </>
   )
 }

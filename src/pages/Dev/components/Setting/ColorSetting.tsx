@@ -2,7 +2,7 @@ import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
 import Icon from '@ant-design/icons'
 import ColorFillSVG from '@/assets/svg/dev/color-fill.svg?react'
-import { ColorPicker, ConfigProvider, Select } from 'antd'
+import { ColorPicker, Select } from 'antd'
 import styled from './index.module.scss'
 import CustomField from './components/CustomField'
 import { useStyleStore } from '@/store'
@@ -81,29 +81,18 @@ const ColorSetting = () => {
         </div>
       </div>
       <CustomField title="分页线样式">
-        <ConfigProvider
-          theme={{
-            components: {
-              Select: {
-                activeBorderColor: '#d9d9d9',
-                hoverBorderColor: '#d9d9d9',
-              },
-            },
+        <Select
+          value={borderStyle}
+          onChange={(val) => {
+            setBorderStyle(val)
           }}
-        >
-          <Select
-            value={borderStyle}
-            onChange={(val) => {
-              setBorderStyle(val)
-            }}
-            style={{ width: '100%', margin: '12px 0' }}
-            options={[
-              { value: 'solid', label: '———————' },
-              { value: 'dashed', label: '-----------------' },
-              { value: 'dotted', label: '·······························' },
-            ]}
-          />
-        </ConfigProvider>
+          style={{ width: '100%', margin: '12px 0' }}
+          options={[
+            { value: 'solid', label: '———————' },
+            { value: 'dashed', label: '-----------------' },
+            { value: 'dotted', label: '·······························' },
+          ]}
+        />
       </CustomField>
     </CustomLayout>
   )
