@@ -9,6 +9,7 @@ import {
   Checkbox,
   Col,
   ConfigProvider,
+  Empty,
   Input,
   message,
   Modal,
@@ -405,7 +406,7 @@ const Share = () => {
                         handleCopy={handleCopy}
                       />
                     ))
-                  : null}
+                  :  <Empty />}
               </div>
             </div>
           )}
