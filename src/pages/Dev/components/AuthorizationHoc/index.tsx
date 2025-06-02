@@ -8,12 +8,11 @@ const AuthorizationHoc = memo(
     permission = 1,
     isOrigin = true,
     isOnlyOrigin = false,
-    type,
   }: {
     children: React.ReactNode
     permission: 1 | 2 | 3 | 4
     isOrigin: boolean // 是否为原链接进入
-    type?: string
+    type?: string // 打备注，调试进行权限控制的组件
     isOnlyOrigin?: boolean // 是否只有作者可见
   }) => {
     // 权限列表

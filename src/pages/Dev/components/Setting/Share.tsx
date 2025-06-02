@@ -69,7 +69,6 @@ const normalizeSeparators = (input: string) => {
 
 const Share = () => {
   const resumeId = useDevStore((state) => state.resumeId)
-  const personalEmail = useUserStore((state) => state.info.email)
   const userId = useUserStore((state) => state.info.id)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [pwd, setPwd] = useState<undefined | string>(undefined)

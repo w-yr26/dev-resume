@@ -1,4 +1,3 @@
-import ColorSetting from './ColorSetting'
 import DownloadSetting from './DownloadSetting'
 import styles from './index.module.scss'
 import PageSetting from './PageSetting'
