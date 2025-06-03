@@ -81,6 +81,7 @@ export type singleNode = {
 export type designStoreType = {
   currentUISchema: singleNode
   currentSelectedKey: string
+  setCurUISchema: (val: singleNode) => void
   insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
   delNode: (prevKey: string, nodeKey: string) => void
   setCurrentSelectedKey: (key: string) => void
@@ -97,4 +98,16 @@ export type designStoreType = {
   ) => void
   changeChildWidth: (nodeKey: string, idx: number, proportion: string) => void
   setRootStyle: (key: string, val: any) => void
+}
+
+// 获取模板详情返回的数据结构
+export type temDetailRespType = {
+  createTime: string
+  updateTime: string
+  fastPhoto: string
+  id: string
+  isDelete: 0 | 1
+  name: string
+  style_config: singleNode
+  userId: string
 }

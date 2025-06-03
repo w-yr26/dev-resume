@@ -1,5 +1,5 @@
 import type { addTemplateType } from '@/types/template'
-import { temDataType } from '@/types/ui'
+import { temDataType, temDetailRespType } from '@/types/ui'
 import { request } from '@/utils'
 
 /**
@@ -41,8 +41,13 @@ export const delTemAPI = (temId: string) => {
 /**
  * 获取某一份模板的Schema信息
  */
-export const getTemplateSchemaAPI = (template_id: string) => {
-  return request(`/resume/templates/${template_id}`)
+export const getTemplateSchemaAPI = (
+  template_id: number,
+  isDefault: boolean = false
+) => {
+  return request<temDetailRespType>(
+    `/resume/templates/getTemplatesById?template_id=${template_id}&isDefault=${isDefault}`
+  )
 }
 
 /**

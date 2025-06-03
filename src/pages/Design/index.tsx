@@ -24,7 +24,7 @@ import { register } from './command'
 import NavBar from './components/NavBar'
 import html2canvas from 'html2canvas'
 import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '模块容器',
@@ -53,6 +53,7 @@ const typeToSVG: Record<uiType, any> = {
 const Design = () => {
   const currentUISchema = useDesignStore((state) => state.currentUISchema)
   const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
+  const setCurUISchema = useDesignStore((state) => state.setCurUISchema)
   const insertNode = useDesignStore((state) => state.insertNode)
   const delNode = useDesignStore((state) => state.delNode)
   const setCurrentSelectedKey = useDesignStore(
@@ -63,12 +64,13 @@ const Design = () => {
   const [isOpened, setIsOpened] = useState(false)
 
   const designRef = useRef<HTMLDivElement>(null)
-  const params = useParams()
-
+  const [searchParams] = useSearchParams()
+  const temId = searchParams.get('temId')
   useEffect(() => {
     const getTemDetail = async () => {
-      const { data } = await getTemplateSchemaAPI(params.temId || '')
-      console.log('date', data)
+      const { data } = await getTemplateSchemaAPI(Number(temId))
+      setCurUISchema(data.style_config)
+      // console.log('date', data)
     }
 
     getTemDetail()

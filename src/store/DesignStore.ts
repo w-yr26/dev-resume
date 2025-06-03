@@ -56,6 +56,13 @@ const useDesignStore = create<designStoreType>()(
           ],
         },
         currentSelectedKey: '',
+        setCurUISchema: (val) => {
+          set(() => {
+            return {
+              currentUISchema: val,
+            }
+          })
+        },
         insertNode: (nodeKey, targetKey, desUISchema) => {
           set(
             produce((state: designStoreType) => {

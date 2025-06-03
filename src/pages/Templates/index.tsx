@@ -40,7 +40,7 @@ const Templates = () => {
   }, [])
 
   const handleOpen = (id: string) => {
-    navigate(`/design/${id}`)
+    navigate(`/design?temId=${id}`)
   }
 
   const produceRandomTitle = () => {
