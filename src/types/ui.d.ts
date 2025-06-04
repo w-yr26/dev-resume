@@ -69,7 +69,8 @@ export type singleNode = {
     ableBind: boolean // 当前容器是否允许绑定字段
     ableDel: boolean // 当前容器是否允许删除操作
     isNestedAgain: boolean // 当前容器是否支持再嵌套
-    maxChildren?:number // children允许的数量
+    maxChildren?: number // children允许的数量
+    allowedParentBind: string[] // 限定父容器绑定的字段
   }
   type: uiType
   layout: layoutType

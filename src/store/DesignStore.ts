@@ -27,6 +27,7 @@ const useDesignStore = create<designStoreType>()(
             ableDel: false,
             ableBind: false,
             isNestedAgain: true,
+            allowedParentBind: [],
           },
           type: 'root', // 根容器
           layout: 'vertical',
@@ -50,6 +51,7 @@ const useDesignStore = create<designStoreType>()(
                 ableDel: true,
                 ableBind: true,
                 isNestedAgain: true,
+                allowedParentBind: ['root'],
               },
               type: 'module', // 根容器
               layout: 'vertical',

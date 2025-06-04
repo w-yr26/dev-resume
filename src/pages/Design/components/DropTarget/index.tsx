@@ -7,18 +7,28 @@ const DropTarget = ({
   children,
   nodeType,
   nodeKey,
-  deep,
+  parentBind,
+  isParentNeed,
 }: {
   children: React.ReactNode
   nodeType: uiType
   nodeKey: string
-  deep: number
-  onDrop: (id: string, targetKey: string, desUISchema: any, deep: number) => any
+  parentBind: string
+  isParentNeed: boolean
+  onDrop: (
+    id: string,
+    targetKey: string,
+    desUISchema: any,
+    parentBind: string,
+    isParentNeed: boolean
+  ) => any
 }) => {
+  // ableBind是物料配置限制的，无需考虑"闭包快照"问题
+  // TODO: parentBind 的闭包快照问题
+  const parentBindRef = useRef(parentBind)
+  parentBindRef.current = parentBind // 每次渲染时更新值
   const ref = useRef<HTMLDivElement>(null)
   const targetKey = useRef('')
-  const deepRef = useRef(0)
-  deepRef.current = deep
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept:
       nodeType === 'root'
@@ -28,9 +38,13 @@ const DropTarget = ({
         : ['container', 'md', 'text', 'image', 'label', 'columns'],
     drop: (item: any) => {
       // 此处可拿的id是因为在 <DraggableBox /> 中传了id字段
-      console.log('deepRef.current', deepRef.current)
-
-      onDrop(item.id, targetKey.current, item.desUISchema, deepRef.current)
+      onDrop(
+        item.id,
+        targetKey.current,
+        item.desUISchema,
+        parentBindRef.current,
+        isParentNeed
+      )
     },
     hover: () => {
       // 记录当前选中的、目标存放的元素

@@ -15,8 +15,8 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Drawer, Tag } from 'antd'
+import React, { useEffect, useRef, useState } from 'react'
+import { Drawer, message, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 import { commandManager } from './command/commandManager'
@@ -115,15 +115,21 @@ const Design = () => {
     nodeKey: string,
     targetKey: string,
     desUISchema: any,
-    deep: number
+    parentBind: string, // 当前放置的容器的bind字段
+    isParentNeed: boolean // 当前放置的容器是否需要字段绑定
   ) => {
-    // const typeAndBind = targetKey.split('?')[1]
-    // // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
-    // const [type, bind] = typeAndBind.split('&')
-    // if (type === 'module' && !bind) {
-    //   return message.warning('请先标注当前模块类型')
-    // }
-
+    if (!parentBind && isParentNeed)
+      return message.warning('请先绑定父容器数据类型')
+    // 当前物料允许父容器的bind类型
+    const allowParentBind = desUISchema.constraints
+      .allowedParentBind as string[]
+    // 如果父容器需要绑定 & 绑定不再当前元素支持范围内，则返回
+    if (
+      allowParentBind.length !== 0 &&
+      !allowParentBind.includes(parentBind) &&
+      isParentNeed
+    )
+      return message.warning('请将正确的物料放置当前容器中')
     // 获取新增命令
     const command = register.create(
       'drop',
@@ -228,7 +234,8 @@ const Design = () => {
               onDrop={handleDrop}
               nodeType={uiSchema.type}
               nodeKey={uiSchema.nodeKey}
-              deep={deep}
+              parentBind={uiSchema.bind}
+              isParentNeed={uiSchema.constraints.ableBind}
             >
               <DragBtn />
             </DropTarget>
