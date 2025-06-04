@@ -29,6 +29,50 @@ interface Option {
 
 const cascaderOptions: Option[] = [
   {
+    value: 'BASE_INFO',
+    label: '个人信息',
+    children: [
+      {
+        value: 'avatar',
+        label: '头像',
+      },
+      {
+        value: 'info',
+        label: '信息',
+        children: [
+          {
+            value: 'userName',
+            label: '姓名',
+          },
+          {
+            value: 'gender',
+            label: '性别',
+          },
+          {
+            value: 'age',
+            label: '年龄',
+          },
+          {
+            value: 'position',
+            label: '求职岗位',
+          },
+          {
+            value: 'phone',
+            label: '电话',
+          },
+          {
+            value: 'email',
+            label: '邮箱',
+          },
+          {
+            value: 'blob',
+            label: '博客',
+          },
+        ],
+      },
+    ],
+  },
+  {
     value: 'EDU_BG',
     label: '教育背景',
     children: [
@@ -302,7 +346,8 @@ const RightPanel = ({
             <Input disabled value={singleNode?.nodeKey} />
           </CustomRaw>
         </ModuleLayout>
-        {singleNode?.type === 'root' ? null : (
+        {singleNode?.type === 'root' ||
+        !singleNode?.constraints.ableBind ? null : (
           <ModuleLayout title="模块设置">
             {singleNode?.type === 'module' ? (
               <CustomRaw label="模块字段">

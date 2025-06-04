@@ -72,7 +72,7 @@ const Design = () => {
       setCurUISchema(data.style_config)
       // console.log('date', data)
     }
-
+    if (!temId) return
     getTemDetail()
   }, [])
 
@@ -164,7 +164,8 @@ const Design = () => {
             className={styles['del-box']}
             style={{
               visibility:
-                uiSchema.ableDel && uiSchema.nodeKey === currentSelectedKey
+                uiSchema.constraints.ableDel &&
+                uiSchema.nodeKey === currentSelectedKey
                   ? 'visible'
                   : 'hidden',
             }}

@@ -69,6 +69,7 @@ const Templates = () => {
       })
     } else {
       // 创建
+      navigate('/design')
     }
     await getTemList(userId)
     resetState()

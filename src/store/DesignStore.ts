@@ -23,7 +23,10 @@ const useDesignStore = create<designStoreType>()(
     (set, get) => {
       return {
         currentUISchema: {
-          ableDel: false,
+          constraints: {
+            ableDel: false,
+            ableBind: false,
+          },
           type: 'root', // 根容器
           isNestedAgain: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
@@ -43,7 +46,10 @@ const useDesignStore = create<designStoreType>()(
           nodeKey: uuidv4() + '?root',
           children: [
             {
-              ableDel: true,
+              constraints: {
+                ableDel: true,
+                ableBind: true,
+              },
               type: 'module', // 根容器
               isNestedAgain: true, // 是否支持嵌套，即children是否有值
               layout: 'vertical',

@@ -65,7 +65,10 @@ export type templateListType = {
 
 // ====== 以下与简历模板设计有关 ===
 export type singleNode = {
-  ableDel: boolean
+  constraints: {
+    ableBind: boolean // 当前容器是否允许绑定字段
+    ableDel: boolean // 当前容器是否允许删除操作
+  }
   type: uiType
   isNestedAgain: boolean
   layout: layoutType

@@ -24,7 +24,6 @@ const LeftPanel = () => {
           sub: '用于定义单个模块',
           // JSON描述信息
           desUISchema: {
-            ableDel: true,
             type: 'module',
             isNestedAgain: true,
             layout: 'vertical',
@@ -33,6 +32,10 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?module',
             children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+            },
           },
         },
         {
@@ -41,7 +44,6 @@ const LeftPanel = () => {
           sub: '用于定义container',
           // JSON描述信息
           desUISchema: {
-            ableDel: true,
             type: 'container',
             isNestedAgain: true,
             layout: 'vertical',
@@ -50,6 +52,10 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?container',
             children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: false,
+            },
           },
         },
       ],
@@ -62,7 +68,6 @@ const LeftPanel = () => {
           label: '模块标题',
           sub: '用于定义模块标题',
           desUISchema: {
-            ableDel: true,
             type: 'text',
             isNestedAgain: false,
             layout: 'vertical',
@@ -75,6 +80,10 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?text',
             // children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+            },
           },
         },
         {
@@ -82,7 +91,6 @@ const LeftPanel = () => {
           label: '数据容器',
           sub: '用于定义模块数据区域',
           desUISchema: {
-            ableDel: true,
             type: 'section',
             isNestedAgain: true,
             layout: 'vertical', // 列表容器也只能是垂直
@@ -93,6 +101,10 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?section',
             children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+            },
           },
         },
       ],
@@ -102,10 +114,30 @@ const LeftPanel = () => {
       children: [
         {
           svg: mdBoxSVG,
+          label: '表单项',
+          sub: '用于定义表单项数据',
+          desUISchema: {
+            type: 'container',
+            isNestedAgain: false,
+            layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
+            style: {
+              padding: 0,
+            },
+            bind: '',
+            tag: '',
+            nodeKey: uuidv4() + '?md',
+            // children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+            },
+          },
+        },
+        {
+          svg: mdBoxSVG,
           label: 'md容器',
           sub: '用于定义md数据',
           desUISchema: {
-            ableDel: true,
             type: 'md',
             isNestedAgain: false,
             layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
@@ -116,6 +148,10 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?md',
             // children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+            },
           },
         },
         {
@@ -123,7 +159,6 @@ const LeftPanel = () => {
           label: '普通文本',
           sub: '用于定义文本内容',
           desUISchema: {
-            ableDel: true,
             type: 'text',
             isNestedAgain: false,
             layout: 'vertical',
@@ -136,6 +171,10 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?text',
             // children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+            },
           },
         },
         {
@@ -143,7 +182,6 @@ const LeftPanel = () => {
           label: '图片',
           sub: '用于定义图片',
           desUISchema: {
-            ableDel: true,
             type: 'image',
             isNestedAgain: false,
             layout: 'vertical',
@@ -152,6 +190,11 @@ const LeftPanel = () => {
             tag: '',
             nodeKey: uuidv4() + '?image',
             // children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+              allowedParentBind: ['BASE_INFO'],
+            },
           },
         },
         {
@@ -159,7 +202,6 @@ const LeftPanel = () => {
           label: '三列布局',
           sub: '用于定义三列文本',
           desUISchema: {
-            ableDel: true,
             type: 'columns', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container(目前Render中对于三栏布局，父盒子的type也是container)
             isNestedAgain: false,
             layout: 'horizontal', // 既然是行内多列布局，layout也不再支持选择
@@ -170,52 +212,57 @@ const LeftPanel = () => {
             tag: '', // 不需要
             nodeKey: uuidv4() + '?columns',
             children: [
-              {
-                ableDel: false,
-                type: 'text',
-                isNestedAgain: false,
-                layout: 'horizontal',
-                style: {
-                  flex: 1,
-                  fontSize: '14px',
-                  fontWeight: 400,
-                  color: '#333',
-                },
-                bind: '',
-                tag: '', // 不需要
-                nodeKey: uuidv4() + '?text',
-              },
-              {
-                ableDel: false,
-                type: 'text',
-                isNestedAgain: false,
-                layout: 'horizontal',
-                style: {
-                  flex: 1,
-                  fontSize: '14px',
-                  fontWeight: 400,
-                  color: '#333',
-                },
-                bind: '',
-                tag: '', // 不需要
-                nodeKey: uuidv4() + '?text',
-              },
-              {
-                ableDel: false,
-                type: 'text',
-                isNestedAgain: false,
-                layout: 'horizontal',
-                style: {
-                  flex: 1,
-                  fontSize: '14px',
-                  fontWeight: 400,
-                  color: '#333',
-                },
-                bind: '',
-                tag: '', // 不需要
-                nodeKey: uuidv4() + '?text',
-              },
+              // {
+              //   ableDel: false,
+              //   type: 'text',
+              //   isNestedAgain: false,
+              //   layout: 'horizontal',
+              //   style: {
+              //     flex: 1,
+              //     fontSize: '14px',
+              //     fontWeight: 400,
+              //     color: '#333',
+              //   },
+              //   bind: '',
+              //   tag: '', // 不需要
+              //   nodeKey: uuidv4() + '?text',
+              // },
+              // {
+              //   ableDel: false,
+              //   type: 'text',
+              //   isNestedAgain: false,
+              //   layout: 'horizontal',
+              //   style: {
+              //     flex: 1,
+              //     fontSize: '14px',
+              //     fontWeight: 400,
+              //     color: '#333',
+              //   },
+              //   bind: '',
+              //   tag: '', // 不需要
+              //   nodeKey: uuidv4() + '?text',
+              // },
+              // {
+              //   ableDel: false,
+              //   type: 'text',
+              //   isNestedAgain: false,
+              //   layout: 'horizontal',
+              //   style: {
+              //     flex: 1,
+              //     fontSize: '14px',
+              //     fontWeight: 400,
+              //     color: '#333',
+              //   },
+              //   bind: '',
+              //   tag: '', // 不需要
+              //   nodeKey: uuidv4() + '?text',
+              // },
             ],
+            constraints: {
+              ableDel: true,
+              ableBind: false,
+              maxChildren: 3,
+            },
           },
         },
       ],
