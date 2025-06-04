@@ -260,8 +260,8 @@ const RightPanel = ({
   const [sizes, setSizes] = useState<(number | string)[]>(['30%', '70%'])
 
   const layoutOptions: CheckboxGroupProps<string>['options'] = [
-    { label: '双列布局', value: 'horizontal' },
-    { label: '单列布局', value: 'vertical' },
+    { label: '水平布局', value: 'horizontal' },
+    { label: '垂直布局', value: 'vertical' },
   ]
 
   // const moduleOptions = [
@@ -395,6 +395,7 @@ const RightPanel = ({
                   height: '28px',
                   width: '100%',
                 }}
+                disabled={!!singleNode?.constraints.maxChildren}
                 options={layoutOptions}
                 value={singleNode?.layout}
                 defaultValue="vertical"
@@ -405,7 +406,7 @@ const RightPanel = ({
                 }}
               />
             </CustomRaw>
-            {singleNode &&
+            {/* {singleNode &&
             singleNode.layout === 'horizontal' &&
             singleNode.children &&
             singleNode.children?.length > 1 ? (
@@ -458,7 +459,7 @@ const RightPanel = ({
                   ))}
                 </Splitter>
               </CustomField>
-            ) : null}
+            ) : null} */}
             {singleNode?.type === 'columns' ? (
               <CustomRaw label="主轴排列">
                 <Radio.Group

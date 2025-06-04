@@ -25,7 +25,6 @@ const LeftPanel = () => {
           // JSON描述信息
           desUISchema: {
             type: 'module',
-            isNestedAgain: true,
             layout: 'vertical',
             style: {},
             bind: '',
@@ -35,6 +34,7 @@ const LeftPanel = () => {
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: true,
             },
           },
         },
@@ -45,7 +45,6 @@ const LeftPanel = () => {
           // JSON描述信息
           desUISchema: {
             type: 'container',
-            isNestedAgain: true,
             layout: 'vertical',
             style: {},
             bind: '',
@@ -55,6 +54,7 @@ const LeftPanel = () => {
             constraints: {
               ableDel: true,
               ableBind: false,
+              isNestedAgain: true,
             },
           },
         },
@@ -69,7 +69,6 @@ const LeftPanel = () => {
           sub: '用于定义模块标题',
           desUISchema: {
             type: 'text',
-            isNestedAgain: false,
             layout: 'vertical',
             style: {
               fontSize: '14px',
@@ -79,10 +78,11 @@ const LeftPanel = () => {
             bind: '',
             tag: '',
             nodeKey: uuidv4() + '?text',
-            // children: [],
+            children: [],
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: false,
             },
           },
         },
@@ -92,7 +92,6 @@ const LeftPanel = () => {
           sub: '用于定义模块数据区域',
           desUISchema: {
             type: 'section',
-            isNestedAgain: true,
             layout: 'vertical', // 列表容器也只能是垂直
             style: {
               padding: 0,
@@ -104,6 +103,7 @@ const LeftPanel = () => {
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: true,
             },
           },
         },
@@ -118,7 +118,6 @@ const LeftPanel = () => {
           sub: '用于定义表单项数据',
           desUISchema: {
             type: 'container',
-            isNestedAgain: false,
             layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
             style: {
               padding: 0,
@@ -126,10 +125,11 @@ const LeftPanel = () => {
             bind: '',
             tag: '',
             nodeKey: uuidv4() + '?md',
-            // children: [],
+            children: [],
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: false,
             },
           },
         },
@@ -139,7 +139,6 @@ const LeftPanel = () => {
           sub: '用于定义md数据',
           desUISchema: {
             type: 'md',
-            isNestedAgain: false,
             layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
             style: {
               padding: 0,
@@ -147,10 +146,11 @@ const LeftPanel = () => {
             bind: '',
             tag: '',
             nodeKey: uuidv4() + '?md',
-            // children: [],
+            children: [],
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: false,
             },
           },
         },
@@ -160,7 +160,6 @@ const LeftPanel = () => {
           sub: '用于定义文本内容',
           desUISchema: {
             type: 'text',
-            isNestedAgain: false,
             layout: 'vertical',
             style: {
               fontSize: '14px',
@@ -170,10 +169,11 @@ const LeftPanel = () => {
             bind: '',
             tag: '',
             nodeKey: uuidv4() + '?text',
-            // children: [],
+            children: [],
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: false,
             },
           },
         },
@@ -183,16 +183,16 @@ const LeftPanel = () => {
           sub: '用于定义图片',
           desUISchema: {
             type: 'image',
-            isNestedAgain: false,
             layout: 'vertical',
             style: {},
             bind: '',
             tag: '',
             nodeKey: uuidv4() + '?image',
-            // children: [],
+            children: [],
             constraints: {
               ableDel: true,
               ableBind: true,
+              isNestedAgain: false,
               allowedParentBind: ['BASE_INFO'],
             },
           },
@@ -203,7 +203,6 @@ const LeftPanel = () => {
           sub: '用于定义三列文本',
           desUISchema: {
             type: 'columns', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container(目前Render中对于三栏布局，父盒子的type也是container)
-            isNestedAgain: false,
             layout: 'horizontal', // 既然是行内多列布局，layout也不再支持选择
             style: {
               justifyContent: 'space-between',
@@ -261,6 +260,7 @@ const LeftPanel = () => {
             constraints: {
               ableDel: true,
               ableBind: false,
+              isNestedAgain: true,
               maxChildren: 3,
             },
           },

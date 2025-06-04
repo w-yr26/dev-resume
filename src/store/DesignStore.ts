@@ -26,9 +26,9 @@ const useDesignStore = create<designStoreType>()(
           constraints: {
             ableDel: false,
             ableBind: false,
+            isNestedAgain: true,
           },
           type: 'root', // 根容器
-          isNestedAgain: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
           style: {}, // 即configStyle
           configStyle: {
@@ -49,9 +49,9 @@ const useDesignStore = create<designStoreType>()(
               constraints: {
                 ableDel: true,
                 ableBind: true,
+                isNestedAgain: true,
               },
               type: 'module', // 根容器
-              isNestedAgain: true, // 是否支持嵌套，即children是否有值
               layout: 'vertical',
               style: {}, // 即configStyle
               bind: '',

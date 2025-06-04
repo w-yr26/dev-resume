@@ -68,16 +68,17 @@ export type singleNode = {
   constraints: {
     ableBind: boolean // 当前容器是否允许绑定字段
     ableDel: boolean // 当前容器是否允许删除操作
+    isNestedAgain: boolean // 当前容器是否支持再嵌套
+    maxChildren?:number // children允许的数量
   }
   type: uiType
-  isNestedAgain: boolean
   layout: layoutType
   bind: string
   tag: string
   nodeKey: string
   style: React.CSSProperties
   configStyle?: any
-  children?: singleNode[]
+  children: singleNode[]
   path?: string
 }
 

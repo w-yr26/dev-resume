@@ -15,7 +15,7 @@ import styles from './index.module.scss'
 import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Drawer, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
@@ -143,6 +143,12 @@ const Design = () => {
     prevBind: string,
     prevKey: string
   ) => {
+    // 是否显示拖拽放置元素(isNestedAgain = true 且当前子元素数量 < 最大子元素数量)
+    const isShowDropTarget =
+      uiSchema.constraints.isNestedAgain &&
+      (uiSchema.constraints.maxChildren
+        ? uiSchema.children?.length < uiSchema.constraints.maxChildren
+        : true)
     return (
       <>
         <fieldset
@@ -217,7 +223,7 @@ const Design = () => {
                 ))
               : null}
           </div>
-          {uiSchema.isNestedAgain ? (
+          {isShowDropTarget ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
