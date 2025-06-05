@@ -10,6 +10,7 @@ export type uiType =
   | 'label'
   | 'md'
   | 'columns'
+  | 'field'
 
 export type layoutType = 'vertical' | 'horizontal' | 'grid'
 

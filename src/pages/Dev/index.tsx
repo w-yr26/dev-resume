@@ -90,16 +90,28 @@ const Dev = () => {
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
         setTemplateId(data.templateId)
-        const { code, temSchema } = await fetchUISchema(data.templateId, [
-          ...templateList,
-          ...diyTemplateList,
-        ])
-        if (code) {
-          setUiSchema(temSchema)
-          await initGlobalStyle(temSchema)
-        } else {
-          return message.error('未找到对应的模板')
-        }
+        fetch('/test2.json')
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok')
+            }
+            return response.json() // 如果是JSON文件
+          })
+          .then(async (data) => {
+            console.log(data) // 处理获取到的数据
+            setUiSchema(data)
+            await initGlobalStyle(data)
+          })
+        // const { code, temSchema } = await fetchUISchema(data.templateId, [
+        //   ...templateList,
+        //   ...diyTemplateList,
+        // ])
+        // if (code) {
+        //   setUiSchema(temSchema)
+        //   await initGlobalStyle(temSchema)
+        // } else {
+        //   return message.error('未找到对应的模板')
+        // }
         setLoading(false)
       }
     }
@@ -391,7 +403,11 @@ const Dev = () => {
             >
               <div className={styles['preview-content']} ref={mainRef}>
                 {uiSchema && !loading && top ? (
-                  <Render dataContext={dataSource} node={uiSchema} />
+                  <Render
+                    dataContext={dataSource}
+                    node={uiSchema}
+                    wheel={wheel}
+                  />
                 ) : null}
               </div>
               {lineShow && (

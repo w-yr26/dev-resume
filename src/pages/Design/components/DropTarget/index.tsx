@@ -35,7 +35,7 @@ const DropTarget = ({
         ? 'module'
         : nodeType === 'module'
         ? ['section', 'text', 'container', 'image']
-        : ['container', 'md', 'text', 'image', 'label', 'columns'],
+        : ['container', 'md', 'text', 'image', 'label', 'columns', 'field'],
     drop: (item: any) => {
       // 此处可拿的id是因为在 <DraggableBox /> 中传了id字段
       onDrop(

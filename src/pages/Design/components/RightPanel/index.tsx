@@ -66,7 +66,7 @@ const cascaderOptions: Option[] = [
             label: '邮箱',
           },
           {
-            value: 'blob',
+            value: 'tblob',
             label: '博客',
           },
         ],
@@ -321,20 +321,20 @@ const RightPanel = ({
     currentNodeDeep - 1
   )
 
-  useEffect(() => {
-    // 当当前容器为“模块容器”且水平排列的时候，才有必要初始化子元素的宽度占比
-    if (
-      singleNode &&
-      singleNode.type === 'module' &&
-      singleNode.layout === 'horizontal' &&
-      singleNode.children &&
-      singleNode.children.length > 1
-    ) {
-      singleNode.children?.forEach((_, index) => {
-        changeChildWidth(singleNode.nodeKey, index, sizes[index] as string)
-      })
-    }
-  }, [singleNode?.type, singleNode?.layout, singleNode?.children?.length])
+  // useEffect(() => {
+  //   // 当当前容器为“模块容器”且水平排列的时候，才有必要初始化子元素的宽度占比
+  //   if (
+  //     singleNode &&
+  //     singleNode.type === 'module' &&
+  //     singleNode.layout === 'horizontal' &&
+  //     singleNode.children &&
+  //     singleNode.children.length > 1
+  //   ) {
+  //     singleNode.children?.forEach((_, index) => {
+  //       changeChildWidth(singleNode.nodeKey, index, sizes[index] as string)
+  //     })
+  //   }
+  // }, [singleNode?.type, singleNode?.layout, singleNode?.children?.length])
 
   return (
     <aside className={styles['property-container']}>

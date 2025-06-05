@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
-import styled from './index.module.scss'
+import styles from './index.module.scss'
 import { useStyleStore, useUIStore } from '@/store'
 import { nodeType } from '@/types/ui'
 import { tokenizer } from '@/components/MdEditor/utils/tokens'
@@ -11,6 +11,17 @@ interface RenderProps {
   node: nodeType | null
   dataContext: any
   top?: number
+  wheel: number
+}
+
+const keyToFieldLabel: Record<string, string> = {
+  userName: '姓名',
+  gender: '性别',
+  age: '年龄',
+  position: '求职岗位',
+  phone: '电话',
+  email: '邮箱',
+  tblob: '个人博客',
 }
 
 const checkDate = (data: any) => {
@@ -25,7 +36,7 @@ const formatDate = (data: Dayjs[]) => {
 // 因为 memo 进行的是浅比较，而原先修改的逻辑是借助"currentSchema与uiSchema引用地址相同"进行修改的，所以 uiSchema 的引用地址保持不变，所以加了 memo 之后就不会更新
 // TODO：每一次只需要进行很小的 style 改动，但是却要重新执行整个递归，导致会有很明显的样式更新延迟
 const Render = memo((props: RenderProps) => {
-  const { dataContext, node } = props
+  const { dataContext, node, wheel } = props
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
@@ -68,16 +79,16 @@ const Render = memo((props: RenderProps) => {
     }
 
     // 整体是两栏布局，需要设置主侧栏的比例并且表示当前简历全局是两栏排列的
-    if (layout === 'grid') {
-      setIsHorizontal(true)
-      rootStyle.gridTemplateColumns = sidebarProportions
-        .map((item) => item + 'fr')
-        .join(' ')
-    }
+    // if (layout === 'grid') {
+    //   setIsHorizontal(true)
+    //   rootStyle.gridTemplateColumns = sidebarProportions
+    //     .map((item) => item + 'fr')
+    //     .join(' ')
+    // }
 
     return (
       <div
-        className={styled['render-container']}
+        className={styles['render-container']}
         style={{
           ...mergedStyle,
           ...rootStyle,
@@ -85,7 +96,14 @@ const Render = memo((props: RenderProps) => {
         data-node-key={node.nodeKey}
       >
         {children.map((child: any, index: number) => {
-          return <Render key={index} dataContext={dataContext} node={child} />
+          return (
+            <Render
+              key={index}
+              dataContext={dataContext}
+              node={child}
+              wheel={wheel}
+            />
+          )
         })}
       </div>
     )
@@ -111,7 +129,9 @@ const Render = memo((props: RenderProps) => {
         data-node-key={node.nodeKey}
       >
         {children.map((child: any, index: number) => {
-          return <Render key={index} node={child} dataContext={data} />
+          return (
+            <Render key={index} node={child} dataContext={data} wheel={wheel} />
+          )
         })}
       </div>
     )
@@ -132,7 +152,12 @@ const Render = memo((props: RenderProps) => {
             <React.Fragment key={index}>
               {children.map((child: any, idx: number) => {
                 return (
-                  <Render key={idx} dataContext={item} node={child}></Render>
+                  <Render
+                    key={idx}
+                    dataContext={item}
+                    node={child}
+                    wheel={wheel}
+                  />
                 )
               })}
             </React.Fragment>
@@ -145,13 +170,13 @@ const Render = memo((props: RenderProps) => {
   // 此处对应模块标题/或者是行内单项值
   if (type === 'text') {
     let data = dataContext[bind]
+    // 取不到对应的值，直接返回null
     if (!data) {
-      data = '默认内容...'
+      return null
     } else if (checkDate(data)) {
       data = formatDate(data)
     }
     return (
-      // <BlockWrapper style={mergedStyle} data={data}>
       <div
         className="text-box"
         style={mergedStyle}
@@ -159,7 +184,6 @@ const Render = memo((props: RenderProps) => {
       >
         {data}
       </div>
-      // </BlockWrapper>
     )
   }
 
@@ -192,7 +216,27 @@ const Render = memo((props: RenderProps) => {
   }
 
   if (type === 'image') {
-    return <img src={dataContext[bind]} style={mergedStyle} />
+    return (
+      <img
+        src={dataContext[bind]}
+        style={{
+          ...mergedStyle,
+          width: (Number(mergedStyle?.width) || 75) * wheel + 'px',
+          height: (Number(mergedStyle?.height) || 140) * wheel + 'px',
+        }}
+      />
+    )
+  }
+
+  if (type === 'field') {
+    console.log(dataContext, bind)
+
+    return (
+      <div className={`${styles['field-box']}`} style={mergedStyle}>
+        <div className={styles['label']}>{keyToFieldLabel[bind]}: </div>
+        <div className={styles['value']}>{dataContext[bind]}</div>
+      </div>
+    )
   }
   return null
 })

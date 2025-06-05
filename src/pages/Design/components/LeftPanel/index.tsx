@@ -76,6 +76,7 @@ const LeftPanel = () => {
               fontSize: '14px',
               fontWeight: 500,
               color: '#333',
+              width: '30%',
             },
             bind: '',
             tag: '',
@@ -138,8 +139,8 @@ const LeftPanel = () => {
           label: '表单项',
           sub: '用于定义表单项数据',
           desUISchema: {
-            type: 'container',
-            layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
+            type: 'field',
+            layout: 'horizontal',
             style: {
               padding: 0,
             },
@@ -162,7 +163,10 @@ const LeftPanel = () => {
           desUISchema: {
             type: 'image',
             layout: 'vertical',
-            style: {},
+            style: {
+              width: 150,
+              height: 200,
+            },
             bind: '',
             tag: '',
             nodeKey: uuidv4() + '?image',
@@ -229,7 +233,10 @@ const LeftPanel = () => {
           desUISchema: {
             type: 'columns',
             layout: 'grid',
-            style: {},
+            style: {
+              flex: 1,
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            },
             bind: '',
             tag: '', // 不需要
             nodeKey: uuidv4() + '?columns',
@@ -250,7 +257,10 @@ const LeftPanel = () => {
           desUISchema: {
             type: 'columns', // 对于多栏布局，由于原先Render的时候没有处理对应的type
             layout: 'grid', // 既然是行内多列布局，layout也不再支持选择
-            style: {},
+            style: {
+              flex: 1,
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            },
             bind: '',
             tag: '', // 不需要
             nodeKey: uuidv4() + '?columns',

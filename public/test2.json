@@ -1,0 +1,339 @@
+{
+  "constraints": {
+    "ableDel": false,
+    "ableBind": false,
+    "isNestedAgain": true,
+    "allowedParentBind": []
+  },
+  "type": "root",
+  "layout": "vertical",
+  "style": {},
+  "configStyle": {
+    "pagePadding": 14,
+    "modulePadding": 8,
+    "lineHeight": 1.5,
+    "fontSize": 14,
+    "mainColor": "rgb(71, 85, 105)",
+    "fontColor": "rgb(10, 10, 10)",
+    "bgColor": "rgb(255, 255, 255)",
+    "borderStyle": "solid"
+  },
+  "bind": "root",
+  "tag": "",
+  "nodeKey": "95cf4bcf-7816-4065-8871-29dc8da699ef?root",
+  "children": [
+    {
+      "constraints": {
+        "ableDel": true,
+        "ableBind": true,
+        "isNestedAgain": true,
+        "allowedParentBind": ["root"]
+      },
+      "type": "module",
+      "layout": "horizontal",
+      "style": {},
+      "bind": "BASE_INFO",
+      "tag": "",
+      "nodeKey": "be38483b-95a7-49a5-8f4f-628713ec0b8f?module",
+      "children": [
+        {
+          "type": "section",
+          "layout": "horizontal",
+          "style": {
+            "padding": 0
+          },
+          "bind": "info",
+          "tag": "",
+          "nodeKey": "016a4698-7216-4619-b8ee-1064146f7cd5?section",
+          "children": [
+            {
+              "type": "image",
+              "layout": "vertical",
+              "style": {
+                "width": 150,
+                "height": 200
+              },
+              "bind": "avatar",
+              "tag": "",
+              "nodeKey": "27ff99f8-87e5-4927-b5e0-16d5e86060ce?image",
+              "children": [],
+              "constraints": {
+                "ableDel": true,
+                "ableBind": true,
+                "isNestedAgain": false,
+                "allowedParentBind": ["info"],
+                "allowedBind": ["avatar"]
+              }
+            },
+            {
+              "type": "columns",
+              "layout": "grid",
+              "style": {
+                "flex": 1,
+                "gridTemplateColumns": "repeat(2, minmax(0, 1fr))"
+              },
+              "bind": "",
+              "tag": "",
+              "nodeKey": "e823cd7f-fb8f-4f2e-8f82-a2ca2b13fb63?columns",
+              "children": [
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "userName",
+                  "tag": "",
+                  "nodeKey": "12f2b42f-13fd-41b1-b058-46adea1669cb?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "gender",
+                  "tag": "",
+                  "nodeKey": "627bd42b-c007-4da9-9718-22716048f8ce?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "age",
+                  "tag": "",
+                  "nodeKey": "938f299c-2faa-441e-be0a-77931d736faa?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "position",
+                  "tag": "",
+                  "nodeKey": "b2a515b1-18d7-4bed-aaf0-9123feb6fdb6?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "tblob",
+                  "tag": "",
+                  "nodeKey": "8a96ea52-9dcc-4a26-bfed-09c0be34e168?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                }
+              ],
+              "constraints": {
+                "ableDel": true,
+                "ableBind": false,
+                "isNestedAgain": true,
+                "columns": 2,
+                "allowedParentBind": []
+              }
+            }
+          ],
+          "constraints": {
+            "ableDel": true,
+            "ableBind": true,
+            "isNestedAgain": true,
+            "allowedParentBind": [
+              "BASE_INFO",
+              "EDU_BG",
+              "WORK_EXP",
+              "PROJECT_EXP",
+              "AWARD_LIST",
+              "SKILL_LIST",
+              "HEART_LIST"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "module",
+      "layout": "horizontal",
+      "style": {},
+      "bind": "EDU_BG",
+      "tag": "",
+      "nodeKey": "d9f808de-ec60-4a5b-a2ed-4beba8a81384?module",
+      "children": [
+        {
+          "type": "text",
+          "layout": "vertical",
+          "style": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#333",
+            "width": "30%"
+          },
+          "bind": "label",
+          "tag": "",
+          "nodeKey": "e190d217-55af-4c46-9ede-bd64f1afe294?text",
+          "children": [],
+          "constraints": {
+            "ableDel": true,
+            "ableBind": true,
+            "isNestedAgain": false,
+            "allowedParentBind": [
+              "BASE_INFO",
+              "EDU_BG",
+              "WORK_EXP",
+              "PROJECT_EXP",
+              "AWARD_LIST",
+              "SKILL_LIST",
+              "HEART_LIST"
+            ]
+          }
+        },
+        {
+          "type": "section",
+          "layout": "vertical",
+          "style": {
+            "padding": 0
+          },
+          "bind": "info",
+          "tag": "",
+          "nodeKey": "7adacffc-7bfe-40f6-a93b-f9f64ab827f9?section",
+          "children": [
+            {
+              "type": "columns",
+              "layout": "grid",
+              "style": {
+                "flex": 1,
+                "gridTemplateColumns": "repeat(3, minmax(0, 1fr))"
+              },
+              "bind": "",
+              "tag": "",
+              "nodeKey": "7c6338ea-ecb1-4c4d-92c8-5ff670236699?columns",
+              "children": [
+                {
+                  "type": "text",
+                  "layout": "vertical",
+                  "style": {
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "bg",
+                  "tag": "",
+                  "nodeKey": "77b04ea2-b0aa-4cf9-b0d7-3c29ca2d2b87?text",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": []
+                  }
+                },
+                {
+                  "type": "text",
+                  "layout": "vertical",
+                  "style": {
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "school",
+                  "tag": "",
+                  "nodeKey": "0d79f281-73c2-4098-851e-ddd460e604d4?text",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": []
+                  }
+                },
+                {
+                  "type": "text",
+                  "layout": "vertical",
+                  "style": {
+                    "fontSize": "14px",
+                    "fontWeight": 400,
+                    "color": "#333"
+                  },
+                  "bind": "date",
+                  "tag": "",
+                  "nodeKey": "550770d2-2505-473e-a068-064be939fddf?text",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": []
+                  }
+                }
+              ],
+              "constraints": {
+                "ableDel": true,
+                "ableBind": false,
+                "isNestedAgain": true,
+                "columns": 3,
+                "allowedParentBind": []
+              }
+            }
+          ],
+          "constraints": {
+            "ableDel": true,
+            "ableBind": true,
+            "isNestedAgain": true,
+            "allowedParentBind": [
+              "BASE_INFO",
+              "EDU_BG",
+              "WORK_EXP",
+              "PROJECT_EXP",
+              "AWARD_LIST",
+              "SKILL_LIST",
+              "HEART_LIST"
+            ]
+          }
+        }
+      ],
+      "constraints": {
+        "ableDel": true,
+        "ableBind": true,
+        "isNestedAgain": true,
+        "allowedParentBind": ["root"]
+      }
+    }
+  ]
+}

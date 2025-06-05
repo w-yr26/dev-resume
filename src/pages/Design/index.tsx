@@ -36,6 +36,7 @@ const typeToComponentName: Record<uiType, string> = {
   text: '文本块',
   label: '模块标题',
   columns: '多列容器',
+  field: '表单项',
 }
 
 const typeToSVG: Record<uiType, any> = {
@@ -48,6 +49,7 @@ const typeToSVG: Record<uiType, any> = {
   image: imageSVG,
   text: textBlockSVG,
   label: textBlockSVG,
+  field: textBlockSVG,
 }
 
 const Design = () => {
