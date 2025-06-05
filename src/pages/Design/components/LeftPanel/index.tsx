@@ -132,6 +132,7 @@ const LeftPanel = () => {
     {
       label: '数据视图组件',
       children: [
+        // TODO：表单项需要与渲染规则对应做处理
         {
           svg: mdBoxSVG,
           label: '表单项',
@@ -151,6 +152,27 @@ const LeftPanel = () => {
               ableBind: true,
               isNestedAgain: false,
               allowedParentBind: ['info'],
+            },
+          },
+        },
+        {
+          svg: imageSVG,
+          label: '图片',
+          sub: '用于定义图片',
+          desUISchema: {
+            type: 'image',
+            layout: 'vertical',
+            style: {},
+            bind: '',
+            tag: '',
+            nodeKey: uuidv4() + '?image',
+            children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: true,
+              isNestedAgain: false,
+              allowedParentBind: ['info'],
+              allowedBind: ['avatar'],
             },
           },
         },
@@ -201,22 +223,23 @@ const LeftPanel = () => {
           },
         },
         {
-          svg: imageSVG,
-          label: '图片',
-          sub: '用于定义图片',
+          svg: threeColumnSVG,
+          label: '双列布局',
+          sub: '用于定义双列文本',
           desUISchema: {
-            type: 'image',
-            layout: 'vertical',
+            type: 'columns',
+            layout: 'grid',
             style: {},
             bind: '',
-            tag: '',
-            nodeKey: uuidv4() + '?image',
+            tag: '', // 不需要
+            nodeKey: uuidv4() + '?columns',
             children: [],
             constraints: {
               ableDel: true,
-              ableBind: true,
-              isNestedAgain: false,
-              allowedParentBind: ['BASE_INFO'],
+              ableBind: false,
+              isNestedAgain: true,
+              columns: 2,
+              allowedParentBind: [],
             },
           },
         },
@@ -225,66 +248,18 @@ const LeftPanel = () => {
           label: '三列布局',
           sub: '用于定义三列文本',
           desUISchema: {
-            type: 'columns', // 对于多栏布局，由于原先Render的时候没有对应的type，先写成container(目前Render中对于三栏布局，父盒子的type也是container)
-            layout: 'horizontal', // 既然是行内多列布局，layout也不再支持选择
-            style: {
-              justifyContent: 'space-between',
-            },
-            bind: '', // 不需要(TODO:但是不需要绑定的条件是啥呢？type === 'container'?)
+            type: 'columns', // 对于多栏布局，由于原先Render的时候没有处理对应的type
+            layout: 'grid', // 既然是行内多列布局，layout也不再支持选择
+            style: {},
+            bind: '',
             tag: '', // 不需要
             nodeKey: uuidv4() + '?columns',
-            children: [
-              // {
-              //   ableDel: false,
-              //   type: 'text',
-              //   isNestedAgain: false,
-              //   layout: 'horizontal',
-              //   style: {
-              //     flex: 1,
-              //     fontSize: '14px',
-              //     fontWeight: 400,
-              //     color: '#333',
-              //   },
-              //   bind: '',
-              //   tag: '', // 不需要
-              //   nodeKey: uuidv4() + '?text',
-              // },
-              // {
-              //   ableDel: false,
-              //   type: 'text',
-              //   isNestedAgain: false,
-              //   layout: 'horizontal',
-              //   style: {
-              //     flex: 1,
-              //     fontSize: '14px',
-              //     fontWeight: 400,
-              //     color: '#333',
-              //   },
-              //   bind: '',
-              //   tag: '', // 不需要
-              //   nodeKey: uuidv4() + '?text',
-              // },
-              // {
-              //   ableDel: false,
-              //   type: 'text',
-              //   isNestedAgain: false,
-              //   layout: 'horizontal',
-              //   style: {
-              //     flex: 1,
-              //     fontSize: '14px',
-              //     fontWeight: 400,
-              //     color: '#333',
-              //   },
-              //   bind: '',
-              //   tag: '', // 不需要
-              //   nodeKey: uuidv4() + '?text',
-              // },
-            ],
+            children: [],
             constraints: {
               ableDel: true,
               ableBind: false,
               isNestedAgain: true,
-              maxChildren: 3,
+              columns: 3,
               allowedParentBind: [],
             },
           },
@@ -320,7 +295,7 @@ const LeftPanel = () => {
   return (
     <aside className={styles['materiel-container']}>
       {draggableList.length ? (
-        <Collapse defaultActiveKey={['1']} items={collapseItems} />
+        <Collapse defaultActiveKey={['1', '2', '3']} items={collapseItems} />
       ) : null}
     </aside>
   )

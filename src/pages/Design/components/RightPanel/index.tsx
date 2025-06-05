@@ -7,6 +7,7 @@ import {
   Cascader,
   ColorPicker,
   Input,
+  message,
   Radio,
   Select,
   Splitter,
@@ -33,13 +34,13 @@ const cascaderOptions: Option[] = [
     label: '个人信息',
     children: [
       {
-        value: 'avatar',
-        label: '头像',
-      },
-      {
         value: 'info',
         label: '信息',
         children: [
+          {
+            value: 'avatar',
+            label: '头像',
+          },
           {
             value: 'userName',
             label: '姓名',
@@ -264,15 +265,15 @@ const RightPanel = ({
     { label: '垂直布局', value: 'vertical' },
   ]
 
-  // const moduleOptions = [
-  //   { value: 'BASE_INFO', label: '基础信息' },
-  //   { value: 'EDU_BG', label: '教育背景' },
-  //   { value: 'WORK_EXP', label: '实习/工作经历' },
-  //   { value: 'PROJECT_EXP', label: '项目经历' },
-  //   { value: 'SKILL_LIST', label: '技能特长' },
-  //   // { value: 'AWARD_LIST', label: '荣誉奖项' },
-  //   { value: 'HEART_LIST', label: '兴趣爱好' },
-  // ]
+  const moduleOptions = [
+    { value: 'BASE_INFO', label: '基础信息' },
+    { value: 'EDU_BG', label: '教育背景' },
+    { value: 'WORK_EXP', label: '实习/工作经历' },
+    { value: 'PROJECT_EXP', label: '项目经历' },
+    { value: 'SKILL_LIST', label: '技能特长' },
+    // { value: 'AWARD_LIST', label: '荣誉奖项' },
+    { value: 'HEART_LIST', label: '兴趣爱好' },
+  ]
 
   const columnsOptions: CheckboxGroupProps<string>['options'] = [
     { label: 'center', value: 'center' },
@@ -357,7 +358,7 @@ const RightPanel = ({
                     width: '100%',
                   }}
                   value={[singleNode?.bind || '']}
-                  options={filterCascaderOptions}
+                  options={moduleOptions}
                   onChange={(e) => {
                     if (singleNode)
                       setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
@@ -375,8 +376,18 @@ const RightPanel = ({
                   value={[singleNode?.bind || '']}
                   options={filterCascaderOptions}
                   onChange={(e) => {
-                    if (singleNode)
+                    if (singleNode) {
+                      console.log('sing', singleNode)
+                      const curBind = e[e.length - 1]
+                      if (
+                        singleNode.constraints.allowedBind &&
+                        singleNode.constraints.allowedBind.length &&
+                        !singleNode.constraints.allowedBind.includes(curBind)
+                      ) {
+                        return message.warning('当前物料不支持绑定该字段')
+                      }
                       setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
+                    }
                   }}
                   placeholder="选择绑定字段"
                 />
@@ -385,6 +396,7 @@ const RightPanel = ({
           </ModuleLayout>
         )}
 
+        {/* TODO：这里，grid布局的情况得处理一下 */}
         {singleNode?.type !== 'root' ? (
           <ModuleLayout title="排列设置">
             <div className={styles['custom-title']}></div>
@@ -395,7 +407,6 @@ const RightPanel = ({
                   height: '28px',
                   width: '100%',
                 }}
-                disabled={!!singleNode?.constraints.maxChildren}
                 options={layoutOptions}
                 value={singleNode?.layout}
                 defaultValue="vertical"

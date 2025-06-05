@@ -81,6 +81,12 @@
   // }
 }
 
+.three-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 防止内容溢出 */
+  gap: 2px;
+}
+
 .active-fieldset {
   border: 3px solid #18181b !important;
 }

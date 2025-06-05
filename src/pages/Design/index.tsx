@@ -27,7 +27,7 @@ import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
 import { useSearchParams } from 'react-router-dom'
 
 const typeToComponentName: Record<uiType, string> = {
-  container: '模块容器',
+  container: '普通容器',
   module: '模块容器',
   root: '根容器',
   md: 'md容器',
@@ -150,11 +150,7 @@ const Design = () => {
     prevKey: string
   ) => {
     // 是否显示拖拽放置元素(isNestedAgain = true 且当前子元素数量 < 最大子元素数量)
-    const isShowDropTarget =
-      uiSchema.constraints.isNestedAgain &&
-      (uiSchema.constraints.maxChildren
-        ? uiSchema.children?.length < uiSchema.constraints.maxChildren
-        : true)
+    const isShowDropTarget = uiSchema.constraints.isNestedAgain
     return (
       <>
         <fieldset
@@ -212,8 +208,18 @@ const Design = () => {
 
           <div
             className={`${
-              uiSchema.layout === 'horizontal' ? styles['flex-fieldset'] : ''
+              uiSchema.layout === 'horizontal'
+                ? styles['flex-fieldset']
+                : uiSchema.layout === 'grid'
+                ? styles['three-grid-container']
+                : ''
             }`}
+            style={{
+              gridTemplateColumns:
+                uiSchema.layout === 'grid'
+                  ? `repeat(${uiSchema.constraints.columns}, minmax(0, 1fr))`
+                  : '',
+            }}
           >
             {uiSchema.children?.length
               ? uiSchema.children.map((nestedChild: singleNode) => (
