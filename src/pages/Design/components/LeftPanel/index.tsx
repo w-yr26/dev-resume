@@ -39,27 +39,27 @@ const LeftPanel = () => {
             },
           },
         },
-        {
-          svg: normalBoxSVG,
-          label: '普通容器',
-          sub: '用于定义container',
-          // JSON描述信息
-          desUISchema: {
-            type: 'container',
-            layout: 'vertical',
-            style: {},
-            bind: '',
-            tag: '',
-            nodeKey: uuidv4() + '?container',
-            children: [],
-            constraints: {
-              ableDel: true,
-              ableBind: false,
-              isNestedAgain: true,
-              allowedParentBind: [],
-            },
-          },
-        },
+        // {
+        //   svg: normalBoxSVG,
+        //   label: '普通容器',
+        //   sub: '用于定义container',
+        //   // JSON描述信息
+        //   desUISchema: {
+        //     type: 'container',
+        //     layout: 'vertical',
+        //     style: {},
+        //     bind: '',
+        //     tag: '',
+        //     nodeKey: uuidv4() + '?container',
+        //     children: [],
+        //     constraints: {
+        //       ableDel: true,
+        //       ableBind: false,
+        //       isNestedAgain: true,
+        //       allowedParentBind: [],
+        //     },
+        //   },
+        // },
       ],
     },
     {
@@ -134,6 +134,56 @@ const LeftPanel = () => {
     {
       label: '数据视图组件',
       children: [
+        {
+          svg: threeColumnSVG,
+          label: '三列布局',
+          sub: '用于定义三列文本',
+          desUISchema: {
+            type: 'columns', // 对于多栏布局，由于原先Render的时候没有处理对应的type
+            layout: 'grid', // 既然是行内多列布局，layout也不再支持选择
+            style: {
+              flex: 1,
+              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              marginBottom: '4px',
+            },
+            bind: '',
+            tag: '', // 不需要
+            nodeKey: uuidv4() + '?columns',
+            children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: false,
+              isNestedAgain: true,
+              columns: 3,
+              allowedParentBind: [],
+            },
+          },
+        },
+        {
+          svg: threeColumnSVG,
+          label: '双列布局',
+          sub: '用于定义双列文本',
+          desUISchema: {
+            type: 'columns',
+            layout: 'grid',
+            style: {
+              flex: 1,
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              marginBottom: '4px',
+            },
+            bind: '',
+            tag: '', // 不需要
+            nodeKey: uuidv4() + '?columns',
+            children: [],
+            constraints: {
+              ableDel: true,
+              ableBind: false,
+              isNestedAgain: true,
+              columns: 2,
+              allowedParentBind: [],
+            },
+          },
+        },
         // TODO：表单项需要与渲染规则对应做处理
         {
           svg: mdBoxSVG,
@@ -204,80 +254,30 @@ const LeftPanel = () => {
             },
           },
         },
-        {
-          svg: textBlockSVG,
-          label: '普通文本',
-          sub: '用于定义文本内容',
-          desUISchema: {
-            type: 'text',
-            layout: 'vertical',
-            style: {
-              fontSize: '14px',
-              fontWeight: 400,
-              color: '#333',
-            },
-            bind: '',
-            tag: '',
-            nodeKey: uuidv4() + '?text',
-            children: [],
-            constraints: {
-              ableDel: true,
-              ableBind: true,
-              isNestedAgain: false,
-              allowedParentBind: [],
-            },
-          },
-        },
-        {
-          svg: threeColumnSVG,
-          label: '双列布局',
-          sub: '用于定义双列文本',
-          desUISchema: {
-            type: 'columns',
-            layout: 'grid',
-            style: {
-              flex: 1,
-              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-              marginBottom: '4px',
-            },
-            bind: '',
-            tag: '', // 不需要
-            nodeKey: uuidv4() + '?columns',
-            children: [],
-            constraints: {
-              ableDel: true,
-              ableBind: false,
-              isNestedAgain: true,
-              columns: 2,
-              allowedParentBind: [],
-            },
-          },
-        },
-        {
-          svg: threeColumnSVG,
-          label: '三列布局',
-          sub: '用于定义三列文本',
-          desUISchema: {
-            type: 'columns', // 对于多栏布局，由于原先Render的时候没有处理对应的type
-            layout: 'grid', // 既然是行内多列布局，layout也不再支持选择
-            style: {
-              flex: 1,
-              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-              marginBottom: '4px',
-            },
-            bind: '',
-            tag: '', // 不需要
-            nodeKey: uuidv4() + '?columns',
-            children: [],
-            constraints: {
-              ableDel: true,
-              ableBind: false,
-              isNestedAgain: true,
-              columns: 3,
-              allowedParentBind: [],
-            },
-          },
-        },
+        // {
+        //   svg: textBlockSVG,
+        //   label: '普通文本',
+        //   sub: '用于定义文本内容',
+        //   desUISchema: {
+        //     type: 'text',
+        //     layout: 'vertical',
+        //     style: {
+        //       fontSize: '14px',
+        //       fontWeight: 400,
+        //       color: '#333',
+        //     },
+        //     bind: '',
+        //     tag: '',
+        //     nodeKey: uuidv4() + '?text',
+        //     children: [],
+        //     constraints: {
+        //       ableDel: true,
+        //       ableBind: true,
+        //       isNestedAgain: false,
+        //       allowedParentBind: [],
+        //     },
+        //   },
+        // },
       ],
     },
   ]

@@ -34,11 +34,7 @@ const ColorSetting = () => {
   const mainColor = useStyleStore((state) => state.mainColor)
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
-  const setFontColor = useStyleStore((state) => state.setFontColor)
-  const setBgColor = useStyleStore((state) => state.setBgColor)
-  const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
-  const setMainColor = useStyleStore((state) => state.setMainColor)
-
+  const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
   return (
     <CustomLayout>
       <Header label="主题" svg={<Icon component={ColorFillSVG} />} />
@@ -53,7 +49,7 @@ const ColorSetting = () => {
                 className={`${styled['radio-box']} ${
                   color === mainColor ? styled['active'] : ''
                 }`}
-                onClick={() => setMainColor(color)}
+                onClick={() => setPageKeyToStyle('mainColor', color)}
               />
             </div>
           ))}
@@ -68,7 +64,7 @@ const ColorSetting = () => {
           <span className={styled['color-name']}>背景色</span>
           <ColorPicker
             value={bgColor}
-            onChange={(_, color) => setBgColor(color)}
+            onChange={(_, color) => setPageKeyToStyle('bgColor', color)}
           />
         </div>
         <div className={styled['picker-item']}>
@@ -76,16 +72,14 @@ const ColorSetting = () => {
           <ColorPicker
             value={fontColor}
             defaultFormat={'hex'}
-            onChange={(_, color) => setFontColor(color)}
+            onChange={(_, color) => setPageKeyToStyle('fontColor', color)}
           />
         </div>
       </div>
       <CustomField title="分页线样式">
         <Select
           value={borderStyle}
-          onChange={(val) => {
-            setBorderStyle(val)
-          }}
+          onChange={(val) => setPageKeyToStyle('borderStyle', val)}
           style={{ width: '100%', margin: '12px 0' }}
           options={[
             { value: 'solid', label: '———————' },

@@ -11,42 +11,9 @@ const useStyleStore = create<styleInitType>((set) => {
     fontColor: '',
     bgColor: '',
     borderStyle: '',
-    sidebarProportions: [],
-    setPagePadding: (val) =>
+    setPageKeyToStyle: (key, val) =>
       set(() => ({
-        pagePadding: val,
-      })),
-    setModulePadding: (val) =>
-      set(() => ({
-        modulePadding: val,
-      })),
-    setLineHeight: (val) =>
-      set(() => ({
-        lineHeight: val,
-      })),
-    setFontSize: (val) =>
-      set(() => ({
-        fontSize: val,
-      })),
-    setFontColor: (val) =>
-      set(() => ({
-        fontColor: val,
-      })),
-    setMainColor: (val) =>
-      set(() => ({
-        mainColor: val,
-      })),
-    setBgColor: (val) =>
-      set(() => ({
-        bgColor: val,
-      })),
-    setBorderStyle: (val) =>
-      set(() => ({
-        borderStyle: val,
-      })),
-    setSidebarProportions: (val) =>
-      set(() => ({
-        sidebarProportions: val,
+        [key]: val,
       })),
   }
 })

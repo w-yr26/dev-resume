@@ -14,6 +14,7 @@ interface RenderProps {
   wheel: number
 }
 
+// 个人信息表单项的标题
 const keyToFieldLabel: Record<string, string> = {
   userName: '姓名',
   gender: '性别',
@@ -22,14 +23,6 @@ const keyToFieldLabel: Record<string, string> = {
   phone: '电话',
   email: '邮箱',
   tblob: '个人博客',
-}
-
-const checkDate = (data: any) => {
-  return Array.isArray(data) && data.every((date: Dayjs) => isDayjs(date))
-}
-
-const formatDate = (data: Dayjs[]) => {
-  return data.map((item) => item.format('YYYY-MM')).join('~')
 }
 
 // 这里原先使用 memo 时，当用户自定义修改样式，是无法达到更新的效果的
@@ -44,8 +37,6 @@ const Render = memo((props: RenderProps) => {
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const pagePadding = useStyleStore((state) => state.pagePadding)
-  const sidebarProportions = useStyleStore((state) => state.sidebarProportions)
-  const setIsHorizontal = useUIStore((state) => state.setIsHorizontal)
 
   if (!node) return null
   const { type, layout, children = [], style = {}, bind, label = '' } = node

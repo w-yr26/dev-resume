@@ -9,8 +9,7 @@ import { useStyleStore } from '@/store'
 const TypeSetting = () => {
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
-  const setLineHeight = useStyleStore((state) => state.setLineHeight)
-  const setFontSize = useStyleStore((state) => state.setFontSize)
+  const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
 
   return (
     <CustomLayout>
@@ -20,7 +19,7 @@ const TypeSetting = () => {
           min={10}
           max={20}
           value={fontSize}
-          onChange={(val: number) => setFontSize(val)}
+          onChange={(val: number) => setPageKeyToStyle('fontSize', val)}
         />
       </CustomField>
       <CustomField title="行高">
@@ -29,7 +28,7 @@ const TypeSetting = () => {
           min={1.2}
           max={2}
           value={lineHeight}
-          onChange={(val: number) => setLineHeight(val)}
+          onChange={(val: number) => setPageKeyToStyle('lineHeight', val)}
         />
       </CustomField>
       <CustomField title="设置">

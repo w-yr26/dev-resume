@@ -31,17 +31,8 @@ const Dev = () => {
   const setTemplateId = useDevStore((state) => state.setTemplateId)
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
-  const setPagePadding = useStyleStore((state) => state.setPagePadding)
-  const setModulePadding = useStyleStore((state) => state.setModulePadding)
-  const setLineHeight = useStyleStore((state) => state.setLineHeight)
-  const setFontSize = useStyleStore((state) => state.setFontSize)
-  const setFontColor = useStyleStore((state) => state.setFontColor)
-  const setMainColor = useStyleStore((state) => state.setMainColor)
-  const setBgColor = useStyleStore((state) => state.setBgColor)
-  const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
-  const setSidebarProportions = useStyleStore(
-    (state) => state.setSidebarProportions
-  )
+  const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
+
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -90,28 +81,28 @@ const Dev = () => {
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
         setTemplateId(data.templateId)
-        fetch('/test2.json')
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok')
-            }
-            return response.json() // 如果是JSON文件
-          })
-          .then(async (data) => {
-            console.log(data) // 处理获取到的数据
-            setUiSchema(data)
-            await initGlobalStyle(data)
-          })
-        // const { code, temSchema } = await fetchUISchema(data.templateId, [
-        //   ...templateList,
-        //   ...diyTemplateList,
-        // ])
-        // if (code) {
-        //   setUiSchema(temSchema)
-        //   await initGlobalStyle(temSchema)
-        // } else {
-        //   return message.error('未找到对应的模板')
-        // }
+        // fetch('/test2.json')
+        //   .then((response) => {
+        //     if (!response.ok) {
+        //       throw new Error('Network response was not ok')
+        //     }
+        //     return response.json() // 如果是JSON文件
+        //   })
+        //   .then(async (data) => {
+        //     console.log(data) // 处理获取到的数据
+        //     setUiSchema(data)
+        //     await initGlobalStyle(data)
+        //   })
+        const { code, temSchema } = await fetchUISchema(data.templateId, [
+          ...templateList,
+          ...diyTemplateList,
+        ])
+        if (code) {
+          setUiSchema(temSchema)
+          await initGlobalStyle(temSchema)
+        } else {
+          return message.error('未找到对应的模板')
+        }
         setLoading(false)
       }
     }
@@ -154,18 +145,16 @@ const Dev = () => {
           bgColor,
           mainColor,
           borderStyle,
-          sidebarProportions,
         },
       } = uiSchemaRes
-      setPagePadding(pagePadding)
-      setModulePadding(modulePadding)
-      setLineHeight(lineHeight)
-      setFontSize(fontSize)
-      setFontColor(fontColor)
-      setBgColor(bgColor)
-      setMainColor(mainColor)
-      setBorderStyle(borderStyle)
-      setSidebarProportions(sidebarProportions)
+      setPageKeyToStyle('pagePadding', pagePadding)
+      setPageKeyToStyle('modulePadding', modulePadding)
+      setPageKeyToStyle('lineHeight', lineHeight)
+      setPageKeyToStyle('fontSize', fontSize)
+      setPageKeyToStyle('fontColor', fontColor)
+      setPageKeyToStyle('bgColor', bgColor)
+      setPageKeyToStyle('mainColor', mainColor)
+      setPageKeyToStyle('borderStyle', borderStyle)
       resolve('success')
     })
   }
