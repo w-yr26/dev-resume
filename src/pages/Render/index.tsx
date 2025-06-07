@@ -118,13 +118,12 @@ const Render = memo((props: RenderProps) => {
         paddingBottom: modulePadding + 'px',
       }
     }
-
     // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
     const data = dataContext[bind] || { ...dataContext }
 
     return (
       <div
-        className="block-box"
+        className={`${type}-box`}
         style={mergedStyle}
         data-node-key={node.nodeKey}
       >
@@ -167,14 +166,12 @@ const Render = memo((props: RenderProps) => {
     ) : null
   }
 
-  // 此处对应模块标题/或者是行内单项值
+  // 此处对应模块标题
   if (type === 'text') {
-    let data = dataContext[bind]
+    const data = dataContext[bind]
     // 取不到对应的值，直接返回null
     if (!data) {
       return null
-    } else if (checkDate(data)) {
-      data = formatDate(data)
     }
     return (
       <div
@@ -210,11 +207,6 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
-  // 此处的label对应的是单项的标题，而非模块标题
-  if (type === 'label') {
-    return <div style={mergedStyle}>{label}</div>
-  }
-
   if (type === 'image') {
     return (
       <img
@@ -229,12 +221,18 @@ const Render = memo((props: RenderProps) => {
   }
 
   if (type === 'field') {
-    console.log(dataContext, bind)
-
+    let val = dataContext[bind]
+    // 如果处理的是时间，做一下特殊处理，去掉""
+    if (bind === 'date') {
+      val = val.replace(/"/g, '')
+    }
     return (
       <div className={`${styles['field-box']}`} style={mergedStyle}>
-        <div className={styles['label']}>{keyToFieldLabel[bind]}: </div>
-        <div className={styles['value']}>{dataContext[bind]}</div>
+        <div className={styles['label']}>
+          {keyToFieldLabel[bind]}
+          {keyToFieldLabel[bind] ? ': ' : null}
+        </div>
+        <div className={styles['value']}>{val}</div>
       </div>
     )
   }

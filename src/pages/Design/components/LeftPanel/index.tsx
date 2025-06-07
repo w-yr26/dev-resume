@@ -9,7 +9,7 @@ import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import styles from './index.module.scss'
 import { v4 as uuidv4 } from 'uuid'
 import type { uiType } from '@/types/ui'
-import { Collapse } from 'antd'
+import { Collapse, Flex } from 'antd'
 import Item from './Item'
 
 const LeftPanel = () => {
@@ -107,6 +107,7 @@ const LeftPanel = () => {
             layout: 'vertical', // 列表容器也只能是垂直
             style: {
               padding: 0,
+              flex: 1,
             },
             bind: 'info',
             tag: '',
@@ -189,6 +190,7 @@ const LeftPanel = () => {
             layout: 'vertical', // 不支持嵌套的话，layout布局也没啥存在的必要
             style: {
               padding: 0,
+              marginBottom: '4px',
             },
             bind: '',
             tag: '',
@@ -236,6 +238,7 @@ const LeftPanel = () => {
             style: {
               flex: 1,
               gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              marginBottom: '4px',
             },
             bind: '',
             tag: '', // 不需要
@@ -260,6 +263,7 @@ const LeftPanel = () => {
             style: {
               flex: 1,
               gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              marginBottom: '4px',
             },
             bind: '',
             tag: '', // 不需要

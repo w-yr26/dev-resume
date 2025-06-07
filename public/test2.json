@@ -20,7 +20,7 @@
   },
   "bind": "root",
   "tag": "",
-  "nodeKey": "95cf4bcf-7816-4065-8871-29dc8da699ef?root",
+  "nodeKey": "870f5dee-0cd4-483e-88df-60597fa9140c?root",
   "children": [
     {
       "constraints": {
@@ -30,21 +30,26 @@
         "allowedParentBind": ["root"]
       },
       "type": "module",
-      "layout": "horizontal",
-      "style": {},
+      "layout": "vertical",
+      "style": {
+        "borderBottomStyle": "solid",
+        "borderBottomWidth": "1px",
+        "borderColor": "rgb(32,32,223)"
+      },
       "bind": "BASE_INFO",
       "tag": "",
-      "nodeKey": "be38483b-95a7-49a5-8f4f-628713ec0b8f?module",
+      "nodeKey": "8c3ccc17-4b05-4de5-81f3-b1be27c488be?module",
       "children": [
         {
           "type": "section",
           "layout": "horizontal",
           "style": {
-            "padding": 0
+            "padding": 0,
+            "flex": 1
           },
           "bind": "info",
           "tag": "",
-          "nodeKey": "016a4698-7216-4619-b8ee-1064146f7cd5?section",
+          "nodeKey": "fc7c3ae8-44cb-4185-a008-a4b37a3bb19b?section",
           "children": [
             {
               "type": "image",
@@ -55,7 +60,7 @@
               },
               "bind": "avatar",
               "tag": "",
-              "nodeKey": "27ff99f8-87e5-4927-b5e0-16d5e86060ce?image",
+              "nodeKey": "eba20a07-9b3f-423f-92b0-38ab11a0e4a5?image",
               "children": [],
               "constraints": {
                 "ableDel": true,
@@ -70,11 +75,12 @@
               "layout": "grid",
               "style": {
                 "flex": 1,
-                "gridTemplateColumns": "repeat(2, minmax(0, 1fr))"
+                "gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+                "marginBottom": "4px"
               },
               "bind": "",
               "tag": "",
-              "nodeKey": "e823cd7f-fb8f-4f2e-8f82-a2ca2b13fb63?columns",
+              "nodeKey": "fdd66b7c-32a8-4bb7-9f0b-343043cb5ba6?columns",
               "children": [
                 {
                   "type": "field",
@@ -82,9 +88,9 @@
                   "style": {
                     "padding": 0
                   },
-                  "bind": "userName",
+                  "bind": "gender",
                   "tag": "",
-                  "nodeKey": "12f2b42f-13fd-41b1-b058-46adea1669cb?md",
+                  "nodeKey": "80b41703-2ee8-4fb7-8fd9-8fcb927c7685?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
@@ -101,58 +107,7 @@
                   },
                   "bind": "gender",
                   "tag": "",
-                  "nodeKey": "627bd42b-c007-4da9-9718-22716048f8ce?md",
-                  "children": [],
-                  "constraints": {
-                    "ableDel": true,
-                    "ableBind": true,
-                    "isNestedAgain": false,
-                    "allowedParentBind": ["info"]
-                  }
-                },
-                {
-                  "type": "field",
-                  "layout": "horizontal",
-                  "style": {
-                    "padding": 0
-                  },
-                  "bind": "age",
-                  "tag": "",
-                  "nodeKey": "938f299c-2faa-441e-be0a-77931d736faa?md",
-                  "children": [],
-                  "constraints": {
-                    "ableDel": true,
-                    "ableBind": true,
-                    "isNestedAgain": false,
-                    "allowedParentBind": ["info"]
-                  }
-                },
-                {
-                  "type": "field",
-                  "layout": "horizontal",
-                  "style": {
-                    "padding": 0
-                  },
-                  "bind": "position",
-                  "tag": "",
-                  "nodeKey": "b2a515b1-18d7-4bed-aaf0-9123feb6fdb6?md",
-                  "children": [],
-                  "constraints": {
-                    "ableDel": true,
-                    "ableBind": true,
-                    "isNestedAgain": false,
-                    "allowedParentBind": ["info"]
-                  }
-                },
-                {
-                  "type": "field",
-                  "layout": "horizontal",
-                  "style": {
-                    "padding": 0
-                  },
-                  "bind": "tblob",
-                  "tag": "",
-                  "nodeKey": "8a96ea52-9dcc-4a26-bfed-09c0be34e168?md",
+                  "nodeKey": "0a985c45-c595-4317-9bdf-26dc730cf134?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
@@ -190,11 +145,11 @@
     },
     {
       "type": "module",
-      "layout": "horizontal",
+      "layout": "vertical",
       "style": {},
-      "bind": "EDU_BG",
+      "bind": "WORK_EXP",
       "tag": "",
-      "nodeKey": "d9f808de-ec60-4a5b-a2ed-4beba8a81384?module",
+      "nodeKey": "07a23734-f659-44ab-ab9d-00b0d137241a?module",
       "children": [
         {
           "type": "text",
@@ -207,7 +162,7 @@
           },
           "bind": "label",
           "tag": "",
-          "nodeKey": "e190d217-55af-4c46-9ede-bd64f1afe294?text",
+          "nodeKey": "8403332b-9eb7-4736-ac68-a07994a8ef76?text",
           "children": [],
           "constraints": {
             "ableDel": true,
@@ -228,78 +183,74 @@
           "type": "section",
           "layout": "vertical",
           "style": {
-            "padding": 0
+            "padding": 0,
+            "flex": 1
           },
           "bind": "info",
           "tag": "",
-          "nodeKey": "7adacffc-7bfe-40f6-a93b-f9f64ab827f9?section",
+          "nodeKey": "93159871-3f81-4287-94f3-af78b8c4a4c2?section",
           "children": [
             {
               "type": "columns",
               "layout": "grid",
               "style": {
+                "marginBottom": "4px",
                 "flex": 1,
                 "gridTemplateColumns": "repeat(3, minmax(0, 1fr))"
               },
               "bind": "",
               "tag": "",
-              "nodeKey": "7c6338ea-ecb1-4c4d-92c8-5ff670236699?columns",
+              "nodeKey": "5e3c221d-1697-485d-8252-073c949b8fdb?columns",
               "children": [
                 {
-                  "type": "text",
-                  "layout": "vertical",
+                  "type": "field",
+                  "layout": "horizontal",
                   "style": {
-                    "fontSize": "14px",
-                    "fontWeight": 400,
-                    "color": "#333"
+                    "padding": 0
                   },
-                  "bind": "bg",
+                  "bind": "company",
                   "tag": "",
-                  "nodeKey": "77b04ea2-b0aa-4cf9-b0d7-3c29ca2d2b87?text",
+                  "nodeKey": "d284be50-3931-4e95-a506-bb40da45917d?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
                     "ableBind": true,
                     "isNestedAgain": false,
-                    "allowedParentBind": []
+                    "allowedParentBind": ["info"]
                   }
                 },
                 {
-                  "type": "text",
-                  "layout": "vertical",
+                  "type": "field",
+                  "layout": "horizontal",
                   "style": {
-                    "fontSize": "14px",
-                    "fontWeight": 400,
-                    "color": "#333"
+                    "padding": 0
                   },
-                  "bind": "school",
+                  "bind": "position",
                   "tag": "",
-                  "nodeKey": "0d79f281-73c2-4098-851e-ddd460e604d4?text",
+                  "nodeKey": "279a671c-931d-427f-a845-99efca5bcfb9?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
                     "ableBind": true,
                     "isNestedAgain": false,
-                    "allowedParentBind": []
+                    "allowedParentBind": ["info"]
                   }
                 },
                 {
-                  "type": "text",
-                  "layout": "vertical",
+                  "type": "field",
+                  "layout": "horizontal",
                   "style": {
-                    "fontSize": "14px",
-                    "fontWeight": 400,
-                    "color": "#333"
+                    "padding": 0
                   },
                   "bind": "date",
                   "tag": "",
-                  "nodeKey": "550770d2-2505-473e-a068-064be939fddf?text",
+                  "nodeKey": "b9f4fa7c-969b-4e79-b2de-612408d95778?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
                     "ableBind": true,
                     "isNestedAgain": false,
-                    "allowedParentBind": []
+                    "allowedParentBind": ["info"]
                   }
                 }
               ],
@@ -308,6 +259,24 @@
                 "ableBind": false,
                 "isNestedAgain": true,
                 "columns": 3,
+                "allowedParentBind": []
+              }
+            },
+            {
+              "type": "md",
+              "layout": "vertical",
+              "style": {
+                "padding": 0,
+                "marginBottom": "4px"
+              },
+              "bind": "output",
+              "tag": "",
+              "nodeKey": "e559ee3e-98b2-4b42-9d07-66f74db20821?md",
+              "children": [],
+              "constraints": {
+                "ableDel": true,
+                "ableBind": true,
+                "isNestedAgain": false,
                 "allowedParentBind": []
               }
             }

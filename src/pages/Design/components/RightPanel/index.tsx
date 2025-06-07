@@ -259,7 +259,7 @@ const RightPanel = ({
   const singleNode = selectedSchema()
 
   const [sizes, setSizes] = useState<(number | string)[]>(['30%', '70%'])
-
+  const [isShowModuleBorder, setIsModuleBorder] = useState(false)
   const layoutOptions: CheckboxGroupProps<string>['options'] = [
     { label: '水平布局', value: 'horizontal' },
     { label: '垂直布局', value: 'vertical' },
@@ -364,6 +364,51 @@ const RightPanel = ({
                       setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
                   }}
                   placeholder="选择绑定字段"
+                />
+              </CustomRaw>
+            ) : null}
+            {singleNode?.type === 'module' ? (
+              <CustomRaw label="模块边框">
+                <Select
+                  style={{ width: '100%' }}
+                  options={[
+                    { value: true, label: '显示' },
+                    { value: false, label: '隐藏' },
+                  ]}
+                  value={isShowModuleBorder}
+                  onChange={(val) => {
+                    if (val) {
+                      if (singleNode) {
+                        changeStyle(
+                          singleNode.nodeKey,
+                          'borderBottomStyle',
+                          'solid'
+                        )
+                        changeStyle(
+                          singleNode.nodeKey,
+                          'borderBottomWidth',
+                          '1px'
+                        )
+                      }
+                    } else {
+                      if (singleNode) {
+                        changeStyle(singleNode.nodeKey, 'borderBottomWidth', 0)
+                      }
+                    }
+                    setIsModuleBorder(val)
+                  }}
+                />
+              </CustomRaw>
+            ) : null}
+            {isShowModuleBorder ? (
+              <CustomRaw label="边框颜色">
+                <ColorPicker
+                  value={singleNode?.style.color}
+                  defaultValue="#18181b"
+                  onChange={(_, color) => {
+                    if (singleNode)
+                      changeStyle(singleNode.nodeKey, 'borderBottomColor', color)
+                  }}
                 />
               </CustomRaw>
             ) : null}

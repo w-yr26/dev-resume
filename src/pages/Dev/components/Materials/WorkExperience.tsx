@@ -44,7 +44,7 @@ const WorkExperience = () => {
     resetState,
     handleOpen,
   } = useModalForm<WorkExpItemType>(storeWorkList, 'WORK_EXP')
-  const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('WORK_EXP')
 
   return (
     <>
