@@ -12,6 +12,7 @@ import { Avatar, Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
 import { optionalCom } from '@/types/dev'
+import { memo } from 'react'
 
 const iconMenu = [
   {
@@ -107,4 +108,6 @@ const LeftMenu = ({
   )
 }
 
-export default LeftMenu
+LeftMenu.displayName = 'LeftMenu'
+
+export default memo(LeftMenu)

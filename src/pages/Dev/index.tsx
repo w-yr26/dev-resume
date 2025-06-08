@@ -2,7 +2,7 @@ import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
 import configStyle from '@/config/templates'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useStyleStore, useUIStore, useUserStore } from '@/store'
 import { pxToMm } from '@/utils'
@@ -227,14 +227,14 @@ const Dev = () => {
   }, [dragging])
 
   // 滚动至具体位置
-  const handleScroll = (position: number) => {
+  const handleScroll = useCallback((position: number) => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: position,
         behavior: 'smooth',
       })
     }
-  }
+  }, [])
 
   // 模式切换
   const handleModeSwitch = () => {
