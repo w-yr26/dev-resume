@@ -6,7 +6,7 @@ import {
 import Icon from '@ant-design/icons'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
-import { useUserStore } from '@/store'
+import { useDesignStore, useUserStore } from '@/store'
 import { templateListType } from '@/types/ui'
 import { useEffect, useState } from 'react'
 import styles from '../Home/index.module.scss'
@@ -20,8 +20,8 @@ import DevModalFormItem from '@/components/DevModalFormItem'
 const Templates = () => {
   const navigate = useNavigate()
   const userId = useUserStore((state) => state.info.id)
+  const setTemplateName = useDesignStore((state) => state.setTemplateName)
   const [temList, setTemList] = useState<templateListType[]>([])
-
   const [slug, setSlug] = useState('')
   const [selectId, setSelectId] = useState('')
   const [temTitle, setTemTitle] = useState('')
@@ -68,6 +68,7 @@ const Templates = () => {
         newName: temTitle,
       })
     } else {
+      setTemplateName(temTitle)
       // 创建
       navigate('/design')
     }

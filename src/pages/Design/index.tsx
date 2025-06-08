@@ -65,6 +65,7 @@ const Design = () => {
   const [nodeDeep, setNodeDeep] = useState(0)
   const [nodeBind, setNodeBind] = useState('root')
   const [isOpened, setIsOpened] = useState(false)
+  const [updateTime, setUpdateTime] = useState('')
 
   const designRef = useRef<HTMLDivElement>(null)
   const [searchParams] = useSearchParams()
@@ -74,7 +75,7 @@ const Design = () => {
       const { data } = await getTemplateSchemaAPI(Number(temId))
       setCurUISchema(data.style_config)
       setTemplateName(data.name)
-      // console.log('date', data)
+      setUpdateTime(data.updateTime)
     }
     if (!temId) return
     getTemDetail()
@@ -263,6 +264,7 @@ const Design = () => {
         <div className={styles['design-container']}>
           <NavBar
             temId={temId || ''}
+            updateTime={updateTime}
             setIsOpened={setIsOpened}
             generateShot={generateShot}
           />
