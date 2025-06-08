@@ -27,7 +27,6 @@
   padding: 14px;
 
   .view-container {
-    background-color: #fff;
     height: 100%;
     width: 100%;
     box-sizing: border-box;
@@ -45,7 +44,7 @@
   height: auto;
   // border-top: none; /* 隐藏顶部边框（由legend替代） */
   // border: none;
-  border: 1px solid #8b8b8d;
+  border: 0.5px solid #e4e4e7;
   padding: 12px;
   box-sizing: border-box;
   border-radius: 8px;

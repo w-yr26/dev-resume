@@ -57,7 +57,7 @@ const DropTarget = ({
   }))
 
   const isActive = canDrop && isOver
-  let backgroundColor = '#fff'
+  let backgroundColor = '#f8fafc'
   if (isActive) {
     backgroundColor = '#e9e8e8'
   } else if (canDrop) {
