@@ -1,4 +1,4 @@
-import type { addTemplateType } from '@/types/template'
+import type { addTemplateType, editTemplateType } from '@/types/template'
 import { temDataType, temDetailRespType } from '@/types/ui'
 import { request } from '@/utils'
 
@@ -22,7 +22,14 @@ export const postSaveTemplateAPI = (data: addTemplateType) => {
 }
 
 /**
- * 简历模板上传
+ * 自定义模板更新
+ */
+export const putUpdateDiyTemplatesAPI = (data: editTemplateType) => {
+  return request('/resume/templates/updateDiyTemplates', 'PUT', data)
+}
+
+/**
+ * 简历模板快照上传
  */
 export const postTemplatesAPI = (data: FormData) => {
   return request<string>('/user/common/uploadTemplates', 'POST', data)

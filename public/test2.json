@@ -20,7 +20,7 @@
   },
   "bind": "root",
   "tag": "",
-  "nodeKey": "870f5dee-0cd4-483e-88df-60597fa9140c?root",
+  "nodeKey": "ea8565f8-0b44-4756-82ba-9608045561b3?root",
   "children": [
     {
       "constraints": {
@@ -33,12 +33,11 @@
       "layout": "vertical",
       "style": {
         "borderBottomStyle": "solid",
-        "borderBottomWidth": "1px",
-        "borderColor": "rgb(32,32,223)"
+        "borderBottomWidth": "1px"
       },
       "bind": "BASE_INFO",
       "tag": "",
-      "nodeKey": "8c3ccc17-4b05-4de5-81f3-b1be27c488be?module",
+      "nodeKey": "b73097a1-454d-4ca2-b76a-b99445385470?module",
       "children": [
         {
           "type": "section",
@@ -49,7 +48,7 @@
           },
           "bind": "info",
           "tag": "",
-          "nodeKey": "fc7c3ae8-44cb-4185-a008-a4b37a3bb19b?section",
+          "nodeKey": "8cbed92a-89b0-4cd0-8c96-def52e70bb35?section",
           "children": [
             {
               "type": "image",
@@ -60,7 +59,7 @@
               },
               "bind": "avatar",
               "tag": "",
-              "nodeKey": "eba20a07-9b3f-423f-92b0-38ab11a0e4a5?image",
+              "nodeKey": "29dc78cb-abfd-4f99-afd1-fb548c4a50a2?image",
               "children": [],
               "constraints": {
                 "ableDel": true,
@@ -75,12 +74,12 @@
               "layout": "grid",
               "style": {
                 "flex": 1,
-                "gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+                "gridTemplateColumns": "repeat(3, minmax(0, 1fr))",
                 "marginBottom": "4px"
               },
               "bind": "",
               "tag": "",
-              "nodeKey": "fdd66b7c-32a8-4bb7-9f0b-343043cb5ba6?columns",
+              "nodeKey": "4e8cc145-5bf5-46fa-a29a-49f6896df559?columns",
               "children": [
                 {
                   "type": "field",
@@ -88,9 +87,9 @@
                   "style": {
                     "padding": 0
                   },
-                  "bind": "gender",
+                  "bind": "userName",
                   "tag": "",
-                  "nodeKey": "80b41703-2ee8-4fb7-8fd9-8fcb927c7685?md",
+                  "nodeKey": "9ad072f7-3bd1-448e-b399-805d81acd408?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
@@ -107,7 +106,75 @@
                   },
                   "bind": "gender",
                   "tag": "",
-                  "nodeKey": "0a985c45-c595-4317-9bdf-26dc730cf134?md",
+                  "nodeKey": "4a585591-abbd-4813-8c12-e9d68d2848b1?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "age",
+                  "tag": "",
+                  "nodeKey": "a05a8a0f-97b8-4fcd-aa89-aa149bb90afc?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "position",
+                  "tag": "",
+                  "nodeKey": "9dada8b4-00b5-4f8c-b85a-7b784758fd32?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "phone",
+                  "tag": "",
+                  "nodeKey": "7764202e-0286-4a8a-ac90-57a5d455756f?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "email",
+                  "tag": "",
+                  "nodeKey": "b2637895-e3aa-4a4a-ac91-c2f08ee7d7a7?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
@@ -121,7 +188,7 @@
                 "ableDel": true,
                 "ableBind": false,
                 "isNestedAgain": true,
-                "columns": 2,
+                "columns": 3,
                 "allowedParentBind": []
               }
             }
@@ -147,9 +214,9 @@
       "type": "module",
       "layout": "vertical",
       "style": {},
-      "bind": "WORK_EXP",
+      "bind": "EDU_BG",
       "tag": "",
-      "nodeKey": "07a23734-f659-44ab-ab9d-00b0d137241a?module",
+      "nodeKey": "4387a437-b8df-4760-94fc-c68b6cac0144?module",
       "children": [
         {
           "type": "text",
@@ -158,11 +225,11 @@
             "fontSize": "14px",
             "fontWeight": 500,
             "color": "#333",
-            "width": "30%"
+            "width": "20%"
           },
           "bind": "label",
           "tag": "",
-          "nodeKey": "8403332b-9eb7-4736-ac68-a07994a8ef76?text",
+          "nodeKey": "fb8484d9-ba41-4fec-80d5-6776cc7b4292?text",
           "children": [],
           "constraints": {
             "ableDel": true,
@@ -188,19 +255,19 @@
           },
           "bind": "info",
           "tag": "",
-          "nodeKey": "93159871-3f81-4287-94f3-af78b8c4a4c2?section",
+          "nodeKey": "64feed4b-1330-4d7d-a53a-a26c8a046134?section",
           "children": [
             {
               "type": "columns",
               "layout": "grid",
               "style": {
-                "marginBottom": "4px",
                 "flex": 1,
-                "gridTemplateColumns": "repeat(3, minmax(0, 1fr))"
+                "gridTemplateColumns": "repeat(3, minmax(0, 1fr))",
+                "marginBottom": "4px"
               },
               "bind": "",
               "tag": "",
-              "nodeKey": "5e3c221d-1697-485d-8252-073c949b8fdb?columns",
+              "nodeKey": "911f8b66-3394-4f54-a19a-4eec3811bda5?columns",
               "children": [
                 {
                   "type": "field",
@@ -208,26 +275,9 @@
                   "style": {
                     "padding": 0
                   },
-                  "bind": "company",
+                  "bind": "bg",
                   "tag": "",
-                  "nodeKey": "d284be50-3931-4e95-a506-bb40da45917d?md",
-                  "children": [],
-                  "constraints": {
-                    "ableDel": true,
-                    "ableBind": true,
-                    "isNestedAgain": false,
-                    "allowedParentBind": ["info"]
-                  }
-                },
-                {
-                  "type": "field",
-                  "layout": "horizontal",
-                  "style": {
-                    "padding": 0
-                  },
-                  "bind": "position",
-                  "tag": "",
-                  "nodeKey": "279a671c-931d-427f-a845-99efca5bcfb9?md",
+                  "nodeKey": "745bd164-0e7a-4848-9da6-c20aafd6f68c?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
@@ -244,7 +294,24 @@
                   },
                   "bind": "date",
                   "tag": "",
-                  "nodeKey": "b9f4fa7c-969b-4e79-b2de-612408d95778?md",
+                  "nodeKey": "5ad9ed8e-ed42-4d86-be8f-9c1f8d9a9fba?md",
+                  "children": [],
+                  "constraints": {
+                    "ableDel": true,
+                    "ableBind": true,
+                    "isNestedAgain": false,
+                    "allowedParentBind": ["info"]
+                  }
+                },
+                {
+                  "type": "field",
+                  "layout": "horizontal",
+                  "style": {
+                    "padding": 0
+                  },
+                  "bind": "school",
+                  "tag": "",
+                  "nodeKey": "7c561ed7-ea36-45f5-b941-a8f3bd2c134f?md",
                   "children": [],
                   "constraints": {
                     "ableDel": true,
@@ -259,24 +326,6 @@
                 "ableBind": false,
                 "isNestedAgain": true,
                 "columns": 3,
-                "allowedParentBind": []
-              }
-            },
-            {
-              "type": "md",
-              "layout": "vertical",
-              "style": {
-                "padding": 0,
-                "marginBottom": "4px"
-              },
-              "bind": "output",
-              "tag": "",
-              "nodeKey": "e559ee3e-98b2-4b42-9d07-66f74db20821?md",
-              "children": [],
-              "constraints": {
-                "ableDel": true,
-                "ableBind": true,
-                "isNestedAgain": false,
                 "allowedParentBind": []
               }
             }

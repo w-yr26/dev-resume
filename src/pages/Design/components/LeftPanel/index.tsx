@@ -76,7 +76,7 @@ const LeftPanel = () => {
               fontSize: '14px',
               fontWeight: 500,
               color: '#333',
-              width: '30%',
+              width: '20%',
             },
             bind: '',
             tag: '',

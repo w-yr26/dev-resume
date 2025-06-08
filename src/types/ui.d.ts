@@ -88,6 +88,8 @@ export type singleNode = {
 export type designStoreType = {
   currentUISchema: singleNode
   currentSelectedKey: string
+  templateName: string
+  setTemplateName: (name: string) => void
   setCurUISchema: (val: singleNode) => void
   insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
   delNode: (prevKey: string, nodeKey: string) => void

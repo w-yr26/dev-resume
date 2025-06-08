@@ -9,30 +9,49 @@ import { Button, message, Tooltip } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
 import { commandManager } from '../../command/commandManager'
 import { useDesignStore, useUserStore } from '@/store'
-import { postSaveTemplateAPI } from '@/apis/template'
+import { postSaveTemplateAPI, putUpdateDiyTemplatesAPI } from '@/apis/template'
 
 const NavBar = ({
+  temId,
   setIsOpened,
   generateShot,
 }: {
+  temId: string
   setIsOpened: (val: boolean) => void
   generateShot: (fileName: string) => Promise<any>
 }) => {
   const userId = useUserStore((state) => state.info.id)
   const currentUISchema = useDesignStore((state) => state.currentUISchema)
-  const handleSaveTem = async () => {
-    const fileName = '模板' + uuidv4().slice(-4) + '.jpeg'
+  const templateName = useDesignStore((state) => state.templateName)
+
+  const handleTemplate = async () => {
     try {
+      const fileName = templateName + '.jpeg'
       const imgUrl = await generateShot(fileName)
-      await postSaveTemplateAPI({
-        userId: Number(userId),
-        name: '模板' + uuidv4().slice(-4),
-        styleConfig: JSON.stringify(currentUISchema),
-        fastPhoto: imgUrl,
-      })
+      if (temId) {
+        // 模板更新
+        await putUpdateDiyTemplatesAPI({
+          id: Number(temId),
+          name: templateName,
+          styleConfig: JSON.stringify(currentUISchema),
+          userId: Number(userId),
+          fastPhoto: imgUrl,
+        })
+      } else {
+        // 模板创建
+        await postSaveTemplateAPI({
+          userId: Number(userId),
+          name: '模板' + uuidv4().slice(-4),
+          styleConfig: JSON.stringify(currentUISchema),
+          fastPhoto: imgUrl,
+          isDefault: false,
+        })
+      }
+
+      message.success(`模板${temId ? '更新' : '创建'}成功`)
     } catch (err) {
       if (typeof err === 'string') message.error(err)
-      else message.error('模板保存失败')
+      else message.error(`模板${temId ? '更新' : '保存'}失败`)
     }
   }
 
@@ -65,9 +84,9 @@ const NavBar = ({
         <Button
           type="primary"
           icon={<Icon component={resumeSVG} />}
-          onClick={handleSaveTem}
+          onClick={handleTemplate}
         >
-          保存
+          {temId ? '更新' : '保存'}
         </Button>
       </div>
     </nav>

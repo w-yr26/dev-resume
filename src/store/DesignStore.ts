@@ -56,7 +56,7 @@ const useDesignStore = create<designStoreType>()(
               type: 'module', // 根容器
               layout: 'vertical',
               style: {}, // 即configStyle
-              bind: '',
+              bind: 'BASE_INFO',
               tag: '',
               nodeKey: uuidv4() + '?module',
               children: [],
@@ -64,6 +64,14 @@ const useDesignStore = create<designStoreType>()(
           ],
         },
         currentSelectedKey: '',
+        templateName: '',
+        setTemplateName: (val) => {
+          set(() => {
+            return {
+              templateName: val,
+            }
+          })
+        },
         setCurUISchema: (val) => {
           set(() => {
             return {

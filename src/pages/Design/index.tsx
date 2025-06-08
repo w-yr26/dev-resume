@@ -56,6 +56,7 @@ const Design = () => {
   const currentUISchema = useDesignStore((state) => state.currentUISchema)
   const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
   const setCurUISchema = useDesignStore((state) => state.setCurUISchema)
+  const setTemplateName = useDesignStore((state) => state.setTemplateName)
   const insertNode = useDesignStore((state) => state.insertNode)
   const delNode = useDesignStore((state) => state.delNode)
   const setCurrentSelectedKey = useDesignStore(
@@ -72,6 +73,7 @@ const Design = () => {
     const getTemDetail = async () => {
       const { data } = await getTemplateSchemaAPI(Number(temId))
       setCurUISchema(data.style_config)
+      setTemplateName(data.name)
       // console.log('date', data)
     }
     if (!temId) return
@@ -192,6 +194,8 @@ const Design = () => {
                 insertNode
               )
               commandManager.executeCommand(command)
+              // 清空选择的节点id
+              setCurrentSelectedKey('')
             }}
           >
             <Icon component={closeSVG} />
@@ -230,8 +234,8 @@ const Design = () => {
                     {renderTemplate(
                       nestedChild,
                       deep + 1,
-                      prevBind + '-' + nestedChild.bind, // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
-                      prevKey + '&' + nestedChild.nodeKey
+                      prevBind + '-' + nestedChild.bind,
+                      prevKey + '&' + nestedChild.nodeKey // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
                     )}
                   </React.Fragment>
                 ))
@@ -257,7 +261,11 @@ const Design = () => {
     <>
       <DndProvider backend={HTML5Backend}>
         <div className={styles['design-container']}>
-          <NavBar setIsOpened={setIsOpened} generateShot={generateShot} />
+          <NavBar
+            temId={temId || ''}
+            setIsOpened={setIsOpened}
+            generateShot={generateShot}
+          />
           <div className={styles['design-body']}>
             <LeftPanel />
             <main
