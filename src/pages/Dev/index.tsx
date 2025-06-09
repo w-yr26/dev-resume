@@ -35,7 +35,8 @@ const Dev = () => {
 
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const leftScrollRef = useRef<HTMLDivElement>(null)
+  const rightScrollRef = useRef<HTMLDivElement>(null)
   const drawerRef = useRef<drawerMethods>(null)
 
   const pageWidth = 794
@@ -111,27 +112,30 @@ const Dev = () => {
   }, [])
 
   // 适配对应的uiSchema
-  const fetchUISchema = (
-    templateId: string,
-    temList: templateListType[]
-  ): Promise<{
-    code: 0 | 1
-    temSchema: any | null
-  }> => {
-    return new Promise((resolve, reject) => {
-      const temSchema = temList.find((tem) => tem.id === templateId)
-      if (temSchema)
-        resolve({
-          code: 1,
-          temSchema: temSchema.style_config,
-        })
-      else
-        reject({
-          code: 0,
-          temSchema: null,
-        })
-    })
-  }
+  const fetchUISchema = useCallback(
+    (
+      templateId: string,
+      temList: templateListType[]
+    ): Promise<{
+      code: 0 | 1
+      temSchema: any | null
+    }> => {
+      return new Promise((resolve, reject) => {
+        const temSchema = temList.find((tem) => tem.id === templateId)
+        if (temSchema)
+          resolve({
+            code: 1,
+            temSchema: temSchema.style_config,
+          })
+        else
+          reject({
+            code: 0,
+            temSchema: null,
+          })
+      })
+    },
+    []
+  )
 
   const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
     return new Promise((resolve) => {
@@ -227,9 +231,18 @@ const Dev = () => {
   }, [dragging])
 
   // 滚动至具体位置
-  const handleScroll = useCallback((position: number) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
+  const handleLeftScroll = useCallback((position: number) => {
+    if (leftScrollRef.current) {
+      leftScrollRef.current.scrollTo({
+        top: position,
+        behavior: 'smooth',
+      })
+    }
+  }, [])
+
+  const handleRightScroll = useCallback((position: number) => {
+    if (rightScrollRef.current) {
+      rightScrollRef.current.scrollTo({
         top: position,
         behavior: 'smooth',
       })
@@ -362,11 +375,11 @@ const Dev = () => {
       <div className={styles['dev-container']}>
         <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <LeftMenu
-            iconClick={handleScroll}
+            iconClick={handleLeftScroll}
             isLeftUnExpand={isLeftUnExpand}
             setisLeftUnExpand={setisLeftUnExpand}
           />
-          <Materials ref={scrollRef} isLeftUnExpand={isLeftUnExpand} />
+          <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
         </AuthorizationHoc>
 
         <main
@@ -415,12 +428,14 @@ const Dev = () => {
 
         <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <Setting
+            ref={rightScrollRef}
             isRightUnExpand={isRightUnExpand}
             isOrigin={isOrigin}
             temList={temList}
             fetchUISchema={fetchUISchema}
           />
           <RightMenu
+            iconClick={handleRightScroll}
             isRightUnExpand={isRightUnExpand}
             setisRightUnExpand={setisRightUnExpand}
           />

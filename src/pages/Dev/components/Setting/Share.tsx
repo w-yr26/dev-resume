@@ -18,10 +18,10 @@ import {
   Tooltip,
 } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { getLinkListsAPI, postShareLinkAPI } from '@/apis/resume'
-import { useDevStore, useUserStore } from '@/store'
+import { useDevStore, useGlobalStore, useUserStore } from '@/store'
 import dayjs from 'dayjs'
 import type { linkItem, shareUserItem } from '@/types/resume'
 import LinkItem from './components/LinkItem'
@@ -79,6 +79,15 @@ const Share = () => {
   const [linkList, setLinkList] = useState<linkItem[]>([])
   const [activeTab, setActiveTab] = useState<'setting' | 'history'>('setting')
   const [permissionArr, setPermissionArr] = useState<number[]>([1])
+
+  const shareRef = useRef<HTMLDivElement>(null)
+  const setPosition = useGlobalStore((state) => state.setPosition)
+  useEffect(() => {
+    if (shareRef.current) {
+      const { y } = shareRef.current.getBoundingClientRect()
+      setPosition('share', y)
+    }
+  }, [])
 
   useEffect(() => {
     if (!resumeId || !userId) return
@@ -173,7 +182,7 @@ const Share = () => {
 
   return (
     <>
-      <CustomLayout>
+      <CustomLayout ref={shareRef}>
         <Header label="分享" svg={<Icon component={OutputSVG} />} />
         <div
           className={styles['down-load-box']}

@@ -5,14 +5,22 @@ import CustomLayout from '@/components/CustomLayout'
 import CustomField from './components/CustomField'
 import Header from '@/components/Header'
 import styled from './index.module.scss'
-import { useStyleStore } from '@/store'
+import { useGlobalStore, useStyleStore } from '@/store'
+import { useEffect, useRef } from 'react'
 const TypeSetting = () => {
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
-
+  const setPosition = useGlobalStore((state) => state.setPosition)
+  const themeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (themeRef.current) {
+      const { y } = themeRef.current.getBoundingClientRect()
+      setPosition('theme', y)
+    }
+  }, [])
   return (
-    <CustomLayout>
+    <CustomLayout ref={themeRef}>
       <Header label="排版" svg={<Icon component={ThemeFillSVG} />} />
       <CustomField title="字号">
         <Slider

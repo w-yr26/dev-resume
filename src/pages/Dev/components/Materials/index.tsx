@@ -31,4 +31,5 @@ const Materials = forwardRef<
   )
 })
 
+Materials.displayName = 'Materials'
 export default Materials
