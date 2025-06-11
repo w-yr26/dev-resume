@@ -45,7 +45,7 @@ const Dev = () => {
   const [wheel, setWheel] = useState(0.7)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
-  const [lineShow, setLineShow] = useState(false)
+  // const [lineShow, setLineShow] = useState(false)
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
   const [temList, setTemList] = useState<templateListType[]>([])
@@ -244,25 +244,25 @@ const Dev = () => {
   const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
 
   // 监听分页线
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { height } = entry.contentRect
-        const mmHeight = pxToMm(height)
-        if (mmHeight > 297) {
-          setLineShow(true)
-        } else {
-          setLineShow(false)
-        }
-      })
-    })
+  // useEffect(() => {
+  //   const observer = new ResizeObserver((entries) => {
+  //     entries.forEach((entry) => {
+  //       const { height } = entry.contentRect
+  //       const mmHeight = pxToMm(height)
+  //       if (mmHeight > 297) {
+  //         setLineShow(true)
+  //       } else {
+  //         setLineShow(false)
+  //       }
+  //     })
+  //   })
 
-    if (mainRef.current) {
-      observer.observe(mainRef.current)
-    }
+  //   if (mainRef.current) {
+  //     observer.observe(mainRef.current)
+  //   }
 
-    return () => observer.disconnect()
-  }, [])
+  //   return () => observer.disconnect()
+  // }, [])
 
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
@@ -399,11 +399,11 @@ const Dev = () => {
                   />
                 ) : null}
               </div>
-              {lineShow && (
+              {/* {lineShow && (
                 <div className={styles['page-line']}>
                   <span>分页线</span>
                 </div>
-              )}
+              )} */}
               {isLoading ? (
                 <div className={styles['loading-box']}>
                   <Spin />
