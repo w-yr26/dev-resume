@@ -1,10 +1,10 @@
 import Icon from '@ant-design/icons'
 import ThemeFillSVG from '@/assets/svg/dev/theme-fill.svg?react'
-import { Slider, Switch } from 'antd'
+import { Slider } from 'antd'
 import CustomLayout from '@/components/CustomLayout'
 import CustomField from './components/CustomField'
 import Header from '@/components/Header'
-import styled from './index.module.scss'
+// import styled from './index.module.scss'
 import { useStyleStore } from '@/store'
 const TypeSetting = () => {
   const lineHeight = useStyleStore((state) => state.lineHeight)
@@ -31,12 +31,12 @@ const TypeSetting = () => {
           onChange={(val: number) => setPageKeyToStyle('lineHeight', val)}
         />
       </CustomField>
-      <CustomField title="设置">
+      {/* <CustomField title="设置">
         <div className={styled['custom-line']}>
           <span className={styled['setting-label']}>下划线链接</span>
           <Switch />
         </div>
-      </CustomField>
+      </CustomField> */}
     </CustomLayout>
   )
 }
