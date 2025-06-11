@@ -17,7 +17,7 @@ const WHITE_LIST = [
 
 // 请求实例
 const instance = axios.create({
-  baseURL: 'http://64c63fa6.r39.cpolar.top',
+  baseURL: 'http://2f7d4220.r39.cpolar.top',
   timeout: 10000,
 })
 
