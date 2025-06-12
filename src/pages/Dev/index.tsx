@@ -18,10 +18,33 @@ import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
 import { getResumeDetailsAPI } from '@/apis/resume'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { templateListType } from '@/types/ui'
+import { temDataType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
+import { getCachesData } from '@/utils/caches'
+import { Data } from '@/utils/request'
+
+const getTemplatesWithCache = async (
+  userId: string
+): Promise<Data<temDataType>> => {
+  console.time('test')
+  const cached = (await getCachesData(userId)) as {
+    data: temDataType
+    code: number
+    msg: string
+  }
+  console.timeEnd('test')
+  if (cached) {
+    console.log('[模板] 命中缓存', cached)
+    return cached
+  }
+
+  console.log('[模板] 未命中缓存，调用接口')
+  const result = await getTemplatesAPI(userId)
+
+  return result
+}
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -76,8 +99,9 @@ const Dev = () => {
         ] = await Promise.all([
           getResumeDetailsAPI(params.randomId),
           getTemplatesAPI(userId),
+          // cache缓存
+          // getTemplatesWithCache(userId),
         ])
-
         setTemList([...templateList, ...diyTemplateList])
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
