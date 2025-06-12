@@ -50,6 +50,10 @@ function App() {
             hoverBorderColor: '#18181b',
             activeShadow: 'none',
           },
+          Steps: {
+            dotSize: 6,
+            fontSize: 12,
+          },
         },
       }}
     >

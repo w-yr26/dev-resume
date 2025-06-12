@@ -1,5 +1,27 @@
-import { Divider } from 'antd'
+import { Divider, Popover, Steps } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
+import Icon from '@ant-design/icons'
+import resumeSVG from '@/assets/svg/resume.svg?react'
+
+const content = () => (
+  <Steps
+    size="small"
+    items={[
+      {
+        title: '打开个人设置',
+        status: 'wait',
+      },
+      {
+        title: '选择邮箱管理',
+        status: 'wait',
+      },
+      {
+        title: '选择公开邮箱设置',
+        status: 'wait',
+      },
+    ]}
+  />
+)
 
 export const ThirdPartyLogin = () => {
   const handleGiteeLogin = () => {
@@ -21,7 +43,15 @@ export const ThirdPartyLogin = () => {
           或使用以下方式继续
         </span>
       </Divider>
-      <CustomBtn onClick={handleGiteeLogin} label="Gitee登录" />
+      <CustomBtn
+        label="Gitee登录"
+        icon={
+          <Popover content={content} placement="bottom" title="快捷登录指引">
+            <Icon component={resumeSVG} />
+          </Popover>
+        }
+        onClick={handleGiteeLogin}
+      />
     </>
   )
 }

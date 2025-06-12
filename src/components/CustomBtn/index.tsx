@@ -2,12 +2,21 @@ import styles from './index.module.scss'
 
 type customBtnType = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string
+  icon?: React.ReactNode
   onClick?: () => void
   style?: React.CSSProperties
 }
 
 const CustomBtn = (props: customBtnType) => {
-  const { label, onClick, disabled, type = 'button', style, ...reset } = props
+  const {
+    label,
+    icon,
+    onClick,
+    disabled,
+    type = 'button',
+    style,
+    ...reset
+  } = props
   const handleClick = () => {
     if (disabled) return
     if (onClick) onClick()
@@ -25,7 +34,16 @@ const CustomBtn = (props: customBtnType) => {
         }`}
         onClick={handleClick}
       >
-        {label}
+        {icon ? (
+          <span
+            style={{
+              marginRight: '8px',
+            }}
+          >
+            {icon}
+          </span>
+        ) : null}
+        <span>{label}</span>
       </div>
     </button>
   )
