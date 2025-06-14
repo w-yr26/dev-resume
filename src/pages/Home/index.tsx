@@ -50,8 +50,9 @@ const Home = () => {
         }
         return res.json()
       })
-      .then((res) => {
-        console.log(res)
+      .then((_) => {}) // 当前页面只是作为预请求数据而存在，并不需要消费该数据
+      .catch((_) => {
+        console.log('fetch err')
       })
   }, [])
 

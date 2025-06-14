@@ -62,6 +62,7 @@ self.addEventListener('fetch', (event) => {
             return new Response(null, { status: 204 })
           } catch (error) {
             // 预加载失败，返回null，不影响页面b
+            console.log('sw error')
             return new Response(null, { status: 200 })
           }
         } else {
