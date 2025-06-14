@@ -2,8 +2,28 @@
 import { Outlet } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN' // 引入中文语言包
+import { useEffect } from 'react'
 
 function App() {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      const registerSW = async () => {
+        try {
+          const registration = await navigator.serviceWorker.register(
+            '/sw.js',
+            {
+              scope: '/',
+            }
+          )
+          console.log('ServiceWorker 注册成功:', registration)
+        } catch (error) {
+          console.error('ServiceWorker 注册失败:', error)
+        }
+      }
+      registerSW()
+    }
+  }, [])
+
   return (
     <ConfigProvider
       locale={zhCN}

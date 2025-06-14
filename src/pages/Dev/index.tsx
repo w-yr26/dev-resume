@@ -22,29 +22,29 @@ import { temDataType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
-import { getCachesData } from '@/utils/caches'
-import { Data } from '@/utils/request'
+// import { getCachesData } from '@/utils/caches'
+// import { Data } from '@/utils/request'
 
-const getTemplatesWithCache = async (
-  userId: string
-): Promise<Data<temDataType>> => {
-  console.time('test')
-  const cached = (await getCachesData(userId)) as {
-    data: temDataType
-    code: number
-    msg: string
-  }
-  console.timeEnd('test')
-  if (cached) {
-    console.log('[模板] 命中缓存', cached)
-    return cached
-  }
+// const getTemplatesWithCache = async (
+//   userId: string
+// ): Promise<Data<temDataType>> => {
+//   console.time('test')
+//   const cached = (await getCachesData(userId)) as {
+//     data: temDataType
+//     code: number
+//     msg: string
+//   }
+//   console.timeEnd('test')
+//   if (cached) {
+//     console.log('[模板] 命中缓存', cached)
+//     return cached
+//   }
 
-  console.log('[模板] 未命中缓存，调用接口')
-  const result = await getTemplatesAPI(userId)
+//   console.log('[模板] 未命中缓存，调用接口')
+//   const result = await getTemplatesAPI(userId)
 
-  return result
-}
+//   return result
+// }
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -91,17 +91,19 @@ const Dev = () => {
     const getDetail = async () => {
       if (params.randomId) {
         setLoading(true)
-        const [
-          { data },
-          {
-            data: { templateList, diyTemplateList },
-          },
-        ] = await Promise.all([
-          getResumeDetailsAPI(params.randomId),
-          getTemplatesAPI(userId),
-          // cache缓存
-          // getTemplatesWithCache(userId),
-        ])
+        const { data } = await getResumeDetailsAPI(params.randomId)
+        const {
+          data: { templateList, diyTemplateList },
+        } = await getTemplatesAPI(userId)
+        // const [
+        //   { data },
+        //   {
+        //     data: { templateList, diyTemplateList },
+        //   },
+        // ] = await Promise.all([
+        //   getResumeDetailsAPI(params.randomId),
+        //   getTemplatesAPI(userId),
+        // ])
         setTemList([...templateList, ...diyTemplateList])
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
