@@ -2,7 +2,7 @@ import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
 import configStyle from '@/config/templates'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useStyleStore, useUIStore, useUserStore } from '@/store'
 import { pxToMm } from '@/utils'
@@ -18,10 +18,33 @@ import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
 import { getResumeDetailsAPI } from '@/apis/resume'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { templateListType } from '@/types/ui'
+import { temDataType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
+// import { getCachesData } from '@/utils/caches'
+// import { Data } from '@/utils/request'
+
+// const getTemplatesWithCache = async (
+//   userId: string
+// ): Promise<Data<temDataType>> => {
+//   console.time('test')
+//   const cached = (await getCachesData(userId)) as {
+//     data: temDataType
+//     code: number
+//     msg: string
+//   }
+//   console.timeEnd('test')
+//   if (cached) {
+//     console.log('[模板] 命中缓存', cached)
+//     return cached
+//   }
+
+//   console.log('[模板] 未命中缓存，调用接口')
+//   const result = await getTemplatesAPI(userId)
+
+//   return result
+// }
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -35,7 +58,8 @@ const Dev = () => {
 
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const leftScrollRef = useRef<HTMLDivElement>(null)
+  const rightScrollRef = useRef<HTMLDivElement>(null)
   const drawerRef = useRef<drawerMethods>(null)
 
   const pageWidth = 794
@@ -67,16 +91,19 @@ const Dev = () => {
     const getDetail = async () => {
       if (params.randomId) {
         setLoading(true)
-        const [
-          { data },
-          {
-            data: { templateList, diyTemplateList },
-          },
-        ] = await Promise.all([
-          getResumeDetailsAPI(params.randomId),
-          getTemplatesAPI(userId),
-        ])
-
+        const { data } = await getResumeDetailsAPI(params.randomId)
+        const {
+          data: { templateList, diyTemplateList },
+        } = await getTemplatesAPI(userId)
+        // const [
+        //   { data },
+        //   {
+        //     data: { templateList, diyTemplateList },
+        //   },
+        // ] = await Promise.all([
+        //   getResumeDetailsAPI(params.randomId),
+        //   getTemplatesAPI(userId),
+        // ])
         setTemList([...templateList, ...diyTemplateList])
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
@@ -111,27 +138,30 @@ const Dev = () => {
   }, [])
 
   // 适配对应的uiSchema
-  const fetchUISchema = (
-    templateId: string,
-    temList: templateListType[]
-  ): Promise<{
-    code: 0 | 1
-    temSchema: any | null
-  }> => {
-    return new Promise((resolve, reject) => {
-      const temSchema = temList.find((tem) => tem.id === templateId)
-      if (temSchema)
-        resolve({
-          code: 1,
-          temSchema: temSchema.style_config,
-        })
-      else
-        reject({
-          code: 0,
-          temSchema: null,
-        })
-    })
-  }
+  const fetchUISchema = useCallback(
+    (
+      templateId: string,
+      temList: templateListType[]
+    ): Promise<{
+      code: 0 | 1
+      temSchema: any | null
+    }> => {
+      return new Promise((resolve, reject) => {
+        const temSchema = temList.find((tem) => tem.id === templateId)
+        if (temSchema)
+          resolve({
+            code: 1,
+            temSchema: temSchema.style_config,
+          })
+        else
+          reject({
+            code: 0,
+            temSchema: null,
+          })
+      })
+    },
+    []
+  )
 
   const initGlobalStyle = (uiSchemaRes: any): Promise<string> => {
     return new Promise((resolve) => {
@@ -227,14 +257,23 @@ const Dev = () => {
   }, [dragging])
 
   // 滚动至具体位置
-  const handleScroll = (position: number) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
+  const handleLeftScroll = useCallback((position: number) => {
+    if (leftScrollRef.current) {
+      leftScrollRef.current.scrollTo({
         top: position,
         behavior: 'smooth',
       })
     }
-  }
+  }, [])
+
+  const handleRightScroll = useCallback((position: number) => {
+    if (rightScrollRef.current) {
+      rightScrollRef.current.scrollTo({
+        top: position,
+        behavior: 'smooth',
+      })
+    }
+  }, [])
 
   // 模式切换
   const handleModeSwitch = () => {
@@ -362,11 +401,11 @@ const Dev = () => {
       <div className={styles['dev-container']}>
         <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <LeftMenu
-            iconClick={handleScroll}
+            iconClick={handleLeftScroll}
             isLeftUnExpand={isLeftUnExpand}
             setisLeftUnExpand={setisLeftUnExpand}
           />
-          <Materials ref={scrollRef} isLeftUnExpand={isLeftUnExpand} />
+          <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
         </AuthorizationHoc>
 
         <main
@@ -415,12 +454,14 @@ const Dev = () => {
 
         <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <Setting
+            ref={rightScrollRef}
             isRightUnExpand={isRightUnExpand}
             isOrigin={isOrigin}
             temList={temList}
             fetchUISchema={fetchUISchema}
           />
           <RightMenu
+            iconClick={handleRightScroll}
             isRightUnExpand={isRightUnExpand}
             setisRightUnExpand={setisRightUnExpand}
           />
