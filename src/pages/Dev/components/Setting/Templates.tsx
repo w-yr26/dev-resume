@@ -4,7 +4,8 @@ import Icon from '@ant-design/icons'
 import gridSVG from '@/assets/svg/grid.svg?react'
 import type { templateListType } from '@/types/ui'
 import styles from './index.module.scss'
-import { useDevStore, useUIStore } from '@/store'
+import { useDevStore, useGlobalStore, useUIStore } from '@/store'
+import { useEffect, useRef } from 'react'
 
 const Templates = ({
   temList,
@@ -22,6 +23,7 @@ const Templates = ({
   const templateId = useDevStore((state) => state.templateId)
   const setTemplateId = useDevStore((state) => state.setTemplateId)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
+  const setPosition = useGlobalStore((state) => state.setPosition)
 
   const changeTemplate = async (id: string) => {
     if (id === templateId) return
@@ -30,8 +32,16 @@ const Templates = ({
     if (code) setUiSchema(temSchema)
   }
 
+  const templateRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (templateRef.current) {
+      const { y } = templateRef.current.getBoundingClientRect()
+      setPosition('template', y)
+    }
+  }, [])
+
   return (
-    <CustomLayout>
+    <CustomLayout ref={templateRef}>
       <Header label="模板" svg={<Icon component={gridSVG} />} />
       <div className={styles['template-list']}>
         {temList.map((item) => (

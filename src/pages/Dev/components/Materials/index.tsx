@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, memo } from 'react'
 import Award from './Award'
 import BaseInfo from './BaseInfo'
 import EduBg from './EduBg'
@@ -31,4 +31,5 @@ const Materials = forwardRef<
   )
 })
 
-export default Materials
+Materials.displayName = 'Materials'
+export default memo(Materials)

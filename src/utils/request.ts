@@ -15,9 +15,11 @@ const WHITE_LIST = [
   '/resume/user/sendCode', // 找回密码
 ]
 
+export const BASE_URL = 'http://2f7d4220.r39.cpolar.top'
+
 // 请求实例
 const instance = axios.create({
-  baseURL: 'http://2f7d4220.r39.cpolar.top',
+  baseURL: BASE_URL,
   timeout: 10000,
 })
 
@@ -107,7 +109,7 @@ const jumpToLogin = () => {
   })
 }
 
-type Data<T> = {
+export type Data<T> = {
   data: T
   code: string | number
   msg: string | null
