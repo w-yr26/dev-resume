@@ -3,22 +3,14 @@
 // import dataSVG from '@/assets/svg/design/database.svg?react'
 // import themeSVG from '@/assets/svg/dev/theme.svg?react'
 // import SettingSVG from '@/assets/svg/setting.svg?react'
-import {
-  Cascader,
-  ColorPicker,
-  Input,
-  Radio,
-  Select,
-  Splitter,
-  Tag,
-} from 'antd'
+import { Cascader, ColorPicker, Input, message, Radio, Select, Tag } from 'antd'
 import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
 import { useDesignStore } from '@/store'
 import CustomRaw from './CustomRaw'
 import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
 import ModuleLayout from './ModuleLayout'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 interface Option {
   value: string
@@ -28,6 +20,50 @@ interface Option {
 }
 
 const cascaderOptions: Option[] = [
+  {
+    value: 'BASE_INFO',
+    label: '个人信息',
+    children: [
+      {
+        value: 'info',
+        label: '信息',
+        children: [
+          {
+            value: 'avatar',
+            label: '头像',
+          },
+          {
+            value: 'userName',
+            label: '姓名',
+          },
+          {
+            value: 'gender',
+            label: '性别',
+          },
+          {
+            value: 'age',
+            label: '年龄',
+          },
+          {
+            value: 'position',
+            label: '求职岗位',
+          },
+          {
+            value: 'phone',
+            label: '电话',
+          },
+          {
+            value: 'email',
+            label: '邮箱',
+          },
+          {
+            value: 'tblob',
+            label: '博客',
+          },
+        ],
+      },
+    ],
+  },
   {
     value: 'EDU_BG',
     label: '教育背景',
@@ -209,26 +245,23 @@ const RightPanel = ({
 }) => {
   const setConfig = useDesignStore((state) => state.setConfig)
   const changeStyle = useDesignStore((state) => state.changeStyle)
-  const changeChildWidth = useDesignStore((state) => state.changeChildWidth)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)
   const singleNode = selectedSchema()
-
-  const [sizes, setSizes] = useState<(number | string)[]>(['30%', '70%'])
-
+  const [isShowModuleBorder, setIsModuleBorder] = useState(false)
   const layoutOptions: CheckboxGroupProps<string>['options'] = [
-    { label: '双列布局', value: 'horizontal' },
-    { label: '单列布局', value: 'vertical' },
+    { label: '水平布局', value: 'horizontal' },
+    { label: '垂直布局', value: 'vertical' },
   ]
 
-  // const moduleOptions = [
-  //   { value: 'BASE_INFO', label: '基础信息' },
-  //   { value: 'EDU_BG', label: '教育背景' },
-  //   { value: 'WORK_EXP', label: '实习/工作经历' },
-  //   { value: 'PROJECT_EXP', label: '项目经历' },
-  //   { value: 'SKILL_LIST', label: '技能特长' },
-  //   // { value: 'AWARD_LIST', label: '荣誉奖项' },
-  //   { value: 'HEART_LIST', label: '兴趣爱好' },
-  // ]
+  const moduleOptions = [
+    { value: 'BASE_INFO', label: '基础信息' },
+    { value: 'EDU_BG', label: '教育背景' },
+    { value: 'WORK_EXP', label: '实习/工作经历' },
+    { value: 'PROJECT_EXP', label: '项目经历' },
+    { value: 'SKILL_LIST', label: '技能特长' },
+    // { value: 'AWARD_LIST', label: '荣誉奖项' },
+    { value: 'HEART_LIST', label: '兴趣爱好' },
+  ]
 
   const columnsOptions: CheckboxGroupProps<string>['options'] = [
     { label: 'center', value: 'center' },
@@ -236,60 +269,53 @@ const RightPanel = ({
     { label: 'around', value: 'space-around' },
   ]
 
-  // 不属于当前模块的子项都进行禁用 -> 这里使用memo意义不大，用户点击不同的dom导致currentNodeDeep、nodeBind不断变化，这里就得不断计算，反倒增加了缓存的成本
-  function markDisabledByDeep(
-    options: Option[],
-    typePath: string[],
-    deep: number,
-    level = 1
-  ): Option[] {
-    if (level > deep) return options
-    return options.map((item) => {
-      // 由于deep是根据dom嵌套的层级来决定的，有时候很深，不断递归导致level增大，最终typePath[level为undefined
-      const shouldKeep = typePath[level] ? item.value === typePath[level] : true // 当前层级是否命中路径
+  const filterOptions = useMemo(() => {
+    const nodeBindPath = nodeBind.split('-')
+    console.log('nodeBindPath', nodeBindPath)
 
-      const nextChildren = item.children
-        ? markDisabledByDeep(item.children, typePath, deep, level + 1)
-        : []
-
-      // 到达目标层级：只保留匹配的项，其他加 disabled
-      if (level + 1 <= deep) {
-        return {
-          ...item,
-          disabled: !shouldKeep,
-          children: shouldKeep ? nextChildren : item.children, // 只有当前项的children需要处理
-        }
-      }
-
-      // 没到目标层级，继续递归；但如果路径不匹配也应禁用整支
-      return {
-        ...item,
-        disabled: level <= deep && !shouldKeep,
-        children: [],
-      }
-    })
-  }
-
-  const filterCascaderOptions = markDisabledByDeep(
-    cascaderOptions,
-    nodeBind.split('-').filter(Boolean),
-    currentNodeDeep - 1
-  )
-
-  useEffect(() => {
-    // 当当前容器为“模块容器”且水平排列的时候，才有必要初始化子元素的宽度占比
     if (
-      singleNode &&
-      singleNode.type === 'module' &&
-      singleNode.layout === 'horizontal' &&
-      singleNode.children &&
-      singleNode.children.length > 1
+      nodeBindPath.findIndex((i) => i === 'label') ===
+        nodeBindPath.length - 1 ||
+      nodeBindPath.findIndex((i) => i === 'info') === nodeBindPath.length - 1
     ) {
-      singleNode.children?.forEach((_, index) => {
-        changeChildWidth(singleNode.nodeKey, index, sizes[index] as string)
-      })
+      const tempOptions = cascaderOptions.find((i) =>
+        nodeBindPath.includes(i.value)
+      )?.children
+      console.log('wyr', tempOptions)
+
+      return tempOptions?.map((item) => ({
+        value: item.value,
+        label: item.label,
+      }))
+    } else if (
+      nodeBindPath.indexOf('label') === -1 &&
+      nodeBindPath.indexOf('info') === -1
+    ) {
+      const tempOptions = cascaderOptions.find((i) =>
+        nodeBindPath.includes(i.value)
+      )?.children
+
+      return tempOptions?.map((item) => ({
+        value: item.value,
+        label: item.label,
+      }))
+    } else {
+      const currentOptions = cascaderOptions.find((i) =>
+        nodeBindPath.includes(i.value)
+      )
+
+      if (currentOptions?.children) {
+        return currentOptions.children.map((i) => {
+          if (!nodeBindPath.includes(i.value)) {
+            return {
+              ...i,
+              disabled: true,
+            }
+          } else return i
+        })
+      } else return []
     }
-  }, [singleNode?.type, singleNode?.layout, singleNode?.children?.length])
+  }, [nodeBind])
 
   return (
     <aside className={styles['property-container']}>
@@ -302,7 +328,8 @@ const RightPanel = ({
             <Input disabled value={singleNode?.nodeKey} />
           </CustomRaw>
         </ModuleLayout>
-        {singleNode?.type === 'root' ? null : (
+        {singleNode?.type === 'root' ||
+        !singleNode?.constraints.ableBind ? null : (
           <ModuleLayout title="模块设置">
             {singleNode?.type === 'module' ? (
               <CustomRaw label="模块字段">
@@ -312,12 +339,61 @@ const RightPanel = ({
                     width: '100%',
                   }}
                   value={[singleNode?.bind || '']}
-                  options={filterCascaderOptions}
+                  options={moduleOptions}
                   onChange={(e) => {
                     if (singleNode)
                       setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
                   }}
                   placeholder="选择绑定字段"
+                />
+              </CustomRaw>
+            ) : null}
+            {singleNode?.type === 'module' ? (
+              <CustomRaw label="模块边框">
+                <Select
+                  style={{ width: '100%' }}
+                  options={[
+                    { value: true, label: '显示' },
+                    { value: false, label: '隐藏' },
+                  ]}
+                  value={isShowModuleBorder}
+                  onChange={(val) => {
+                    if (val) {
+                      if (singleNode) {
+                        changeStyle(
+                          singleNode.nodeKey,
+                          'borderBottomStyle',
+                          'solid'
+                        )
+                        changeStyle(
+                          singleNode.nodeKey,
+                          'borderBottomWidth',
+                          '1px'
+                        )
+                      }
+                    } else {
+                      if (singleNode) {
+                        changeStyle(singleNode.nodeKey, 'borderBottomWidth', 0)
+                      }
+                    }
+                    setIsModuleBorder(val)
+                  }}
+                />
+              </CustomRaw>
+            ) : null}
+            {isShowModuleBorder ? (
+              <CustomRaw label="边框颜色">
+                <ColorPicker
+                  value={singleNode?.style.color}
+                  defaultValue="#18181b"
+                  onChange={(_, color) => {
+                    if (singleNode)
+                      changeStyle(
+                        singleNode.nodeKey,
+                        'borderBottomColor',
+                        color
+                      )
+                  }}
                 />
               </CustomRaw>
             ) : null}
@@ -328,10 +404,20 @@ const RightPanel = ({
                     width: '100%',
                   }}
                   value={[singleNode?.bind || '']}
-                  options={filterCascaderOptions}
+                  options={filterOptions}
                   onChange={(e) => {
-                    if (singleNode)
+                    if (singleNode) {
+                      console.log('sing', singleNode)
+                      const curBind = e[e.length - 1]
+                      if (
+                        singleNode.constraints.allowedBind &&
+                        singleNode.constraints.allowedBind.length &&
+                        !singleNode.constraints.allowedBind.includes(curBind)
+                      ) {
+                        return message.warning('当前物料不支持绑定该字段')
+                      }
                       setConfig(singleNode.nodeKey, 'bind', e[e.length - 1])
+                    }
                   }}
                   placeholder="选择绑定字段"
                 />
@@ -340,6 +426,7 @@ const RightPanel = ({
           </ModuleLayout>
         )}
 
+        {/* TODO：这里，grid布局的情况得处理一下 */}
         {singleNode?.type !== 'root' ? (
           <ModuleLayout title="排列设置">
             <div className={styles['custom-title']}></div>
@@ -360,7 +447,7 @@ const RightPanel = ({
                 }}
               />
             </CustomRaw>
-            {singleNode &&
+            {/* {singleNode &&
             singleNode.layout === 'horizontal' &&
             singleNode.children &&
             singleNode.children?.length > 1 ? (
@@ -413,7 +500,7 @@ const RightPanel = ({
                   ))}
                 </Splitter>
               </CustomField>
-            ) : null}
+            ) : null} */}
             {singleNode?.type === 'columns' ? (
               <CustomRaw label="主轴排列">
                 <Radio.Group

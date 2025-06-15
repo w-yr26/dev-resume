@@ -168,6 +168,26 @@ const Share = () => {
       permissions: JSON.stringify(permissionArr),
     })
     await handleCopy(data.share_url)
+    setLinkList((prev) => {
+      return [
+        {
+          accessType: userList.length ? 'private' : 'public',
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          expireAt: dayjs().add(hour, 'hours').format('YYYY-MM-DD HH:mm:ss'),
+          id: new Date().getTime(),
+          isActive: 1,
+          isDeleted: 0,
+          maxVisits: count === -1 ? undefined : count,
+          permissions: JSON.stringify(permissionArr),
+          resourceId: resumeId,
+          shareToken: '',
+          shareUrl: data.share_url,
+          userId: Number(userId),
+          visitCount: 0,
+        },
+        ...prev,
+      ]
+    })
     resetState()
   }
 

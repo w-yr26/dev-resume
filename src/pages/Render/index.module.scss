@@ -3,3 +3,15 @@
     border-bottom: 0 !important;
   }
 }
+
+.field-box {
+  display: flex;
+  align-items: center;
+
+  .label,
+  .value {
+    flex-shrink: 0;
+    font-weight: 500;
+    font-size: 13px;
+  }
+}

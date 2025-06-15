@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { Dayjs, isDayjs } from 'dayjs'
-import styled from './index.module.scss'
+import styles from './index.module.scss'
 import { useStyleStore, useUIStore } from '@/store'
 import { nodeType } from '@/types/ui'
 import { tokenizer } from '@/components/MdEditor/utils/tokens'
@@ -11,21 +11,25 @@ interface RenderProps {
   node: nodeType | null
   dataContext: any
   top?: number
+  wheel: number
 }
 
-const checkDate = (data: any) => {
-  return Array.isArray(data) && data.every((date: Dayjs) => isDayjs(date))
-}
-
-const formatDate = (data: Dayjs[]) => {
-  return data.map((item) => item.format('YYYY-MM')).join('~')
+// 个人信息表单项的标题
+const keyToFieldLabel: Record<string, string> = {
+  userName: '姓名',
+  gender: '性别',
+  age: '年龄',
+  position: '求职岗位',
+  phone: '电话',
+  email: '邮箱',
+  tblob: '个人博客',
 }
 
 // 这里原先使用 memo 时，当用户自定义修改样式，是无法达到更新的效果的
 // 因为 memo 进行的是浅比较，而原先修改的逻辑是借助"currentSchema与uiSchema引用地址相同"进行修改的，所以 uiSchema 的引用地址保持不变，所以加了 memo 之后就不会更新
 // TODO：每一次只需要进行很小的 style 改动，但是却要重新执行整个递归，导致会有很明显的样式更新延迟
 const Render = memo((props: RenderProps) => {
-  const { dataContext, node } = props
+  const { dataContext, node, wheel } = props
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
@@ -33,8 +37,6 @@ const Render = memo((props: RenderProps) => {
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const pagePadding = useStyleStore((state) => state.pagePadding)
-  const sidebarProportions = useStyleStore((state) => state.sidebarProportions)
-  const setIsHorizontal = useUIStore((state) => state.setIsHorizontal)
 
   if (!node) return null
   const { type, layout, children = [], style = {}, bind, label = '' } = node
@@ -68,16 +70,16 @@ const Render = memo((props: RenderProps) => {
     }
 
     // 整体是两栏布局，需要设置主侧栏的比例并且表示当前简历全局是两栏排列的
-    if (layout === 'grid') {
-      setIsHorizontal(true)
-      rootStyle.gridTemplateColumns = sidebarProportions
-        .map((item) => item + 'fr')
-        .join(' ')
-    }
+    // if (layout === 'grid') {
+    //   setIsHorizontal(true)
+    //   rootStyle.gridTemplateColumns = sidebarProportions
+    //     .map((item) => item + 'fr')
+    //     .join(' ')
+    // }
 
     return (
       <div
-        className={styled['render-container']}
+        className={styles['render-container']}
         style={{
           ...mergedStyle,
           ...rootStyle,
@@ -85,7 +87,14 @@ const Render = memo((props: RenderProps) => {
         data-node-key={node.nodeKey}
       >
         {children.map((child: any, index: number) => {
-          return <Render key={index} dataContext={dataContext} node={child} />
+          return (
+            <Render
+              key={index}
+              dataContext={dataContext}
+              node={child}
+              wheel={wheel}
+            />
+          )
         })}
       </div>
     )
@@ -100,18 +109,19 @@ const Render = memo((props: RenderProps) => {
         paddingBottom: modulePadding + 'px',
       }
     }
-
     // 有时候，container只是作为容器存在，并不一定会在当前container渲染数据(可能是在它的子元素中),这种 case 就需要传递dataContext进行兜底
     const data = dataContext[bind] || { ...dataContext }
 
     return (
       <div
-        className="block-box"
+        className={`${type}-box`}
         style={mergedStyle}
         data-node-key={node.nodeKey}
       >
         {children.map((child: any, index: number) => {
-          return <Render key={index} node={child} dataContext={data} />
+          return (
+            <Render key={index} node={child} dataContext={data} wheel={wheel} />
+          )
         })}
       </div>
     )
@@ -132,7 +142,12 @@ const Render = memo((props: RenderProps) => {
             <React.Fragment key={index}>
               {children.map((child: any, idx: number) => {
                 return (
-                  <Render key={idx} dataContext={item} node={child}></Render>
+                  <Render
+                    key={idx}
+                    dataContext={item}
+                    node={child}
+                    wheel={wheel}
+                  />
                 )
               })}
             </React.Fragment>
@@ -142,16 +157,14 @@ const Render = memo((props: RenderProps) => {
     ) : null
   }
 
-  // 此处对应模块标题/或者是行内单项值
+  // 此处对应模块标题
   if (type === 'text') {
-    let data = dataContext[bind]
+    const data = dataContext[bind]
+    // 取不到对应的值，直接返回null
     if (!data) {
-      data = '默认内容...'
-    } else if (checkDate(data)) {
-      data = formatDate(data)
+      return null
     }
     return (
-      // <BlockWrapper style={mergedStyle} data={data}>
       <div
         className="text-box"
         style={mergedStyle}
@@ -159,7 +172,6 @@ const Render = memo((props: RenderProps) => {
       >
         {data}
       </div>
-      // </BlockWrapper>
     )
   }
 
@@ -186,13 +198,34 @@ const Render = memo((props: RenderProps) => {
     )
   }
 
-  // 此处的label对应的是单项的标题，而非模块标题
-  if (type === 'label') {
-    return <div style={mergedStyle}>{label}</div>
+  if (type === 'image') {
+    return (
+      <img
+        src={dataContext[bind]}
+        style={{
+          ...mergedStyle,
+          width: (Number(mergedStyle?.width) || 75) * wheel + 'px',
+          height: (Number(mergedStyle?.height) || 140) * wheel + 'px',
+        }}
+      />
+    )
   }
 
-  if (type === 'image') {
-    return <img src={dataContext[bind]} style={mergedStyle} />
+  if (type === 'field') {
+    let val = dataContext[bind]
+    // 如果处理的是时间，做一下特殊处理，去掉""
+    if (bind === 'date') {
+      val = val.replace(/"/g, '')
+    }
+    return (
+      <div className={`${styles['field-box']}`} style={mergedStyle}>
+        <div className={styles['label']}>
+          {keyToFieldLabel[bind]}
+          {keyToFieldLabel[bind] ? ': ' : null}
+        </div>
+        <div className={styles['value']}>{val}</div>
+      </div>
+    )
   }
   return null
 })

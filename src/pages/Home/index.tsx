@@ -121,7 +121,7 @@ const Home = () => {
         </div>
 
         {/* 导入部分 */}
-        <div className={styles['resume-item']}>
+        {/* <div className={styles['resume-item']}>
           <div className={styles['icon-box']}>
             <Icon component={DownloadSVG} className={styles['svg']} />
           </div>
@@ -130,7 +130,7 @@ const Home = () => {
             <p className={styles['resume-name']}>导入现有简历</p>
             <p className={styles['update-time']}>LinkedIn、JSON简历等</p>
           </div>
-        </div>
+        </div> */}
 
         {/* 简历列表 */}
         {resumeList.length

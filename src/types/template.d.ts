@@ -5,4 +5,9 @@ export type addTemplateType = {
   styleConfig: string
   fastPhoto?: string
   userId: number
+  isDefault: boolean
+}
+
+export type editTemplateType = Omit<addTemplateType, 'isDefault'> & {
+  id: number
 }

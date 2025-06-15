@@ -31,17 +31,8 @@ const Dev = () => {
   const setTemplateId = useDevStore((state) => state.setTemplateId)
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
-  const setPagePadding = useStyleStore((state) => state.setPagePadding)
-  const setModulePadding = useStyleStore((state) => state.setModulePadding)
-  const setLineHeight = useStyleStore((state) => state.setLineHeight)
-  const setFontSize = useStyleStore((state) => state.setFontSize)
-  const setFontColor = useStyleStore((state) => state.setFontColor)
-  const setMainColor = useStyleStore((state) => state.setMainColor)
-  const setBgColor = useStyleStore((state) => state.setBgColor)
-  const setBorderStyle = useStyleStore((state) => state.setBorderStyle)
-  const setSidebarProportions = useStyleStore(
-    (state) => state.setSidebarProportions
-  )
+  const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
+
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -54,7 +45,7 @@ const Dev = () => {
   const [wheel, setWheel] = useState(0.7)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
-  const [lineShow, setLineShow] = useState(false)
+  // const [lineShow, setLineShow] = useState(false)
   const [isLeftUnExpand, setisLeftUnExpand] = useState(false)
   const [isRightUnExpand, setisRightUnExpand] = useState(false)
   const [temList, setTemList] = useState<templateListType[]>([])
@@ -90,6 +81,18 @@ const Dev = () => {
         // const { data } = await getResumeDetailsAPI(params.randomId)
         setDataSource(data.content)
         setTemplateId(data.templateId)
+        // fetch('/test2.json')
+        //   .then((response) => {
+        //     if (!response.ok) {
+        //       throw new Error('Network response was not ok')
+        //     }
+        //     return response.json() // 如果是JSON文件
+        //   })
+        //   .then(async (data) => {
+        //     console.log(data) // 处理获取到的数据
+        //     setUiSchema(data)
+        //     await initGlobalStyle(data)
+        //   })
         const { code, temSchema } = await fetchUISchema(data.templateId, [
           ...templateList,
           ...diyTemplateList,
@@ -142,18 +145,16 @@ const Dev = () => {
           bgColor,
           mainColor,
           borderStyle,
-          sidebarProportions,
         },
       } = uiSchemaRes
-      setPagePadding(pagePadding)
-      setModulePadding(modulePadding)
-      setLineHeight(lineHeight)
-      setFontSize(fontSize)
-      setFontColor(fontColor)
-      setBgColor(bgColor)
-      setMainColor(mainColor)
-      setBorderStyle(borderStyle)
-      setSidebarProportions(sidebarProportions)
+      setPageKeyToStyle('pagePadding', pagePadding)
+      setPageKeyToStyle('modulePadding', modulePadding)
+      setPageKeyToStyle('lineHeight', lineHeight)
+      setPageKeyToStyle('fontSize', fontSize)
+      setPageKeyToStyle('fontColor', fontColor)
+      setPageKeyToStyle('bgColor', bgColor)
+      setPageKeyToStyle('mainColor', mainColor)
+      setPageKeyToStyle('borderStyle', borderStyle)
       resolve('success')
     })
   }
@@ -243,25 +244,25 @@ const Dev = () => {
   const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
 
   // 监听分页线
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        const { height } = entry.contentRect
-        const mmHeight = pxToMm(height)
-        if (mmHeight > 297) {
-          setLineShow(true)
-        } else {
-          setLineShow(false)
-        }
-      })
-    })
+  // useEffect(() => {
+  //   const observer = new ResizeObserver((entries) => {
+  //     entries.forEach((entry) => {
+  //       const { height } = entry.contentRect
+  //       const mmHeight = pxToMm(height)
+  //       if (mmHeight > 297) {
+  //         setLineShow(true)
+  //       } else {
+  //         setLineShow(false)
+  //       }
+  //     })
+  //   })
 
-    if (mainRef.current) {
-      observer.observe(mainRef.current)
-    }
+  //   if (mainRef.current) {
+  //     observer.observe(mainRef.current)
+  //   }
 
-    return () => observer.disconnect()
-  }, [])
+  //   return () => observer.disconnect()
+  // }, [])
 
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
@@ -391,14 +392,18 @@ const Dev = () => {
             >
               <div className={styles['preview-content']} ref={mainRef}>
                 {uiSchema && !loading && top ? (
-                  <Render dataContext={dataSource} node={uiSchema} />
+                  <Render
+                    dataContext={dataSource}
+                    node={uiSchema}
+                    wheel={wheel}
+                  />
                 ) : null}
               </div>
-              {lineShow && (
+              {/* {lineShow && (
                 <div className={styles['page-line']}>
                   <span>分页线</span>
                 </div>
-              )}
+              )} */}
               {isLoading ? (
                 <div className={styles['loading-box']}>
                   <Spin />

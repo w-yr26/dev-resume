@@ -15,7 +15,7 @@ const Heart = () => {
   } = useDevStore((state) => state.devSchema.dataSource.HEART_LIST)
   const immerRichInfo = useDevStore((state) => state.immerRichInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
-  const { handleChange, isEdit, setIsEdit } = useChangeLabel('SKILL_LIST')
+  const { handleChange, isEdit, setIsEdit } = useChangeLabel('HEART_LIST')
   const heartRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

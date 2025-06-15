@@ -16,7 +16,7 @@ import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
 import React, { useEffect, useRef, useState } from 'react'
-import { Drawer, Tag } from 'antd'
+import { Drawer, message, Tag } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 import { commandManager } from './command/commandManager'
@@ -24,10 +24,10 @@ import { register } from './command'
 import NavBar from './components/NavBar'
 import html2canvas from 'html2canvas'
 import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 const typeToComponentName: Record<uiType, string> = {
-  container: '模块容器',
+  container: '普通容器',
   module: '模块容器',
   root: '根容器',
   md: 'md容器',
@@ -36,6 +36,7 @@ const typeToComponentName: Record<uiType, string> = {
   text: '文本块',
   label: '模块标题',
   columns: '多列容器',
+  field: '表单项',
 }
 
 const typeToSVG: Record<uiType, any> = {
@@ -48,11 +49,14 @@ const typeToSVG: Record<uiType, any> = {
   image: imageSVG,
   text: textBlockSVG,
   label: textBlockSVG,
+  field: textBlockSVG,
 }
 
 const Design = () => {
   const currentUISchema = useDesignStore((state) => state.currentUISchema)
   const currentSelectedKey = useDesignStore((state) => state.currentSelectedKey)
+  const setCurUISchema = useDesignStore((state) => state.setCurUISchema)
+  const setTemplateName = useDesignStore((state) => state.setTemplateName)
   const insertNode = useDesignStore((state) => state.insertNode)
   const delNode = useDesignStore((state) => state.delNode)
   const setCurrentSelectedKey = useDesignStore(
@@ -61,16 +65,19 @@ const Design = () => {
   const [nodeDeep, setNodeDeep] = useState(0)
   const [nodeBind, setNodeBind] = useState('root')
   const [isOpened, setIsOpened] = useState(false)
+  const [updateTime, setUpdateTime] = useState('')
 
   const designRef = useRef<HTMLDivElement>(null)
-  const params = useParams()
-
+  const [searchParams] = useSearchParams()
+  const temId = searchParams.get('temId')
   useEffect(() => {
     const getTemDetail = async () => {
-      const { data } = await getTemplateSchemaAPI(params.temId || '')
-      console.log('date', data)
+      const { data } = await getTemplateSchemaAPI(Number(temId))
+      setCurUISchema(data.style_config)
+      setTemplateName(data.name)
+      setUpdateTime(data.updateTime)
     }
-
+    if (!temId) return
     getTemDetail()
   }, [])
 
@@ -113,15 +120,21 @@ const Design = () => {
     nodeKey: string,
     targetKey: string,
     desUISchema: any,
-    deep: number
+    parentBind: string, // 当前放置的容器的bind字段
+    isParentNeed: boolean // 当前放置的容器是否需要字段绑定
   ) => {
-    // const typeAndBind = targetKey.split('?')[1]
-    // // 解析出目标容器的类型和bind字段，如果bind字段为空，说明父容器还未绑定具体字段，此时就不能直接拖拽子元素进来
-    // const [type, bind] = typeAndBind.split('&')
-    // if (type === 'module' && !bind) {
-    //   return message.warning('请先标注当前模块类型')
-    // }
-
+    if (!parentBind && isParentNeed)
+      return message.warning('请先绑定父容器数据类型')
+    // 当前物料允许父容器的bind类型
+    const allowParentBind = desUISchema.constraints
+      .allowedParentBind as string[]
+    // 如果父容器需要绑定 & 绑定不再当前元素支持范围内，则返回
+    if (
+      allowParentBind.length !== 0 &&
+      !allowParentBind.includes(parentBind) &&
+      isParentNeed
+    )
+      return message.warning('请将正确的物料放置当前容器中')
     // 获取新增命令
     const command = register.create(
       'drop',
@@ -141,6 +154,8 @@ const Design = () => {
     prevBind: string,
     prevKey: string
   ) => {
+    // 是否显示拖拽放置元素(isNestedAgain = true 且当前子元素数量 < 最大子元素数量)
+    const isShowDropTarget = uiSchema.constraints.isNestedAgain
     return (
       <>
         <fieldset
@@ -162,7 +177,8 @@ const Design = () => {
             className={styles['del-box']}
             style={{
               visibility:
-                uiSchema.ableDel && uiSchema.nodeKey === currentSelectedKey
+                uiSchema.constraints.ableDel &&
+                uiSchema.nodeKey === currentSelectedKey
                   ? 'visible'
                   : 'hidden',
             }}
@@ -179,6 +195,8 @@ const Design = () => {
                 insertNode
               )
               commandManager.executeCommand(command)
+              // 清空选择的节点id
+              setCurrentSelectedKey('')
             }}
           >
             <Icon component={closeSVG} />
@@ -197,8 +215,18 @@ const Design = () => {
 
           <div
             className={`${
-              uiSchema.layout === 'horizontal' ? styles['flex-fieldset'] : ''
+              uiSchema.layout === 'horizontal'
+                ? styles['flex-fieldset']
+                : uiSchema.layout === 'grid'
+                ? styles['three-grid-container']
+                : ''
             }`}
+            style={{
+              gridTemplateColumns:
+                uiSchema.layout === 'grid'
+                  ? `repeat(${uiSchema.constraints.columns}, minmax(0, 1fr))`
+                  : '',
+            }}
           >
             {uiSchema.children?.length
               ? uiSchema.children.map((nestedChild: singleNode) => (
@@ -207,19 +235,20 @@ const Design = () => {
                     {renderTemplate(
                       nestedChild,
                       deep + 1,
-                      prevBind + '-' + nestedChild.bind, // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
-                      prevKey + '&' + nestedChild.nodeKey
+                      prevBind + '-' + nestedChild.bind,
+                      prevKey + '&' + nestedChild.nodeKey // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
                     )}
                   </React.Fragment>
                 ))
               : null}
           </div>
-          {uiSchema.isNestedAgain ? (
+          {isShowDropTarget ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
               nodeKey={uiSchema.nodeKey}
-              deep={deep}
+              parentBind={uiSchema.bind}
+              isParentNeed={uiSchema.constraints.ableBind}
             >
               <DragBtn />
             </DropTarget>
@@ -233,7 +262,12 @@ const Design = () => {
     <>
       <DndProvider backend={HTML5Backend}>
         <div className={styles['design-container']}>
-          <NavBar setIsOpened={setIsOpened} generateShot={generateShot} />
+          <NavBar
+            temId={temId || ''}
+            updateTime={updateTime}
+            setIsOpened={setIsOpened}
+            generateShot={generateShot}
+          />
           <div className={styles['design-body']}>
             <LeftPanel />
             <main

@@ -1,16 +1,15 @@
 import Icon from '@ant-design/icons'
 import ThemeFillSVG from '@/assets/svg/dev/theme-fill.svg?react'
-import { Slider, Switch } from 'antd'
+import { Slider } from 'antd'
 import CustomLayout from '@/components/CustomLayout'
 import CustomField from './components/CustomField'
 import Header from '@/components/Header'
-import styled from './index.module.scss'
+// import styled from './index.module.scss'
 import { useStyleStore } from '@/store'
 const TypeSetting = () => {
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
-  const setLineHeight = useStyleStore((state) => state.setLineHeight)
-  const setFontSize = useStyleStore((state) => state.setFontSize)
+  const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
 
   return (
     <CustomLayout>
@@ -20,7 +19,7 @@ const TypeSetting = () => {
           min={10}
           max={20}
           value={fontSize}
-          onChange={(val: number) => setFontSize(val)}
+          onChange={(val: number) => setPageKeyToStyle('fontSize', val)}
         />
       </CustomField>
       <CustomField title="行高">
@@ -29,15 +28,15 @@ const TypeSetting = () => {
           min={1.2}
           max={2}
           value={lineHeight}
-          onChange={(val: number) => setLineHeight(val)}
+          onChange={(val: number) => setPageKeyToStyle('lineHeight', val)}
         />
       </CustomField>
-      <CustomField title="设置">
+      {/* <CustomField title="设置">
         <div className={styled['custom-line']}>
           <span className={styled['setting-label']}>下划线链接</span>
           <Switch />
         </div>
-      </CustomField>
+      </CustomField> */}
     </CustomLayout>
   )
 }

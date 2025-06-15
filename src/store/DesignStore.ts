@@ -23,9 +23,13 @@ const useDesignStore = create<designStoreType>()(
     (set, get) => {
       return {
         currentUISchema: {
-          ableDel: false,
+          constraints: {
+            ableDel: false,
+            ableBind: false,
+            isNestedAgain: true,
+            allowedParentBind: [],
+          },
           type: 'root', // 根容器
-          isNestedAgain: true, // 是否支持嵌套，即children是否有值
           layout: 'vertical',
           style: {}, // 即configStyle
           configStyle: {
@@ -43,12 +47,16 @@ const useDesignStore = create<designStoreType>()(
           nodeKey: uuidv4() + '?root',
           children: [
             {
-              ableDel: true,
+              constraints: {
+                ableDel: true,
+                ableBind: true,
+                isNestedAgain: true,
+                allowedParentBind: ['root'],
+              },
               type: 'module', // 根容器
-              isNestedAgain: true, // 是否支持嵌套，即children是否有值
               layout: 'vertical',
               style: {}, // 即configStyle
-              bind: '',
+              bind: 'BASE_INFO',
               tag: '',
               nodeKey: uuidv4() + '?module',
               children: [],
@@ -56,6 +64,21 @@ const useDesignStore = create<designStoreType>()(
           ],
         },
         currentSelectedKey: '',
+        templateName: '',
+        setTemplateName: (val) => {
+          set(() => {
+            return {
+              templateName: val,
+            }
+          })
+        },
+        setCurUISchema: (val) => {
+          set(() => {
+            return {
+              currentUISchema: val,
+            }
+          })
+        },
         insertNode: (nodeKey, targetKey, desUISchema) => {
           set(
             produce((state: designStoreType) => {

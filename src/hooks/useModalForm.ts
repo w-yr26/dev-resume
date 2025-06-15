@@ -55,6 +55,7 @@ export function useModalForm<T extends { id: string; date: string }>(
         date: content.date
           ?.map((item: Dayjs) => item.format('YYYY-MM-DD'))
           .join('~'),
+        id: infoId ?? undefined, // 编辑时才需要传入每一项的id，反之即为新增
       }
       // 先调用接口，执行创建/更新，再写入store，因为存在接口调用失败的情况下，避免store多次写入
       const { code } = await postModuleInfoAPI({

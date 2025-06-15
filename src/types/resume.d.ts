@@ -132,7 +132,7 @@ export type shareLinkInfoType = {
 export type linkItem = {
   accessType: 'public' | 'private'
   expireAt: string
-  maxVisits: number
+  maxVisits: number | undefined
   resourceId: string
   userId: number
   visitCount: number // 已访问数量

@@ -10,6 +10,7 @@ export type uiType =
   | 'label'
   | 'md'
   | 'columns'
+  | 'field'
 
 export type layoutType = 'vertical' | 'horizontal' | 'grid'
 
@@ -65,22 +66,31 @@ export type templateListType = {
 
 // ====== 以下与简历模板设计有关 ===
 export type singleNode = {
-  ableDel: boolean
+  constraints: {
+    ableBind: boolean // 当前容器是否允许绑定字段
+    ableDel: boolean // 当前容器是否允许删除操作
+    isNestedAgain: boolean // 当前容器是否支持再嵌套
+    columns?: number // 每列的元素数量
+    allowedParentBind: string[] // 限定父容器绑定的字段
+    allowedBind?: string[] // 允许自身能绑定的字段，主要用来限定如<image />这种特殊的物料
+  }
   type: uiType
-  isNestedAgain: boolean
   layout: layoutType
   bind: string
   tag: string
   nodeKey: string
   style: React.CSSProperties
   configStyle?: any
-  children?: singleNode[]
+  children: singleNode[]
   path?: string
 }
 
 export type designStoreType = {
   currentUISchema: singleNode
   currentSelectedKey: string
+  templateName: string
+  setTemplateName: (name: string) => void
+  setCurUISchema: (val: singleNode) => void
   insertNode: (nodeKey: string, targetKey: string, desUISchema: any) => void
   delNode: (prevKey: string, nodeKey: string) => void
   setCurrentSelectedKey: (key: string) => void
@@ -97,4 +107,16 @@ export type designStoreType = {
   ) => void
   changeChildWidth: (nodeKey: string, idx: number, proportion: string) => void
   setRootStyle: (key: string, val: any) => void
+}
+
+// 获取模板详情返回的数据结构
+export type temDetailRespType = {
+  createTime: string
+  updateTime: string
+  fastPhoto: string
+  id: string
+  isDelete: 0 | 1
+  name: string
+  style_config: singleNode
+  userId: string
 }
