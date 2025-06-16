@@ -1,4 +1,5 @@
 const TEMPLATE_CACHE_NAME = 'template-cache'
+const INVALIDATE_TEMPLATE_CACHE = 'INVALIDATE_TEMPLATE_CACHE'
 // const TEMPLATE_UPDATE_KEY = 'template-last-update'
 const TEMPLATE_UPDATE_INTERVAL = 1000 * 60 * 5 // 5 分钟
 
@@ -81,5 +82,26 @@ self.addEventListener('fetch', (event) => {
         }
       })
     )
+  }
+})
+
+self.addEventListener('message', (event) => {
+  console.log(event)
+  const {
+    data: { type, userId },
+  } = event
+
+  // 更新caches缓存
+  if (type === INVALIDATE_TEMPLATE_CACHE) {
+    caches.open(TEMPLATE_CACHE_NAME).then((cache) => {
+      cache.keys().then((requests) => {
+        requests.forEach((request) => {
+          const url = new URL(request.url)
+          if (url.pathname.includes(`/resume/templates/getAll/${userId}`)) {
+            cache.delete(request)
+          }
+        })
+      })
+    })
   }
 })

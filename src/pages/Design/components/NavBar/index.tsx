@@ -74,6 +74,14 @@ const NavBar = ({
         })
       }
 
+      // 更新sw
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'INVALIDATE_TEMPLATE_CACHE',
+          userId: userId, // 传递当前用户ID
+        })
+      }
+
       message.success(`模板${temId ? '更新' : '创建'}成功`)
     } catch (err) {
       if (typeof err === 'string') message.error(err)
