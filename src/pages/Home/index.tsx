@@ -41,11 +41,16 @@ const Home = () => {
       headers: {
         Authorization: token,
         'X-Pre-Load': 'true',
+        'X-Max-Count': String(sessionStorage.getItem('preload_count') || 0),
       },
     })
       .then((res) => {
         if (res.status === 204) {
           console.log('预加载成功，无需解析响应')
+          sessionStorage.setItem(
+            'preload_count',
+            String((Number(sessionStorage.getItem('preload_count')) || 0) + 1)
+          )
           return // 直接结束，不进入下一个 .then()
         }
         return res.json()
