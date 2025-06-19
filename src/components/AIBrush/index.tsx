@@ -92,7 +92,7 @@ const AIBrush = <
     const decoder = new TextDecoder()
 
     while (true) {
-      const { done, value } = await reader.read()
+      const { value } = await reader.read()
 
       const chunk = decoder.decode(value)
       // 解析事件字段(以换行符为分割)

@@ -1,4 +1,4 @@
-import { Avatar, Input } from 'antd'
+import { Avatar } from 'antd'
 import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'

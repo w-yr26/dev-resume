@@ -5,7 +5,7 @@ import Icon, {
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import ThemeSVG from '@/assets/svg/dev/theme.svg?react'
 import OutputSVG from '@/assets/svg/dev/output.svg?react'
-import ColorSVG from '@/assets/svg/dev/color.svg?react'
+// import ColorSVG from '@/assets/svg/dev/color.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Tooltip } from 'antd'

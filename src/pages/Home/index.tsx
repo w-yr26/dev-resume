@@ -3,7 +3,7 @@ import { useUserStore } from '@/store'
 import styles from './index.module.scss'
 // 引入icon图标
 import Icon from '@ant-design/icons'
-import DownloadSVG from '@/assets/svg/download.svg?react'
+// import DownloadSVG from '@/assets/svg/download.svg?react'
 import ListSVG from '@/assets/svg/list.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
@@ -41,11 +41,16 @@ const Home = () => {
       headers: {
         Authorization: token,
         'X-Pre-Load': 'true',
+        'X-Max-Count': String(sessionStorage.getItem('preload_count') || 0),
       },
     })
       .then((res) => {
         if (res.status === 204) {
           console.log('预加载成功，无需解析响应')
+          sessionStorage.setItem(
+            'preload_count',
+            String((Number(sessionStorage.getItem('preload_count')) || 0) + 1)
+          )
           return // 直接结束，不进入下一个 .then()
         }
         return res.json()

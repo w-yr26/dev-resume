@@ -9,7 +9,7 @@ import normalBoxSVG from '@/assets/svg/design/normalBox.svg?react'
 import styles from './index.module.scss'
 import { v4 as uuidv4 } from 'uuid'
 import type { uiType } from '@/types/ui'
-import { Collapse, Flex } from 'antd'
+import { Collapse } from 'antd'
 import Item from './Item'
 
 const LeftPanel = () => {
