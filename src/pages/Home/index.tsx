@@ -3,7 +3,7 @@ import { useUserStore } from '@/store'
 import styles from './index.module.scss'
 // 引入icon图标
 import Icon from '@ant-design/icons'
-import DownloadSVG from '@/assets/svg/download.svg?react'
+// import DownloadSVG from '@/assets/svg/download.svg?react'
 import ListSVG from '@/assets/svg/list.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'

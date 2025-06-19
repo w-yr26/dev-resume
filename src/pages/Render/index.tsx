@@ -1,7 +1,6 @@
 import React, { memo } from 'react'
-import { Dayjs, isDayjs } from 'dayjs'
 import styles from './index.module.scss'
-import { useStyleStore, useUIStore } from '@/store'
+import { useStyleStore } from '@/store'
 import { nodeType } from '@/types/ui'
 import { tokenizer } from '@/components/MdEditor/utils/tokens'
 import { buildAST } from '@/components/MdEditor/utils/ast'
@@ -39,7 +38,7 @@ const Render = (props: RenderProps) => {
   const pagePadding = useStyleStore((state) => state.pagePadding)
 
   if (!node) return null
-  const { type, layout, children = [], style = {}, bind, label = '' } = node
+  const { type, layout, children = [], style = {}, bind } = node
 
   let mergedStyle: React.CSSProperties = {
     display:

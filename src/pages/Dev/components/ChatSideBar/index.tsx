@@ -1,4 +1,3 @@
-import { Avatar, Input } from 'antd'
 import styles from './index.module.scss'
 import type { sideBarType } from '@/types/materials'
 import React, { useEffect, useState } from 'react'

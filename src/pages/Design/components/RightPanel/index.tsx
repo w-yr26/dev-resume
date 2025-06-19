@@ -8,7 +8,7 @@ import type { CheckboxGroupProps } from 'antd/es/checkbox'
 import styles from './index.module.scss'
 import { useDesignStore } from '@/store'
 import CustomRaw from './CustomRaw'
-import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
+// import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
 import ModuleLayout from './ModuleLayout'
 import { useMemo, useState } from 'react'
 
@@ -243,6 +243,7 @@ const RightPanel = ({
   currentNodeDeep: number
   nodeBind: string
 }) => {
+  console.log(currentNodeDeep)
   const setConfig = useDesignStore((state) => state.setConfig)
   const changeStyle = useDesignStore((state) => state.changeStyle)
   const selectedSchema = useDesignStore((state) => state.selectedSchema)

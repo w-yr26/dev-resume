@@ -24,7 +24,7 @@ const mapToAntdTreeData = (
   }
 }
 
-const StyleEditor = forwardRef<drawerMethods>((props, ref) => {
+const StyleEditor = forwardRef<drawerMethods>((_, ref) => {
   const uiSchema = useUIStore((state) => state.uiSchema)
   const updateUISchema = useUIStore((state) => state.updateUISchema)
   const [cssOpen, setCssOpen] = useState(false)
@@ -45,6 +45,7 @@ const StyleEditor = forwardRef<drawerMethods>((props, ref) => {
 
   const handleSelectNode = (selectedKeys: any, e: any) => {
     if (e) {
+      console.log(selectedKeys)
       setIsEditing(false)
       const selectedStyle = e.node.cssStyle
       // const currentPath = e.node.key
