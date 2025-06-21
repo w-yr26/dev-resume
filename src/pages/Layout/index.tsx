@@ -2,10 +2,10 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import ResumeSvg from '@/assets/svg/resume.svg?react'
-import SettingSVG from '@/assets/svg/setting.svg?react'
+// import SettingSVG from '@/assets/svg/setting.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
 import { useUserStore } from '@/store'
-import { Avatar } from 'antd'
+import { Avatar, Button, Popover } from 'antd'
 
 const routeMenu = [
   {
@@ -18,11 +18,11 @@ const routeMenu = [
     name: '模板集',
     icon: <Icon component={GridSVG} />,
   },
-  {
-    path: '/setting',
-    name: '设置',
-    icon: <Icon component={SettingSVG} />,
-  },
+  // {
+  //   path: '/setting',
+  //   name: '设置',
+  //   icon: <Icon component={SettingSVG} />,
+  // },
 ]
 
 const Layout = () => {
@@ -30,9 +30,23 @@ const Layout = () => {
   const navigate = useNavigate()
 
   const userName = useUserStore((state) => state.info.userName)
-
+  const updateInfo = useUserStore((state) => state.updateInfo)
   const jumpNewPage = (path: string) => {
     navigate(path)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('email')
+    localStorage.removeItem('userName')
+    localStorage.removeItem('user_id')
+    localStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
+    updateInfo('email', '')
+    updateInfo('userName', '')
+    updateInfo('id', '')
+    updateInfo('token', '')
+    updateInfo('refreshToken', '')
+    navigate('/login')
   }
 
   return (
@@ -76,7 +90,16 @@ const Layout = () => {
 
         <div className={styles['left-bottom']}>
           <div className={styles['account-box']}>
-            <Avatar size={24}>{userName}</Avatar>
+            <Popover
+              content={
+                <Button variant="link" color="danger" onClick={handleLogout}>
+                  退出登录
+                </Button>
+              }
+              title={null}
+            >
+              <Avatar size={24}>{userName}</Avatar>
+            </Popover>
             <div className={styles['account']}>{userName}</div>
           </div>
           <p className={styles['version-box']}>DevResume 1.0.0</p>

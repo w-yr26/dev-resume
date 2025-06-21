@@ -15,12 +15,12 @@ const WHITE_LIST = [
   '/resume/user/sendCode', // 找回密码
 ]
 
-export const BASE_URL = 'http://2f7d4220.r39.cpolar.top'
+export const BASE_URL = 'http://47.121.143.89/api'
 
 // 请求实例
 const instance = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 20000,
 })
 
 // 请求拦截器

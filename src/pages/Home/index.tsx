@@ -116,7 +116,7 @@ const Home = () => {
       {/* 头部 */}
       <div className={styles['container-top']}>
         <h1>简历</h1>
-        <div>
+        {/* <div>
           <Button
             icon={<Icon component={GridSVG} />}
             style={{
@@ -126,7 +126,7 @@ const Home = () => {
             网格
           </Button>
           <Button icon={<Icon component={ListSVG} />}>列表</Button>
-        </div>
+        </div> */}
       </div>
 
       {/* 底部 */}

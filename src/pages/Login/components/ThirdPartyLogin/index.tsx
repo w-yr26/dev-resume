@@ -2,6 +2,7 @@ import { Divider, Popover, Steps } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
 import Icon from '@ant-design/icons'
 import resumeSVG from '@/assets/svg/resume.svg?react'
+import { BASE_URL } from '@/utils/request'
 
 const content = () => (
   <Steps
@@ -26,8 +27,7 @@ const content = () => (
 export const ThirdPartyLogin = () => {
   const handleGiteeLogin = () => {
     // 跳转至授权页面
-    window.location.href =
-      'http://5d0cfcb7.r39.cpolar.top/resume/user/gitee/redirect'
+    window.location.href = `${BASE_URL}/resume/user/gitee/redirect`
   }
 
   return (
