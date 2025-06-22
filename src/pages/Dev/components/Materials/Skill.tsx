@@ -16,6 +16,7 @@ const Skill = () => {
   const {
     info: [skillInfo],
     label,
+    visible,
   } = useDevStore((state) => state.devSchema.dataSource.SKILL_LIST)
 
   const immerRichInfo = useDevStore((state) => state.immerRichInfo)
@@ -37,7 +38,11 @@ const Skill = () => {
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu currentKey="SKILL_LIST" renameLabel={() => setIsEdit(true)} />
+        <CtxMenu
+          currentKey="SKILL_LIST"
+          visible={visible}
+          renameLabel={() => setIsEdit(true)}
+        />
       </Header>
       <MdEditor
         value={skillInfo?.content}

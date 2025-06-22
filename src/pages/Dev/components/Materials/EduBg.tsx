@@ -34,7 +34,9 @@ const EduBg = () => {
 
   useElementPosition(edubgRef, 'EDU_BG')
 
-  const { label } = useDevStore((state) => state.devSchema.dataSource.EDU_BG)
+  const { label, visible } = useDevStore(
+    (state) => state.devSchema.dataSource.EDU_BG
+  )
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   return (
@@ -47,7 +49,11 @@ const EduBg = () => {
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}
         >
-          <CtxMenu currentKey="EDU_BG" renameLabel={() => setIsEdit(true)} />
+          <CtxMenu
+            currentKey="EDU_BG"
+            visible={visible}
+            renameLabel={() => setIsEdit(true)}
+          />
         </Header>
         {eduInfo.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />

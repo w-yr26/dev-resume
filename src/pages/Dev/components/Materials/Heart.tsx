@@ -15,6 +15,7 @@ const Heart = () => {
   const {
     info: [heartInfo],
     label,
+    visible,
   } = useDevStore((state) => state.devSchema.dataSource.HEART_LIST)
   const immerRichInfo = useDevStore((state) => state.immerRichInfo)
   const setPosition = useGlobalStore((state) => state.setPosition)
@@ -37,7 +38,11 @@ const Heart = () => {
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu currentKey="HEART_LIST" renameLabel={() => setIsEdit(true)} />
+        <CtxMenu
+          currentKey="HEART_LIST"
+          visible={visible}
+          renameLabel={() => setIsEdit(true)}
+        />
       </Header>
       <MdEditor
         value={heartInfo?.interest}

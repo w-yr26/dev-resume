@@ -24,6 +24,9 @@ const WorkExperience = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.label
   )
+  const visible = useDevStore(
+    (state) => state.devSchema.dataSource.WORK_EXP.visible
+  )
 
   const workRef = useRef<HTMLDivElement>(null)
   useElementPosition(workRef, 'WORK_EXP')
@@ -51,7 +54,11 @@ const WorkExperience = () => {
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}
         >
-          <CtxMenu currentKey="WORK_EXP" renameLabel={() => setIsEdit(true)} />
+          <CtxMenu
+            currentKey="WORK_EXP"
+            visible={visible}
+            renameLabel={() => setIsEdit(true)}
+          />
         </Header>
         {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />

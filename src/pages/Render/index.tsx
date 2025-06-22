@@ -102,10 +102,11 @@ const Render = (props: RenderProps) => {
   }
 
   if (type === 'container' || type === 'columns' || type === 'module') {
-    //  确保模块内有值，才有必要渲染当前模块
+    //  确保模块内有值且 visible === true，才有必要渲染当前模块
     if (type === 'module') {
       const moduleInfo = dataSource[bind as allKeyType].info
-      if (moduleInfo.length === 0) return null
+      const isVisible = dataSource[bind as allKeyType].visible
+      if (moduleInfo.length === 0 || !isVisible) return null
     }
 
     // 如果当前是模块，style.padding还要考虑联动

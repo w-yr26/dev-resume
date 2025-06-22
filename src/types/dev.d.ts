@@ -115,9 +115,7 @@ export type optionalCom =
 export type headMenuType = {
   label: string
   key: string
-  icon: React.ForwardRefExoticComponent<
-    Omit<AntdIconProps, 'ref'> & React.RefAttributes<HTMLSpanElement>
-  >
+  icon: React.ReactNode
   callback?: () => void
 }
 

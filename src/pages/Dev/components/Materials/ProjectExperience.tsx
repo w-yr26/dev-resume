@@ -23,6 +23,9 @@ const ProjectExperience = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.PROJECT_EXP.label
   )
+  const visible = useDevStore(
+    (state) => state.devSchema.dataSource.PROJECT_EXP.visible
+  )
 
   const proRef = useRef<HTMLDivElement>(null)
 
@@ -50,7 +53,11 @@ const ProjectExperience = () => {
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu currentKey="PROJECT_EXP" renameLabel={() => setIsEdit(true)} />
+        <CtxMenu
+          currentKey="PROJECT_EXP"
+          visible={visible}
+          renameLabel={() => setIsEdit(true)}
+        />
       </Header>
       {storeProjectList.length === 0 ? (
         <AddBtn handleAdd={handleOpen} />

@@ -21,6 +21,9 @@ const Award = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.AWARD_LIST.label
   )
+  const visible = useDevStore(
+    (state) => state.devSchema.dataSource.AWARD_LIST.visible
+  )
 
   const awardRef = useRef<HTMLDivElement>(null)
   useElementPosition(awardRef, 'AWARD_LIST')
@@ -47,7 +50,11 @@ const Award = () => {
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu currentKey="AWARD_LIST" renameLabel={() => setIsEdit(true)} />
+        <CtxMenu
+          currentKey="AWARD_LIST"
+          visible={visible}
+          renameLabel={() => setIsEdit(true)}
+        />
       </Header>
 
       {storeAwardList.length === 0 ? (
