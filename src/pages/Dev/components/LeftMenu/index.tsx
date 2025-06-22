@@ -5,7 +5,7 @@ import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AwardSVG from '@/assets/svg/dev/award.svg?react'
 import SkillSVG from '@/assets/svg/dev/skill.svg?react'
-import HeartSVG from '@/assets/svg/dev/heart.svg?react'
+// import HeartSVG from '@/assets/svg/dev/heart.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Avatar, Tooltip } from 'antd'
@@ -45,11 +45,11 @@ const iconMenu = [
     label: '技能特长',
     key: 'SKILL_LIST',
   },
-  {
-    icon: <Icon component={HeartSVG} />,
-    label: '兴趣爱好',
-    key: 'HEART_LIST',
-  },
+  // {
+  //   icon: <Icon component={HeartSVG} />,
+  //   label: '兴趣爱好',
+  //   key: 'HEART_LIST',
+  // },
 ]
 
 const LeftMenu = ({

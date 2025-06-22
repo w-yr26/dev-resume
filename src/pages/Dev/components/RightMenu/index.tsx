@@ -1,10 +1,8 @@
-import Icon, {
-  AppstoreAddOutlined,
-  InfoCircleOutlined,
-} from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import ThemeSVG from '@/assets/svg/dev/theme.svg?react'
 import OutputSVG from '@/assets/svg/dev/output.svg?react'
+import GridSVG from '@/assets/svg/grid.svg?react'
 // import ColorSVG from '@/assets/svg/dev/color.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
@@ -15,7 +13,7 @@ import { memo } from 'react'
 
 const toolMenu = [
   {
-    icon: <AppstoreAddOutlined />,
+    icon: <Icon component={GridSVG} />,
     label: '模板',
     key: 'template',
   },
@@ -44,11 +42,11 @@ const toolMenu = [
     label: '分享',
     key: 'share',
   },
-  {
-    icon: <InfoCircleOutlined />,
-    label: '信息',
-    key: 'info',
-  },
+  // {
+  //   icon: <InfoCircleOutlined />,
+  //   label: '信息',
+  //   key: 'info',
+  // },
 ]
 
 const RightMenu = ({

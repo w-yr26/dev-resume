@@ -5,14 +5,15 @@ import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
 import List from './components/List'
-import { useEffect, useRef } from 'react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useRef } from 'react'
+import { useDevStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
 import MdEditor from '@/components/MdEditor'
 import AIBrush from '@/components/AIBrush'
 import styles from './index.module.scss'
+import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
 
 const ProjectExperience = () => {
@@ -23,15 +24,9 @@ const ProjectExperience = () => {
     (state) => state.devSchema.dataSource.PROJECT_EXP.label
   )
 
-  const setPosition = useGlobalStore((state) => state.setPosition)
   const proRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (proRef.current) {
-      const { y } = proRef.current.getBoundingClientRect()
-      setPosition('PROJECT_EXP', y)
-    }
-  }, [])
+  useElementPosition(proRef, 'PROJECT_EXP')
 
   const {
     opened,

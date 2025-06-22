@@ -6,11 +6,12 @@ import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
-import { useEffect, useRef } from 'react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useRef } from 'react'
+import { useDevStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
+import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
 
 const Award = () => {
@@ -21,15 +22,8 @@ const Award = () => {
     (state) => state.devSchema.dataSource.AWARD_LIST.label
   )
 
-  const setPosition = useGlobalStore((state) => state.setPosition)
   const awardRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (awardRef.current) {
-      const { y } = awardRef.current.getBoundingClientRect()
-      setPosition('AWARD_LIST', y)
-    }
-  }, [])
+  useElementPosition(awardRef, 'AWARD_LIST')
 
   const {
     opened,

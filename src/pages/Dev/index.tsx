@@ -1,7 +1,6 @@
 import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
-import configStyle from '@/config/templates'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useStyleStore, useUIStore, useUserStore } from '@/store'
@@ -420,7 +419,6 @@ const Dev = () => {
             <div
               className={styles['resume-container']}
               style={{
-                ...configStyle['commonStyle'],
                 width: pageWidth,
                 height: pageHeight,
                 transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,

@@ -4,8 +4,9 @@ import Icon from '@ant-design/icons'
 import gridSVG from '@/assets/svg/grid.svg?react'
 import type { templateListType } from '@/types/ui'
 import styles from './index.module.scss'
-import { useDevStore, useGlobalStore, useUIStore } from '@/store'
-import { useEffect, useRef } from 'react'
+import { useDevStore, useUIStore } from '@/store'
+import { useRef } from 'react'
+import { useElementPosition } from '@/hooks/useElementPosition'
 
 const Templates = ({
   temList,
@@ -23,7 +24,6 @@ const Templates = ({
   const templateId = useDevStore((state) => state.templateId)
   const setTemplateId = useDevStore((state) => state.setTemplateId)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
-  const setPosition = useGlobalStore((state) => state.setPosition)
 
   const changeTemplate = async (id: string) => {
     if (id === templateId) return
@@ -33,12 +33,7 @@ const Templates = ({
   }
 
   const templateRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (templateRef.current) {
-      const { y } = templateRef.current.getBoundingClientRect()
-      setPosition('template', y)
-    }
-  }, [])
+  useElementPosition(templateRef, 'template')
 
   return (
     <CustomLayout ref={templateRef}>

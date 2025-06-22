@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
-import { Button, ConfigProvider, DatePicker, Form, Input, Modal } from 'antd'
+import { Button, DatePicker, Form, Input, Modal } from 'antd'
 import Icon from '@ant-design/icons'
 import EduSVG from '@/assets/svg/dev/edu.svg?react'
 import Header from '@/components/Header/index'
@@ -12,11 +12,11 @@ import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import type { EduBgType } from '@/types/dev'
+import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
 
 const EduBg = () => {
   const edubgRef = useRef<HTMLDivElement>(null)
-  const setPosition = useGlobalStore((state) => state.setPosition)
   const { info: eduInfo } = useDevStore(
     (state) => state.devSchema.dataSource.EDU_BG
   )
@@ -32,12 +32,7 @@ const EduBg = () => {
     handleOpen,
   } = useModalForm<EduBgType>(eduInfo, 'EDU_BG')
 
-  useEffect(() => {
-    if (edubgRef.current) {
-      const { y } = edubgRef.current.getBoundingClientRect()
-      setPosition('EDU_BG', y)
-    }
-  }, [])
+  useElementPosition(edubgRef, 'EDU_BG')
 
   const { label } = useDevStore((state) => state.devSchema.dataSource.EDU_BG)
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')

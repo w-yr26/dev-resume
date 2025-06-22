@@ -21,11 +21,12 @@ import CustomBtn from '@/components/CustomBtn'
 import { useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { getLinkListsAPI, postShareLinkAPI } from '@/apis/resume'
-import { useDevStore, useGlobalStore, useUserStore } from '@/store'
+import { useDevStore, useUserStore } from '@/store'
 import dayjs from 'dayjs'
 import type { linkItem, shareUserItem } from '@/types/resume'
 import LinkItem from './components/LinkItem'
 import DevModalFormItem from '@/components/DevModalFormItem'
+import { useElementPosition } from '@/hooks/useElementPosition'
 
 const durationOptions = [
   {
@@ -81,13 +82,7 @@ const Share = () => {
   const [permissionArr, setPermissionArr] = useState<number[]>([1])
 
   const shareRef = useRef<HTMLDivElement>(null)
-  const setPosition = useGlobalStore((state) => state.setPosition)
-  useEffect(() => {
-    if (shareRef.current) {
-      const { y } = shareRef.current.getBoundingClientRect()
-      setPosition('share', y)
-    }
-  }, [])
+  useElementPosition(shareRef, 'share')
 
   useEffect(() => {
     if (!resumeId || !userId) return
