@@ -73,14 +73,18 @@ const ProjectExperience = () => {
             subTitle: 'role',
             visible: 'visible',
           }}
-        ></List>
+        />
       )}
       <Modal
         title={infoId ? '编辑条目' : '创建新条目'}
         okText="创建"
         cancelText="取消"
         width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '更新' : '创建'}
@@ -91,18 +95,18 @@ const ProjectExperience = () => {
         onCancel={resetState}
       >
         <Form layout="vertical" requiredMark={false} form={formRef}>
-          <div className="flex justify-between items-center gap-[10px]">
-            <Form.Item
-              label="项目名称"
-              name="title"
-              layout="vertical"
-              rules={[{ required: true }]}
-              style={{
-                flex: 1,
-              }}
-            >
-              <Input />
-            </Form.Item>
+          <Form.Item
+            label="项目名称"
+            name="title"
+            layout="vertical"
+            rules={[{ required: true }]}
+            style={{
+              flex: 1,
+            }}
+          >
+            <Input />
+          </Form.Item>
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="项目角色"
               name="role"

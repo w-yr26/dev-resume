@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useDevStore, useGlobalStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
-import { Button, DatePicker, Form, Input, Modal } from 'antd'
+import { Button, ConfigProvider, DatePicker, Form, Input, Modal } from 'antd'
 import Icon from '@ant-design/icons'
 import EduSVG from '@/assets/svg/dev/edu.svg?react'
 import Header from '@/components/Header/index'
@@ -77,8 +77,11 @@ const EduBg = () => {
         title={infoId ? '编辑条目' : '创建新条目'}
         okText="创建"
         cancelText="取消"
-        width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '更新' : '创建'}

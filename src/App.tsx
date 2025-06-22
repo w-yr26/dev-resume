@@ -34,6 +34,7 @@ function App() {
             footerBg: '#fafafa',
             headerBg: '#fafafa',
             boxShadow: 'none',
+            colorBgMask: 'rgba(250, 250, 250, 0.9)',
           },
           Collapse: {
             headerBg: '#fff',

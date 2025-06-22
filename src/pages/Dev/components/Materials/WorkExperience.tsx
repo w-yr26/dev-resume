@@ -82,7 +82,11 @@ const WorkExperience = () => {
         okText="创建"
         cancelText="取消"
         width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '更新' : '创建'}

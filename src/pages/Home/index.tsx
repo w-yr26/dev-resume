@@ -178,9 +178,6 @@ const Home = () => {
       </div>
       <Modal
         styles={{
-          mask: {
-            backgroundColor: 'rgba(250, 250, 250, 0.9)',
-          },
           content: {
             border: '1px solid #e4e4e7',
           },

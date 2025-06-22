@@ -34,7 +34,7 @@ $light-cardBg-color: #ffffff;
       border-radius: 0.5rem;
 
       &:hover {
-        cursor: help;
+        cursor: pointer;
         background-color: $light-muted-color;
       }
     }

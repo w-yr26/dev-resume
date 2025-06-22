@@ -1,10 +1,11 @@
 import React, { memo } from 'react'
 import styles from './index.module.scss'
-import { useStyleStore } from '@/store'
+import { useDevStore, useStyleStore } from '@/store'
 import { nodeType } from '@/types/ui'
 import { tokenizer } from '@/components/MdEditor/utils/tokens'
 import { buildAST } from '@/components/MdEditor/utils/ast'
 import { renderAST } from '@/components/MdEditor/utils/render'
+import { allKeyType } from '@/types/dev'
 // import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
@@ -36,6 +37,7 @@ const Render = (props: RenderProps) => {
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const pagePadding = useStyleStore((state) => state.pagePadding)
+  const dataSource = useDevStore((state) => state.devSchema.dataSource)
 
   if (!node) return null
   const { type, layout, children = [], style = {}, bind } = node
@@ -100,6 +102,12 @@ const Render = (props: RenderProps) => {
   }
 
   if (type === 'container' || type === 'columns' || type === 'module') {
+    //  确保模块内有值，才有必要渲染当前模块
+    if (type === 'module') {
+      const moduleInfo = dataSource[bind as allKeyType].info
+      if (moduleInfo.length === 0) return null
+    }
+
     // 如果当前是模块，style.padding还要考虑联动
     if (type === 'module') {
       mergedStyle = {
@@ -199,14 +207,18 @@ const Render = (props: RenderProps) => {
 
   if (type === 'image') {
     return (
-      <img
-        src={dataContext[bind]}
-        style={{
-          ...mergedStyle,
-          width: (Number(mergedStyle?.width) || 75) * wheel + 'px',
-          height: (Number(mergedStyle?.height) || 140) * wheel + 'px',
-        }}
-      />
+      <>
+        {dataContext[bind] ? (
+          <img
+            src={dataContext[bind]}
+            style={{
+              ...mergedStyle,
+              width: (Number(mergedStyle?.width) || 75) * wheel + 'px',
+              height: (Number(mergedStyle?.height) || 140) * wheel + 'px',
+            }}
+          />
+        ) : null}
+      </>
     )
   }
 

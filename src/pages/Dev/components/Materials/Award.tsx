@@ -78,7 +78,11 @@ const Award = () => {
       <Modal
         title={infoId ? '编辑条目' : '创建新条目'}
         width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '编辑' : '创建'}
@@ -95,7 +99,9 @@ const Award = () => {
               name="award"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
@@ -104,7 +110,9 @@ const Award = () => {
               name="date"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <RangePicker />
             </Form.Item>
