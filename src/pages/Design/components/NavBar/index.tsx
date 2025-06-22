@@ -15,7 +15,8 @@ import {
   putDiyTemplatesNameAPI,
   putUpdateDiyTemplatesAPI,
 } from '@/apis/template'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { RefsContext } from '../RefsProvider/context'
 
 const NavBar = ({
   temId,
@@ -33,6 +34,8 @@ const NavBar = ({
   const templateName = useDesignStore((state) => state.templateName)
   const [isInputShow, setIsInputShow] = useState(false)
   const [title, setTitle] = useState(templateName)
+  const context = useContext(RefsContext)
+
   useEffect(() => {
     setTitle(templateName)
   }, [templateName])
@@ -138,6 +141,7 @@ const NavBar = ({
           variant="text"
           icon={<Icon component={codeSVG} />}
           onClick={() => setIsOpened(true)}
+          ref={context?.ref5 as React.RefObject<HTMLButtonElement>}
         />
         <Button
           type="primary"

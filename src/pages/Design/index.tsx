@@ -16,7 +16,7 @@ import DropTarget from './components/DropTarget'
 import { useDesignStore } from '@/store'
 import type { singleNode, uiType } from '@/types/ui'
 import React, { useEffect, useRef, useState } from 'react'
-import { Drawer, message, Tag } from 'antd'
+import { Drawer, message, Tag, Tour } from 'antd'
 import GlobalSetting from './components/GlobalSetting'
 import { Editor } from '@monaco-editor/react'
 import { commandManager } from './command/commandManager'
@@ -25,6 +25,7 @@ import NavBar from './components/NavBar'
 import html2canvas from 'html2canvas'
 import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
 import { useSearchParams } from 'react-router-dom'
+import RefsProvider from './components/RefsProvider'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '普通容器',
@@ -284,7 +285,7 @@ const Design = () => {
   }
 
   return (
-    <>
+    <RefsProvider>
       <DndProvider backend={HTML5Backend}>
         <div className={styles['design-container']}>
           <NavBar
@@ -338,7 +339,7 @@ const Design = () => {
           }}
         />
       </Drawer>
-    </>
+    </RefsProvider>
   )
 }
 
