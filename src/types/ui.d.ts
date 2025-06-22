@@ -77,7 +77,6 @@ export type singleNode = {
   type: uiType
   layout: layoutType
   bind: string
-  tag: string
   nodeKey: string
   style: React.CSSProperties
   configStyle?: any

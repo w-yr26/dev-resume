@@ -13,7 +13,6 @@ import { Collapse } from 'antd'
 import Item from './Item'
 
 const LeftPanel = () => {
-  // 说明：tag字段仅仅是用来描述模块，而不是每个字段都要描述，但是bind就是每个字段都要绑定
   const draggableList = [
     {
       label: '容器组件',
@@ -28,7 +27,6 @@ const LeftPanel = () => {
             layout: 'vertical',
             style: {},
             bind: '',
-            tag: '',
             nodeKey: uuidv4() + '?module',
             children: [],
             constraints: {
@@ -49,7 +47,6 @@ const LeftPanel = () => {
         //     layout: 'vertical',
         //     style: {},
         //     bind: '',
-        //     tag: '',
         //     nodeKey: uuidv4() + '?container',
         //     children: [],
         //     constraints: {
@@ -78,8 +75,7 @@ const LeftPanel = () => {
               color: '#333',
               width: '20%',
             },
-            bind: '',
-            tag: '',
+            bind: 'label',
             nodeKey: uuidv4() + '?text',
             children: [],
             constraints: {
@@ -110,7 +106,6 @@ const LeftPanel = () => {
               flex: 1,
             },
             bind: 'info',
-            tag: '',
             nodeKey: uuidv4() + '?section',
             children: [],
             constraints: {
@@ -147,7 +142,6 @@ const LeftPanel = () => {
               marginBottom: '4px',
             },
             bind: '',
-            tag: '', // 不需要
             nodeKey: uuidv4() + '?columns',
             children: [],
             constraints: {
@@ -172,7 +166,6 @@ const LeftPanel = () => {
               marginBottom: '4px',
             },
             bind: '',
-            tag: '', // 不需要
             nodeKey: uuidv4() + '?columns',
             children: [],
             constraints: {
@@ -196,7 +189,6 @@ const LeftPanel = () => {
               padding: 0,
             },
             bind: '',
-            tag: '',
             nodeKey: uuidv4() + '?md',
             children: [],
             constraints: {
@@ -219,7 +211,6 @@ const LeftPanel = () => {
               height: 200,
             },
             bind: '',
-            tag: '',
             nodeKey: uuidv4() + '?image',
             children: [],
             constraints: {
@@ -243,7 +234,6 @@ const LeftPanel = () => {
               marginBottom: '4px',
             },
             bind: '',
-            tag: '',
             nodeKey: uuidv4() + '?md',
             children: [],
             constraints: {
@@ -267,7 +257,6 @@ const LeftPanel = () => {
         //       color: '#333',
         //     },
         //     bind: '',
-        //     tag: '',
         //     nodeKey: uuidv4() + '?text',
         //     children: [],
         //     constraints: {

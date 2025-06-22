@@ -8,7 +8,7 @@ import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
 import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
 import closeSVG from '@/assets/svg/design/close.svg?react'
-import DragBtn from './components/DragBtn'
+// import DragBtn from './components/DragBtn'
 import LeftPanel from './components/LeftPanel'
 import RightPanel from './components/RightPanel'
 import styles from './index.module.scss'
@@ -121,8 +121,10 @@ const Design = () => {
     targetKey: string,
     desUISchema: any,
     parentBind: string, // 当前放置的容器的bind字段
-    isParentNeed: boolean // 当前放置的容器是否需要字段绑定
+    isParentNeed: boolean, // 当前放置的容器是否需要字段绑定
+    isNestedAgain: boolean // 当前容器是否还允许放置元素
   ) => {
+    if (!isNestedAgain) return message.warning('当前容器不允许放置元素')
     if (!parentBind && isParentNeed)
       return message.warning('请先绑定父容器数据类型')
     // 当前物料允许父容器的bind类型
@@ -155,94 +157,116 @@ const Design = () => {
     prevKey: string
   ) => {
     // 是否显示拖拽放置元素(isNestedAgain = true 且当前子元素数量 < 最大子元素数量)
-    const isShowDropTarget = uiSchema.constraints.isNestedAgain
+    const isNestedAgain = uiSchema.constraints.isNestedAgain
     return (
       <>
-        <fieldset
-          className={`${styles['fieldset-item']} ${
-            uiSchema.nodeKey === currentSelectedKey
-              ? styles['active-fieldset']
-              : ''
-          }`}
-          onClick={(e) => {
-            e.stopPropagation()
-            // 记录当前选中节点在递归中的层级，用于<RightPanel />中禁用非相关的级联选项
-            setNodeDeep(deep)
-            setNodeBind(prevBind)
-            // 记录当前选中节点的key
-            setCurrentSelectedKey(uiSchema.nodeKey)
-          }}
+        <DropTarget
+          onDrop={(
+            nodeKey: string,
+            targetKey: string,
+            desUISchema: any,
+            parentBind: string,
+            isParentNeed: boolean
+          ) =>
+            handleDrop(
+              nodeKey,
+              targetKey,
+              desUISchema,
+              parentBind,
+              isParentNeed,
+              isNestedAgain
+            )
+          }
+          nodeType={uiSchema.type}
+          nodeKey={uiSchema.nodeKey}
+          parentBind={uiSchema.bind}
+          isParentNeed={uiSchema.constraints.ableBind}
         >
-          <div
-            className={styles['del-box']}
-            style={{
-              visibility:
-                uiSchema.constraints.ableDel &&
-                uiSchema.nodeKey === currentSelectedKey
-                  ? 'visible'
-                  : 'hidden',
-            }}
-            onClick={() => {
-              const prevKeysArr = prevKey.split('&')
-              const prev = prevKeysArr[prevKeysArr.length - 2]
-              // 获取删除命令
-              const command = register.create(
-                'delete',
-                prev,
-                uiSchema.nodeKey,
-                currentUISchema,
-                delNode,
-                insertNode
-              )
-              commandManager.executeCommand(command)
-              // 清空选择的节点id
-              setCurrentSelectedKey('')
-            }}
-          >
-            <Icon component={closeSVG} />
-          </div>
-          <legend>
-            <Icon component={typeToSVG[uiSchema.type]} />
-            <span
-              style={{
-                marginLeft: '8px',
-              }}
-            >
-              {typeToComponentName[uiSchema.type]}
-              {uiSchema.bind ? <Tag>{uiSchema.bind}</Tag> : null}
-            </span>
-          </legend>
-
-          <div
-            className={`${
-              uiSchema.layout === 'horizontal'
-                ? styles['flex-fieldset']
-                : uiSchema.layout === 'grid'
-                ? styles['three-grid-container']
+          <fieldset
+            className={`${styles['fieldset-item']} ${
+              uiSchema.nodeKey === currentSelectedKey
+                ? styles['active-fieldset']
                 : ''
             }`}
-            style={{
-              gridTemplateColumns:
-                uiSchema.layout === 'grid'
-                  ? `repeat(${uiSchema.constraints.columns}, minmax(0, 1fr))`
-                  : '',
+            onClick={(e) => {
+              e.stopPropagation()
+              // 记录当前选中节点在递归中的层级，用于<RightPanel />中禁用非相关的级联选项
+              setNodeDeep(deep)
+              setNodeBind(prevBind)
+              // 记录当前选中节点的key
+              setCurrentSelectedKey(uiSchema.nodeKey)
             }}
           >
-            {uiSchema.children?.length
-              ? uiSchema.children.map((nestedChild: singleNode) => (
-                  <React.Fragment key={nestedChild.nodeKey}>
-                    {/* 这里根据递归的层数拼接bind字段，在后续<RightPanel />中根据拼接路径以及deep层级筛选出所需的bind */}
-                    {renderTemplate(
-                      nestedChild,
-                      deep + 1,
-                      prevBind + '-' + nestedChild.bind,
-                      prevKey + '&' + nestedChild.nodeKey // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
-                    )}
-                  </React.Fragment>
-                ))
-              : null}
-          </div>
-          {isShowDropTarget ? (
+            <div
+              className={styles['del-box']}
+              style={{
+                visibility:
+                  uiSchema.constraints.ableDel &&
+                  uiSchema.nodeKey === currentSelectedKey
+                    ? 'visible'
+                    : 'hidden',
+              }}
+              onClick={() => {
+                const prevKeysArr = prevKey.split('&')
+                const prev = prevKeysArr[prevKeysArr.length - 2]
+                // 获取删除命令
+                const command = register.create(
+                  'delete',
+                  prev,
+                  uiSchema.nodeKey,
+                  currentUISchema,
+                  delNode,
+                  insertNode
+                )
+                commandManager.executeCommand(command)
+                // 清空选择的节点id
+                setCurrentSelectedKey('')
+              }}
+            >
+              <Icon component={closeSVG} />
+            </div>
+            <legend>
+              <Icon component={typeToSVG[uiSchema.type]} />
+              <span
+                style={{
+                  marginLeft: '8px',
+                }}
+              >
+                {typeToComponentName[uiSchema.type]}
+                {uiSchema.bind ? <Tag>{uiSchema.bind}</Tag> : null}
+              </span>
+            </legend>
+
+            <div
+              className={`${
+                uiSchema.layout === 'horizontal'
+                  ? styles['flex-fieldset']
+                  : uiSchema.layout === 'grid'
+                  ? styles['three-grid-container']
+                  : ''
+              }`}
+              style={{
+                gridTemplateColumns:
+                  uiSchema.layout === 'grid'
+                    ? `repeat(${uiSchema.constraints.columns}, minmax(0, 1fr))`
+                    : '',
+              }}
+            >
+              {uiSchema.children?.length
+                ? uiSchema.children.map((nestedChild: singleNode) => (
+                    <React.Fragment key={nestedChild.nodeKey}>
+                      {/* 这里根据递归的层数拼接bind字段，在后续<RightPanel />中根据拼接路径以及deep层级筛选出所需的bind */}
+                      {renderTemplate(
+                        nestedChild,
+                        deep + 1,
+                        prevBind + '-' + nestedChild.bind,
+                        prevKey + '&' + nestedChild.nodeKey // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
+                      )}
+                    </React.Fragment>
+                  ))
+                : null}
+            </div>
+            {/* {isShowDropTarget ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
@@ -252,8 +276,9 @@ const Design = () => {
             >
               <DragBtn />
             </DropTarget>
-          ) : null}
-        </fieldset>
+          ) : null} */}
+          </fieldset>
+        </DropTarget>
       </>
     )
   }

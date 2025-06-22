@@ -71,6 +71,7 @@ const DropTarget = ({
       ref={ref}
       style={{
         backgroundColor,
+        width: '100%',
         transition: 'background-color 0.3s',
       }}
     >

@@ -333,7 +333,6 @@ const RightPanel = ({
             {singleNode?.type === 'module' ? (
               <CustomRaw label="模块字段">
                 <Cascader
-                  defaultValue={['BASE_INFO']}
                   style={{
                     width: '100%',
                   }}
