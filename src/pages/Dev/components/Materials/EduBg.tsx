@@ -40,7 +40,6 @@ const EduBg = () => {
   }, [])
 
   const { label } = useDevStore((state) => state.devSchema.dataSource.EDU_BG)
-  // const immerRichInfo = useDevStore((state) => state.immerRichInfo)
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   return (
@@ -58,15 +57,6 @@ const EduBg = () => {
         {eduInfo.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />
         ) : (
-          // eduInfo.map((eduItem) => (
-          //   <div key={eduItem.id} className={styles['edu-item']}>
-          //     {eduInfo.length ? (
-
-          //     ) : (
-          //       <AddBtn handleAdd={() => {}} />
-          //     )}
-          //   </div>
-          // ))
           <List
             type="EDU_BG"
             data={eduInfo}

@@ -62,12 +62,8 @@ const LeftMenu = ({
   setisLeftUnExpand: (isExpand: boolean) => void
 }) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
-  const handleClick = (key: optionalCom | 'ADD_MORE') => {
-    if (key === 'ADD_MORE') {
-      console.log('add')
-    } else {
-      iconClick(keyToPosition[key] || 0)
-    }
+  const handleClick = (key: optionalCom) => {
+    iconClick(keyToPosition[key] || 0)
   }
 
   return (
@@ -88,7 +84,7 @@ const LeftMenu = ({
             <li
               key={item.key}
               className={styles['icon-item']}
-              onClick={() => handleClick(item.key as optionalCom | 'ADD_MORE')}
+              onClick={() => handleClick(item.key as optionalCom)}
             >
               <Tooltip placement="right" title={item.label}>
                 {item.icon}

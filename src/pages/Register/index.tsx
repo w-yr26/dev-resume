@@ -17,7 +17,7 @@ const Register = () => {
 
   const handleGetCode = async () => {
     const email = formRef.getFieldValue('email')
-    if (!email) return console.log('请输入邮箱')
+    if (!email) return
 
     await postRegisterCodeAPI(email)
   }

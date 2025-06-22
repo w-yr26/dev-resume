@@ -22,6 +22,9 @@ const Skill = () => {
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('SKILL_LIST')
   const skillRef = useRef<HTMLDivElement>(null)
 
+  const handleSkillVal = (val: string) => {
+    immerRichInfo(val, 'SKILL_LIST')
+  }
   useEffect(() => {
     if (skillRef.current) {
       const { y } = skillRef.current.getBoundingClientRect()
@@ -41,12 +44,13 @@ const Skill = () => {
         <CtxMenu currentKey="SKILL_LIST" renameLabel={() => setIsEdit(true)} />
       </Header>
       <MdEditor
-        value={skillInfo?.content || ''}
-        onChange={(val: string) => immerRichInfo(val, 'SKILL_LIST')}
+        value={skillInfo?.content}
+        onChange={(val: string) => handleSkillVal(val)}
         onBlur={async (val: string) => {
           await postModuleInfoAPI({
             content: {
               info: val,
+              id: skillInfo.id === '-1' ? undefined : skillInfo.id,
             },
             resumeId,
             type: 'SKILL_LIST',

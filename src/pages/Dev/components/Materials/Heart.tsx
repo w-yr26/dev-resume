@@ -2,13 +2,16 @@ import CustomLayout from '@/components/CustomLayout/index'
 import Header from '@/components/Header/index'
 import Icon from '@ant-design/icons'
 import HeartSVG from '@/assets/svg/dev/heart.svg?react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore, useGlobalStore, useUserStore } from '@/store'
 import CtxMenu from './components/CtxMenu'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useEffect, useRef } from 'react'
 import MdEditor from '@/components/MdEditor'
+import { postModuleInfoAPI } from '@/apis/resume'
 
 const Heart = () => {
+  const resumeId = useDevStore((state) => state.resumeId)
+  const userId = useUserStore((state) => state.info.id)
   const {
     info: [heartInfo],
     label,
@@ -39,6 +42,17 @@ const Heart = () => {
       <MdEditor
         value={heartInfo?.interest}
         onChange={(val: string) => immerRichInfo(val, 'HEART_LIST')}
+        onBlur={async (val: string) => {
+          await postModuleInfoAPI({
+            content: {
+              info: val,
+              // id: heartInfo.id === '-1' ? undefined : heartInfo.id,
+            },
+            resumeId,
+            type: 'HEART_LIST',
+            userId,
+          })
+        }}
       />
     </CustomLayout>
   )

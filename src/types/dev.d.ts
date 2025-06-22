@@ -171,13 +171,6 @@ export type InfoArrTypeMap = {
   EDU_BG: EduBgType
 }
 
-// 这个Map存放info为string的字段
-export type InfoStrTypeMap = {
-  EDU_BG: string
-  SKILL_LIST: string
-  HEART_LIST: string
-}
-
 export type devState = {
   devSchema: devInitType
   resumeId: string // 当前简历的random_id
@@ -186,7 +179,7 @@ export type devState = {
   setTemplateId: (id: string) => void
   setDataSource: (dataSource: any) => void
   immerBaseInfo: (newVal: string, key: string) => void
-  immerRichInfo: (newVal: string, key: keyof InfoStrTypeMap) => void
+  immerRichInfo: (newVal: string, key: 'SKILL_LIST' | 'HEART_LIST') => void
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void
   addInfoList: (data: any, key: keyType) => void

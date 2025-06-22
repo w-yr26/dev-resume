@@ -2,7 +2,7 @@ import { forwardRef, memo } from 'react'
 import Award from './Award'
 import BaseInfo from './BaseInfo'
 import EduBg from './EduBg'
-import Heart from './Heart'
+// import Heart from './Heart'
 import ProjectExperience from './ProjectExperience'
 import Skill from './Skill'
 import WorkExperience from './WorkExperience'
@@ -26,7 +26,7 @@ const Materials = forwardRef<
       <ProjectExperience />
       <Award />
       <Skill />
-      <Heart />
+      {/* <Heart /> */}
     </div>
   )
 })
