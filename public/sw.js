@@ -11,7 +11,7 @@ self.addEventListener('fetch', (event) => {
   const req = event.request
   const url = new URL(req.url)
 
-  if (url.pathname.startsWith('/resume/templates/getAll/')) {
+  if (url.pathname.startsWith('/api/resume/templates/getAll/')) {
     // const userId = url.pathname.split('/').pop() || 'default'
     const preLoad = req.headers.get('X-Pre-Load') === 'true'
     const count = req.headers.get('X-Max-Count')
