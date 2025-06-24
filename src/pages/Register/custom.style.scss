@@ -1,4 +1,16 @@
 .ant-form-item-additional {
-  // display: none;
   height: 0;
+  min-height: 0;
+}
+
+.ant-form-item-label {
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+// 垂直分布下的表单项的label不需要48px
+.ant-form-vertical .ant-form-item-label {
+  height: auto !important;
+  padding: 0 !important;
 }

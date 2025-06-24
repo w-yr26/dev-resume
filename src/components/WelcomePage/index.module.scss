@@ -1,0 +1,61 @@
+.illustrate-container {
+  position: relative;
+  width: 55%;
+  background: linear-gradient(135deg, #171717 0%, #404040 100%);
+  padding: 48px;
+  color: white;
+
+  .slogan {
+    font-size: 32px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    line-height: 1.5;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+  }
+
+  .background-circles {
+    position: absolute;
+    inset: 0;
+    opacity: 0.1;
+  }
+
+  .circle1 {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    background-color: white;
+  }
+
+  .circle2 {
+    position: absolute;
+    bottom: 25%;
+    right: 25%;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    background-color: white;
+  }
+
+  .circle3 {
+    position: absolute;
+    top: 50%;
+    right: 33.33%;
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background-color: white;
+  }
+}

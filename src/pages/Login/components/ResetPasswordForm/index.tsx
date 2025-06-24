@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Form, Input, message } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
-import styles from './index.module.scss'
+import styles from '../../index.module.scss'
+import '@/pages/Register/custom.style.scss'
+
 import { getVerificationCodeAPI, postNewPwdAPI } from '@/apis/user'
 import { useUserStore } from '@/store'
 

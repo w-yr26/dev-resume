@@ -1,7 +1,8 @@
 import { Form, Input } from 'antd'
 import CustomBtn from '@/components/CustomBtn'
 import styles from './index.module.scss'
-
+import commonStyles from '../../index.module.scss'
+import '@/pages/Register/custom.style.scss'
 interface LoginFormProps {
   onFinish: (values: any) => void
   isLoading: boolean
@@ -32,7 +33,7 @@ export const LoginForm = ({
         ]}
       >
         <Input
-          className={styles['custom-input']}
+          className={commonStyles['custom-input']}
           placeholder="user@example.com"
         />
       </Form.Item>
@@ -46,7 +47,7 @@ export const LoginForm = ({
         ]}
       >
         <Input.Password
-          className={styles['custom-input']}
+          className={commonStyles['custom-input']}
           placeholder="password123"
         />
       </Form.Item>
