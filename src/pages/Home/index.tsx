@@ -4,12 +4,12 @@ import styles from './index.module.scss'
 // 引入icon图标
 import Icon from '@ant-design/icons'
 // import DownloadSVG from '@/assets/svg/download.svg?react'
-import ListSVG from '@/assets/svg/list.svg?react'
-import GridSVG from '@/assets/svg/grid.svg?react'
+// import ListSVG from '@/assets/svg/list.svg?react'
+// import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 
-import { Button, Input, message, Modal, Tooltip } from 'antd'
+import { Input, message, Modal, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import {
   delResumeAPI,
