@@ -10,6 +10,8 @@ import MdEditor from '@/components/MdEditor'
 import { postModuleInfoAPI } from '@/apis/resume'
 import { useElementPosition } from '@/hooks/useElementPosition'
 
+const skillIcon = <Icon component={SkillSVG} />
+
 const Skill = () => {
   const resumeId = useDevStore((state) => state.resumeId)
   const userId = useUserStore((state) => state.info.id)
@@ -33,7 +35,7 @@ const Skill = () => {
     <CustomLayout ref={skillRef}>
       <Header
         label={label || '技能特长'}
-        svg={<Icon component={SkillSVG} />}
+        svg={skillIcon}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}

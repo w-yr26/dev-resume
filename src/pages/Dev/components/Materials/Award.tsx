@@ -14,6 +14,8 @@ import CtxMenu from './components/CtxMenu'
 import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
 
+const awardIcon = <Icon component={AwardSVG} />
+
 const Award = () => {
   const storeAwardList = useDevStore(
     (state) => state.devSchema.dataSource.AWARD_LIST.info
@@ -45,7 +47,7 @@ const Award = () => {
     <CustomLayout ref={awardRef}>
       <Header
         label={label || '荣誉奖项'}
-        svg={<Icon component={AwardSVG} />}
+        svg={awardIcon}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}

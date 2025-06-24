@@ -16,6 +16,8 @@ import styles from './index.module.scss'
 import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
 
+const projectIcon = <Icon component={ProjectSVG} />
+
 const ProjectExperience = () => {
   const storeProjectList = useDevStore(
     (state) => state.devSchema.dataSource.PROJECT_EXP.info
@@ -48,7 +50,7 @@ const ProjectExperience = () => {
     <CustomLayout ref={proRef}>
       <Header
         label={label || '项目经历'}
-        svg={<Icon component={ProjectSVG} />}
+        svg={projectIcon}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}

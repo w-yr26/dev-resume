@@ -15,6 +15,8 @@ import type { EduBgType } from '@/types/dev'
 import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
 
+const eduIcon = <Icon component={EduSVG} />
+
 const EduBg = () => {
   const edubgRef = useRef<HTMLDivElement>(null)
   const { info: eduInfo } = useDevStore(
@@ -44,7 +46,7 @@ const EduBg = () => {
       <CustomLayout ref={edubgRef}>
         <Header
           label={label || '教育背景'}
-          svg={<Icon component={EduSVG} />}
+          svg={eduIcon}
           isEdit={isEdit}
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}

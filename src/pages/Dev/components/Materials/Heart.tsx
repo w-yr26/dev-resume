@@ -9,6 +9,8 @@ import { useEffect, useRef } from 'react'
 import MdEditor from '@/components/MdEditor'
 import { postModuleInfoAPI } from '@/apis/resume'
 
+const heartIcon = <Icon component={HeartSVG} />
+
 const Heart = () => {
   const resumeId = useDevStore((state) => state.resumeId)
   const userId = useUserStore((state) => state.info.id)
@@ -33,7 +35,7 @@ const Heart = () => {
     <CustomLayout ref={heartRef}>
       <Header
         label={label || '兴趣爱好'}
-        svg={<Icon component={HeartSVG} />}
+        svg={heartIcon}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}

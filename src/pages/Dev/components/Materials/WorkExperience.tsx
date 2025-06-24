@@ -17,6 +17,8 @@ import MdEditor from '@/components/MdEditor'
 import AIBrush from '@/components/AIBrush'
 import { useElementPosition } from '@/hooks/useElementPosition'
 
+const workIcon = <Icon component={WorkSVG} />
+
 const WorkExperience = () => {
   const storeWorkList = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.info
@@ -49,7 +51,7 @@ const WorkExperience = () => {
       <CustomLayout ref={workRef}>
         <Header
           label={label || '工作/实习经历'}
-          svg={<Icon component={WorkSVG} />}
+          svg={workIcon}
           isEdit={isEdit}
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}

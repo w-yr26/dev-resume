@@ -10,7 +10,6 @@ import { allKeyType } from '@/types/dev'
 interface RenderProps {
   node: nodeType | null
   dataContext: any
-  top?: number
   wheel: number
 }
 

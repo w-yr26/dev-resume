@@ -427,7 +427,7 @@ const Dev = () => {
               ref={resumeRef}
             >
               <div className={styles['preview-content']} ref={mainRef}>
-                {uiSchema && !loading && top ? (
+                {uiSchema && !loading ? (
                   <Render
                     dataContext={dataSource}
                     node={uiSchema}
