@@ -9,18 +9,21 @@ const DropTarget = ({
   nodeKey,
   parentBind,
   isParentNeed,
+  isNestedAgain,
 }: {
   children: React.ReactNode
   nodeType: uiType
   nodeKey: string
   parentBind: string
   isParentNeed: boolean
+  isNestedAgain: boolean
   onDrop: (
     id: string,
     targetKey: string,
     desUISchema: any,
     parentBind: string,
-    isParentNeed: boolean
+    isParentNeed: boolean,
+    isNestedAgain: boolean
   ) => any
 }) => {
   // ableBind是物料配置限制的，无需考虑"闭包快照"问题
@@ -43,7 +46,8 @@ const DropTarget = ({
         targetKey.current,
         item.desUISchema,
         parentBindRef.current,
-        isParentNeed
+        isParentNeed,
+        isNestedAgain
       )
     },
     hover: () => {

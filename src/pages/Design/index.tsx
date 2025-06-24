@@ -8,7 +8,7 @@ import textBlockSVG from '@/assets/svg/design/textBlock.svg?react'
 import threeColumnSVG from '@/assets/svg/design/threeColumn.svg?react'
 import imageSVG from '@/assets/svg/design/image.svg?react'
 import closeSVG from '@/assets/svg/design/close.svg?react'
-// import DragBtn from './components/DragBtn'
+import DragBtn from './components/DragBtn'
 import LeftPanel from './components/LeftPanel'
 import RightPanel from './components/RightPanel'
 import styles from './index.module.scss'
@@ -161,125 +161,103 @@ const Design = () => {
     const isNestedAgain = uiSchema.constraints.isNestedAgain
     return (
       <>
-        <DropTarget
-          onDrop={(
-            nodeKey: string,
-            targetKey: string,
-            desUISchema: any,
-            parentBind: string,
-            isParentNeed: boolean
-          ) =>
-            handleDrop(
-              nodeKey,
-              targetKey,
-              desUISchema,
-              parentBind,
-              isParentNeed,
-              isNestedAgain
-            )
-          }
-          nodeType={uiSchema.type}
-          nodeKey={uiSchema.nodeKey}
-          parentBind={uiSchema.bind}
-          isParentNeed={uiSchema.constraints.ableBind}
+        <fieldset
+          className={`${styles['fieldset-item']} ${
+            uiSchema.nodeKey === currentSelectedKey
+              ? styles['active-fieldset']
+              : ''
+          }`}
+          onClick={(e) => {
+            e.stopPropagation()
+            // 记录当前选中节点在递归中的层级，用于<RightPanel />中禁用非相关的级联选项
+            setNodeDeep(deep)
+            setNodeBind(prevBind)
+            // 记录当前选中节点的key
+            setCurrentSelectedKey(uiSchema.nodeKey)
+          }}
         >
-          <fieldset
-            className={`${styles['fieldset-item']} ${
-              uiSchema.nodeKey === currentSelectedKey
-                ? styles['active-fieldset']
-                : ''
-            }`}
-            onClick={(e) => {
-              e.stopPropagation()
-              // 记录当前选中节点在递归中的层级，用于<RightPanel />中禁用非相关的级联选项
-              setNodeDeep(deep)
-              setNodeBind(prevBind)
-              // 记录当前选中节点的key
-              setCurrentSelectedKey(uiSchema.nodeKey)
+          <div
+            className={styles['del-box']}
+            style={{
+              visibility:
+                uiSchema.constraints.ableDel &&
+                uiSchema.nodeKey === currentSelectedKey
+                  ? 'visible'
+                  : 'hidden',
+            }}
+            onClick={() => {
+              const prevKeysArr = prevKey.split('&')
+              const prev = prevKeysArr[prevKeysArr.length - 2]
+              // 获取删除命令
+              const command = register.create(
+                'delete',
+                prev,
+                uiSchema.nodeKey,
+                currentUISchema,
+                delNode,
+                insertNode
+              )
+              commandManager.executeCommand(command)
+              // 清空选择的节点id
+              setCurrentSelectedKey('')
             }}
           >
-            <div
-              className={styles['del-box']}
+            <Icon component={closeSVG} />
+          </div>
+          <legend>
+            <Icon component={typeToSVG[uiSchema.type]} />
+            <span
               style={{
-                visibility:
-                  uiSchema.constraints.ableDel &&
-                  uiSchema.nodeKey === currentSelectedKey
-                    ? 'visible'
-                    : 'hidden',
-              }}
-              onClick={() => {
-                const prevKeysArr = prevKey.split('&')
-                const prev = prevKeysArr[prevKeysArr.length - 2]
-                // 获取删除命令
-                const command = register.create(
-                  'delete',
-                  prev,
-                  uiSchema.nodeKey,
-                  currentUISchema,
-                  delNode,
-                  insertNode
-                )
-                commandManager.executeCommand(command)
-                // 清空选择的节点id
-                setCurrentSelectedKey('')
+                marginLeft: '8px',
               }}
             >
-              <Icon component={closeSVG} />
-            </div>
-            <legend>
-              <Icon component={typeToSVG[uiSchema.type]} />
-              <span
-                style={{
-                  marginLeft: '8px',
-                }}
-              >
-                {typeToComponentName[uiSchema.type]}
-                {uiSchema.bind ? <Tag>{uiSchema.bind}</Tag> : null}
-              </span>
-            </legend>
+              {typeToComponentName[uiSchema.type]}
+              {uiSchema.bind ? <Tag>{uiSchema.bind}</Tag> : null}
+            </span>
+          </legend>
 
-            <div
-              className={`${
-                uiSchema.layout === 'horizontal'
-                  ? styles['flex-fieldset']
-                  : uiSchema.layout === 'grid'
-                  ? styles['three-grid-container']
-                  : ''
-              }`}
-              style={{
-                gridTemplateColumns:
-                  uiSchema.layout === 'grid'
-                    ? `repeat(${uiSchema.constraints.columns}, minmax(0, 1fr))`
-                    : '',
-              }}
-            >
-              {uiSchema.children?.length
-                ? uiSchema.children.map((nestedChild: singleNode) => (
-                    <React.Fragment key={nestedChild.nodeKey}>
-                      {/* 这里根据递归的层数拼接bind字段，在后续<RightPanel />中根据拼接路径以及deep层级筛选出所需的bind */}
-                      {renderTemplate(
-                        nestedChild,
-                        deep + 1,
-                        prevBind + '-' + nestedChild.bind,
-                        prevKey + '&' + nestedChild.nodeKey // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
-                      )}
-                    </React.Fragment>
-                  ))
-                : null}
-            </div>
-            {/* {isShowDropTarget ? (
+          <div
+            className={`${
+              uiSchema.layout === 'horizontal'
+                ? styles['flex-fieldset']
+                : uiSchema.layout === 'grid'
+                ? styles['three-grid-container']
+                : ''
+            }`}
+            style={{
+              gridTemplateColumns:
+                uiSchema.layout === 'grid'
+                  ? `repeat(${uiSchema.constraints.columns}, minmax(0, 1fr))`
+                  : '',
+            }}
+          >
+            {uiSchema.children?.length
+              ? uiSchema.children.map((nestedChild: singleNode) => (
+                  <React.Fragment key={nestedChild.nodeKey}>
+                    {/* 这里根据递归的层数拼接bind字段，在后续<RightPanel />中根据拼接路径以及deep层级筛选出所需的bind */}
+                    {renderTemplate(
+                      nestedChild,
+                      deep + 1,
+                      prevBind + '-' + nestedChild.bind,
+                      prevKey + '&' + nestedChild.nodeKey // 注意，由于nodeKey在生成uuid的时候可能会生成'-'，所以此处使用'&'进行拼接
+                    )}
+                  </React.Fragment>
+                ))
+              : null}
+          </div>
+          {isNestedAgain ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
               nodeKey={uiSchema.nodeKey}
               parentBind={uiSchema.bind}
               isParentNeed={uiSchema.constraints.ableBind}
+              isNestedAgain={isNestedAgain}
             >
               <DragBtn />
             </DropTarget>
-          ) : null} */}
-          </fieldset>
-        </DropTarget>
+          ) : null}
+        </fieldset>
       </>
     )
   }
