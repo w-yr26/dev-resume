@@ -231,11 +231,15 @@ const Render = (props: RenderProps) => {
     }
     return (
       <div className={`${styles['field-box']}`} style={mergedStyle}>
-        <div className={styles['label']}>
-          {keyToFieldLabel[bind]}
-          {keyToFieldLabel[bind] ? ': ' : null}
-        </div>
-        <div className={styles['value']}>{val}</div>
+        {val ? (
+          <>
+            <div className={styles['label']}>
+              {keyToFieldLabel[bind]}
+              {keyToFieldLabel[bind] ? ': ' : null}
+            </div>
+            <div className={styles['value']}>{val}</div>
+          </>
+        ) : null}
       </div>
     )
   }
