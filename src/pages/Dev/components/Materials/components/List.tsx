@@ -1,10 +1,10 @@
-import Icon, {
+import {
   CheckOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
-import DragSVG from '@/assets/svg/dev/drag.svg?react'
+// import DragSVG from '@/assets/svg/dev/drag.svg?react'
 
 import { Button, Popover } from 'antd'
 import styles from './index.module.scss'
@@ -95,7 +95,7 @@ const List = <T,>({
                   backgroundColor: item[fieldMap.visible] ? '' : '#f7f4f4aa',
                 }}
               >
-                <Icon component={DragSVG} />
+                {/* <Icon component={DragSVG} /> */}
                 <div className={styles['msg-box']}>
                   <p className={styles['label-primary']}>
                     {String(item[fieldMap.title])}

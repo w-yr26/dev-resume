@@ -209,6 +209,7 @@ const LeftPanel = () => {
             style: {
               width: 150,
               height: 200,
+              marginRight: '12px',
             },
             bind: '',
             nodeKey: uuidv4() + '?image',

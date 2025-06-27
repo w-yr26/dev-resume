@@ -42,7 +42,7 @@ const Dev = () => {
   const pageHeight = 1120
   const [loading, setLoading] = useState<boolean>(false)
   const [dragging, setDragging] = useState(false)
-  const [wheel, setWheel] = useState(0.7)
+  const [wheel, setWheel] = useState(0.5)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   // const [lineShow, setLineShow] = useState(false)
