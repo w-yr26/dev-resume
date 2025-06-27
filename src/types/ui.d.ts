@@ -1,5 +1,10 @@
 import React from 'react'
 
+export type layoutItem = {
+  key: string
+  label: string
+}
+
 export type uiType =
   | 'root'
   | 'container'
@@ -29,7 +34,13 @@ export type nodeType = {
 export type uiStoreType = {
   isHorizontal: boolean
   uiSchema: nodeType | null
+  layoutMap: Map<string, Record<'main' | 'side', layoutItem[]>>
   setUiSchema: (newUISchema: nodeType | null) => void
+  updateSchema: (moduleOrderArr: string[]) => void
+  updateLayoutMap: (
+    val: Record<'main' | 'side', layoutItem[]>,
+    page: string
+  ) => void
   setIsHorizontal: (arg: boolean) => void
   updateUISchema: (
     node: nodeType,

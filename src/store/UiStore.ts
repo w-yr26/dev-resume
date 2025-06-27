@@ -1,5 +1,6 @@
-import type { nodeType, uiStoreType } from '@/types/ui'
+import type { layoutItem, nodeType, uiStoreType } from '@/types/ui'
 import { create } from 'zustand'
+import { defaultInfoMap } from './DevStore'
 
 // 递归处理结构共享
 const updateNodeById = (
@@ -28,12 +29,53 @@ const useUIStore = create<uiStoreType>((set) => {
   return {
     uiSchema: null,
     isHorizontal: false,
+    layoutMap: new Map<string, Record<'main' | 'side', layoutItem[]>>([
+      [
+        'page1',
+        {
+          main: Array.from(Object.keys(defaultInfoMap)).map((i) => ({
+            key: i,
+            label: defaultInfoMap[i].label,
+          })),
+          side: [],
+        },
+      ],
+    ]),
     setUiSchema: (newUISchema) =>
       set(() => {
         return {
           uiSchema: newUISchema,
         }
       }),
+    updateSchema: (moduleOrderArr) =>
+      set((state) => {
+        const newChildren: (nodeType | null)[] = []
+        moduleOrderArr.forEach((module, index) => {
+          newChildren[index] =
+            state.uiSchema?.children?.find((i) => i.bind === module) || null
+        })
+        console.log('newChildren', newChildren.filter(Boolean))
+
+        const orderSchema = {
+          ...state.uiSchema,
+          children: newChildren.filter(Boolean),
+        } as nodeType
+
+        return {
+          uiSchema: orderSchema,
+        }
+      }),
+    updateLayoutMap: (val, page) => {
+      return set((state) => {
+        const newLayoutMap = new Map(state.layoutMap)
+        newLayoutMap.set(page, val)
+
+        // 3. 返回新状态
+        return {
+          layoutMap: newLayoutMap,
+        }
+      })
+    },
     setIsHorizontal: (isHorizontal) =>
       set(() => {
         return {

@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import type {
-  allKeyType,
   devInitType,
   devState,
   InfoArrTypeMap,
@@ -9,14 +8,35 @@ import type {
 import { produce } from 'immer'
 import { devtools } from 'zustand/middleware'
 
-const defaultInfoMap: Record<allKeyType, any> = {
-  BASE_INFO: [],
-  EDU_BG: [],
-  WORK_EXP: [],
-  PROJECT_EXP: [],
-  AWARD_LIST: [],
-  SKILL_LIST: [],
-  HEART_LIST: [],
+export const defaultInfoMap: Record<string, any> = {
+  BASE_INFO: {
+    info: [],
+    label: '基本信息',
+  },
+  EDU_BG: {
+    info: [],
+    label: '教育背景',
+  },
+  WORK_EXP: {
+    info: [],
+    label: '工作经历',
+  },
+  PROJECT_EXP: {
+    info: [],
+    label: '项目经历',
+  },
+  AWARD_LIST: {
+    info: [],
+    label: '荣誉奖项',
+  },
+  SKILL_LIST: {
+    info: [],
+    label: '技能特长',
+  },
+  HEART_LIST: {
+    info: [],
+    label: '兴趣爱好',
+  },
 }
 
 const initialData: devInitType = {
@@ -310,7 +330,7 @@ const useDevStore = create<devState>()(
             produce((state: devState) => {
               state.devSchema.dataSource[key] = {
                 ...state.devSchema.dataSource[key],
-                info: defaultInfoMap[key],
+                info: defaultInfoMap[key].info,
                 visible: true,
               }
             })

@@ -27,11 +27,11 @@ const toolMenu = [
     label: '页面',
     key: 'page',
   },
-  // {
-  //   icon: <Icon component={ColorSVG} />,
-  //   label: '主题',
-  //   key: 'color',
-  // },
+  {
+    icon: <Icon component={OutputSVG} />,
+    label: '布局',
+    key: 'layout',
+  },
   {
     icon: <Icon component={OutputSVG} />,
     label: '导出',

@@ -53,6 +53,7 @@ self.addEventListener('fetch', (event) => {
           const cachedResp = await cache.match(cacheKey)
           if (cachedResp) {
             console.log('缓存命中')
+            // TODO: 这里缓存的resp在下一次进入读取的时候，token可能已经过期，此时再从缓存读取内容的时候，就会报401 -> 然后执行 refreshToken -> 然后再读取到该缓存 -> 又是执行 refreshToken...
             return cachedResp
           }
           console.log('缓存不命中，发起网络请求，并将结果缓存')

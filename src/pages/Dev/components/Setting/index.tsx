@@ -7,6 +7,7 @@ import type { templateListType } from '@/types/ui'
 import { forwardRef, memo } from 'react'
 import Share from './Share'
 import AuthorizationHoc from '../AuthorizationHoc'
+import Layout from './Layout'
 
 const Setting = forwardRef<
   HTMLDivElement,
@@ -34,6 +35,7 @@ const Setting = forwardRef<
       <TypeSetting />
       <PageSetting />
       {/* <ColorSetting /> */}
+      <Layout />
       <DownloadSetting />
       <AuthorizationHoc isOrigin={isOrigin} permission={1} isOnlyOrigin={true}>
         <Share />
