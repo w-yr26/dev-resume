@@ -31,7 +31,7 @@ const useUIStore = create<uiStoreType>((set) => {
     isHorizontal: false,
     layoutMap: new Map<string, Record<'main' | 'side', layoutItem[]>>([
       [
-        'page1',
+        '0',
         {
           main: Array.from(Object.keys(defaultInfoMap)).map((i) => ({
             key: i,
@@ -47,33 +47,46 @@ const useUIStore = create<uiStoreType>((set) => {
           uiSchema: newUISchema,
         }
       }),
-    updateSchema: (moduleOrderArr) =>
-      set((state) => {
-        const newChildren: (nodeType | null)[] = []
-        moduleOrderArr.forEach((module, index) => {
-          newChildren[index] =
-            state.uiSchema?.children?.find((i) => i.bind === module) || null
-        })
-        console.log('newChildren', newChildren.filter(Boolean))
+    // updateSchema: (moduleOrderArr) =>
+    //   set((state) => {
+    //     const newChildren: (nodeType | null)[] = []
+    //     moduleOrderArr.forEach((module, index) => {
+    //       newChildren[index] =
+    //         state.uiSchema?.children?.find((i) => i.bind === module) || null
+    //     })
+    //     console.log('newChildren', newChildren.filter(Boolean))
 
-        const orderSchema = {
-          ...state.uiSchema,
-          children: newChildren.filter(Boolean),
-        } as nodeType
+    //     const orderSchema = {
+    //       ...state.uiSchema,
+    //       children: newChildren.filter(Boolean),
+    //     } as nodeType
 
+    //     return {
+    //       uiSchema: orderSchema,
+    //     }
+    //   }),
+    updateLayoutMap: (val) => {
+      return set(() => {
         return {
-          uiSchema: orderSchema,
+          layoutMap: val,
         }
-      }),
-    updateLayoutMap: (val, page) => {
+      })
+    },
+    addPage: () => {
       return set((state) => {
-        const newLayoutMap = new Map(state.layoutMap)
-        newLayoutMap.set(page, val)
-
-        // 3. 返回新状态
-        return {
-          layoutMap: newLayoutMap,
-        }
+        const newLayoutMap = new Map(state.layoutMap) // 创建新 Map
+        newLayoutMap.set(String([...state.layoutMap.keys()].length), {
+          main: [],
+          side: [],
+        })
+        return { layoutMap: newLayoutMap }
+      })
+    },
+    delPage: (key) => {
+      return set((state) => {
+        const newLayoutMap = new Map(state.layoutMap) // 创建新 Map
+        newLayoutMap.delete(key)
+        return { layoutMap: newLayoutMap }
       })
     },
     setIsHorizontal: (isHorizontal) =>

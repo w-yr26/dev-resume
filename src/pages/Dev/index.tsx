@@ -16,7 +16,7 @@ import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
 import { getResumeDetailsAPI } from '@/apis/resume'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { templateListType } from '@/types/ui'
+import type { layoutMapType, nodeType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
@@ -30,6 +30,7 @@ const Dev = () => {
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
+  const layoutMap = useUIStore((state) => state.layoutMap)
 
   const resumeRef = useRef<HTMLDivElement>(null)
   const mainRef = useRef<HTMLDivElement>(null)
@@ -371,6 +372,33 @@ const Dev = () => {
     }
   }, [selectedEl])
 
+  // 当前页面
+  const pageArr = useMemo(() => [...layoutMap.keys()], [layoutMap])
+
+  const getPageUiSchema = useCallback(
+    (
+      pageKey: string,
+      uiSchema: nodeType,
+      layoutMap: layoutMapType
+    ): nodeType | null => {
+      // console.log('uiSchema==', uiSchema, pageKey)
+      const deepUiSchema = JSON.parse(JSON.stringify(uiSchema))
+      const pageModules = layoutMap.get(pageKey)?.main.map((i) => i.key)
+      const newChildren: (nodeType | null)[] = []
+      pageModules?.forEach((module, index) => {
+        newChildren[index] =
+          deepUiSchema?.children?.find((i: nodeType) => i.bind === module) ||
+          null
+      })
+      return {
+        ...deepUiSchema,
+        bind: deepUiSchema?.bind || '',
+        children: newChildren.filter(Boolean) as nodeType[],
+      }
+    },
+    []
+  )
+
   return (
     <InvalidHoc token={token}>
       <div className={styles['dev-container']}>
@@ -396,22 +424,32 @@ const Dev = () => {
             <div
               className={styles['resume-container']}
               style={{
-                width: pageWidth,
-                height: pageHeight,
                 transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
                 cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
+                gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
               }}
               ref={resumeRef}
             >
-              <div className={styles['preview-content']} ref={mainRef}>
-                {uiSchema && !loading ? (
-                  <Render
-                    dataContext={dataSource}
-                    node={uiSchema}
-                    wheel={wheel}
-                  />
-                ) : null}
-              </div>
+              {pageArr.map((page) => (
+                <div
+                  className={styles['preview-content']}
+                  key={page}
+                  ref={mainRef}
+                  style={{
+                    width: pageWidth,
+                    height: pageHeight,
+                  }}
+                >
+                  {uiSchema && !loading ? (
+                    <Render
+                      dataContext={dataSource}
+                      node={getPageUiSchema(page, uiSchema, layoutMap)}
+                      wheel={wheel}
+                    />
+                  ) : null}
+                </div>
+              ))}
+
               {/* {lineShow && (
                 <div className={styles['page-line']}>
                   <span>分页线</span>

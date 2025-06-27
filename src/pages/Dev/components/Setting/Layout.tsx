@@ -1,11 +1,13 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
 import { useElementPosition } from '@/hooks/useElementPosition'
-import Icon from '@ant-design/icons'
+import Icon, { PlusOutlined } from '@ant-design/icons'
 import OutputSVG from '@/assets/svg/dev/output.svg?react'
-import { useRef, useState } from 'react'
+import DeleteSVG from '@/assets/svg/delete.svg?react'
+import DragSVG from '@/assets/svg/dev/drag.svg?react'
+import { useMemo, useRef } from 'react'
 import { useUIStore } from '@/store'
-import { Card } from 'antd'
+import { Button, Card } from 'antd'
 import {
   DragDropContext,
   Droppable,
@@ -13,20 +15,22 @@ import {
   DropResult,
 } from 'react-beautiful-dnd'
 import styles from './index.module.scss'
-import type { layoutItem } from '@/types/ui'
 
 export type DropContainerType = 'main' | 'side'
 
 const Layout = () => {
   const layoutMap = useUIStore((state) => state.layoutMap)
   const updateLayoutMap = useUIStore((state) => state.updateLayoutMap)
-  const updateSchema = useUIStore((state) => state.updateSchema)
-  const [pageArr] = useState(() => [...layoutMap.keys()])
+  const addPage = useUIStore((state) => state.addPage)
+  const delPage = useUIStore((state) => state.delPage)
   const layoutRef = useRef<HTMLDivElement>(null)
   useElementPosition(layoutRef, 'layout')
 
+  const pageArr = useMemo(() => [...layoutMap.keys()], [layoutMap])
+
   const onDragEnd = (e: DropResult) => {
     const { destination, source } = e
+    console.log('destination', destination, 'source', source)
 
     // 1. 检查无效拖拽
     if (!destination) return
@@ -36,36 +40,61 @@ const Layout = () => {
     )
       return
 
-    // 2. 获取当前页面数据（假设第一个页面）
-    // TODO: 抽象到多个页面之间的更改
-    const currentPageKey = pageArr[0]
-    const currentLayout = { ...layoutMap.get(currentPageKey) }
+    // 2. 多个页面之间的数据更改
+    // 拖拽前Item所出的页面位置以及主侧轴位置
+    const prevPage = source.droppableId.split('-')[1]
+    const prevPosition = source.droppableId.split('-')[0] as DropContainerType
+    const nextPage = destination.droppableId.split('-')[1]
+    const nextPosition = destination.droppableId.split(
+      '-'
+    )[0] as DropContainerType
+    const prevLayout = { ...layoutMap.get(prevPage) } // { main: Item[], side: Item[] }
+    const nextLayout = { ...layoutMap.get(nextPage) } // { main: Item[], side: Item[] }
+    // 浅拷贝处理
+    const shallowPrevLayout = { ...prevLayout }
+    const shallowNextLayout = { ...nextLayout }
+    // console.log(
+    //   'shallowPrevLayout',
+    //   shallowPrevLayout,
+    //   source.index,
+    //   prevPosition,
+    //   prevPage,
+    //   'shallowNextLayout',
+    //   shallowNextLayout,
+    //   destination.index,
+    //   nextPosition,
+    //   nextPage
+    // )
 
-    // 3. 浅拷贝当前列表（避免直接修改原数组）
-    const sourceList = [
-      ...(currentLayout[source.droppableId as DropContainerType] || []),
-    ]
-    const destList =
-      source.droppableId === destination.droppableId
-        ? sourceList
-        : [
-            ...(currentLayout[destination.droppableId as DropContainerType] ||
-              []),
-          ]
+    // 获取源列表数据
+    const sourceList = [...(shallowPrevLayout[prevPosition] || [])]
+    // 获取目标列表数据，此处要做判断：如果拖拽前后位于同一个Page、同一个position，那么他的值应该与sourceList的地址相同
+    let targetList
+    if (prevPage === nextPage && prevPosition === nextPosition) {
+      targetList = sourceList
+    } else {
+      targetList = [...(shallowNextLayout[nextPosition] || [])]
+    }
 
     // 4. 执行移动操作——先在源列表剪切、再在目标列表粘贴当前元素(注意splice的用法，可删可粘)
     const [movedItem] = sourceList.splice(source.index, 1)
-    destList.splice(destination.index, 0, movedItem)
+    targetList.splice(destination.index, 0, movedItem)
+    console.log('splice', movedItem, sourceList, targetList)
 
-    // 5. 更新状态（只更新受影响的页面）
-    const newLayout = {
-      ...currentLayout,
-      [source.droppableId]: sourceList,
-      [destination.droppableId]: destList,
-    } as Record<'main' | 'side', layoutItem[]>
+    // 5. 更新状态（更新整个Map）
+    const newModuleLayout = new Map(layoutMap)
+    // 处理操作前后对应Page、对应主侧轴的值
+    newModuleLayout.set(prevPage, {
+      ...newModuleLayout.get(prevPage)!,
+      [prevPosition]: sourceList,
+    })
 
-    updateLayoutMap(newLayout, 'page1')
-    updateSchema(sourceList.map((i) => i.key))
+    newModuleLayout.set(nextPage, {
+      ...newModuleLayout.get(nextPage)!,
+      [nextPosition]: targetList,
+    })
+
+    updateLayoutMap(newModuleLayout)
   }
 
   return (
@@ -75,13 +104,29 @@ const Layout = () => {
         {pageArr.map((pageKey, index) => {
           const { main = [], side = [] } = layoutMap.get(pageKey) || {}
           return (
-            <Card key={pageKey} title={'Page ' + (index + 1)}>
+            <Card
+              key={pageKey}
+              title={'Page ' + (index + 1)}
+              style={{
+                marginBottom: '8px',
+              }}
+              extra={
+                index > 0 ? (
+                  <span
+                    className={styles['del-extra-box']}
+                    onClick={() => delPage(pageKey)}
+                  >
+                    <Icon component={DeleteSVG} />
+                  </span>
+                ) : null
+              }
+            >
               <div className={styles['main-side-bar']}>
                 <div className={styles['main-bar']}>
                   <div className={styles['bg-box']} />
                   <div className={styles['content-box']}>
                     <div className={styles['bar-title']}>主页面</div>
-                    <Droppable droppableId="main">
+                    <Droppable droppableId={'main-' + index}>
                       {(provided) => (
                         <div
                           ref={provided.innerRef}
@@ -102,7 +147,7 @@ const Layout = () => {
                                   className={styles['bar-item']}
                                 >
                                   <span className={styles['left-icon']}>
-                                    <Icon component={OutputSVG} />
+                                    <Icon component={DragSVG} />
                                   </span>
                                   <div className={styles['label-right']}>
                                     {item.label}
@@ -122,7 +167,7 @@ const Layout = () => {
                   <div className={styles['bg-box']} />
                   <div className={styles['content-box']}>
                     <div className={styles['bar-title']}>侧栏</div>
-                    <Droppable droppableId="side">
+                    <Droppable droppableId={'side-' + index}>
                       {(provided) => (
                         <div
                           ref={provided.innerRef}
@@ -143,7 +188,7 @@ const Layout = () => {
                                   className={styles['bar-item']}
                                 >
                                   <span className={styles['left-icon']}>
-                                    <Icon component={OutputSVG} />
+                                    <Icon component={DragSVG} />
                                   </span>
                                   <div className={styles['label-right']}>
                                     {item.label}
@@ -156,18 +201,6 @@ const Layout = () => {
                         </div>
                       )}
                     </Droppable>
-                    {/* <div className={styles['bar-list']}>
-                      {side.map((item, index) => (
-                        <div className={styles['bar-item']}>
-                          <span className={styles['left-icon']}>
-                            <Icon component={OutputSVG} />
-                          </span>
-                          <div className={styles['label-right']}>
-                            {item.label}
-                          </div>
-                        </div>
-                      ))}
-                    </div> */}
                   </div>
                 </div>
               </div>
@@ -175,6 +208,11 @@ const Layout = () => {
           )
         })}
       </DragDropContext>
+      <div className={styles['add-btn-box']}>
+        <Button icon={<PlusOutlined />} onClick={addPage}>
+          添加一项
+        </Button>
+      </div>
     </CustomLayout>
   )
 }

@@ -281,6 +281,7 @@
   .main-bar,
   .side-bar {
     position: relative;
+    min-height: 100px;
   }
 
   .bg-box {
@@ -331,4 +332,14 @@
       cursor: pointer;
     }
   }
+}
+
+.add-btn-box {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.del-extra-box {
+  color: #663a38;
+  cursor: pointer;
 }

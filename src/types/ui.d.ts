@@ -31,16 +31,19 @@ export type nodeType = {
   children?: nodeType[]
 }
 
+export type layoutMapType = Map<string, Record<'main' | 'side', layoutItem[]>>
+
 export type uiStoreType = {
   isHorizontal: boolean
   uiSchema: nodeType | null
-  layoutMap: Map<string, Record<'main' | 'side', layoutItem[]>>
+  layoutMap: layoutMapType
   setUiSchema: (newUISchema: nodeType | null) => void
-  updateSchema: (moduleOrderArr: string[]) => void
+  // updateSchema: (moduleOrderArr: string[]) => void
   updateLayoutMap: (
-    val: Record<'main' | 'side', layoutItem[]>,
-    page: string
+    val: layoutMapType
   ) => void
+  addPage: () => void
+  delPage: (key: string) => void
   setIsHorizontal: (arg: boolean) => void
   updateUISchema: (
     node: nodeType,
