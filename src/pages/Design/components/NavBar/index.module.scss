@@ -46,4 +46,10 @@
       color: #9d9da3;
     }
   }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 }

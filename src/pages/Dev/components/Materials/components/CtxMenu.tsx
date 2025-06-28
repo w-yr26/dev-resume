@@ -1,28 +1,34 @@
 import { useDevStore } from '@/store'
 import type { allKeyType, headMenuType } from '@/types/dev'
-import {
-  EditOutlined,
-  EyeOutlined,
-  MenuOutlined,
-  SettingOutlined,
-} from '@ant-design/icons'
+import Icon from '@ant-design/icons'
+import settingSVG from '@/assets/svg/setting.svg?react'
+import editSVG from '@/assets/svg/edit.svg?react'
+import eyeSVG from '@/assets/svg/dev/eye.svg?react'
+import eyeoffSVG from '@/assets/svg/dev/eyeoff.svg?react'
+import menuSVG from '@/assets/svg/dev/menu.svg?react'
 import { Popover } from 'antd'
 import styles from './index.module.scss'
 
 const CtxMenu = ({
   currentKey,
+  visible,
   renameLabel,
 }: {
   currentKey: allKeyType
+  visible: boolean
   renameLabel?: () => void
 }) => {
   const changeItemVisible = useDevStore((state) => state.changeItemVisible)
   const resetInfo = useDevStore((state) => state.resetInfo)
   const ListContent: headMenuType[] = [
     {
-      label: '隐藏',
+      label: visible ? '隐藏' : '显示',
       key: 'visible',
-      icon: EyeOutlined,
+      icon: visible ? (
+        <Icon component={eyeoffSVG} />
+      ) : (
+        <Icon component={eyeSVG} />
+      ),
       callback: () => {
         changeItemVisible(currentKey)
       },
@@ -30,7 +36,7 @@ const CtxMenu = ({
     {
       label: '重命名',
       key: 'rename',
-      icon: EditOutlined,
+      icon: <Icon component={editSVG} />,
       callback: () => {
         if (renameLabel) renameLabel()
       },
@@ -38,7 +44,7 @@ const CtxMenu = ({
     {
       label: '重置',
       key: 'reset',
-      icon: SettingOutlined,
+      icon: <Icon component={settingSVG} />,
       callback: () => {
         resetInfo(currentKey)
       },
@@ -62,9 +68,7 @@ const CtxMenu = ({
           className={styles['head-menu-item']}
           onClick={() => handleClick(item)}
         >
-          <div className={styles['icon-box']}>
-            <item.icon />
-          </div>
+          <div className={styles['icon-box']}>{item.icon}</div>
           <div className="label-box">{item.label}</div>
         </li>
       ))}
@@ -73,7 +77,7 @@ const CtxMenu = ({
 
   return (
     <Popover content={content} trigger="click" placement="bottom">
-      <MenuOutlined size={14} />
+      <Icon component={menuSVG} size={14} />
     </Popover>
   )
 }

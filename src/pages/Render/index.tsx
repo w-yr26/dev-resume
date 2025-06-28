@@ -1,15 +1,15 @@
 import React, { memo } from 'react'
 import styles from './index.module.scss'
-import { useStyleStore } from '@/store'
+import { useDevStore, useStyleStore } from '@/store'
 import { nodeType } from '@/types/ui'
 import { tokenizer } from '@/components/MdEditor/utils/tokens'
 import { buildAST } from '@/components/MdEditor/utils/ast'
 import { renderAST } from '@/components/MdEditor/utils/render'
+import { allKeyType } from '@/types/dev'
 // import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
   dataContext: any
-  top?: number
   wheel: number
 }
 
@@ -36,6 +36,7 @@ const Render = (props: RenderProps) => {
   const borderStyle = useStyleStore((state) => state.borderStyle)
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const pagePadding = useStyleStore((state) => state.pagePadding)
+  const dataSource = useDevStore((state) => state.devSchema.dataSource)
 
   if (!node) return null
   const { type, layout, children = [], style = {}, bind } = node
@@ -56,6 +57,7 @@ const Render = (props: RenderProps) => {
     flexDirection: layout === 'vertical' ? 'column' : 'row',
     ...style,
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
+    // fontSize: fontSize * wheel + 'px', // 简历内所有内容的字体大小应该统一根字体大小，后续应该将物料区有关fontSize的配置下掉(统一在root做处理)
   }
 
   // 根部
@@ -100,6 +102,13 @@ const Render = (props: RenderProps) => {
   }
 
   if (type === 'container' || type === 'columns' || type === 'module') {
+    //  确保模块内有值且 visible === true，才有必要渲染当前模块
+    if (type === 'module') {
+      const moduleInfo = dataSource[bind as allKeyType].info
+      const isVisible = dataSource[bind as allKeyType].visible
+      if (moduleInfo.length === 0 || !isVisible) return null
+    }
+
     // 如果当前是模块，style.padding还要考虑联动
     if (type === 'module') {
       mergedStyle = {
@@ -199,14 +208,18 @@ const Render = (props: RenderProps) => {
 
   if (type === 'image') {
     return (
-      <img
-        src={dataContext[bind]}
-        style={{
-          ...mergedStyle,
-          width: (Number(mergedStyle?.width) || 75) * wheel + 'px',
-          height: (Number(mergedStyle?.height) || 140) * wheel + 'px',
-        }}
-      />
+      <>
+        {dataContext[bind] ? (
+          <img
+            src={dataContext[bind]}
+            style={{
+              ...mergedStyle,
+              width: (Number(mergedStyle?.width) || 75) * wheel + 'px',
+              height: (Number(mergedStyle?.height) || 140) * wheel + 'px',
+            }}
+          />
+        ) : null}
+      </>
     )
   }
 
@@ -218,11 +231,15 @@ const Render = (props: RenderProps) => {
     }
     return (
       <div className={`${styles['field-box']}`} style={mergedStyle}>
-        <div className={styles['label']}>
-          {keyToFieldLabel[bind]}
-          {keyToFieldLabel[bind] ? ': ' : null}
-        </div>
-        <div className={styles['value']}>{val}</div>
+        {val ? (
+          <>
+            <div className={styles['label']}>
+              {keyToFieldLabel[bind]}
+              {keyToFieldLabel[bind] ? ': ' : null}
+            </div>
+            <div className={styles['value']}>{val}</div>
+          </>
+        ) : null}
       </div>
     )
   }

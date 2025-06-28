@@ -37,9 +37,19 @@ $light-cardBg-color: #ffffff;
   }
 }
 
-.image-container {
-  width: 70%;
-  background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643');
-  background-size: cover;
-  background-position: center;
+.custom-input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid var(--light-border-color);
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: rgba(228, 228, 231, 0.2) !important;
+  box-sizing: border-box;
+}
+
+.raw-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }

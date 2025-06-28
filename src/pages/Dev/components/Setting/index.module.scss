@@ -269,3 +269,77 @@
     background: #bfbfbf; /* 滚动条悬停时颜色 */
   }
 }
+
+.main-side-bar {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  font-size: 12px;
+
+  .main-bar,
+  .side-bar {
+    position: relative;
+    min-height: 100px;
+  }
+
+  .bg-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 55%;
+    height: 100%;
+    background-color: #f8f8f9;
+    border-radius: 4px;
+  }
+
+  .content-box {
+    position: relative;
+    z-index: 9;
+    padding: 12px;
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bar-title {
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 8px;
+  }
+
+  .bar-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      width: 70%;
+      padding: 8px;
+      color: #fff;
+      background-color: #000;
+      font-size: 12px;
+      border-radius: 4px;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+  }
+}
+
+.add-btn-box {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.del-extra-box {
+  color: #c83c2d;
+  cursor: pointer;
+}

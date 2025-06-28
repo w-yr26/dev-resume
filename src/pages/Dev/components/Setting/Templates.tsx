@@ -4,8 +4,10 @@ import Icon from '@ant-design/icons'
 import gridSVG from '@/assets/svg/grid.svg?react'
 import type { templateListType } from '@/types/ui'
 import styles from './index.module.scss'
-import { useDevStore, useGlobalStore, useUIStore } from '@/store'
-import { useEffect, useRef } from 'react'
+import { useDevStore, useUIStore } from '@/store'
+import { useRef } from 'react'
+import { useElementPosition } from '@/hooks/useElementPosition'
+import { Skeleton } from 'antd'
 
 const Templates = ({
   temList,
@@ -23,7 +25,6 @@ const Templates = ({
   const templateId = useDevStore((state) => state.templateId)
   const setTemplateId = useDevStore((state) => state.setTemplateId)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
-  const setPosition = useGlobalStore((state) => state.setPosition)
 
   const changeTemplate = async (id: string) => {
     if (id === templateId) return
@@ -33,34 +34,33 @@ const Templates = ({
   }
 
   const templateRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (templateRef.current) {
-      const { y } = templateRef.current.getBoundingClientRect()
-      setPosition('template', y)
-    }
-  }, [])
+  useElementPosition(templateRef, 'template')
 
   return (
     <CustomLayout ref={templateRef}>
       <Header label="模板" svg={<Icon component={gridSVG} />} />
-      <div className={styles['template-list']}>
-        {temList.map((item) => (
-          <div
-            className={`${styles['template-item']} ${
-              templateId === item.id ? styles['active-template'] : ''
-            }`}
-            style={{
-              backgroundImage: `url(${item.fastPhoto})`,
-            }}
-            key={item.id}
-            onClick={() => changeTemplate(item.id)}
-          >
-            <div className={styles['title-box']}>
-              {item.templateName || item.name}
+      {temList.length ? (
+        <div className={styles['template-list']}>
+          {temList.map((item) => (
+            <div
+              className={`${styles['template-item']} ${
+                templateId === item.id ? styles['active-template'] : ''
+              }`}
+              style={{
+                backgroundImage: `url(${item.fastPhoto})`,
+              }}
+              key={item.id}
+              onClick={() => changeTemplate(item.id)}
+            >
+              <div className={styles['title-box']}>
+                {item.templateName || item.name}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <Skeleton paragraph={{ rows: 8 }} />
+      )}
     </CustomLayout>
   )
 }

@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useDevStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
 import Icon from '@ant-design/icons'
@@ -12,11 +12,13 @@ import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import type { EduBgType } from '@/types/dev'
+import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
+
+const eduIcon = <Icon component={EduSVG} />
 
 const EduBg = () => {
   const edubgRef = useRef<HTMLDivElement>(null)
-  const setPosition = useGlobalStore((state) => state.setPosition)
   const { info: eduInfo } = useDevStore(
     (state) => state.devSchema.dataSource.EDU_BG
   )
@@ -32,15 +34,11 @@ const EduBg = () => {
     handleOpen,
   } = useModalForm<EduBgType>(eduInfo, 'EDU_BG')
 
-  useEffect(() => {
-    if (edubgRef.current) {
-      const { y } = edubgRef.current.getBoundingClientRect()
-      setPosition('EDU_BG', y)
-    }
-  }, [])
+  useElementPosition(edubgRef, 'EDU_BG')
 
-  const { label } = useDevStore((state) => state.devSchema.dataSource.EDU_BG)
-  // const immerRichInfo = useDevStore((state) => state.immerRichInfo)
+  const { label, visible } = useDevStore(
+    (state) => state.devSchema.dataSource.EDU_BG
+  )
   const { handleChange, isEdit, setIsEdit } = useChangeLabel('EDU_BG')
 
   return (
@@ -48,25 +46,20 @@ const EduBg = () => {
       <CustomLayout ref={edubgRef}>
         <Header
           label={label || '教育背景'}
-          svg={<Icon component={EduSVG} />}
+          svg={eduIcon}
           isEdit={isEdit}
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}
         >
-          <CtxMenu currentKey="EDU_BG" renameLabel={() => setIsEdit(true)} />
+          <CtxMenu
+            currentKey="EDU_BG"
+            visible={visible}
+            renameLabel={() => setIsEdit(true)}
+          />
         </Header>
         {eduInfo.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />
         ) : (
-          // eduInfo.map((eduItem) => (
-          //   <div key={eduItem.id} className={styles['edu-item']}>
-          //     {eduInfo.length ? (
-
-          //     ) : (
-          //       <AddBtn handleAdd={() => {}} />
-          //     )}
-          //   </div>
-          // ))
           <List
             type="EDU_BG"
             data={eduInfo}
@@ -87,8 +80,11 @@ const EduBg = () => {
         title={infoId ? '编辑条目' : '创建新条目'}
         okText="创建"
         cancelText="取消"
-        width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '更新' : '创建'}

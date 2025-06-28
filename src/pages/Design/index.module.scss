@@ -42,8 +42,7 @@
   position: relative;
   width: 100%;
   height: auto;
-  // border-top: none; /* 隐藏顶部边框（由legend替代） */
-  // border: none;
+  min-height: 50px;
   border: 0.5px solid #e4e4e7;
   padding: 12px;
   box-sizing: border-box;

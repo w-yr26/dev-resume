@@ -6,13 +6,14 @@ import InfoSVG from '@/assets/svg/dev/info.svg?react'
 import uploadSVG from '@/assets/svg/dev/upload.svg?react'
 import CustomInput from './components/CustomInput'
 import CustomLayout from '@/components/CustomLayout/index'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 // import { AddItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import './custom.scss'
-import { useDevStore, useGlobalStore, useUserStore } from '@/store'
+import { useDevStore, useUserStore } from '@/store'
 import { postUploadOneAPI } from '@/apis/user'
 import { postModuleInfoAPI } from '@/apis/resume'
+import { useElementPosition } from '@/hooks/useElementPosition'
 
 const BaseInfo = () => {
   const baseinfoRef = useRef<HTMLDivElement>(null)
@@ -22,14 +23,8 @@ const BaseInfo = () => {
   const userId = useUserStore((state) => state.info.id)
   const resumeId = useDevStore((state) => state.resumeId)
   const changeBaseInfo = useDevStore((state) => state.immerBaseInfo)
-  const setPosition = useGlobalStore((state) => state.setPosition)
 
-  useEffect(() => {
-    if (baseinfoRef.current) {
-      const { y } = baseinfoRef.current.getBoundingClientRect()
-      setPosition('BASE_INFO', y)
-    }
-  }, [])
+  useElementPosition(baseinfoRef, 'BASE_INFO')
 
   const handleFieldChange = (
     e: React.ChangeEvent<HTMLInputElement>,

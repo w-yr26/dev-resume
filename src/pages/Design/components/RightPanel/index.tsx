@@ -272,7 +272,6 @@ const RightPanel = ({
 
   const filterOptions = useMemo(() => {
     const nodeBindPath = nodeBind.split('-')
-    console.log('nodeBindPath', nodeBindPath)
 
     if (
       nodeBindPath.findIndex((i) => i === 'label') ===
@@ -282,7 +281,6 @@ const RightPanel = ({
       const tempOptions = cascaderOptions.find((i) =>
         nodeBindPath.includes(i.value)
       )?.children
-      console.log('wyr', tempOptions)
 
       return tempOptions?.map((item) => ({
         value: item.value,
@@ -335,7 +333,6 @@ const RightPanel = ({
             {singleNode?.type === 'module' ? (
               <CustomRaw label="模块字段">
                 <Cascader
-                  defaultValue={['BASE_INFO']}
                   style={{
                     width: '100%',
                   }}
@@ -408,7 +405,6 @@ const RightPanel = ({
                   options={filterOptions}
                   onChange={(e) => {
                     if (singleNode) {
-                      console.log('sing', singleNode)
                       const curBind = e[e.length - 1]
                       if (
                         singleNode.constraints.allowedBind &&

@@ -6,12 +6,15 @@ import List from './components/List'
 import AddBtn from './components/AddBtn'
 import styles from './index.module.scss'
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
-import { useEffect, useRef } from 'react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useRef } from 'react'
+import { useDevStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
+import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
+
+const awardIcon = <Icon component={AwardSVG} />
 
 const Award = () => {
   const storeAwardList = useDevStore(
@@ -20,16 +23,12 @@ const Award = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.AWARD_LIST.label
   )
+  const visible = useDevStore(
+    (state) => state.devSchema.dataSource.AWARD_LIST.visible
+  )
 
-  const setPosition = useGlobalStore((state) => state.setPosition)
   const awardRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (awardRef.current) {
-      const { y } = awardRef.current.getBoundingClientRect()
-      setPosition('AWARD_LIST', y)
-    }
-  }, [])
+  useElementPosition(awardRef, 'AWARD_LIST')
 
   const {
     opened,
@@ -48,12 +47,16 @@ const Award = () => {
     <CustomLayout ref={awardRef}>
       <Header
         label={label || '荣誉奖项'}
-        svg={<Icon component={AwardSVG} />}
+        svg={awardIcon}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu currentKey="AWARD_LIST" renameLabel={() => setIsEdit(true)} />
+        <CtxMenu
+          currentKey="AWARD_LIST"
+          visible={visible}
+          renameLabel={() => setIsEdit(true)}
+        />
       </Header>
 
       {storeAwardList.length === 0 ? (
@@ -78,7 +81,11 @@ const Award = () => {
       <Modal
         title={infoId ? '编辑条目' : '创建新条目'}
         width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '编辑' : '创建'}
@@ -95,7 +102,9 @@ const Award = () => {
               name="award"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <Input />
             </Form.Item>
@@ -104,7 +113,9 @@ const Award = () => {
               name="date"
               layout="vertical"
               rules={[{ required: true }]}
-              className="flex-1"
+              style={{
+                flex: 1,
+              }}
             >
               <RangePicker />
             </Form.Item>

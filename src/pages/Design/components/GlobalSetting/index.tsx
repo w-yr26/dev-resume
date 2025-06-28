@@ -3,15 +3,21 @@ import ModuleLayout from '../RightPanel/ModuleLayout'
 import styles from './index.module.scss'
 import CustomField from '@/pages/Dev/components/Setting/components/CustomField'
 import { Slider } from 'antd'
+import { RefsContext } from '../RefsProvider/context'
+import { useContext } from 'react'
 
 const GlobalSetting = () => {
   const { pagePadding, modulePadding, lineHeight, fontSize } = useDesignStore(
     (state) => state.currentUISchema.configStyle
   )
   const setRootStyle = useDesignStore((state) => state.setRootStyle)
+  const context = useContext(RefsContext)
 
   return (
-    <div className={styles['global-container']}>
+    <div
+      className={styles['global-container']}
+      ref={context?.ref4 as React.RefObject<HTMLDivElement>}
+    >
       <ModuleLayout title="全局设置">
         <CustomField
           title="页面内边距"

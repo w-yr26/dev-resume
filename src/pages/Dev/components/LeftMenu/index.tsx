@@ -5,7 +5,7 @@ import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AwardSVG from '@/assets/svg/dev/award.svg?react'
 import SkillSVG from '@/assets/svg/dev/skill.svg?react'
-import HeartSVG from '@/assets/svg/dev/heart.svg?react'
+// import HeartSVG from '@/assets/svg/dev/heart.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import { Avatar, Tooltip } from 'antd'
@@ -45,11 +45,11 @@ const iconMenu = [
     label: '技能特长',
     key: 'SKILL_LIST',
   },
-  {
-    icon: <Icon component={HeartSVG} />,
-    label: '兴趣爱好',
-    key: 'HEART_LIST',
-  },
+  // {
+  //   icon: <Icon component={HeartSVG} />,
+  //   label: '兴趣爱好',
+  //   key: 'HEART_LIST',
+  // },
 ]
 
 const LeftMenu = ({
@@ -62,12 +62,8 @@ const LeftMenu = ({
   setisLeftUnExpand: (isExpand: boolean) => void
 }) => {
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
-  const handleClick = (key: optionalCom | 'ADD_MORE') => {
-    if (key === 'ADD_MORE') {
-      console.log('add')
-    } else {
-      iconClick(keyToPosition[key] || 0)
-    }
+  const handleClick = (key: optionalCom) => {
+    iconClick(keyToPosition[key] || 0)
   }
 
   return (
@@ -88,7 +84,7 @@ const LeftMenu = ({
             <li
               key={item.key}
               className={styles['icon-item']}
-              onClick={() => handleClick(item.key as optionalCom | 'ADD_MORE')}
+              onClick={() => handleClick(item.key as optionalCom)}
             >
               <Tooltip placement="right" title={item.label}>
                 {item.icon}

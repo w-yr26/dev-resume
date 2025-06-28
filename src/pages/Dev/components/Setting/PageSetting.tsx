@@ -4,21 +4,17 @@ import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import { Slider } from 'antd'
 import CustomField from './components/CustomField'
-import { useGlobalStore, useStyleStore } from '@/store'
-import { useEffect, useRef } from 'react'
+import { useStyleStore } from '@/store'
+import { useRef } from 'react'
+import { useElementPosition } from '@/hooks/useElementPosition'
 
 const TypeSetting = () => {
   const pagePadding = useStyleStore((state) => state.pagePadding)
   const modulePadding = useStyleStore((state) => state.modulePadding)
   const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
   const pageRef = useRef<HTMLDivElement>(null)
-  const setPosition = useGlobalStore((state) => state.setPosition)
-  useEffect(() => {
-    if (pageRef.current) {
-      const { y } = pageRef.current.getBoundingClientRect()
-      setPosition('page', y)
-    }
-  }, [])
+  useElementPosition(pageRef, 'page')
+
   return (
     <CustomLayout ref={pageRef}>
       <Header label="页面" svg={<Icon component={PageSVG} />} />

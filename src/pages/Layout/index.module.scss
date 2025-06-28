@@ -20,7 +20,7 @@
   .logo-area {
     height: 48px;
     width: 100%;
-    background-image: url('/src/assets/logo.png');
+    background-image: url('/src/assets/logo.avif');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -75,6 +75,7 @@
       height: 40px;
       box-sizing: border-box;
       align-items: center;
+      cursor: pointer;
 
       .account {
         margin-left: 8px;

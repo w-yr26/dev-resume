@@ -4,12 +4,12 @@ import styles from './index.module.scss'
 // 引入icon图标
 import Icon from '@ant-design/icons'
 // import DownloadSVG from '@/assets/svg/download.svg?react'
-import ListSVG from '@/assets/svg/list.svg?react'
-import GridSVG from '@/assets/svg/grid.svg?react'
+// import ListSVG from '@/assets/svg/list.svg?react'
+// import GridSVG from '@/assets/svg/grid.svg?react'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 
-import { Button, Input, message, Modal, Tooltip } from 'antd'
+import { Input, message, Modal, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import {
   delResumeAPI,
@@ -116,7 +116,7 @@ const Home = () => {
       {/* 头部 */}
       <div className={styles['container-top']}>
         <h1>简历</h1>
-        <div>
+        {/* <div>
           <Button
             icon={<Icon component={GridSVG} />}
             style={{
@@ -126,7 +126,7 @@ const Home = () => {
             网格
           </Button>
           <Button icon={<Icon component={ListSVG} />}>列表</Button>
-        </div>
+        </div> */}
       </div>
 
       {/* 底部 */}
@@ -178,9 +178,6 @@ const Home = () => {
       </div>
       <Modal
         styles={{
-          mask: {
-            backgroundColor: 'rgba(250, 250, 250, 0.9)',
-          },
           content: {
             border: '1px solid #e4e4e7',
           },

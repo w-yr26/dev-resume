@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import type {
-  allKeyType,
   devInitType,
   devState,
   InfoArrTypeMap,
@@ -9,14 +8,35 @@ import type {
 import { produce } from 'immer'
 import { devtools } from 'zustand/middleware'
 
-const defaultInfoMap: Record<allKeyType, any> = {
-  BASE_INFO: [],
-  EDU_BG: [],
-  WORK_EXP: [],
-  PROJECT_EXP: [],
-  AWARD_LIST: [],
-  SKILL_LIST: '',
-  HEART_LIST: '',
+export const defaultInfoMap: Record<string, any> = {
+  BASE_INFO: {
+    info: [],
+    label: '基本信息',
+  },
+  EDU_BG: {
+    info: [],
+    label: '教育背景',
+  },
+  WORK_EXP: {
+    info: [],
+    label: '工作经历',
+  },
+  PROJECT_EXP: {
+    info: [],
+    label: '项目经历',
+  },
+  AWARD_LIST: {
+    info: [],
+    label: '荣誉奖项',
+  },
+  SKILL_LIST: {
+    info: [],
+    label: '技能特长',
+  },
+  HEART_LIST: {
+    info: [],
+    label: '兴趣爱好',
+  },
 }
 
 const initialData: devInitType = {
@@ -216,17 +236,38 @@ const useDevStore = create<devState>()(
               // }
             })
           ),
-        // 此处就包含了“教育背景”、“技能特长”、“兴趣爱好”的info字段的修改
+        // 此处就包含了md编辑器部分的修改(“技能特长”、“兴趣爱好”的info字段)
         immerRichInfo: (newVal, primaryKey) =>
           set(
             produce((state: devState) => {
-              // console.log('newVal', newVal)
               if (primaryKey === 'HEART_LIST') {
-                state.devSchema.dataSource.HEART_LIST.info[0].interest = newVal
+                if (state.devSchema.dataSource.HEART_LIST.info.length === 0) {
+                  state.devSchema.dataSource.HEART_LIST.info.push({
+                    id: '-1',
+                    interest: newVal,
+                    visible: true,
+                  })
+                  // console.log(
+                  //   'wyr==',
+                  //   state.devSchema.dataSource.HEART_LIST.info
+                  // )
+                } else {
+                  state.devSchema.dataSource.HEART_LIST.info[0].interest =
+                    newVal
+                }
               } else if (primaryKey === 'SKILL_LIST') {
-                state.devSchema.dataSource.SKILL_LIST.info[0].content = newVal
+                if (state.devSchema.dataSource.SKILL_LIST.info.length === 0) {
+                  state.devSchema.dataSource.SKILL_LIST.info.push({
+                    content: newVal,
+                    id: '-1',
+                    visible: true,
+                    aiContent: '',
+                    aiDescription: '',
+                  })
+                } else {
+                  state.devSchema.dataSource.SKILL_LIST.info[0].content = newVal
+                }
               }
-              // state.devSchema.dataSource[primaryKey].info. = newVal
             })
           ),
         immerVisible: <T extends keyof InfoArrTypeMap>(id: string, key: T) =>
@@ -289,7 +330,7 @@ const useDevStore = create<devState>()(
             produce((state: devState) => {
               state.devSchema.dataSource[key] = {
                 ...state.devSchema.dataSource[key],
-                info: defaultInfoMap[key],
+                info: defaultInfoMap[key].info,
                 visible: true,
               }
             })

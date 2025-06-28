@@ -5,15 +5,18 @@ import ProjectSVG from '@/assets/svg/dev/project.svg?react'
 import AddBtn from './components/AddBtn'
 import { Button, Modal, Form, Input, DatePicker } from 'antd'
 import List from './components/List'
-import { useEffect, useRef } from 'react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useRef } from 'react'
+import { useDevStore } from '@/store'
 import { useModalForm } from '@/hooks/useModalForm'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import CtxMenu from './components/CtxMenu'
 import MdEditor from '@/components/MdEditor'
 import AIBrush from '@/components/AIBrush'
 import styles from './index.module.scss'
+import { useElementPosition } from '@/hooks/useElementPosition'
 const { RangePicker } = DatePicker
+
+const projectIcon = <Icon component={ProjectSVG} />
 
 const ProjectExperience = () => {
   const storeProjectList = useDevStore(
@@ -22,16 +25,13 @@ const ProjectExperience = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.PROJECT_EXP.label
   )
+  const visible = useDevStore(
+    (state) => state.devSchema.dataSource.PROJECT_EXP.visible
+  )
 
-  const setPosition = useGlobalStore((state) => state.setPosition)
   const proRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (proRef.current) {
-      const { y } = proRef.current.getBoundingClientRect()
-      setPosition('PROJECT_EXP', y)
-    }
-  }, [])
+  useElementPosition(proRef, 'PROJECT_EXP')
 
   const {
     opened,
@@ -50,12 +50,16 @@ const ProjectExperience = () => {
     <CustomLayout ref={proRef}>
       <Header
         label={label || '项目经历'}
-        svg={<Icon component={ProjectSVG} />}
+        svg={projectIcon}
         isEdit={isEdit}
         handleChange={handleChange}
         handleBlur={() => setIsEdit(false)}
       >
-        <CtxMenu currentKey="PROJECT_EXP" renameLabel={() => setIsEdit(true)} />
+        <CtxMenu
+          currentKey="PROJECT_EXP"
+          visible={visible}
+          renameLabel={() => setIsEdit(true)}
+        />
       </Header>
       {storeProjectList.length === 0 ? (
         <AddBtn handleAdd={handleOpen} />
@@ -73,14 +77,18 @@ const ProjectExperience = () => {
             subTitle: 'role',
             visible: 'visible',
           }}
-        ></List>
+        />
       )}
       <Modal
         title={infoId ? '编辑条目' : '创建新条目'}
         okText="创建"
         cancelText="取消"
         width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '更新' : '创建'}
@@ -91,18 +99,18 @@ const ProjectExperience = () => {
         onCancel={resetState}
       >
         <Form layout="vertical" requiredMark={false} form={formRef}>
-          <div className="flex justify-between items-center gap-[10px]">
-            <Form.Item
-              label="项目名称"
-              name="title"
-              layout="vertical"
-              rules={[{ required: true }]}
-              style={{
-                flex: 1,
-              }}
-            >
-              <Input />
-            </Form.Item>
+          <Form.Item
+            label="项目名称"
+            name="title"
+            layout="vertical"
+            rules={[{ required: true }]}
+            style={{
+              flex: 1,
+            }}
+          >
+            <Input />
+          </Form.Item>
+          <div className={styles['row-form-item']}>
             <Form.Item
               label="项目角色"
               name="role"

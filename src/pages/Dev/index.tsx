@@ -1,7 +1,6 @@
 import LeftMenu from './components/LeftMenu'
 import RightMenu from './components/RightMenu'
 import Materials from './components/Materials'
-import configStyle from '@/config/templates'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { useDevStore, useStyleStore, useUIStore, useUserStore } from '@/store'
@@ -17,33 +16,10 @@ import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
 import { getResumeDetailsAPI } from '@/apis/resume'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { templateListType } from '@/types/ui'
+import type { layoutMapType, nodeType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
-// import { getCachesData } from '@/utils/caches'
-// import { Data } from '@/utils/request'
-
-// const getTemplatesWithCache = async (
-//   userId: string
-// ): Promise<Data<temDataType>> => {
-//   console.time('test')
-//   const cached = (await getCachesData(userId)) as {
-//     data: temDataType
-//     code: number
-//     msg: string
-//   }
-//   console.timeEnd('test')
-//   if (cached) {
-//     console.log('[模板] 命中缓存', cached)
-//     return cached
-//   }
-
-//   console.log('[模板] 未命中缓存，调用接口')
-//   const result = await getTemplatesAPI(userId)
-
-//   return result
-// }
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -54,9 +30,16 @@ const Dev = () => {
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
+  const layoutMap = useUIStore((state) => state.layoutMap)
 
   const resumeRef = useRef<HTMLDivElement>(null)
-  const mainRef = useRef<HTMLDivElement>(null)
+  // 页面删除的时候，数组原先的位置会变成null，但是在执行生成pdf的时候，已经对null的情况做了判断，故此处不处理
+  const mainRefs = useRef<(HTMLDivElement | null)[]>([]) // 存储所有 ref
+  // 更新 ref 数组
+  const setMainRef = (el: HTMLDivElement | null, index: number) => {
+    mainRefs.current[index] = el
+  }
+
   const leftScrollRef = useRef<HTMLDivElement>(null)
   const rightScrollRef = useRef<HTMLDivElement>(null)
   const drawerRef = useRef<drawerMethods>(null)
@@ -65,7 +48,7 @@ const Dev = () => {
   const pageHeight = 1120
   const [loading, setLoading] = useState<boolean>(false)
   const [dragging, setDragging] = useState(false)
-  const [wheel, setWheel] = useState(0.7)
+  const [wheel, setWheel] = useState(0.5)
   const [translateX, setTranslateX] = useState(pageWidth / 2)
   const [translateY, setTranslateY] = useState(pageHeight / 2)
   // const [lineShow, setLineShow] = useState(false)
@@ -279,7 +262,7 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
-  const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
+  const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
 
   // 监听分页线
   // useEffect(() => {
@@ -395,6 +378,33 @@ const Dev = () => {
     }
   }, [selectedEl])
 
+  // 当前页面
+  const pageArr = useMemo(() => [...layoutMap.keys()], [layoutMap])
+
+  const getPageUiSchema = useCallback(
+    (
+      pageKey: string,
+      uiSchema: nodeType,
+      layoutMap: layoutMapType
+    ): nodeType | null => {
+      // console.log('uiSchema==', uiSchema, pageKey)
+      const deepUiSchema = JSON.parse(JSON.stringify(uiSchema))
+      const pageModules = layoutMap.get(pageKey)?.main.map((i) => i.key)
+      const newChildren: (nodeType | null)[] = []
+      pageModules?.forEach((module, index) => {
+        newChildren[index] =
+          deepUiSchema?.children?.find((i: nodeType) => i.bind === module) ||
+          null
+      })
+      return {
+        ...deepUiSchema,
+        bind: deepUiSchema?.bind || '',
+        children: newChildren.filter(Boolean) as nodeType[],
+      }
+    },
+    []
+  )
+
   return (
     <InvalidHoc token={token}>
       <div className={styles['dev-container']}>
@@ -420,23 +430,35 @@ const Dev = () => {
             <div
               className={styles['resume-container']}
               style={{
-                ...configStyle['commonStyle'],
-                width: pageWidth,
-                height: pageHeight,
                 transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
                 cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
+                gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
               }}
               ref={resumeRef}
             >
-              <div className={styles['preview-content']} ref={mainRef}>
-                {uiSchema && !loading && top ? (
-                  <Render
-                    dataContext={dataSource}
-                    node={uiSchema}
-                    wheel={wheel}
-                  />
-                ) : null}
-              </div>
+              <span className={styles['scale-tooltip-box']}>
+                缩放比例: {wheel.toFixed(2)}
+              </span>
+              {pageArr.map((page, index) => (
+                <div
+                  className={styles['preview-content']}
+                  key={page}
+                  ref={(el) => setMainRef(el, index)}
+                  style={{
+                    width: pageWidth,
+                    height: pageHeight,
+                  }}
+                >
+                  {uiSchema && !loading ? (
+                    <Render
+                      dataContext={dataSource}
+                      node={getPageUiSchema(page, uiSchema, layoutMap)}
+                      wheel={wheel}
+                    />
+                  ) : null}
+                </div>
+              ))}
+
               {/* {lineShow && (
                 <div className={styles['page-line']}>
                   <span>分页线</span>

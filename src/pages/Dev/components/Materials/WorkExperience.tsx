@@ -7,14 +7,17 @@ import List from './components/List'
 import CtxMenu from '@/pages/Dev/components/Materials/components/CtxMenu'
 import { Form, Input, Modal, DatePicker, Button } from 'antd'
 const { RangePicker } = DatePicker
-import { useEffect, useRef } from 'react'
-import { useDevStore, useGlobalStore } from '@/store'
+import { useRef } from 'react'
+import { useDevStore } from '@/store'
 import { useChangeLabel } from '@/hooks/useChangeLabel'
 import { useModalForm } from '@/hooks/useModalForm'
 import type { WorkExpItemType } from '@/types/dev'
 import styles from './index.module.scss'
 import MdEditor from '@/components/MdEditor'
 import AIBrush from '@/components/AIBrush'
+import { useElementPosition } from '@/hooks/useElementPosition'
+
+const workIcon = <Icon component={WorkSVG} />
 
 const WorkExperience = () => {
   const storeWorkList = useDevStore(
@@ -23,15 +26,12 @@ const WorkExperience = () => {
   const label = useDevStore(
     (state) => state.devSchema.dataSource.WORK_EXP.label
   )
-  const setPosition = useGlobalStore((state) => state.setPosition)
+  const visible = useDevStore(
+    (state) => state.devSchema.dataSource.WORK_EXP.visible
+  )
 
   const workRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (workRef.current) {
-      const { y } = workRef.current.getBoundingClientRect()
-      setPosition('WORK_EXP', y)
-    }
-  }, [])
+  useElementPosition(workRef, 'WORK_EXP')
 
   const {
     opened,
@@ -51,12 +51,16 @@ const WorkExperience = () => {
       <CustomLayout ref={workRef}>
         <Header
           label={label || '工作/实习经历'}
-          svg={<Icon component={WorkSVG} />}
+          svg={workIcon}
           isEdit={isEdit}
           handleChange={handleChange}
           handleBlur={() => setIsEdit(false)}
         >
-          <CtxMenu currentKey="WORK_EXP" renameLabel={() => setIsEdit(true)} />
+          <CtxMenu
+            currentKey="WORK_EXP"
+            visible={visible}
+            renameLabel={() => setIsEdit(true)}
+          />
         </Header>
         {storeWorkList.length === 0 ? (
           <AddBtn handleAdd={handleOpen} />
@@ -82,7 +86,11 @@ const WorkExperience = () => {
         okText="创建"
         cancelText="取消"
         width="50%"
-        mask={true}
+        styles={{
+          content: {
+            border: '1px solid #e4e4e7',
+          },
+        }}
         footer={[
           <Button key="submit" onClick={handleOk}>
             {infoId ? '更新' : '创建'}

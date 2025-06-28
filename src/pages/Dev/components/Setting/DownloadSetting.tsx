@@ -5,18 +5,13 @@ import OutputSVG from '@/assets/svg/dev/output.svg?react'
 import PDFSVG from '@/assets/svg/dev/pdf.svg?react'
 // import JsonSVG from '@/assets/svg/dev/json.svg?react'
 import styled from './index.module.scss'
-import { useEffect, useRef } from 'react'
-import { useGlobalStore } from '@/store'
+import { useRef } from 'react'
+import { useElementPosition } from '@/hooks/useElementPosition'
 
 const DownloadSetting = () => {
   const outputRef = useRef<HTMLDivElement>(null)
-  const setPosition = useGlobalStore((state) => state.setPosition)
-  useEffect(() => {
-    if (outputRef.current) {
-      const { y } = outputRef.current.getBoundingClientRect()
-      setPosition('output', y)
-    }
-  }, [])
+  useElementPosition(outputRef, 'output')
+
   return (
     <CustomLayout ref={outputRef}>
       <Header label="导出" svg={<Icon component={OutputSVG} />} />

@@ -1,13 +1,13 @@
-import Icon, {
-  AppstoreAddOutlined,
-  InfoCircleOutlined,
-} from '@ant-design/icons'
+import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import ThemeSVG from '@/assets/svg/dev/theme.svg?react'
 import OutputSVG from '@/assets/svg/dev/output.svg?react'
+import GridSVG from '@/assets/svg/grid.svg?react'
 // import ColorSVG from '@/assets/svg/dev/color.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
+import layoutSVG from '@/assets/svg/dev/layout.svg?react'
+import shareSVG from '@/assets/svg/dev/share.svg?react'
 import { Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
@@ -15,7 +15,7 @@ import { memo } from 'react'
 
 const toolMenu = [
   {
-    icon: <AppstoreAddOutlined />,
+    icon: <Icon component={GridSVG} />,
     label: '模板',
     key: 'template',
   },
@@ -29,26 +29,26 @@ const toolMenu = [
     label: '页面',
     key: 'page',
   },
-  // {
-  //   icon: <Icon component={ColorSVG} />,
-  //   label: '主题',
-  //   key: 'color',
-  // },
+  {
+    icon: <Icon component={layoutSVG} />,
+    label: '布局',
+    key: 'layout',
+  },
   {
     icon: <Icon component={OutputSVG} />,
     label: '导出',
     key: 'output',
   },
   {
-    icon: <Icon component={OutputSVG} />,
+    icon: <Icon component={shareSVG} />,
     label: '分享',
     key: 'share',
   },
-  {
-    icon: <InfoCircleOutlined />,
-    label: '信息',
-    key: 'info',
-  },
+  // {
+  //   icon: <InfoCircleOutlined />,
+  //   label: '信息',
+  //   key: 'info',
+  // },
 ]
 
 const RightMenu = ({

@@ -25,6 +25,7 @@ import NavBar from './components/NavBar'
 import html2canvas from 'html2canvas'
 import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
 import { useSearchParams } from 'react-router-dom'
+import RefsProvider from './components/RefsProvider'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '普通容器',
@@ -121,8 +122,10 @@ const Design = () => {
     targetKey: string,
     desUISchema: any,
     parentBind: string, // 当前放置的容器的bind字段
-    isParentNeed: boolean // 当前放置的容器是否需要字段绑定
+    isParentNeed: boolean, // 当前放置的容器是否需要字段绑定
+    isNestedAgain: boolean // 当前容器是否还允许放置元素
   ) => {
+    if (!isNestedAgain) return message.warning('当前容器不允许放置元素')
     if (!parentBind && isParentNeed)
       return message.warning('请先绑定父容器数据类型')
     // 当前物料允许父容器的bind类型
@@ -155,7 +158,7 @@ const Design = () => {
     prevKey: string
   ) => {
     // 是否显示拖拽放置元素(isNestedAgain = true 且当前子元素数量 < 最大子元素数量)
-    const isShowDropTarget = uiSchema.constraints.isNestedAgain
+    const isNestedAgain = uiSchema.constraints.isNestedAgain
     return (
       <>
         <fieldset
@@ -242,13 +245,14 @@ const Design = () => {
                 ))
               : null}
           </div>
-          {isShowDropTarget ? (
+          {isNestedAgain ? (
             <DropTarget
               onDrop={handleDrop}
               nodeType={uiSchema.type}
               nodeKey={uiSchema.nodeKey}
               parentBind={uiSchema.bind}
               isParentNeed={uiSchema.constraints.ableBind}
+              isNestedAgain={isNestedAgain}
             >
               <DragBtn />
             </DropTarget>
@@ -259,7 +263,7 @@ const Design = () => {
   }
 
   return (
-    <>
+    <RefsProvider>
       <DndProvider backend={HTML5Backend}>
         <div className={styles['design-container']}>
           <NavBar
@@ -313,7 +317,7 @@ const Design = () => {
           }}
         />
       </Drawer>
-    </>
+    </RefsProvider>
   )
 }
 
