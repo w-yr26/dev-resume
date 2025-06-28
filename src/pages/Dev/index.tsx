@@ -278,33 +278,11 @@ const Dev = () => {
 
   const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
 
-  // 监听分页线
-  // useEffect(() => {
-  //   const observer = new ResizeObserver((entries) => {
-  //     entries.forEach((entry) => {
-  //       const { height } = entry.contentRect
-  //       const mmHeight = pxToMm(height)
-  //       if (mmHeight > 297) {
-  //         setLineShow(true)
-  //       } else {
-  //         setLineShow(false)
-  //       }
-  //     })
-  //   })
-
-  //   if (mainRef.current) {
-  //     observer.observe(mainRef.current)
-  //   }
-
-  //   return () => observer.disconnect()
-  // }, [])
-
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
   const [panelPos, setPanelPos] = useState<ButtonPanelPosition | null>(null)
   const [currentNodeKey, setCurrentNodeKey] = useState('')
   const [currentText, setCurrentText] = useState('')
-  const [sidebarOpened, setSidebarOpened] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
   // Hover 事件监听
   useEffect(() => {
@@ -432,9 +410,9 @@ const Dev = () => {
         </AuthorizationHoc>
 
         <main
-          className={`${styles['main-container']}
-        ${isLeftUnExpand && isRightUnExpand && styles['not-edit']}
-        `}
+          className={`${styles['main-container']} ${
+            isLeftUnExpand && isRightUnExpand ? styles['not-edit'] : ''
+          }`}
         >
           <div
             className={styles['preview-container']}
@@ -479,12 +457,6 @@ const Dev = () => {
                   ) : null}
                 </div>
               ))}
-
-              {/* {lineShow && (
-                <div className={styles['page-line']}>
-                  <span>分页线</span>
-                </div>
-              )} */}
               {isLoading ? (
                 <div className={styles['loading-box']}>
                   <Spin />
@@ -532,20 +504,19 @@ const Dev = () => {
               left: panelPos.left + 'px',
             }}
             className={styles['panel-box']}
-            onClick={() => setSidebarOpened(true)}
           >
             {/* 功能按钮面板 */}
             <Icon component={commentSVG} />
           </div>
         )}
-        <ChatSideBar
-          resumeId={params.randomId!}
-          selectedNodeKey={currentNodeKey}
-          currentText={currentText}
-          sidebarOpened={sidebarOpened}
-          setSidebarOpened={setSidebarOpened}
-          setCurrentText={setCurrentText}
-        />
+        {isReadMode ? (
+          <ChatSideBar
+            resumeId={params.randomId!}
+            selectedNodeKey={currentNodeKey}
+            currentText={currentText}
+            setCurrentText={setCurrentText}
+          />
+        ) : null}
 
         {/* <AuthorizationHoc isOrigin={isOrigin} permission={2} type="test">
           <div

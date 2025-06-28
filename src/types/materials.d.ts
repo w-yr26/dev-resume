@@ -9,10 +9,8 @@ export type ButtonPanelPosition = {
 
 export type sideBarType = {
   resumeId: string
-  sidebarOpened: boolean
   currentText: string
   selectedNodeKey: string
-  setSidebarOpened: (val: boolean) => void
   setCurrentText: (text: string) => void
 }
 
