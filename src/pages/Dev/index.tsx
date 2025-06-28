@@ -430,6 +430,9 @@ const Dev = () => {
               }}
               ref={resumeRef}
             >
+              <span className={styles['scale-tooltip-box']}>
+                缩放比例: {wheel}
+              </span>
               {pageArr.map((page) => (
                 <div
                   className={styles['preview-content']}

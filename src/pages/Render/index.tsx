@@ -30,7 +30,7 @@ const keyToFieldLabel: Record<string, string> = {
 const Render = (props: RenderProps) => {
   const { dataContext, node, wheel } = props
   const lineHeight = useStyleStore((state) => state.lineHeight)
-  const fontSize = useStyleStore((state) => state.fontSize)
+  // const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
@@ -57,14 +57,14 @@ const Render = (props: RenderProps) => {
     flexDirection: layout === 'vertical' ? 'column' : 'row',
     ...style,
     borderBottomStyle: style.borderBottomStyle ? borderStyle : 'none',
-    fontSize: fontSize * wheel + 'px', // 简历内所有内容的字体大小应该统一根字体大小，后续应该将物料区有关fontSize的配置下掉(统一在root做处理)
+    // fontSize: fontSize * wheel + 'px', // 简历内所有内容的字体大小应该统一根字体大小，后续应该将物料区有关fontSize的配置下掉(统一在root做处理)
   }
 
   // 根部
   if (type === 'root') {
     const rootStyle: React.CSSProperties = {
       lineHeight: lineHeight,
-      fontSize: fontSize * wheel + 'px',
+      // fontSize: fontSize * wheel + 'px',
       color: fontColor,
       backgroundColor: bgColor,
       padding: pagePadding + 'px',
