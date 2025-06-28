@@ -20,6 +20,7 @@ import type { layoutMapType, nodeType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
+import QASideBar from './components/QASideBar'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -184,8 +185,8 @@ const Dev = () => {
 
   // 重置缩放
   const resetWheel = () => {
-    if (wheel === 0.7) return
-    setWheel(0.7)
+    if (wheel === 0.5) return
+    setWheel(0.5)
   }
 
   const startDrag = (e: React.MouseEvent<Element>) => {
@@ -517,6 +518,8 @@ const Dev = () => {
             setCurrentText={setCurrentText}
           />
         ) : null}
+
+        {isReadMode ? <QASideBar /> : null}
 
         {/* <AuthorizationHoc isOrigin={isOrigin} permission={2} type="test">
           <div

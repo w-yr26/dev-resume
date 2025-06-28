@@ -1,0 +1,53 @@
+.qa-side-container {
+  position: absolute;
+  top: 0;
+  right: 48px;
+  height: 100%;
+  width: 300px;
+  background-color: #fafafa;
+  transition: transform 0.3s ease-in;
+  padding: 8px;
+  box-sizing: border-box;
+  border-left: 1px solid #dee0e3;
+
+  .qa-list-title {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dee0e3;
+    font-weight: 500;
+  }
+}
+
+.tooltip-card {
+  background: linear-gradient(to right, #faf5ff, #f0f9ff);
+  border: 1px solid #e9d5ff;
+  border-radius: 4px;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+
+  .icon-box {
+    color: #6b21a8;
+  }
+
+  .text-container {
+    .title {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      font-weight: 500;
+      color: #581c87;
+    }
+
+    .description {
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: #6b21a8;
+    }
+  }
+}
