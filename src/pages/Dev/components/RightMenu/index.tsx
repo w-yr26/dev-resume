@@ -7,6 +7,7 @@ import GridSVG from '@/assets/svg/grid.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
 import layoutSVG from '@/assets/svg/dev/layout.svg?react'
+import shareSVG from '@/assets/svg/dev/share.svg?react'
 import { Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
@@ -39,7 +40,7 @@ const toolMenu = [
     key: 'output',
   },
   {
-    icon: <Icon component={OutputSVG} />,
+    icon: <Icon component={shareSVG} />,
     label: '分享',
     key: 'share',
   },

@@ -1,7 +1,7 @@
 import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
 import Icon from '@ant-design/icons'
-import OutputSVG from '@/assets/svg/dev/output.svg?react'
+import shareSVG from '@/assets/svg/dev/share.svg?react'
 import JsonSVG from '@/assets/svg/dev/json.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 import styles from './index.module.scss'
@@ -198,7 +198,7 @@ const Share = () => {
   return (
     <>
       <CustomLayout ref={shareRef}>
-        <Header label="分享" svg={<Icon component={OutputSVG} />} />
+        <Header label="分享" svg={<Icon component={shareSVG} />} />
         <div
           className={styles['down-load-box']}
           style={{
