@@ -6,6 +6,7 @@ import GridSVG from '@/assets/svg/grid.svg?react'
 // import ColorSVG from '@/assets/svg/dev/color.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
 import shrinkSVG from '@/assets/svg/dev/shrink.svg?react'
+import layoutSVG from '@/assets/svg/dev/layout.svg?react'
 import { Tooltip } from 'antd'
 import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
@@ -28,7 +29,7 @@ const toolMenu = [
     key: 'page',
   },
   {
-    icon: <Icon component={OutputSVG} />,
+    icon: <Icon component={layoutSVG} />,
     label: '布局',
     key: 'layout',
   },

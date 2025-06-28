@@ -84,8 +84,21 @@ const useUIStore = create<uiStoreType>((set) => {
     },
     delPage: (key) => {
       return set((state) => {
+        // 将删除的页面的main、side对应的bar移至上一页
+        const targetMap = state.layoutMap.get(key)
+        const main = targetMap?.main || []
+        const side = targetMap?.side || []
         const newLayoutMap = new Map(state.layoutMap) // 创建新 Map
+        const prevKey = String(Number(key) - 1)
+        const prevMap = newLayoutMap.get(prevKey)
+        if (prevMap?.main) {
+          prevMap.main = [...prevMap.main, ...main]
+        }
+        if (prevMap?.side) {
+          prevMap.side = [...prevMap.side, ...side]
+        }
         newLayoutMap.delete(key)
+        newLayoutMap.set(prevKey, prevMap!)
         return { layoutMap: newLayoutMap }
       })
     },

@@ -2,7 +2,7 @@ import CustomLayout from '@/components/CustomLayout'
 import Header from '@/components/Header'
 import { useElementPosition } from '@/hooks/useElementPosition'
 import Icon, { PlusOutlined } from '@ant-design/icons'
-import OutputSVG from '@/assets/svg/dev/output.svg?react'
+import layoutSVG from '@/assets/svg/dev/layout.svg?react'
 import DeleteSVG from '@/assets/svg/delete.svg?react'
 import DragSVG from '@/assets/svg/dev/drag.svg?react'
 import { useMemo, useRef } from 'react'
@@ -99,7 +99,7 @@ const Layout = () => {
 
   return (
     <CustomLayout ref={layoutRef}>
-      <Header label="布局" svg={<Icon component={OutputSVG} />} />
+      <Header label="布局" svg={<Icon component={layoutSVG} />} />
       <DragDropContext onDragEnd={onDragEnd}>
         {pageArr.map((pageKey, index) => {
           const { main = [], side = [] } = layoutMap.get(pageKey) || {}
