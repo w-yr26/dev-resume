@@ -5,34 +5,30 @@ import type { RGBAData } from 'jspdf'
 import { sleep } from '@/utils'
 
 /**
- * @param mainRef 待转换为canvas图像的容器
- * @param setWheel 重置缩放大小函数(有传则重置容器缩放大小)
+ * @param mainRefs 多个待转换为PDF的容器（数组）
+ * @param setWheel 重置缩放大小函数（可选）
  */
 export function useExportPDF(
-  mainRef: React.RefObject<HTMLDivElement | null>,
-  setWheel?: (wheel: number) => void
+  mainRefs: React.RefObject<(HTMLDivElement | null)[]>,
+  setWheel: (wheel: number) => void
 ) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const dom2Canvas = async () => {
-    if (mainRef.current) {
-      const canvas = await html2canvas(mainRef.current, {
-        useCORS: true, // 允许图片跨域，后续换掉
-        scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
-      })
-      const { width, height } = canvas
-      const base64URL = canvas.toDataURL('image/jpeg', 1) // 第二个参数quality: 生成的图片质量
-      return {
-        base64URL,
-        width,
-        height,
-      }
+  // 生成单个容器的 Canvas
+  const dom2Canvas = async (element: HTMLDivElement) => {
+    const canvas = await html2canvas(element, {
+      useCORS: true,
+      scale: window.devicePixelRatio * 2,
+    })
+    return {
+      base64URL: canvas.toDataURL('image/jpeg', 1),
+      width: canvas.width,
+      height: canvas.height,
     }
   }
 
+  // 添加图片到 PDF
   const addImage = (
-    _x: number,
-    _y: number,
     pdfInstance: jsPDF,
     base_data:
       | string
@@ -40,56 +36,63 @@ export function useExportPDF(
       | HTMLCanvasElement
       | Uint8Array
       | RGBAData,
-    _width: number,
-    _height: number
+    width: number,
+    height: number,
+    x: number = 0,
+    y: number = 0
   ) => {
-    pdfInstance.addImage(base_data, 'JPEG', _x, _y, _width, _height)
+    pdfInstance.addImage(base_data, 'JPEG', x, y, width, height)
   }
 
+  // 导出 PDF
   const savePDF = async () => {
-    // 页面先重置缩放，且一定要在转换为 canvas 图像之前缩放
-    if (setWheel) setWheel(1)
+    if (!mainRefs.current) return
+    setIsLoading(true)
+
+    setWheel(1)
     await sleep()
-    const {
-      base64URL,
-      height: canvasHeight,
-      width: canvasWidth,
-    } = (await dom2Canvas()) || {}
+
     const pdfInstance = new jsPDF({
       orientation: 'portrait',
       unit: 'px',
       format: 'a4',
     })
-    if (!base64URL || !canvasHeight || !canvasWidth) return
 
-    const pageWidth = pdfInstance.internal.pageSize.getWidth()
-    const pageHeight = pdfInstance.internal.pageSize.getHeight()
+    // 遍历所有容器，每页一个
+    for (let index = 0; index < mainRefs.current.length; index++) {
+      const ref = mainRefs.current[index]
+      if (!ref) continue // 跳过空引用
 
-    // 计算等比缩放后的尺寸
-    const scale = pageWidth / canvasWidth
-    const imgHeight = canvasHeight * scale
-    // 计算所需的页数(也就是内容实际高度是否 > 一张a4的高度)
-    // const pageSize = Math.ceil(imgHeight / pageHeight)
-    const pageSize = 1 // 强制使用一页
+      const {
+        base64URL,
+        width: canvasWidth,
+        height: canvasHeight,
+      } = await dom2Canvas(ref)
+      if (!base64URL || !canvasWidth || !canvasHeight) continue
 
-    Array(pageSize)
-      .fill(0)
-      .forEach((_, index) => {
-        if (index > 0) {
-          // 新增的页面要与原页面的配置保持一致
-          pdfInstance.addPage('a4', 'portrait')
-        }
+      const pageWidth = pdfInstance.internal.pageSize.getWidth()
+      const pageHeight = pdfInstance.internal.pageSize.getHeight()
 
-        const yPos = -(index * pageHeight)
-        addImage(0, yPos, pdfInstance, base64URL, pageWidth, imgHeight)
-      })
-    pdfInstance.save(`resume_${new Date().getTime()}`)
+      // 计算缩放比例（保持宽高比）
+      const scale = pageWidth / canvasWidth
+      const scaledHeight = canvasHeight * scale
+
+      // 如果是第一页，直接添加；否则新增一页
+      if (index >= 1) {
+        pdfInstance.addPage('a4', 'portrait')
+      }
+
+      // 将内容居中（可选）
+      const yPos = (pageHeight - scaledHeight) / 2
+      addImage(pdfInstance, base64URL, pageWidth, scaledHeight, 0, yPos)
+    }
+
+    pdfInstance.save(`resume${new Date().getTime()}`)
+    setIsLoading(false)
   }
 
   return {
     isLoading,
-    setIsLoading,
-    dom2Canvas,
     savePDF,
   }
 }

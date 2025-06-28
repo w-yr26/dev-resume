@@ -33,7 +33,13 @@ const Dev = () => {
   const layoutMap = useUIStore((state) => state.layoutMap)
 
   const resumeRef = useRef<HTMLDivElement>(null)
-  const mainRef = useRef<HTMLDivElement>(null)
+  // 页面删除的时候，数组原先的位置会变成null，但是在执行生成pdf的时候，已经对null的情况做了判断，故此处不处理
+  const mainRefs = useRef<(HTMLDivElement | null)[]>([]) // 存储所有 ref
+  // 更新 ref 数组
+  const setMainRef = (el: HTMLDivElement | null, index: number) => {
+    mainRefs.current[index] = el
+  }
+
   const leftScrollRef = useRef<HTMLDivElement>(null)
   const rightScrollRef = useRef<HTMLDivElement>(null)
   const drawerRef = useRef<drawerMethods>(null)
@@ -256,7 +262,7 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
-  const { savePDF, isLoading } = useExportPDF(mainRef, setWheel)
+  const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
 
   // 监听分页线
   // useEffect(() => {
@@ -433,11 +439,11 @@ const Dev = () => {
               <span className={styles['scale-tooltip-box']}>
                 缩放比例: {wheel.toFixed(2)}
               </span>
-              {pageArr.map((page) => (
+              {pageArr.map((page, index) => (
                 <div
                   className={styles['preview-content']}
                   key={page}
-                  ref={mainRef}
+                  ref={(el) => setMainRef(el, index)}
                   style={{
                     width: pageWidth,
                     height: pageHeight,

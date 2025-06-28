@@ -30,7 +30,7 @@ const keyToFieldLabel: Record<string, string> = {
 const Render = (props: RenderProps) => {
   const { dataContext, node, wheel } = props
   const lineHeight = useStyleStore((state) => state.lineHeight)
-  // const fontSize = useStyleStore((state) => state.fontSize)
+  const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
   const bgColor = useStyleStore((state) => state.bgColor)
   const borderStyle = useStyleStore((state) => state.borderStyle)
@@ -64,7 +64,7 @@ const Render = (props: RenderProps) => {
   if (type === 'root') {
     const rootStyle: React.CSSProperties = {
       lineHeight: lineHeight,
-      // fontSize: fontSize * wheel + 'px',
+      fontSize: fontSize + 'px',
       color: fontColor,
       backgroundColor: bgColor,
       padding: pagePadding + 'px',
