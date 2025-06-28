@@ -57,6 +57,7 @@ const Dev = () => {
   const [temList, setTemList] = useState<templateListType[]>([])
   // 当前是否为阅读模式
   const [isReadMode, setIsReadMode] = useState(false)
+  const [mouseMode, setMouseMode] = useState<'pan' | 'scale'>('pan')
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -199,6 +200,19 @@ const Dev = () => {
   }
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    // 滚轮操作时为"平移"模式下不处理缩放，处理滚动
+    if (mouseMode === 'pan') {
+      // 根据滚轮方向调整 translateY（上下滚动）或 translateX（Shift + 滚轮左右滚动）
+      if (e.shiftKey) {
+        // Shift + 滚轮 → 水平移动
+        setTranslateX((prev) => prev + e.deltaY)
+      } else {
+        // 普通滚轮 → 垂直移动
+        setTranslateY((prev) => prev + e.deltaY)
+      }
+      return
+    }
+
     const zoomSpeed = 0.1
     // const oldWheel = wheel
     // 放大
@@ -431,7 +445,14 @@ const Dev = () => {
               className={styles['resume-container']}
               style={{
                 transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-                cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
+                cursor:
+                  mouseMode === 'pan'
+                    ? 'move'
+                    : dragging
+                    ? 'grabbing'
+                    : isReadMode
+                    ? ''
+                    : 'grab',
                 gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
               }}
               ref={resumeRef}
@@ -491,6 +512,8 @@ const Dev = () => {
         <BottomBar
           isReadMode={isReadMode}
           isOrigin={isOrigin}
+          mouseMode={mouseMode}
+          setMouseMode={setMouseMode}
           setIsReadMode={setIsReadMode}
           upWheel={upWheel}
           reduceWheel={reduceWheel}

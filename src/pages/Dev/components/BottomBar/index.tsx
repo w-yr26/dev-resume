@@ -1,5 +1,7 @@
 import Icon from '@ant-design/icons'
 import cssSVG from '@/assets/svg/dev/css.svg?react'
+import panSVG from '@/assets/svg/dev/pan.svg?react'
+import scaleSVG from '@/assets/svg/dev/scale.svg?react'
 import centerSVG from '@/assets/svg/dev/center.svg?react'
 import zoomInSVG from '@/assets/svg/dev/zoom-in-line.svg?react'
 import zoomOutSVG from '@/assets/svg/dev/zoom-out-line.svg?react'
@@ -15,6 +17,8 @@ import AuthorizationHoc from '../AuthorizationHoc'
 type barType = {
   isReadMode: boolean
   isOrigin: boolean
+  mouseMode: 'pan' | 'scale'
+  setMouseMode: (val: 'pan' | 'scale') => void
   setIsReadMode: (val: boolean) => void
   setisLeftUnExpand: (v: boolean) => void
   setisRightUnExpand: (v: boolean) => void
@@ -28,6 +32,8 @@ type barType = {
 const BottomBar = ({
   isReadMode,
   isOrigin,
+  mouseMode,
+  setMouseMode,
   setIsReadMode,
   setisLeftUnExpand,
   setisRightUnExpand,
@@ -44,6 +50,12 @@ const BottomBar = ({
   }
 
   const iconArr = [
+    {
+      icon: <Icon component={mouseMode === 'pan' ? panSVG : scaleSVG} />,
+      label: mouseMode === 'pan' ? '平移到缩放' : '缩放到平移',
+      callback: () => setMouseMode(mouseMode === 'pan' ? 'scale' : 'pan'),
+      permission: 1,
+    },
     {
       icon: <Icon component={centerSVG} />,
       label: '重置缩放',
