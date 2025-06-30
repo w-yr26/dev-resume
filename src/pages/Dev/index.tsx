@@ -21,6 +21,7 @@ import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
 import QASideBar from './components/QASideBar'
+import { sleep } from '@/utils'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -398,6 +399,63 @@ const Dev = () => {
     []
   )
 
+  const iframePrint = async () => {
+    const iframe = document.createElement('iframe')
+    iframe.style.position = 'absolute'
+    iframe.style.width = '0'
+    iframe.style.height = '0'
+    iframe.style.border = 'none'
+    iframe.style.left = '-9999px'
+
+    document.body.appendChild(iframe)
+
+    iframe.onload = async function () {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+      if (!iframeDoc) return
+      // 收集当前页面的 <style> 和 <link rel="stylesheet"> 标签，会默认收集所有的样式(可以把目标打印区域的样式单独抽离到css文件中，此处就可以直接读取目标style容器)
+      const styles = Array.from(
+        document.querySelectorAll('style, link[rel="stylesheet"]')
+      )
+        .map((node) => node.outerHTML)
+        .join('\n')
+
+      const elementsToPrint = mainRefs.current
+        ?.filter((el): el is HTMLDivElement => el !== null) // 过滤掉 null
+        .map((el) => {
+          el.setAttribute(
+            'style',
+            `${el.getAttribute('style') || ''}; page-break-after: always;`
+          )
+          return el.outerHTML
+        })
+        .join('')
+      const html = `
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Print</title>
+                    ${styles}
+                    <style>
+                        body { margin: 0; padding: 0; }
+                    </style>
+                </head>
+                <body>
+                    ${elementsToPrint}
+                </body>
+            </html>
+        `
+      iframeDoc.write(html)
+      iframeDoc.close()
+      await sleep()
+      try {
+        iframe.contentWindow?.focus()
+        iframe.contentWindow?.print()
+      } finally {
+        document.body.removeChild(iframe)
+      }
+    }
+  }
+
   return (
     <InvalidHoc token={token}>
       <div className={styles['dev-container']}>
@@ -494,7 +552,7 @@ const Dev = () => {
           resetWheel={resetWheel}
           setisLeftUnExpand={setisLeftUnExpand}
           setisRightUnExpand={setisRightUnExpand}
-          savePDF={savePDF}
+          savePDF={iframePrint}
         />
         <StyleEditor ref={drawerRef} />
         {panelPos && (
