@@ -278,7 +278,8 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
-  const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
+  // const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
@@ -429,6 +430,7 @@ const Dev = () => {
           return el.outerHTML
         })
         .join('')
+
       const html = `
             <!DOCTYPE html>
             <html>
@@ -446,12 +448,14 @@ const Dev = () => {
         `
       iframeDoc.write(html)
       iframeDoc.close()
+      setIsLoading(true)
       await sleep()
       try {
         iframe.contentWindow?.focus()
         iframe.contentWindow?.print()
       } finally {
         document.body.removeChild(iframe)
+        setIsLoading(false)
       }
     }
   }
@@ -516,14 +520,15 @@ const Dev = () => {
                   ) : null}
                 </div>
               ))}
-              {isLoading ? (
-                <div className={styles['loading-box']}>
-                  <Spin />
-                </div>
-              ) : null}
             </div>
           </div>
         </main>
+
+        {isLoading ? (
+          <div className={styles['loading-box']}>
+            <Spin />
+          </div>
+        ) : null}
 
         <AuthorizationHoc permission={3} isOrigin={isOrigin}>
           <Setting
