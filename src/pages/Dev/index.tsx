@@ -9,7 +9,6 @@ import BottomBar from './components/BottomBar'
 import Render from '../Render'
 import StyleEditor from './components/StyleEditor'
 import type { drawerMethods, ButtonPanelPosition } from '@/types/materials'
-import { useExportPDF } from '@/hooks/useExportPDF'
 import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
@@ -278,7 +277,6 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
-  // const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
   const [isLoading, setIsLoading] = useState(false)
 
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
