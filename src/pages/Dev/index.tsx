@@ -64,12 +64,25 @@ const Dev = () => {
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
   const params = useParams()
+  console.log('params', params)
+
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
   const isOrigin = useMemo(() => {
     return !searchParams.get('token')
   }, [searchParams])
+
+  const isBrowserExport = useMemo(() => {
+    return params.preview !== undefined
+  }, [params])
+
+  useEffect(() => {
+    // 此时为无头浏览器预览
+    if (params.preview) {
+      setWheel(1)
+    }
+  }, [])
 
   useEffect(() => {
     const getDetail = async () => {
@@ -461,14 +474,16 @@ const Dev = () => {
   return (
     <InvalidHoc token={token}>
       <div className={styles['dev-container']}>
-        <AuthorizationHoc permission={3} isOrigin={isOrigin}>
-          <LeftMenu
-            iconClick={handleLeftScroll}
-            isLeftUnExpand={isLeftUnExpand}
-            setisLeftUnExpand={setisLeftUnExpand}
-          />
-          <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
-        </AuthorizationHoc>
+        {isBrowserExport ? null : (
+          <AuthorizationHoc permission={3} isOrigin={isOrigin}>
+            <LeftMenu
+              iconClick={handleLeftScroll}
+              isLeftUnExpand={isLeftUnExpand}
+              setisLeftUnExpand={setisLeftUnExpand}
+            />
+            <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
+          </AuthorizationHoc>
+        )}
 
         <main
           className={`${styles['main-container']} ${
@@ -528,35 +543,40 @@ const Dev = () => {
           </div>
         ) : null}
 
-        <AuthorizationHoc permission={3} isOrigin={isOrigin}>
-          <Setting
-            ref={rightScrollRef}
-            isRightUnExpand={isRightUnExpand}
-            isOrigin={isOrigin}
-            temList={temList}
-            fetchUISchema={fetchUISchema}
-          />
-          <RightMenu
-            iconClick={handleRightScroll}
-            isRightUnExpand={isRightUnExpand}
-            setisRightUnExpand={setisRightUnExpand}
-          />
-        </AuthorizationHoc>
+        {isBrowserExport ? null : (
+          <>
+            <AuthorizationHoc permission={3} isOrigin={isOrigin}>
+              <Setting
+                ref={rightScrollRef}
+                isRightUnExpand={isRightUnExpand}
+                isOrigin={isOrigin}
+                temList={temList}
+                fetchUISchema={fetchUISchema}
+              />
+              <RightMenu
+                iconClick={handleRightScroll}
+                isRightUnExpand={isRightUnExpand}
+                setisRightUnExpand={setisRightUnExpand}
+              />
+            </AuthorizationHoc>
 
-        <BottomBar
-          isReadMode={isReadMode}
-          isOrigin={isOrigin}
-          mouseMode={mouseMode}
-          setMouseMode={setMouseMode}
-          setIsReadMode={setIsReadMode}
-          upWheel={upWheel}
-          reduceWheel={reduceWheel}
-          handleModeSwitch={handleModeSwitch}
-          resetWheel={resetWheel}
-          setisLeftUnExpand={setisLeftUnExpand}
-          setisRightUnExpand={setisRightUnExpand}
-          savePDF={iframePrint}
-        />
+            <BottomBar
+              isReadMode={isReadMode}
+              isOrigin={isOrigin}
+              mouseMode={mouseMode}
+              setMouseMode={setMouseMode}
+              setIsReadMode={setIsReadMode}
+              upWheel={upWheel}
+              reduceWheel={reduceWheel}
+              handleModeSwitch={handleModeSwitch}
+              resetWheel={resetWheel}
+              setisLeftUnExpand={setisLeftUnExpand}
+              setisRightUnExpand={setisRightUnExpand}
+              savePDF={iframePrint}
+            />
+          </>
+        )}
+
         <StyleEditor ref={drawerRef} />
         {panelPos && (
           <div
