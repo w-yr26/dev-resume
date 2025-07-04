@@ -1,14 +1,18 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source'
-import { useState } from 'react'
-import { Empty, Typography } from 'antd'
+import { useEffect, useRef, useState } from 'react'
+import { Empty, Spin, Tag, Typography } from 'antd'
 import Icon from '@ant-design/icons'
 import brainSVG from '@/assets/svg/dev/brain.svg?react'
 import refreshSVG from '@/assets/svg/dev/refresh.svg?react'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
+import eyeSVG from '@/assets/svg/dev/eye.svg?react'
+import eyeoffSVG from '@/assets/svg/dev/eyeoff.svg?react'
 import { BASE_URL } from '@/utils/request'
 import { useDevStore, useUserStore } from '@/store'
 import styles from './index.module.scss'
 import DevTabs from '@/components/DevTabs'
+import { getInterviewHistoryAPI } from '@/apis/resume'
+import type { questionRespItem } from '@/types/resume'
 
 const tabsOptions = [
   {
@@ -27,9 +31,21 @@ const QASideBar = () => {
   const resumeId = useDevStore((state) => state.resumeId)
 
   const [activeTab, setActiveTab] = useState(0)
-  const [buffer, setBuffer] = useState('') // 用于拼接字符
+  const [buffer, setBuffer] = useState('')
+  // 对话是否完成
   const [isFinish, setIsFinish] = useState(false)
+  // 对话是否处于建立连接状态
+  const [isPending, setIsPending] = useState(false)
+  const [historyList, setHistoryList] = useState<
+    (questionRespItem & {
+      isShow: boolean
+    })[]
+  >([])
+  const brushRef = useRef<HTMLDivElement>(null)
+  const isFetch = useRef(false)
+
   const generatorQuestions = async () => {
+    setIsPending(true)
     await fetchEventSource(
       `${BASE_URL}/resume/AI/generate?resumeId=${resumeId}&userId=${userId}`,
       {
@@ -37,6 +53,7 @@ const QASideBar = () => {
           Authorization: token,
         },
         async onopen() {
+          setIsPending(false)
           setIsFinish(false)
         },
         onmessage(ev) {
@@ -48,12 +65,56 @@ const QASideBar = () => {
             parsedData = rawData.replace(/"/g, '')
           }
           const text = parsedData.replace(/\\n/g, '\n') // 将字符串 "\n" 转为换行符
-          setBuffer((prev) => prev + text)
+          setBuffer((prev) => {
+            return prev + text
+          })
         },
         onclose() {
           setIsFinish(true)
         },
       }
+    )
+  }
+
+  useEffect(() => {
+    if (brushRef.current) {
+      brushRef.current.scrollTop = brushRef.current.scrollHeight
+    }
+  }, [brushRef.current?.scrollHeight])
+
+  // 重新生成面试题
+  const resetChat = () => {
+    setBuffer('')
+    generatorQuestions()
+  }
+
+  useEffect(() => {
+    const getHistoryList = async () => {
+      const { data } = await getInterviewHistoryAPI(resumeId, userId)
+      setHistoryList(
+        data.map((i) => ({
+          ...i,
+          isShow: false,
+        }))
+      )
+    }
+
+    if (isFetch.current) return
+
+    getHistoryList()
+    isFetch.current = true
+  }, [])
+
+  const setItemPreview = (id: string) => {
+    setHistoryList(
+      historyList.map((i) => {
+        if (i.batchId !== id) return i
+        else
+          return {
+            ...i,
+            isShow: !i.isShow,
+          }
+      })
     )
   }
 
@@ -82,7 +143,7 @@ const QASideBar = () => {
           options={tabsOptions}
         />
         {activeTab === 0 ? (
-          <>
+          <Spin spinning={isPending}>
             {!buffer ? (
               <div className={styles['empty-box']} style={{ margin: '16px 0' }}>
                 <Empty
@@ -106,28 +167,102 @@ const QASideBar = () => {
                     {isFinish ? '面试题' : '正在生成...'}
                   </span>
 
-                  <div className={styles['header-right']}>
+                  <div className={styles['header-right']} onClick={resetChat}>
                     <Icon component={refreshSVG} />
                   </div>
                 </div>
 
-                <div className={styles['chat-content']}>{buffer}</div>
+                <div className={styles['chat-content']} ref={brushRef}>
+                  {buffer}
+                </div>
               </div>
             )}
-          </>
+          </Spin>
         ) : null}
 
         {activeTab === 1 ? (
-          <div className={styles['empty-box']} style={{ margin: '16px 0' }}>
-            <Empty
-              description={
-                <Typography.Text>
-                  暂无历史记录，
-                  <a onClick={() => setActiveTab(0)}>去生成面试题</a>
-                </Typography.Text>
-              }
-            />
-          </div>
+          !historyList.length ? (
+            <div className={styles['empty-box']} style={{ margin: '16px 0' }}>
+              <Empty
+                description={
+                  <Typography.Text>
+                    暂无历史记录，
+                    <a onClick={() => setActiveTab(0)}>去生成面试题</a>
+                  </Typography.Text>
+                }
+              />
+            </div>
+          ) : (
+            <div className={styles['history-list']}>
+              {historyList.map((chatItem) => (
+                <>
+                  {!chatItem.isShow ? (
+                    <div className={styles['chat-item']}>
+                      <div className={styles['chat-header']}>
+                        <div className="header-left">
+                          <Icon component={brainSVG} />
+                          <span
+                            style={{
+                              marginLeft: '4px',
+                            }}
+                          >
+                            {chatItem.questions[0].createTime.split(' ')[0]}
+                          </span>
+                        </div>
+                        <span
+                          style={{
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setItemPreview(chatItem.batchId)}
+                        >
+                          <Icon component={eyeSVG} />
+                        </span>
+                      </div>
+                      <div className={styles['chat-body']}>
+                        {chatItem.questions.length}道面试题
+                      </div>
+                      <Tag>{chatItem.batchId}</Tag>
+                    </div>
+                  ) : (
+                    <div className={styles['preview-item']}>
+                      <div className={styles['preview-header']}>
+                        <Tag>{chatItem.batchId}</Tag>
+                        <span
+                          style={{
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setItemPreview(chatItem.batchId)}
+                        >
+                          <Icon component={eyeoffSVG} />
+                        </span>
+                      </div>
+                      <div className={styles['question-list']}>
+                        {chatItem.questions.map((q, index) => (
+                          <div className={styles['question-item']} key={q.id}>
+                            <div className={styles['question-content-box']}>
+                              {index + 1}. {q.question}
+                            </div>
+                            <div className={styles['focus-points-list']}>
+                              <strong>考察重点</strong>
+                              {q.focusPoint}
+                            </div>
+                            <div className={styles['follow-up-list']}>
+                              <strong>追问方向</strong>
+                              <ul>
+                                {q.followUpList.map((follow, idx) => (
+                                  <li key={idx}>{follow}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))}
+            </div>
+          )
         ) : null}
       </div>
     </div>

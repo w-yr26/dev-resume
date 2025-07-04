@@ -573,14 +573,13 @@ const Dev = () => {
                 className={`${styles['resume-container']} resume-inner`}
                 style={{
                   transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-                  cursor:
-                    mouseMode === 'pan'
-                      ? 'move'
-                      : dragging
-                      ? 'grabbing'
-                      : isReadMode
-                      ? ''
-                      : 'grab',
+                  cursor: isReadMode
+                    ? ''
+                    : mouseMode === 'pan'
+                    ? 'move'
+                    : dragging
+                    ? 'grabbing'
+                    : 'grab',
                   gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
                 }}
                 ref={resumeRef}

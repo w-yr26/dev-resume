@@ -117,14 +117,15 @@ const AIBrush = <
 
   const aiChatModal = () => (
     <div className={styles['ai-chat-modal']}>
-      {isPending ? <Spin /> : null}
-      <div
-        className={styles['chat-content']}
-        style={{ whiteSpace: 'pre-wrap' }}
-        ref={brushRef}
-      >
-        {respText}
-      </div>
+      <Spin spinning={isPending}>
+        <div
+          className={styles['chat-content']}
+          style={{ whiteSpace: 'pre-wrap' }}
+          ref={brushRef}
+        >
+          {respText}
+        </div>
+      </Spin>
     </div>
   )
 

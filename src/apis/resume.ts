@@ -4,6 +4,7 @@ import type {
   chatRespType,
   createLinkType,
   linkItem,
+  questionRespItem,
   resumeDetailType,
   resumeListResp,
   SendChatType,
@@ -184,4 +185,13 @@ export const postVerifyLinkAPI = (data: {
   shareToken: string
 }) => {
   return request('/resume/shareLink/verifyLink', 'POST', data)
+}
+
+/**
+ * 获取ai生成面试题的历史记录(最多五条)
+ */
+export const getInterviewHistoryAPI = (resumeId: string, userId: string) => {
+  return request<questionRespItem[]>(
+    `/resume/interview/history?resumeId=${resumeId}&userId=${userId}`
+  )
 }
