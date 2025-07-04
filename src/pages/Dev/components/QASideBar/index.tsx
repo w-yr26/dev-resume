@@ -8,6 +8,18 @@ import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import { BASE_URL } from '@/utils/request'
 import { useDevStore, useUserStore } from '@/store'
 import styles from './index.module.scss'
+import DevTabs from '@/components/DevTabs'
+
+const tabsOptions = [
+  {
+    key: 'chat',
+    label: '面试题库',
+  },
+  {
+    key: 'history',
+    label: '历史记录',
+  },
+]
 
 const QASideBar = () => {
   const token = useUserStore((state) => state.info.token)
@@ -64,25 +76,11 @@ const QASideBar = () => {
       </div>
 
       <div className={styles['ai-chat-container']}>
-        <div className={styles['tabs-header']}>
-          <div
-            className={`${styles['tab-item']} ${
-              activeTab === 0 ? styles['active-item'] : ''
-            }`}
-            onClick={() => setActiveTab(0)}
-          >
-            面试题库
-          </div>
-          <div
-            className={`${styles['tab-item']} ${
-              activeTab === 1 ? styles['active-item'] : ''
-            }`}
-            onClick={() => setActiveTab(1)}
-          >
-            历史记录
-          </div>
-        </div>
-
+        <DevTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          options={tabsOptions}
+        />
         {activeTab === 0 ? (
           <>
             {!buffer ? (

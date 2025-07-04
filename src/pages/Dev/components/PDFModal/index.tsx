@@ -1,9 +1,21 @@
 import { Button, Modal } from 'antd'
 import styles from './index.module.scss'
-
 import Icon from '@ant-design/icons'
 import PDFSVG from '@/assets/svg/dev/pdf.svg?react'
 import downloadSVG from '@/assets/svg/download.svg?react'
+import DevTabs from '@/components/DevTabs'
+
+const tabsOptions = [
+  {
+    key: 'server',
+    label: '服务端打印',
+  },
+  {
+    key: 'client',
+    label: '浏览器打印',
+  },
+]
+
 const PDFModal = ({
   activeTab,
   isModalOpen,
@@ -55,25 +67,11 @@ const PDFModal = ({
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
       >
-        <div className={styles['tabs-header']}>
-          <div
-            className={`${styles['tab-item']} ${
-              activeTab === 0 ? styles['active-item'] : ''
-            }`}
-            onClick={() => setActiveTab(0)}
-          >
-            服务端渲染
-          </div>
-          <div
-            className={`${styles['tab-item']} ${
-              activeTab === 1 ? styles['active-item'] : ''
-            }`}
-            onClick={() => setActiveTab(1)}
-          >
-            浏览器打印
-          </div>
-        </div>
-
+        <DevTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          options={tabsOptions}
+        />
         {activeTab === 0 ? (
           <div className={styles['info-box']}>
             <div className={styles['advantages-box']}>
