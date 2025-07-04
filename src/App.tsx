@@ -75,6 +75,23 @@ function App() {
             dotSize: 6,
             fontSize: 12,
           },
+          Spin: {
+            colorPrimary: '#18181b',
+          },
+          Button: {
+            defaultActiveBg: '#18181b',
+            defaultActiveBorderColor: '#18181b',
+            defaultActiveColor: '#fff',
+            defaultBg: '#18181b',
+            defaultBorderColor: '#18181b',
+            defaultColor: '#fff',
+            defaultHoverBg: '#18181b',
+            defaultHoverBorderColor: '#18181b',
+            defaultHoverColor: '#fff',
+            defaultShadow: 'none',
+            contentLineHeight: 2,
+            borderRadius: 0
+          },
         },
       }}
     >

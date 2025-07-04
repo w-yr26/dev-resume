@@ -1,7 +1,6 @@
 import Icon from '@ant-design/icons'
 import PageSVG from '@/assets/svg/dev/page.svg?react'
 import ThemeSVG from '@/assets/svg/dev/theme.svg?react'
-import OutputSVG from '@/assets/svg/dev/output.svg?react'
 import GridSVG from '@/assets/svg/grid.svg?react'
 // import ColorSVG from '@/assets/svg/dev/color.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
@@ -33,11 +32,6 @@ const toolMenu = [
     icon: <Icon component={layoutSVG} />,
     label: '布局',
     key: 'layout',
-  },
-  {
-    icon: <Icon component={OutputSVG} />,
-    label: '导出',
-    key: 'output',
   },
   {
     icon: <Icon component={shareSVG} />,

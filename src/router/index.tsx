@@ -46,14 +46,6 @@ const routes = createRoutesFromElements(
       }
     ></Route>
     <Route
-      path="/preview/resume/:randomId/:preview"
-      element={
-        <Suspense fallback={<Loading />}>
-          <Dev />
-        </Suspense>
-      }
-    ></Route>
-    <Route
       path="login"
       element={
         <Suspense fallback={<Loading />}>

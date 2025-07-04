@@ -26,7 +26,7 @@ type barType = {
   reduceWheel: () => void
   handleModeSwitch: () => void
   resetWheel: () => void
-  savePDF: () => Promise<any>
+  savePDF: () => void
 }
 
 const BottomBar = ({

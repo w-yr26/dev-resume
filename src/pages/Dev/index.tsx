@@ -20,10 +20,13 @@ import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
 import QASideBar from './components/QASideBar'
-import { sleep } from '@/utils'
+import { createLink2Download, getAllStyleText, sleep } from '@/utils'
+import { BASE_URL } from '@/utils/request'
+import PDFModal from './components/PDFModal'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
+  const userToken = useUserStore((state) => state.info.token)
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
   const setDataSource = useDevStore((state) => state.setDataSource)
   const setResumeId = useDevStore((state) => state.setResumeId)
@@ -58,13 +61,15 @@ const Dev = () => {
   const [temList, setTemList] = useState<templateListType[]>([])
   // 当前是否为阅读模式
   const [isReadMode, setIsReadMode] = useState(false)
+  // 导出pdf对话框
+  const [isModalOpen, setISModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState(0)
   const [mouseMode, setMouseMode] = useState<'pan' | 'scale'>('pan')
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
   const params = useParams()
-  console.log('params', params)
 
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
@@ -72,10 +77,6 @@ const Dev = () => {
   const isOrigin = useMemo(() => {
     return !searchParams.get('token')
   }, [searchParams])
-
-  const isBrowserExport = useMemo(() => {
-    return params.preview !== undefined
-  }, [params])
 
   useEffect(() => {
     // 此时为无头浏览器预览
@@ -411,70 +412,144 @@ const Dev = () => {
     []
   )
 
+  // 浏览器打印
   const iframePrint = async () => {
-    const iframe = document.createElement('iframe')
-    iframe.style.position = 'absolute'
-    iframe.style.width = '0'
-    iframe.style.height = '0'
-    iframe.style.border = 'none'
-    iframe.style.left = '-9999px'
+    try {
+      const iframe = document.createElement('iframe')
+      iframe.style.position = 'absolute'
+      iframe.style.width = '0'
+      iframe.style.height = '0'
+      iframe.style.border = 'none'
+      iframe.style.left = '-9999px'
 
-    document.body.appendChild(iframe)
+      // 先添加到DOM再设置内容
+      document.body.appendChild(iframe)
 
-    iframe.onload = async function () {
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-      if (!iframeDoc) return
-      // 收集当前页面的 <style> 和 <link rel="stylesheet"> 标签，会默认收集所有的样式(可以把目标打印区域的样式单独抽离到css文件中，此处就可以直接读取目标style容器)
+      await new Promise((resolve) => {
+        iframe.onload = resolve
+
+        // 设置空白文档触发load事件
+        iframe.srcdoc = '<!DOCTYPE html><html><head></head><body></body></html>'
+      })
+
+      const iframeDoc = iframe.contentDocument
+      if (!iframeDoc) throw new Error('无法访问iframe文档')
+
+      // 收集样式 - 考虑限制范围
       const styles = Array.from(
         document.querySelectorAll('style, link[rel="stylesheet"]')
       )
         .map((node) => node.outerHTML)
         .join('\n')
 
+      // 处理打印内容
       const elementsToPrint = mainRefs.current
-        ?.filter((el): el is HTMLDivElement => el !== null) // 过滤掉 null
+        ?.filter((el): el is HTMLDivElement => el !== null)
         .map((el) => {
+          const existingStyle = el.getAttribute('style') || ''
           el.setAttribute(
             'style',
-            `${el.getAttribute('style') || ''}; page-break-after: always;`
+            `${existingStyle}; page-break-after: always;`
           )
           return el.outerHTML
         })
         .join('')
 
       const html = `
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    <title>Print</title>
-                    ${styles}
-                    <style>
-                        body { margin: 0; padding: 0; }
-                    </style>
-                </head>
-                <body>
-                    ${elementsToPrint}
-                </body>
-            </html>
-        `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print</title>
+          ${styles}
+          <style>
+            body { margin: 0; padding: 0; }
+            @page { size: auto; margin: 0; }
+          </style>
+        </head>
+        <body>
+          ${elementsToPrint}
+        </body>
+      </html>
+    `
+
+      iframeDoc.open()
       iframeDoc.write(html)
       iframeDoc.close()
-      setIsLoading(true)
-      await sleep()
-      try {
-        iframe.contentWindow?.focus()
-        iframe.contentWindow?.print()
-      } finally {
-        document.body.removeChild(iframe)
-        setIsLoading(false)
+
+      await sleep() // 确保内容渲染完成
+
+      iframe.contentWindow?.focus()
+      iframe.contentWindow?.print()
+    } catch (error) {
+      console.error('打印出错:', error)
+    } finally {
+      // 延迟移除iframe以确保打印完成
+      const iframe = document.querySelector('iframe[style*="left: -9999px"]')
+      if (iframe && iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe)
       }
     }
   }
 
+  // 生成打印目标的html交由无头浏览器
+  const generatorTargetHTMLStr = () => {
+    const html = resumeRef.current?.outerHTML || ''
+    const styleText = getAllStyleText()
+
+    return `
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>简历导出</title>
+      ${styleText}
+    </head>
+    <body>
+      ${html}
+    </body>
+    </html>
+  `
+  }
+
+  // 无头浏览器打印
+  const headlessBrowserExportPDF = async () => {
+    const html = generatorTargetHTMLStr()
+    // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
+    const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: userToken,
+      } as any,
+      body: JSON.stringify({
+        html,
+        resumeId: params.randomId!,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error('生成 PDF 失败')
+    }
+
+    const blob = await response.blob()
+    await createLink2Download(blob, params.randomId)
+  }
+
+  const handleExportPDF = async () => {
+    setISModalOpen(false)
+    setIsLoading(true)
+    if (activeTab === 0) {
+      await headlessBrowserExportPDF()
+    } else if (activeTab === 1) {
+      await iframePrint()
+    }
+    setIsLoading(false)
+  }
   return (
-    <InvalidHoc token={token}>
-      <div className={styles['dev-container']}>
-        {isBrowserExport ? null : (
+    <>
+      <InvalidHoc token={token}>
+        <div className={styles['dev-container']}>
           <AuthorizationHoc permission={3} isOrigin={isOrigin}>
             <LeftMenu
               iconClick={handleLeftScroll}
@@ -483,135 +558,131 @@ const Dev = () => {
             />
             <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
           </AuthorizationHoc>
-        )}
 
-        <main
-          className={`${styles['main-container']} ${
-            isLeftUnExpand && isRightUnExpand ? styles['not-edit'] : ''
-          }`}
-        >
-          <div
-            className={styles['preview-container']}
-            onWheel={(e) => handleWheel(e)}
-            onMouseDown={(e) => startDrag(e)}
+          <main
+            className={`${styles['main-container']} ${
+              isLeftUnExpand && isRightUnExpand ? styles['not-edit'] : ''
+            }`}
           >
             <div
-              className={styles['resume-container']}
-              style={{
-                transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-                cursor:
-                  mouseMode === 'pan'
-                    ? 'move'
-                    : dragging
-                    ? 'grabbing'
-                    : isReadMode
-                    ? ''
-                    : 'grab',
-                gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
-              }}
-              ref={resumeRef}
+              className={`${styles['preview-container']} resume-target`}
+              onWheel={(e) => handleWheel(e)}
+              onMouseDown={(e) => startDrag(e)}
             >
-              <span className={styles['scale-tooltip-box']}>
-                缩放比例: {wheel.toFixed(2)}
-              </span>
-              {pageArr.map((page, index) => (
-                <div
-                  className={styles['preview-content']}
-                  key={page}
-                  ref={(el) => setMainRef(el, index)}
-                  style={{
-                    width: pageWidth,
-                    height: pageHeight,
-                  }}
-                >
-                  {uiSchema && !loading ? (
-                    <Render
-                      dataContext={dataSource}
-                      node={getPageUiSchema(page, uiSchema, layoutMap)}
-                      wheel={wheel}
-                    />
-                  ) : null}
-                </div>
-              ))}
+              <div
+                className={`${styles['resume-container']} resume-inner`}
+                style={{
+                  transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
+                  cursor:
+                    mouseMode === 'pan'
+                      ? 'move'
+                      : dragging
+                      ? 'grabbing'
+                      : isReadMode
+                      ? ''
+                      : 'grab',
+                  gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
+                }}
+                ref={resumeRef}
+              >
+                <span className={`${styles['scale-tooltip-box']} resume-miss`}>
+                  缩放比例: {wheel.toFixed(2)}
+                </span>
+                {pageArr.map((page, index) => (
+                  <div
+                    className={`${styles['preview-content']} page-break`}
+                    key={page}
+                    ref={(el) => setMainRef(el, index)}
+                    style={{
+                      width: pageWidth,
+                      height: pageHeight,
+                    }}
+                  >
+                    {uiSchema && !loading ? (
+                      <Render
+                        dataContext={dataSource}
+                        node={getPageUiSchema(page, uiSchema, layoutMap)}
+                        wheel={wheel}
+                      />
+                    ) : null}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
 
-        {isLoading ? (
-          <div className={styles['loading-box']}>
-            <Spin />
-          </div>
-        ) : null}
+          {isLoading ? (
+            <div className={styles['loading-box']}>
+              <Spin />
+            </div>
+          ) : null}
 
-        {isBrowserExport ? null : (
-          <>
-            <AuthorizationHoc permission={3} isOrigin={isOrigin}>
-              <Setting
-                ref={rightScrollRef}
-                isRightUnExpand={isRightUnExpand}
-                isOrigin={isOrigin}
-                temList={temList}
-                fetchUISchema={fetchUISchema}
-              />
-              <RightMenu
-                iconClick={handleRightScroll}
-                isRightUnExpand={isRightUnExpand}
-                setisRightUnExpand={setisRightUnExpand}
-              />
-            </AuthorizationHoc>
-
-            <BottomBar
-              isReadMode={isReadMode}
+          <AuthorizationHoc permission={3} isOrigin={isOrigin}>
+            <Setting
+              ref={rightScrollRef}
+              isRightUnExpand={isRightUnExpand}
               isOrigin={isOrigin}
-              mouseMode={mouseMode}
-              setMouseMode={setMouseMode}
-              setIsReadMode={setIsReadMode}
-              upWheel={upWheel}
-              reduceWheel={reduceWheel}
-              handleModeSwitch={handleModeSwitch}
-              resetWheel={resetWheel}
-              setisLeftUnExpand={setisLeftUnExpand}
-              setisRightUnExpand={setisRightUnExpand}
-              savePDF={iframePrint}
+              temList={temList}
+              fetchUISchema={fetchUISchema}
             />
-          </>
-        )}
+            <RightMenu
+              iconClick={handleRightScroll}
+              isRightUnExpand={isRightUnExpand}
+              setisRightUnExpand={setisRightUnExpand}
+            />
+          </AuthorizationHoc>
 
-        <StyleEditor ref={drawerRef} />
-        {panelPos && (
-          <div
-            ref={panelRef}
-            style={{
-              top: panelPos.top + 'px',
-              left: panelPos.left + 'px',
-            }}
-            className={styles['panel-box']}
-          >
-            {/* 功能按钮面板 */}
-            <Icon component={commentSVG} />
-          </div>
-        )}
-        {isReadMode ? (
-          <ChatSideBar
-            resumeId={params.randomId!}
-            selectedNodeKey={currentNodeKey}
-            currentText={currentText}
-            setCurrentText={setCurrentText}
+          <BottomBar
+            isReadMode={isReadMode}
+            isOrigin={isOrigin}
+            mouseMode={mouseMode}
+            setMouseMode={setMouseMode}
+            setIsReadMode={setIsReadMode}
+            upWheel={upWheel}
+            reduceWheel={reduceWheel}
+            handleModeSwitch={handleModeSwitch}
+            resetWheel={resetWheel}
+            setisLeftUnExpand={setisLeftUnExpand}
+            setisRightUnExpand={setisRightUnExpand}
+            savePDF={() => setISModalOpen(true)}
           />
-        ) : null}
 
-        {isReadMode ? <QASideBar /> : null}
+          <StyleEditor ref={drawerRef} />
+          {panelPos && (
+            <div
+              ref={panelRef}
+              style={{
+                top: panelPos.top + 'px',
+                left: panelPos.left + 'px',
+              }}
+              className={styles['panel-box']}
+            >
+              {/* 功能按钮面板 */}
+              <Icon component={commentSVG} />
+            </div>
+          )}
+          {isReadMode ? (
+            <ChatSideBar
+              resumeId={params.randomId!}
+              selectedNodeKey={currentNodeKey}
+              currentText={currentText}
+              setCurrentText={setCurrentText}
+            />
+          ) : null}
 
-        {/* <AuthorizationHoc isOrigin={isOrigin} permission={2} type="test">
-          <div
-            className={styles['open-chat-tool-box']}
-            onClick={() => setSidebarOpened(true)}
-          >
-            <Icon component={commentSVG} />
-          </div>
-        </AuthorizationHoc> */}
-      </div>
-    </InvalidHoc>
+          {isReadMode ? <QASideBar /> : null}
+        </div>
+      </InvalidHoc>
+
+      {/* 选择下载选项的对话框 */}
+      <PDFModal
+        activeTab={activeTab}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setISModalOpen}
+        setActiveTab={setActiveTab}
+        handleExportPDF={handleExportPDF}
+      />
+    </>
   )
 }
 
