@@ -194,9 +194,12 @@ const QASideBar = () => {
             </div>
           ) : (
             <div className={styles['history-list']}>
-              {historyList.map((chatItem) => (
-                <>
-                  {!chatItem.isShow ? (
+              {historyList.map((batchItem) => (
+                <div
+                  className={styles['batch-item-box']}
+                  key={batchItem.batchId}
+                >
+                  {!batchItem.isShow ? (
                     <div className={styles['chat-item']}>
                       <div className={styles['chat-header']}>
                         <div className="header-left">
@@ -206,38 +209,38 @@ const QASideBar = () => {
                               marginLeft: '4px',
                             }}
                           >
-                            {chatItem.questions[0].createTime.split(' ')[0]}
+                            {batchItem.questions[0].createTime.split(' ')[0]}
                           </span>
                         </div>
                         <span
                           style={{
                             cursor: 'pointer',
                           }}
-                          onClick={() => setItemPreview(chatItem.batchId)}
+                          onClick={() => setItemPreview(batchItem.batchId)}
                         >
                           <Icon component={eyeSVG} />
                         </span>
                       </div>
                       <div className={styles['chat-body']}>
-                        {chatItem.questions.length}道面试题
+                        {batchItem.questions.length}道面试题
                       </div>
-                      <Tag>{chatItem.batchId}</Tag>
+                      <Tag>{batchItem.batchId}</Tag>
                     </div>
                   ) : (
                     <div className={styles['preview-item']}>
                       <div className={styles['preview-header']}>
-                        <Tag>{chatItem.batchId}</Tag>
+                        <Tag>{batchItem.batchId}</Tag>
                         <span
                           style={{
                             cursor: 'pointer',
                           }}
-                          onClick={() => setItemPreview(chatItem.batchId)}
+                          onClick={() => setItemPreview(batchItem.batchId)}
                         >
                           <Icon component={eyeoffSVG} />
                         </span>
                       </div>
                       <div className={styles['question-list']}>
-                        {chatItem.questions.map((q, index) => (
+                        {batchItem.questions.map((q, index) => (
                           <div className={styles['question-item']} key={q.id}>
                             <div className={styles['question-content-box']}>
                               {index + 1}. {q.question}
@@ -259,7 +262,7 @@ const QASideBar = () => {
                       </div>
                     </div>
                   )}
-                </>
+                </div>
               ))}
             </div>
           )
