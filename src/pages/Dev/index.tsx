@@ -104,7 +104,22 @@ const Dev = () => {
         // ])
         setTemList([...templateList, ...diyTemplateList])
         // const { data } = await getResumeDetailsAPI(params.randomId)
-        setDataSource(data.content)
+        setDataSource({
+          ...data.content,
+          // 前后沟通有误，导致初始化时结构不一致，此处做特殊处理(不太提倡)
+          SKILL_LIST: {
+            ...data.content.SKILL_LIST,
+            info: data.content.SKILL_LIST.info
+              ? data.content.SKILL_LIST.info
+              : [],
+          },
+          HEART_LIST: {
+            ...data.content.HEART_LIST,
+            info: data.content.HEART_LIST.info
+              ? data.content.HEART_LIST.info
+              : [],
+          },
+        })
         setTemplateId(data.templateId)
         // fetch('/test2.json')
         //   .then((response) => {
