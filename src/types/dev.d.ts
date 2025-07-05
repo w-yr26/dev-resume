@@ -158,7 +158,6 @@ export type devInitType = {
       label?: string
     }
   }
-  componentList: optionalCom[]
 }
 
 // 这个Map存放info为数组的字段
@@ -184,6 +183,7 @@ export type devState = {
   updateInfo: (data: any, id: string, key: keyType) => void
   changeItemVisible: (key: allKeyType) => void
   resetInfo: (key: allKeyType) => void
+  resetGlobalInfo: () => void
   changeLabel: (key: allKeyType, value: string) => void
 }
 

@@ -31,6 +31,7 @@ const Dev = () => {
   const setDataSource = useDevStore((state) => state.setDataSource)
   const setResumeId = useDevStore((state) => state.setResumeId)
   const setTemplateId = useDevStore((state) => state.setTemplateId)
+  const resetGlobalInfo = useDevStore((state) => state.resetGlobalInfo)
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
@@ -79,9 +80,16 @@ const Dev = () => {
   }, [searchParams])
 
   useEffect(() => {
-    // 此时为无头浏览器预览
-    if (params.preview) {
-      setWheel(1)
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault()
+      // 重置store状态
+      resetGlobalInfo()
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
     }
   }, [])
 
