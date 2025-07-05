@@ -80,20 +80,6 @@ const Dev = () => {
   }, [searchParams])
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault()
-      // 重置store状态
-      resetGlobalInfo()
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [])
-
-  useEffect(() => {
     const getDetail = async () => {
       if (params.randomId) {
         setLoading(true)
@@ -156,6 +142,10 @@ const Dev = () => {
     }
     setResumeId(params.randomId || 'unknow-randonId')
     getDetail()
+
+    return () => {
+      resetGlobalInfo()
+    }
   }, [])
 
   // 适配对应的uiSchema

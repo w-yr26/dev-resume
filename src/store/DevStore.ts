@@ -232,7 +232,7 @@ const useDevStore = create<devState>()(
         resetGlobalInfo: () =>
           set(
             produce((state: devState) => {
-              state.devSchema.dataSource = { ...defaultInfoMap }
+              state.devSchema.dataSource = { ...defaultInfoMap as any }
             })
           ),
         changeLabel: (key, value) =>
