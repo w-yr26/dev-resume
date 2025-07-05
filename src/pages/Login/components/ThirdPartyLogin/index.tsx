@@ -1,5 +1,4 @@
-import { Divider, Popover, Steps } from 'antd'
-import CustomBtn from '@/components/CustomBtn'
+import { Button, Divider, Popover, Steps } from 'antd'
 import Icon from '@ant-design/icons'
 import resumeSVG from '@/assets/svg/resume.svg?react'
 import { BASE_URL } from '@/utils/request'
@@ -43,15 +42,19 @@ export const ThirdPartyLogin = () => {
           或使用以下方式继续
         </span>
       </Divider>
-      <CustomBtn
-        label="Gitee登录"
+      <Button
+        style={{
+          height: '48px',
+        }}
         icon={
           <Popover content={content} placement="bottom" title="快捷登录指引">
             <Icon component={resumeSVG} />
           </Popover>
         }
         onClick={handleGiteeLogin}
-      />
+      >
+        Gitee登录
+      </Button>
     </>
   )
 }

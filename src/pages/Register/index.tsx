@@ -1,8 +1,7 @@
-import { Form, Input } from 'antd'
+import { Button, Form, Input } from 'antd'
 import styles from './index.module.scss'
 import commonStyles from '../Login/index.module.scss'
 import './custom.style.scss'
-import CustomBtn from '@/components/CustomBtn'
 import { postRegisterAPI, postRegisterCodeAPI } from '@/apis/user'
 import { useNavigate } from 'react-router-dom'
 import WelcomePage from '@/components/WelcomePage'
@@ -91,17 +90,25 @@ const Register = () => {
                   >
                     <Input className={commonStyles['custom-input']} />
                   </Form.Item>
-                  <CustomBtn
-                    type="button"
-                    label="点击获取验证码"
+                  <Button
                     style={{
                       width: '150px',
+                      height: '48px',
                     }}
                     onClick={handleGetCode}
-                  />
+                  >
+                    点击获取验证码
+                  </Button>
                 </div>
                 <Form.Item>
-                  <CustomBtn type="submit" label="注册" />
+                  <Button
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                    }}
+                  >
+                    注册
+                  </Button>
                 </Form.Item>
               </Form>
             </div>

@@ -7,12 +7,14 @@ import refreshSVG from '@/assets/svg/dev/refresh.svg?react'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import eyeSVG from '@/assets/svg/dev/eye.svg?react'
 import eyeoffSVG from '@/assets/svg/dev/eyeoff.svg?react'
+import calendarSVG from '@/assets/svg/dev/calendar.svg?react'
 import { BASE_URL } from '@/utils/request'
 import { useDevStore, useUserStore } from '@/store'
 import styles from './index.module.scss'
 import DevTabs from '@/components/DevTabs'
 import { getInterviewHistoryAPI } from '@/apis/resume'
 import type { questionRespItem } from '@/types/resume'
+import DevScroll from '@/components/DevScroll'
 
 const tabsOptions = [
   {
@@ -193,78 +195,80 @@ const QASideBar = () => {
               />
             </div>
           ) : (
-            <div className={styles['history-list']}>
-              {historyList.map((batchItem) => (
-                <div
-                  className={styles['batch-item-box']}
-                  key={batchItem.batchId}
-                >
-                  {!batchItem.isShow ? (
-                    <div className={styles['chat-item']}>
-                      <div className={styles['chat-header']}>
-                        <div className="header-left">
-                          <Icon component={brainSVG} />
+            <DevScroll>
+              <div className={styles['history-list']}>
+                {historyList.map((batchItem) => (
+                  <div
+                    className={styles['batch-item-box']}
+                    key={batchItem.batchId}
+                  >
+                    {!batchItem.isShow ? (
+                      <div className={styles['chat-item']}>
+                        <div className={styles['chat-header']}>
+                          <div className="header-left">
+                            <Icon component={calendarSVG} />
+                            <span
+                              style={{
+                                marginLeft: '4px',
+                              }}
+                            >
+                              {batchItem.questions[0].createTime.split(' ')[0]}
+                            </span>
+                          </div>
                           <span
                             style={{
-                              marginLeft: '4px',
+                              cursor: 'pointer',
                             }}
+                            onClick={() => setItemPreview(batchItem.batchId)}
                           >
-                            {batchItem.questions[0].createTime.split(' ')[0]}
+                            <Icon component={eyeSVG} />
                           </span>
                         </div>
-                        <span
-                          style={{
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => setItemPreview(batchItem.batchId)}
-                        >
-                          <Icon component={eyeSVG} />
-                        </span>
-                      </div>
-                      <div className={styles['chat-body']}>
-                        {batchItem.questions.length}道面试题
-                      </div>
-                      <Tag>{batchItem.batchId}</Tag>
-                    </div>
-                  ) : (
-                    <div className={styles['preview-item']}>
-                      <div className={styles['preview-header']}>
+                        <div className={styles['chat-body']}>
+                          {batchItem.questions.length}道面试题
+                        </div>
                         <Tag>{batchItem.batchId}</Tag>
-                        <span
-                          style={{
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => setItemPreview(batchItem.batchId)}
-                        >
-                          <Icon component={eyeoffSVG} />
-                        </span>
                       </div>
-                      <div className={styles['question-list']}>
-                        {batchItem.questions.map((q, index) => (
-                          <div className={styles['question-item']} key={q.id}>
-                            <div className={styles['question-content-box']}>
-                              {index + 1}. {q.question}
+                    ) : (
+                      <div className={styles['preview-item']}>
+                        <div className={styles['preview-header']}>
+                          <Tag>{batchItem.batchId}</Tag>
+                          <span
+                            style={{
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => setItemPreview(batchItem.batchId)}
+                          >
+                            <Icon component={eyeoffSVG} />
+                          </span>
+                        </div>
+                        <div className={styles['question-list']}>
+                          {batchItem.questions.map((q, index) => (
+                            <div className={styles['question-item']} key={q.id}>
+                              <div className={styles['question-content-box']}>
+                                {index + 1}. {q.question}
+                              </div>
+                              <div className={styles['focus-points-list']}>
+                                <strong>考察重点</strong>
+                                {q.focusPoint}
+                              </div>
+                              <div className={styles['follow-up-list']}>
+                                <strong>追问方向</strong>
+                                <ul>
+                                  {q.followUpList.map((follow, idx) => (
+                                    <li key={idx}>{follow}</li>
+                                  ))}
+                                </ul>
+                              </div>
                             </div>
-                            <div className={styles['focus-points-list']}>
-                              <strong>考察重点</strong>
-                              {q.focusPoint}
-                            </div>
-                            <div className={styles['follow-up-list']}>
-                              <strong>追问方向</strong>
-                              <ul>
-                                {q.followUpList.map((follow, idx) => (
-                                  <li key={idx}>{follow}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </DevScroll>
           )
         ) : null}
       </div>

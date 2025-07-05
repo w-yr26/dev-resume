@@ -2,8 +2,7 @@ import { getLinkInfoAPI, postVerifyLinkAPI } from '@/apis/resume'
 import { useEffect, useState } from 'react'
 import Unauthorized from '../Unauthorized'
 import { useShareStore, useUserStore } from '@/store'
-import { Input, Modal } from 'antd'
-import CustomBtn from '@/components/CustomBtn'
+import { Button, Input, Modal } from 'antd'
 import DevModalFormItem from '@/components/DevModalFormItem'
 import styles from '@/pages/Home/index.module.scss'
 
@@ -76,7 +75,18 @@ const InvalidHoc = ({
         closable={false}
         keyboard={false}
         maskClosable={false}
-        footer={[<CustomBtn key="create" label="校验" onClick={validatePwd} />]}
+        footer={[
+          <Button
+            style={{
+              width: '100%',
+              height: '48px',
+            }}
+            key="create"
+            onClick={validatePwd}
+          >
+            校验
+          </Button>,
+        ]}
         open={isModalOpen && !(isUnauthorization || !isWithinRange)}
       >
         <div className={styles['create-form-container']}>

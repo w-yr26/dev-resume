@@ -14,7 +14,7 @@ const Register = lazy(() => import('@/pages/Register'))
 const ThirdPart = lazy(() => import('@/pages/ThirdPart'))
 const Dev = lazy(() => import('@/pages/Dev'))
 const Templates = lazy(() => import('@/pages/Templates'))
-const Design = lazy(() => import('@/pages/Design'))
+// const Design = lazy(() => import('@/pages/Design'))
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
@@ -69,14 +69,14 @@ const routes = createRoutesFromElements(
         </Suspense>
       }
     ></Route>
-    <Route
+    {/* <Route
       path="/design"
       element={
         <Suspense fallback={<Loading />}>
           <Design />
         </Suspense>
       }
-    ></Route>
+    ></Route> */}
   </Route>
 )
 

@@ -6,6 +6,7 @@ import JsonSVG from '@/assets/svg/dev/json.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 import styles from './index.module.scss'
 import {
+  Button,
   Checkbox,
   Col,
   ConfigProvider,
@@ -17,7 +18,6 @@ import {
   Select,
   Tooltip,
 } from 'antd'
-import CustomBtn from '@/components/CustomBtn'
 import { useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { getLinkListsAPI, postShareLinkAPI } from '@/apis/resume'
@@ -240,11 +240,9 @@ const Share = () => {
         width={600}
         footer={[
           activeTab === 0 ? (
-            <CustomBtn
-              key="create"
-              label="生成分享链接"
-              onClick={generatorShareLink}
-            />
+            <Button key="create" onClick={generatorShareLink}>
+              生成分享链接
+            </Button>
           ) : null,
         ]}
         open={isModalOpen}

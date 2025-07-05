@@ -1,5 +1,4 @@
-import { Form, Input } from 'antd'
-import CustomBtn from '@/components/CustomBtn'
+import { Button, Form, Input } from 'antd'
 import styles from './index.module.scss'
 import commonStyles from '../../index.module.scss'
 import '@/pages/Register/custom.style.scss'
@@ -14,11 +13,17 @@ export const LoginForm = ({
   isLoading,
   onForgotPassword,
 }: LoginFormProps) => {
+  const [form] = Form.useForm()
+  const handleLogin = async () => {
+    const values = await form.validateFields()
+    await onFinish(values)
+  }
+
   return (
     <Form
       name="login-form"
+      form={form}
       initialValues={{ remember: true }}
-      onFinish={onFinish}
       autoComplete="off"
     >
       <Form.Item
@@ -53,11 +58,16 @@ export const LoginForm = ({
       </Form.Item>
 
       <Form.Item>
-        <CustomBtn
-          type="submit"
+        <Button
+          style={{
+            width: '100%',
+            height: '48px',
+          }}
           disabled={isLoading}
-          label={isLoading ? '登录中...' : '登录'}
-        />
+          onClick={handleLogin}
+        >
+          {isLoading ? '登录中...' : '登录'}
+        </Button>
         <a onClick={onForgotPassword} className={styles['forgot-link']}>
           忘记密码？
         </a>

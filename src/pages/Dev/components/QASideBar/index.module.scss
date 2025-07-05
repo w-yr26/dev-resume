@@ -142,29 +142,7 @@
 
 .history-list {
   height: 500px;
-  overflow-y: auto;
-  margin-top: 8px;
-
-  scroll-behavior: smooth;
-  white-space: pre-wrap !important; /* 保留空格和换行 */
-
-  &::-webkit-scrollbar {
-    width: 8px; /* 滚动条宽度 */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f0f0f0; /* 滚动条轨道颜色 */
-    border-radius: 4px; /* 圆角 */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #bfbfbf; /* 滚动条颜色 */
-    border-radius: 4px; /* 圆角 */
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #bfbfbf; /* 滚动条悬停时颜色 */
-  }
+  white-space: pre-wrap !important;
 
   .chat-item,
   .preview-item {
@@ -175,14 +153,18 @@
     transition: all 0.3s ease;
   }
 
+  .chat-header,
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .chat-item {
     padding: 8px 16px;
 
     .chat-header {
       height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       color: #797f88;
       font-size: 12px;
       font-weight: 500;
@@ -200,9 +182,6 @@
     padding: 4px;
 
     .preview-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       margin-bottom: 8px;
       font-size: 10px;
     }

@@ -23,6 +23,7 @@ const MdEditor = ({ value, onChange, onBlur }: mdEditorType) => {
   return (
     <textarea
       className={styles['custom-textarea']}
+      placeholder="支持输入markdown语法,行内代码、加粗、有/无序列表..."
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
