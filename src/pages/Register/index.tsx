@@ -18,11 +18,15 @@ const Register = () => {
   }
 
   const handleSubmit = async () => {
-    const data = await formRef.getFieldsValue()
-    await postRegisterAPI(data)
-    navigate('/login', {
-      replace: true,
-    })
+    try {
+      const data = await formRef.validateFields()
+      await postRegisterAPI(data)
+      navigate('/login', {
+        replace: true,
+      })
+    } catch (_) {
+      console.log('校验错误')
+    }
   }
 
   return (
@@ -43,7 +47,6 @@ const Register = () => {
                 autoComplete="off"
                 layout="vertical"
                 form={formRef}
-                onFinish={handleSubmit}
               >
                 <Form.Item
                   label="用户名"
@@ -100,16 +103,15 @@ const Register = () => {
                     点击获取验证码
                   </Button>
                 </div>
-                <Form.Item>
-                  <Button
-                    style={{
-                      width: '100%',
-                      height: '48px',
-                    }}
-                  >
-                    注册
-                  </Button>
-                </Form.Item>
+                <Button
+                  style={{
+                    width: '100%',
+                    height: '48px',
+                  }}
+                  onClick={handleSubmit}
+                >
+                  注册
+                </Button>
               </Form>
             </div>
             <div className={styles['navigate-to-login-box']}>
