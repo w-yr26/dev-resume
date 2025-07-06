@@ -493,32 +493,30 @@ const Dev = () => {
 
   // 无头浏览器打印
   const headlessBrowserExportPDF = async () => {
-    const html = generatorTargetHTMLStr()
-    const hash = await calculateSHA256(html)
-    // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
-    const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: userToken,
-      } as any,
-      body: JSON.stringify({
-        html: html,
-        resumeId: params.randomId!,
-        clientHash: hash,
-      }),
-    })
-    // "<script>console.log('XSS1.1');</script>",
-
-    // 大小写变体
-    // "<ScRiPt>alert('XSS2');</ScRiPt>",
-    // "<sCriPt>alert('XSS2.1');</sCrIpT>",
-    if (!response.ok) {
-      throw new Error('生成 PDF 失败')
+    try {
+      const html = generatorTargetHTMLStr()
+      const hash = await calculateSHA256(html)
+      // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
+      const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userToken,
+        } as any,
+        body: JSON.stringify({
+          html: html,
+          resumeId: params.randomId!,
+          clientHash: hash,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error('生成 PDF 失败')
+      }
+      const blob = await response.blob()
+      await createLink2Download(blob, params.randomId)
+    } catch (_) {
+      message.error('导出失败，请尝试使用其他方式')
     }
-
-    const blob = await response.blob()
-    await createLink2Download(blob, params.randomId)
   }
 
   const handleExportPDF = async () => {

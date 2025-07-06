@@ -1,5 +1,6 @@
 import convert from 'css-unit-converter'
 import { request } from './request'
+import SHA256 from 'crypto-js/sha256'
 /**
  * px -> mm
  * @param px 像素大小
@@ -133,12 +134,7 @@ const addPrintStyle = () => {
  * @param str html字符串
  */
 const calculateSHA256 = async (str: string) => {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(str)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-  return hashHex
+  return SHA256(str).toString()
 }
 
 const getAllStyleText = () => {
