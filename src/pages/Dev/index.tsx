@@ -103,12 +103,14 @@ const Dev = () => {
           // 前后沟通有误，导致初始化时结构不一致，此处做特殊处理(不太提倡)
           SKILL_LIST: {
             ...data.content.SKILL_LIST,
+            visible: true,
             info: data.content.SKILL_LIST.info
               ? data.content.SKILL_LIST.info
               : [],
           },
           HEART_LIST: {
             ...data.content.HEART_LIST,
+            visible: true,
             info: data.content.HEART_LIST.info
               ? data.content.HEART_LIST.info
               : [],
