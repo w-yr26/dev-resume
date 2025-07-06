@@ -20,7 +20,12 @@ import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
 import QASideBar from './components/QASideBar'
-import { createLink2Download, getAllStyleText, sleep } from '@/utils'
+import {
+  calculateSHA256,
+  createLink2Download,
+  getAllStyleText,
+  sleep,
+} from '@/utils'
 import { BASE_URL } from '@/utils/request'
 import PDFModal from './components/PDFModal'
 
@@ -515,9 +520,6 @@ const Dev = () => {
     <!DOCTYPE html>
     <html lang="zh-CN">
     <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>简历导出</title>
       ${styleText}
     </head>
     <body>
@@ -530,6 +532,7 @@ const Dev = () => {
   // 无头浏览器打印
   const headlessBrowserExportPDF = async () => {
     const html = generatorTargetHTMLStr()
+    const hash = await calculateSHA256(html)
     // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
     const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
       method: 'POST',
@@ -538,11 +541,16 @@ const Dev = () => {
         Authorization: userToken,
       } as any,
       body: JSON.stringify({
-        html,
+        html: html,
         resumeId: params.randomId!,
+        clientHash: hash,
       }),
     })
+    // "<script>console.log('XSS1.1');</script>",
 
+    // 大小写变体
+    // "<ScRiPt>alert('XSS2');</ScRiPt>",
+    // "<sCriPt>alert('XSS2.1');</sCrIpT>",
     if (!response.ok) {
       throw new Error('生成 PDF 失败')
     }

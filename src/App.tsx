@@ -90,7 +90,7 @@ function App() {
             defaultHoverColor: '#fff',
             defaultShadow: 'none',
             contentLineHeight: 2,
-            borderRadius: 0
+            borderRadius: 0,
           },
         },
       }}

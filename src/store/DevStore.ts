@@ -12,6 +12,7 @@ export const defaultInfoMap: Record<string, any> = {
   BASE_INFO: {
     info: [],
     visible: true,
+    label: '基础信息',
   },
   EDU_BG: {
     info: [],
@@ -232,7 +233,7 @@ const useDevStore = create<devState>()(
         resetGlobalInfo: () =>
           set(
             produce((state: devState) => {
-              state.devSchema.dataSource = { ...defaultInfoMap as any }
+              state.devSchema.dataSource = { ...(defaultInfoMap as any) }
             })
           ),
         changeLabel: (key, value) =>

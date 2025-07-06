@@ -128,6 +128,19 @@ const addPrintStyle = () => {
   return printStyles
 }
 
+/**
+ * hash计算
+ * @param str html字符串
+ */
+const calculateSHA256 = async (str: string) => {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(str)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  return hashHex
+}
+
 const getAllStyleText = () => {
   let styleText = ''
 
@@ -159,4 +172,5 @@ export {
   createLink2Download,
   addPrintStyle,
   getAllStyleText,
+  calculateSHA256,
 }

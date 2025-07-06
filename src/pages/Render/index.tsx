@@ -29,6 +29,8 @@ const keyToFieldLabel: Record<string, string> = {
 // TODO：每一次只需要进行很小的 style 改动，但是却要重新执行整个递归，导致会有很明显的样式更新延迟
 const Render = (props: RenderProps) => {
   const { dataContext, node, wheel } = props
+  console.log(dataContext)
+
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
@@ -228,15 +230,20 @@ const Render = (props: RenderProps) => {
     // 如果处理的是时间，做一下特殊处理，去掉""
     if (bind === 'date') {
       val = val.replace(/"/g, '')
+    } else if (bind === 'gender') {
+      if (typeof val === 'number') {
+        val = val === 0 ? '男' : '女'
+      }
     }
     return (
       <div className={`${styles['field-box']}`} style={mergedStyle}>
-        {val ? (
+        {String(val) ? (
           <>
-            <div className={styles['label']}>
-              {keyToFieldLabel[bind]}
-              {keyToFieldLabel[bind] ? ': ' : null}
-            </div>
+            {/* 只有个人信息模块才需要标签名 */}
+            {dataContext.avatar ? (
+              <div className={styles['label']}>{keyToFieldLabel[bind]}: </div>
+            ) : null}
+
             <div className={styles['value']}>{val}</div>
           </>
         ) : null}
