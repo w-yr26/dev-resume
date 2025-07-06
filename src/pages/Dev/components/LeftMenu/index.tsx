@@ -13,6 +13,7 @@ import styles from './index.module.scss'
 import { useGlobalStore } from '@/store'
 import { optionalCom } from '@/types/dev'
 import { memo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const iconMenu = [
   {
@@ -61,9 +62,14 @@ const LeftMenu = ({
   isLeftUnExpand: boolean
   setisLeftUnExpand: (isExpand: boolean) => void
 }) => {
+  const navigate = useNavigate()
   const keyToPosition = useGlobalStore((state) => state.keyToPosition)
   const handleClick = (key: optionalCom) => {
     iconClick(keyToPosition[key] || 0)
+  }
+
+  const pathToHome = () => {
+    navigate('/')
   }
 
   return (
@@ -93,11 +99,16 @@ const LeftMenu = ({
           )
         })}
       </ul>
-      <div>
+      <div
+        style={{
+          cursor: 'pointer',
+        }}
+      >
         <Avatar
           shape="square"
           size="large"
           icon={<Icon component={UserSVG} />}
+          onClick={pathToHome}
         />
       </div>
     </div>

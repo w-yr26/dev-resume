@@ -1,6 +1,6 @@
 import { Button, Divider, Popover, Steps } from 'antd'
 import Icon from '@ant-design/icons'
-import resumeSVG from '@/assets/svg/resume.svg?react'
+import infoSVG from '@/assets/svg/dev/info.svg?react'
 import { BASE_URL } from '@/utils/request'
 
 const content = () => (
@@ -39,18 +39,21 @@ export const ThirdPartyLogin = () => {
             fontWeight: 400,
           }}
         >
-          或使用以下方式继续
+          或使用以下方式继续{' '}
+          <Popover content={content} placement="bottom" title="快捷登录指引">
+            <Icon
+              component={infoSVG}
+              style={{
+                cursor: 'pointer',
+              }}
+            />
+          </Popover>
         </span>
       </Divider>
       <Button
         style={{
           height: '48px',
         }}
-        icon={
-          <Popover content={content} placement="bottom" title="快捷登录指引">
-            <Icon component={resumeSVG} />
-          </Popover>
-        }
         onClick={handleGiteeLogin}
       >
         Gitee登录

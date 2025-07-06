@@ -8,7 +8,9 @@ export type infoType = {
 
 export type userStoreType = {
   info: infoType
+  lastRoute: string
   updateInfo: (key: keyof infoType, value: string) => void
+  setLastRoute: (route: string) => void
 }
 
 export type loginInfoType = {

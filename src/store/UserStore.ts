@@ -10,6 +10,14 @@ const useUserStore = create<userStoreType>((set) => {
       userName: localStorage.getItem('userName') || '',
       id: localStorage.getItem('user_id') || '',
     },
+    lastRoute: '',
+    setLastRoute: (route) => {
+      return set(() => {
+        return {
+          lastRoute: route,
+        }
+      })
+    },
     updateInfo: (key, value) => {
       return set((state) => {
         return {

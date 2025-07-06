@@ -10,30 +10,41 @@ import { useUserStore } from '@/store'
 
 const Login: React.FC = () => {
   const updateInfo = useUserStore((state) => state.updateInfo)
+  const lastRoute = useUserStore((state) => state.lastRoute)
+  const setLastRoute = useUserStore((state) => state.setLastRoute)
   const [isLoading, setIsLoading] = useState(false)
   const [showResetPassword, setShowResetPassword] = useState(false)
   const navigate = useNavigate()
 
   const onFinish = async (values: { email: string; password: string }) => {
-    setIsLoading(true)
+    try {
+      setIsLoading(true)
 
-    const { data } = await loginAPI({
-      email: values.email.trim(),
-      password: values.password.trim(),
-    })
+      const { data } = await loginAPI({
+        email: values.email.trim(),
+        password: values.password.trim(),
+      })
 
-    localStorage.setItem('email', data.email)
-    localStorage.setItem('userName', data.username)
-    localStorage.setItem('user_id', String(data.id))
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('refreshToken', data.refreshToken)
-    updateInfo('email', data.email)
-    updateInfo('userName', data.username)
-    updateInfo('id', String(data.id))
-    updateInfo('token', data.token)
-    updateInfo('refreshToken', data.refreshToken)
-    navigate('/')
-    setIsLoading(false)
+      localStorage.setItem('email', data.email)
+      localStorage.setItem('userName', data.username)
+      localStorage.setItem('user_id', String(data.id))
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('refreshToken', data.refreshToken)
+      updateInfo('email', data.email)
+      updateInfo('userName', data.username)
+      updateInfo('id', String(data.id))
+      updateInfo('token', data.token)
+      updateInfo('refreshToken', data.refreshToken)
+      navigate(lastRoute || '/', {
+        replace: true,
+      })
+      // 清空历史路由
+      setLastRoute('')
+    } catch (_) {
+      console.log('登录失败')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

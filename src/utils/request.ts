@@ -53,6 +53,10 @@ instance.interceptors.response.use(
     if (code !== 1) {
       // 如果是刷新token的请求出现业务状态码错误，需要拦截到登录页
       if (response.config.url === '/resume/user/refreshToken') {
+        const { setLastRoute } = useUserStore.getState()
+        // 记录最新一次的路由
+        const lastRoute = window.location.pathname + window.location.search
+        setLastRoute(lastRoute)
         jumpToLogin()
         return
       }

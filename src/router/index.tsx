@@ -13,21 +13,21 @@ const Login = lazy(() => import('@/pages/Login'))
 const Register = lazy(() => import('@/pages/Register'))
 const ThirdPart = lazy(() => import('@/pages/ThirdPart'))
 const Dev = lazy(() => import('@/pages/Dev'))
-const Templates = lazy(() => import('@/pages/Templates'))
+// const Templates = lazy(() => import('@/pages/Templates'))
 // const Design = lazy(() => import('@/pages/Design'))
 
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route path="/" element={<Layout />}>
       <Route index element={<Home />}></Route>
-      <Route
+      {/* <Route
         path="/templates"
         element={
           <Suspense fallback={<Loading />}>
             <Templates />
           </Suspense>
         }
-      />
+      /> */}
     </Route>
     <Route
       path="/dev/:randomId"
