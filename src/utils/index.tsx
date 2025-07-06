@@ -137,23 +137,34 @@ const calculateSHA256 = async (str: string) => {
   return SHA256(str).toString()
 }
 
-const getAllStyleText = () => {
+const getAllStyleText = async () => {
   let styleText = ''
 
-  // 1. 获取所有<style>标签的内容
+  // 1. 获取所有<style>标签内容
   document.querySelectorAll('style').forEach((style) => {
     styleText += style.outerHTML
   })
 
-  // 2. 获取所有外联样式
-  document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
-    styleText += link.outerHTML
-  })
+  // 2. 将<link rel="stylesheet">的内容变成<style>
+  const linkNodes = Array.from(
+    document.querySelectorAll('link[rel="stylesheet"]')
+  )
 
-  // 3. 拼接上打印特有的样式
-  styleText += `<style  id="pdf-override-styles">
-      ${addPrintStyle()}
-      </style>`
+  for (const link of linkNodes) {
+    const href = link.getAttribute('href')
+    if (href) {
+      try {
+        const res = await fetch(href)
+        const css = await res.text()
+        styleText += `<style>${css}</style>`
+      } catch (e) {
+        console.warn(`样式加载失败：${href}`, e)
+      }
+    }
+  }
+
+  // 3. 添加打印样式
+  styleText += `<style id="pdf-override-styles">${addPrintStyle()}</style>`
 
   return styleText
 }

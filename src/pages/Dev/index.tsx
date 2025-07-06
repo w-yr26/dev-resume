@@ -474,9 +474,9 @@ const Dev = () => {
   }
 
   // 生成打印目标的html交由无头浏览器
-  const generatorTargetHTMLStr = () => {
+  const generatorTargetHTMLStr = async () => {
     const html = resumeRef.current?.outerHTML || ''
-    const styleText = getAllStyleText()
+    const styleText = await getAllStyleText()
 
     return `
     <!DOCTYPE html>
@@ -494,7 +494,7 @@ const Dev = () => {
   // 无头浏览器打印
   const headlessBrowserExportPDF = async () => {
     try {
-      const html = generatorTargetHTMLStr()
+      const html = await generatorTargetHTMLStr()
       const hash = await calculateSHA256(html)
       // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
       const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
