@@ -95,9 +95,9 @@ export function useModalForm<T extends { id: string; date: string }>(
     }
   }
 
-  const resetState = () => {
+  const resetState = async () => {
+    await formRef.resetFields()
     setOpened(false)
-    formRef.resetFields()
     setInfoId('')
   }
 

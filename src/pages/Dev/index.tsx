@@ -24,6 +24,7 @@ import {
   calculateSHA256,
   createLink2Download,
   getAllStyleText,
+  handleDataSource,
   sleep,
 } from '@/utils'
 import { BASE_URL } from '@/utils/request'
@@ -92,48 +93,9 @@ const Dev = () => {
         const {
           data: { templateList, diyTemplateList },
         } = await getTemplatesAPI(userId)
-        // const [
-        //   { data },
-        //   {
-        //     data: { templateList, diyTemplateList },
-        //   },
-        // ] = await Promise.all([
-        //   getResumeDetailsAPI(params.randomId),
-        //   getTemplatesAPI(userId),
-        // ])
         setTemList([...templateList, ...diyTemplateList])
-        // const { data } = await getResumeDetailsAPI(params.randomId)
-        setDataSource({
-          ...data.content,
-          // 前后沟通有误，导致初始化时结构不一致，此处做特殊处理(不太提倡)
-          SKILL_LIST: {
-            ...data.content.SKILL_LIST,
-            visible: true,
-            info: data.content.SKILL_LIST.info
-              ? data.content.SKILL_LIST.info
-              : [],
-          },
-          HEART_LIST: {
-            ...data.content.HEART_LIST,
-            visible: true,
-            info: data.content.HEART_LIST.info
-              ? data.content.HEART_LIST.info
-              : [],
-          },
-        })
+        setDataSource(handleDataSource(data.content))
         setTemplateId(data.templateId)
-        // fetch('/test2.json')
-        //   .then((response) => {
-        //     if (!response.ok) {
-        //       throw new Error('Network response was not ok')
-        //     }
-        //     return response.json() // 如果是JSON文件
-        //   })
-        //   .then(async (data) => {
-        //     console.log(data) // 处理获取到的数据
-        //     setUiSchema(data)
-        //     await initGlobalStyle(data)
-        //   })
         const { code, temSchema } = await fetchUISchema(data.templateId, [
           ...templateList,
           ...diyTemplateList,

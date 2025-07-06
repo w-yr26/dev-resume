@@ -6,6 +6,7 @@ import { tokenizer } from '@/components/MdEditor/utils/tokens'
 import { buildAST } from '@/components/MdEditor/utils/ast'
 import { renderAST } from '@/components/MdEditor/utils/render'
 import { allKeyType } from '@/types/dev'
+import { isNotEmpty } from '@/utils'
 // import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
@@ -29,8 +30,6 @@ const keyToFieldLabel: Record<string, string> = {
 // TODO：每一次只需要进行很小的 style 改动，但是却要重新执行整个递归，导致会有很明显的样式更新延迟
 const Render = (props: RenderProps) => {
   const { dataContext, node, wheel } = props
-  console.log(dataContext)
-
   const lineHeight = useStyleStore((state) => state.lineHeight)
   const fontSize = useStyleStore((state) => state.fontSize)
   const fontColor = useStyleStore((state) => state.fontColor)
@@ -235,12 +234,13 @@ const Render = (props: RenderProps) => {
         val = val === 0 ? '男' : '女'
       }
     }
+
     return (
       <div className={`${styles['field-box']}`} style={mergedStyle}>
-        {String(val) ? (
+        {isNotEmpty(val) ? (
           <>
-            {/* 只有个人信息模块才需要标签名 */}
-            {dataContext.avatar ? (
+            {/* 只有个人信息模块才需要标签名，通过userName判断当前是否为个人信息模块 */}
+            {dataContext.userName ? (
               <div className={styles['label']}>{keyToFieldLabel[bind]}: </div>
             ) : null}
 

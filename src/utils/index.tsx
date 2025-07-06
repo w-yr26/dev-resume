@@ -162,6 +162,24 @@ const getAllStyleText = () => {
   return styleText
 }
 
+const isNotEmpty = (value: any) => {
+  return value != null && value !== '' && value !== undefined
+}
+
+const handleDataSource = (data: Record<string, any>) => {
+  const handledObj: Record<string, any> = {}
+  Object.keys(data).forEach((key) => {
+    handledObj[key] = {
+      ...data[key],
+      visible: true,
+      info: !data[key].info ? [] : data[key].info,
+    }
+  })
+  console.log(handledObj)
+
+  return handledObj
+}
+
 export {
   pxToMm,
   request,
@@ -173,4 +191,6 @@ export {
   addPrintStyle,
   getAllStyleText,
   calculateSHA256,
+  isNotEmpty,
+  handleDataSource,
 }
