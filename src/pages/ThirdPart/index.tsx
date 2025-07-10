@@ -19,6 +19,8 @@ const ThirdPart = () => {
           localStorage.setItem('email', data.email)
           localStorage.setItem('userName', data.username)
           localStorage.setItem('user_id', String(data.id))
+          localStorage.setItem('token', String(data.token))
+          localStorage.setItem('refreshToken', String(data.refreshToken))
           navigate('/')
         } catch (_) {
           setIsFail(true)

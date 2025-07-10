@@ -1,6 +1,8 @@
 import type { HeaderType } from '@/types/dev'
 import styles from './index.module.scss'
-import { Input } from 'antd'
+import Icon from '@ant-design/icons'
+import infoSVG from '@/assets/svg/dev/info.svg?react'
+import { Input, Tooltip } from 'antd'
 import { useState } from 'react'
 
 const Header = (props: HeaderType) => {
@@ -10,6 +12,7 @@ const Header = (props: HeaderType) => {
     opMenu = true,
     children,
     isEdit,
+    toolTip,
     handleChange: propChange,
     handleBlur,
   } = props
@@ -36,7 +39,20 @@ const Header = (props: HeaderType) => {
             className={styles['rename-input']}
           />
         ) : (
-          <div className={styles['label']}>{label}</div>
+          <>
+            <div className={styles['label']}>{label}</div>
+            {toolTip ? (
+              <Tooltip title={toolTip}>
+                <Icon
+                  component={infoSVG}
+                  style={{
+                    cursor: 'pointer',
+                    marginLeft: '4px',
+                  }}
+                />
+              </Tooltip>
+            ) : null}
+          </>
         )}
       </div>
       {opMenu && children}

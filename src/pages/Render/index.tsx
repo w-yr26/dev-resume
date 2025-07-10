@@ -106,7 +106,9 @@ const Render = (props: RenderProps) => {
     //  确保模块内有值且 visible === true，才有必要渲染当前模块
     if (type === 'module') {
       const moduleInfo = dataSource[bind as allKeyType].info
-      const isVisible = dataSource[bind as allKeyType].visible
+      const isVisible =
+        dataSource[bind as allKeyType].visible &&
+        moduleInfo.some((i) => i.visible)
       if (moduleInfo.length === 0 || !isVisible) return null
     }
 
@@ -159,6 +161,14 @@ const Render = (props: RenderProps) => {
                   />
                 )
               })}
+              {index !== list.length - 1 ? (
+                <hr
+                  style={{
+                    border: 0,
+                    
+                  }}
+                />
+              ) : null}
             </React.Fragment>
           ) : null
         })}

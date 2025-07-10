@@ -358,7 +358,7 @@ const Share = () => {
               primary={
                 <Input
                   className={styles['custom-input']}
-                  placeholder="输入邮箱地址(@163.com)，按分号或逗号分隔"
+                  placeholder="输入邮箱地址(当前仅支持@163.com)，按分号或逗号分隔"
                   value={emailList}
                   onChange={(e) => setEmailList(e.target.value)}
                 />

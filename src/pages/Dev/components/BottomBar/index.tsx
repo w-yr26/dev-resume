@@ -8,8 +8,8 @@ import zoomOutSVG from '@/assets/svg/dev/zoom-out-line.svg?react'
 import pdfSVG from '@/assets/svg/dev/pdf.svg?react'
 import normalSVG from '@/assets/svg/dev/normal.svg?react'
 import codeSVG from '@/assets/svg/dev/code.svg?react'
-import chatCheckSVG from '@/assets/svg/dev/chat-check.svg?react'
-import chatDeleteSVG from '@/assets/svg/dev/chat-delete.svg?react'
+// import chatCheckSVG from '@/assets/svg/dev/chat-check.svg?react'
+// import chatDeleteSVG from '@/assets/svg/dev/chat-delete.svg?react'
 import styles from './index.module.scss'
 import { Switch, Tooltip } from 'antd'
 import AuthorizationHoc from '../AuthorizationHoc'
@@ -80,14 +80,14 @@ const BottomBar = ({
       callback: handleModeSwitch,
       permission: 3,
     },
-    {
-      icon: <Icon component={isReadMode ? chatCheckSVG : chatDeleteSVG} />,
-      label: '评论',
-      callback: () => {
-        console.log(isReadMode)
-      },
-      permission: 1,
-    },
+    // {
+    //   icon: <Icon component={isReadMode ? chatCheckSVG : chatDeleteSVG} />,
+    //   label: '评论',
+    //   callback: () => {
+    //     console.log(isReadMode)
+    //   },
+    //   permission: 1,
+    // },
     {
       icon: <Icon component={pdfSVG} />,
       label: '下载pdf',

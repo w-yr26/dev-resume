@@ -117,7 +117,7 @@ const ChatSideBar = ({
   return (
     <div className={styles['chat-side-container']}>
       <div className={styles['chat-list-title']}>
-        <div>评论({chatList.length})</div>
+        <div>批注({chatList.length})</div>
       </div>
       <div className={styles['chat-list-body']}>
         {chatList.length
