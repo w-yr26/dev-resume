@@ -1,4 +1,4 @@
-import { Input, Upload } from 'antd'
+import { Input, Select, Upload } from 'antd'
 import type { UploadProps } from 'antd'
 import Header from '@/components/Header/index'
 import Icon from '@ant-design/icons'
@@ -130,7 +130,7 @@ const BaseInfo = () => {
         >
           <CustomInput
             label="姓名"
-            placeholder="请输入您的姓名"
+            placeholder=""
             value={baseInfo?.userName}
             onChange={(e) => {
               handleFieldChange(e, 'userName')
@@ -147,7 +147,7 @@ const BaseInfo = () => {
         >
           <CustomInput
             label="性别"
-            placeholder="请输入您的性别"
+            placeholder=""
             value={baseInfo?.gender}
             onChange={(e) => {
               handleFieldChange(e, 'gender')

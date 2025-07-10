@@ -97,7 +97,11 @@ const Layout = () => {
 
   return (
     <CustomLayout ref={layoutRef}>
-      <Header label="布局" svg={<Icon component={layoutSVG} />} />
+      <Header
+        label="布局"
+        svg={<Icon component={layoutSVG} />}
+        toolTip="当前暂无支持侧轴排列的模板"
+      />
       <DragDropContext onDragEnd={onDragEnd}>
         {pageArr.map((pageKey, index) => {
           const { main = [], side = [] } = layoutMap.get(pageKey) || {}
@@ -208,7 +212,7 @@ const Layout = () => {
       </DragDropContext>
       <div className={styles['add-btn-box']}>
         <Button icon={<PlusOutlined />} onClick={addPage}>
-          添加一项
+          添加一页
         </Button>
       </div>
     </CustomLayout>

@@ -24,7 +24,7 @@ const Materials = forwardRef<
       <EduBg />
       <WorkExperience />
       <ProjectExperience />
-      <Award />
+      {/* <Award /> */}
       <Skill />
       {/* <Heart /> */}
     </div>
