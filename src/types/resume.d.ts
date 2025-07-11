@@ -29,6 +29,7 @@ export type resumeDetailType = {
   resumeId: string
   templateId: string
   userId: string
+  snapshotUrl: string | null
 }
 
 export type addModuleType = {
@@ -36,6 +37,7 @@ export type addModuleType = {
   resumeId: string
   type: allKeyType
   userId: string
+  snapshotUrl?: string
 }
 
 export type updateNameType = {
