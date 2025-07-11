@@ -61,7 +61,7 @@ const BaseInfo = () => {
     const file = options.file
     const fd = new FormData()
     fd.append('file', file)
-    const { data: avatar } = await postUploadOneAPI(fd, userId)
+    const { data: avatar } = await postUploadOneAPI(fd, 'avatar')
 
     // 保存数据库
     await postModuleInfoAPI({

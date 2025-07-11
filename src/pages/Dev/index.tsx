@@ -13,7 +13,7 @@ import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
 import ChatSideBar from './components/ChatSideBar'
-import { getResumeDetailsAPI } from '@/apis/resume'
+import { getResumeDetailsAPI, postModuleInfoAPI } from '@/apis/resume'
 import { useParams, useSearchParams } from 'react-router-dom'
 import type { layoutMapType, nodeType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
@@ -22,13 +22,16 @@ import AuthorizationHoc from './components/AuthorizationHoc'
 import QASideBar from './components/QASideBar'
 import {
   calculateSHA256,
+  canvas2File,
   createLink2Download,
+  dom2Canvas,
   getAllStyleText,
   handleDataSource,
   sleep,
 } from '@/utils'
 import { BASE_URL } from '@/utils/request'
 import PDFModal from './components/PDFModal'
+import { delFileAPI, postUploadOneAPI } from '@/apis/user'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
@@ -72,6 +75,7 @@ const Dev = () => {
   const [isModalOpen, setISModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState(0)
   const [mouseMode, setMouseMode] = useState<'pan' | 'scale'>('pan')
+  const [resumeShapshot, setResumeShapshot] = useState<string | null>('')
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
@@ -85,6 +89,34 @@ const Dev = () => {
     return !searchParams.get('token')
   }, [searchParams])
 
+  // 保存卸载前的处理函数
+  const beforeUnmountHandler = async (el: HTMLDivElement) => {
+    // if (!el) return console.log('not exe')
+    if (!el || !document.body.contains(el)) {
+      console.error('DOM 元素已不存在！', el)
+      return
+    }
+    try {
+      if (resumeShapshot) {
+        await delFileAPI(resumeShapshot, 'resume')
+      }
+      const canvas = await dom2Canvas(el)
+      const file = await canvas2File(canvas, params.randomId!)
+      const fd = new FormData()
+      fd.append('file', file)
+      const { data: url } = await postUploadOneAPI(fd, 'resume')
+      postModuleInfoAPI({
+        content: {},
+        resumeId: params.randomId!,
+        type: 'BASE_INFO',
+        snapshotUrl: url,
+        userId,
+      })
+    } catch (error) {
+      console.error('DOM to canvas conversion failed:', error)
+    }
+  }
+
   useEffect(() => {
     const getDetail = async () => {
       if (params.randomId) {
@@ -95,6 +127,7 @@ const Dev = () => {
         } = await getTemplatesAPI(userId)
         setTemList([...templateList, ...diyTemplateList])
         setDataSource(handleDataSource(data.content))
+        setResumeShapshot(data.snapshotUrl)
         setTemplateId(data.templateId)
         const { code, temSchema } = await fetchUISchema(data.templateId, [
           ...templateList,
@@ -111,9 +144,27 @@ const Dev = () => {
     }
     setResumeId(params.randomId || 'unknow-randonId')
     getDetail()
-
     return () => {
       resetGlobalInfo()
+    }
+  }, [])
+
+  useEffect(() => {
+    let el = mainRefs.current[0]
+    return () => {
+      if (!el) return console.log('目标元素为null')
+      const clone = el.cloneNode(true) as HTMLDivElement
+      document.body.appendChild(clone)
+      clone.style.position = 'fixed'
+      clone.style.left = '-9999px' // 移出可视区域
+      clone.style.opacity = '0'
+      // 可以在这里执行一些副作用逻辑
+      beforeUnmountHandler(clone)
+        .catch(console.error)
+        .finally(() => {
+          document.body.removeChild(clone)
+          el = null
+        })
     }
   }, [])
 
@@ -494,8 +545,9 @@ const Dev = () => {
   // 无头浏览器打印
   const headlessBrowserExportPDF = async () => {
     try {
+      const salt = Math.random() + ''
       const html = await generatorTargetHTMLStr()
-      const hash = await calculateSHA256(html)
+      const hash = await calculateSHA256(html, salt)
       // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
       const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
         method: 'POST',
@@ -507,6 +559,7 @@ const Dev = () => {
           html: html,
           resumeId: params.randomId!,
           clientHash: hash,
+          salt,
         }),
       })
       if (!response.ok) {

@@ -1,6 +1,7 @@
 import convert from 'css-unit-converter'
 import { request } from './request'
 import SHA256 from 'crypto-js/sha256'
+import html2canvas from 'html2canvas'
 /**
  * px -> mm
  * @param px 像素大小
@@ -133,8 +134,8 @@ const addPrintStyle = () => {
  * hash计算
  * @param str html字符串
  */
-const calculateSHA256 = async (str: string) => {
-  return SHA256(str).toString()
+const calculateSHA256 = async (str: string, salt: string) => {
+  return SHA256(str + salt).toString()
 }
 
 const getAllStyleText = async () => {
@@ -182,9 +183,37 @@ const handleDataSource = (data: Record<string, any>) => {
       info: !data[key].info ? [] : data[key].info,
     }
   })
-  console.log(handledObj)
-
   return handledObj
+}
+
+/**
+ * dom转canvas
+ */
+const dom2Canvas = async (element: HTMLDivElement | null) => {
+  if (!element) return
+  const canvas = await html2canvas(element, {
+    useCORS: true,
+    scale: window.devicePixelRatio * 0.2,
+  })
+  return canvas
+}
+
+/**
+ * canvas转File对象
+ */
+function canvas2File(
+  canvas: HTMLCanvasElement | undefined,
+  filename: string,
+  mimeType = 'image/png'
+): Promise<File> {
+  return new Promise((resolve, reject) => {
+    if (!canvas) return reject('canvas is null')
+    canvas.toBlob((blob) => {
+      if (!blob) throw new Error('Canvas 转换失败')
+      const file = new File([blob], filename, { type: mimeType })
+      resolve(file)
+    }, mimeType)
+  })
 }
 
 export {
@@ -200,4 +229,6 @@ export {
   calculateSHA256,
   isNotEmpty,
   handleDataSource,
+  dom2Canvas,
+  canvas2File,
 }
