@@ -1,4 +1,4 @@
-import { Input, Select, Upload } from 'antd'
+import { Input, Upload } from 'antd'
 import type { UploadProps } from 'antd'
 import Header from '@/components/Header/index'
 import Icon from '@ant-design/icons'
@@ -63,20 +63,20 @@ const BaseInfo = () => {
 
     const fd = new FormData()
     fd.append('file', file)
-    // const { data: avatar } = await postUploadOneAPI(fd, 'avatar')
+    const { data: avatar } = await postUploadOneAPI(fd, 'avatar')
 
-    // // 保存数据库
-    // await postModuleInfoAPI({
-    //   type: 'BASE_INFO',
-    //   resumeId,
-    //   userId,
-    //   content: {
-    //     id: baseInfo.id,
-    //     avatar,
-    //   },
-    // })
-    // // 更新store
-    // changeBaseInfo(avatar, 'avatar')
+    // 保存数据库
+    await postModuleInfoAPI({
+      type: 'BASE_INFO',
+      resumeId,
+      userId,
+      content: {
+        id: baseInfo.id,
+        avatar,
+      },
+    })
+    // 更新store
+    changeBaseInfo(avatar, 'avatar')
   }
 
   return (
