@@ -90,9 +90,8 @@ const Dev = () => {
   }, [searchParams])
 
   // 保存卸载前的处理函数
-  const beforeUnmountHandler = async (el: HTMLDivElement) => {
-    // if (!el) return console.log('not exe')
-    if (!el || !document.body.contains(el)) {
+  const beforeUnmountHandler = async (el: HTMLDivElement | null) => {
+    if (!el) {
       console.error('DOM 元素已不存在！', el)
       return
     }
@@ -101,11 +100,11 @@ const Dev = () => {
         await delFileAPI(resumeShapshot, 'resume')
       }
       const canvas = await dom2Canvas(el)
-      const file = await canvas2File(canvas, params.randomId!)
+      const file = await canvas2File(canvas, params.randomId! + '.jpeg')
       const fd = new FormData()
       fd.append('file', file)
       const { data: url } = await postUploadOneAPI(fd, 'resume')
-      postModuleInfoAPI({
+      await postModuleInfoAPI({
         content: {},
         resumeId: params.randomId!,
         type: 'BASE_INFO',

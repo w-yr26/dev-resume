@@ -204,7 +204,7 @@ const dom2Canvas = async (element: HTMLDivElement | null) => {
 function canvas2File(
   canvas: HTMLCanvasElement | undefined,
   filename: string,
-  mimeType = 'image/png'
+  mimeType = 'image/jpeg'
 ): Promise<File> {
   return new Promise((resolve, reject) => {
     if (!canvas) return reject('canvas is null')

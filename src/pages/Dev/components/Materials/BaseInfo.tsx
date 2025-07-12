@@ -59,22 +59,24 @@ const BaseInfo = () => {
 
   const handleUpload: UploadProps['customRequest'] = async (options) => {
     const file = options.file
+    console.log('file', file)
+
     const fd = new FormData()
     fd.append('file', file)
-    const { data: avatar } = await postUploadOneAPI(fd, 'avatar')
+    // const { data: avatar } = await postUploadOneAPI(fd, 'avatar')
 
-    // 保存数据库
-    await postModuleInfoAPI({
-      type: 'BASE_INFO',
-      resumeId,
-      userId,
-      content: {
-        id: baseInfo.id,
-        avatar,
-      },
-    })
-    // 更新store
-    changeBaseInfo(avatar, 'avatar')
+    // // 保存数据库
+    // await postModuleInfoAPI({
+    //   type: 'BASE_INFO',
+    //   resumeId,
+    //   userId,
+    //   content: {
+    //     id: baseInfo.id,
+    //     avatar,
+    //   },
+    // })
+    // // 更新store
+    // changeBaseInfo(avatar, 'avatar')
   }
 
   return (

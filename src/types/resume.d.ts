@@ -10,7 +10,7 @@ export type resumeItem = {
   templateId: string
   userId: string
   isDeleted: 0 | 1 | 2
-  snapshot?: string
+  snapshotUrl?: string
 }
 
 export type resumeListResp = {
