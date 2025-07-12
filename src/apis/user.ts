@@ -89,5 +89,5 @@ export const postUploadOneAPI = (data: FormData, category: string) => {
  * 删除文件
  */
 export const delFileAPI = (url: string, category: string) => {
-  return request(`/user/common/delete?category=${category}&fileUrl=${url}`)
+  return request(`/user/common/delete?category=${category}&fileUrl=${url}`, 'DELETE')
 }

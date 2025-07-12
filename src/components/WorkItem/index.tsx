@@ -70,7 +70,7 @@ const WorkItem = ({
         className={`${styles['resume-item']} ${styles['animation-item']}`}
         style={{
           animationDelay: `0.${index + 1}s`,
-          backgroundImage: snapshot ? `url(${snapshot})` : '',
+          backgroundImage: snapshot ? `url(${snapshot + '.jpeg'})` : '',
           backgroundSize: snapshot ? 'contain' : 'none',
           backgroundRepeat: snapshot ? 'no-repeat' : 'none',
         }}

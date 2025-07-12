@@ -29,13 +29,6 @@ export const putUpdateDiyTemplatesAPI = (data: editTemplateType) => {
 }
 
 /**
- * 简历模板快照上传
- */
-export const postTemplatesAPI = (data: FormData) => {
-  return request<string>('/user/common/uploadTemplates', 'POST', data)
-}
-
-/**
  * 删除模板
  */
 export const delTemAPI = (temId: string) => {
