@@ -152,3 +152,21 @@ export type shareStoreType = {
   updateTarget: (val: sharedUserItem[] | null) => void
   updatePermissions: (val: number[]) => void
 }
+
+export type optionsItem = {
+  id: string
+  batchId: string
+  resumeId: string
+  userId: string
+  question: string
+  focusPoint: string
+  followUp: string
+  difficulty: string
+  followUpList: string[]
+  createTime: string
+}
+
+export type questionRespItem = {
+  batchId: string
+  questions: optionsItem[]
+}

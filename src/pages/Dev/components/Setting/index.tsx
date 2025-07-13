@@ -1,4 +1,3 @@
-import DownloadSetting from './DownloadSetting'
 import styles from './index.module.scss'
 import PageSetting from './PageSetting'
 import TypeSetting from './TypeSetting'
@@ -36,7 +35,6 @@ const Setting = forwardRef<
       <PageSetting />
       {/* <ColorSetting /> */}
       <Layout />
-      <DownloadSetting />
       <AuthorizationHoc isOrigin={isOrigin} permission={1} isOnlyOrigin={true}>
         <Share />
       </AuthorizationHoc>

@@ -1,8 +1,7 @@
-import { Form, Input } from 'antd'
+import { Button, Form, Input } from 'antd'
 import styles from './index.module.scss'
 import commonStyles from '../Login/index.module.scss'
 import './custom.style.scss'
-import CustomBtn from '@/components/CustomBtn'
 import { postRegisterAPI, postRegisterCodeAPI } from '@/apis/user'
 import { useNavigate } from 'react-router-dom'
 import WelcomePage from '@/components/WelcomePage'
@@ -19,11 +18,15 @@ const Register = () => {
   }
 
   const handleSubmit = async () => {
-    const data = await formRef.getFieldsValue()
-    await postRegisterAPI(data)
-    navigate('/login', {
-      replace: true,
-    })
+    try {
+      const data = await formRef.validateFields()
+      await postRegisterAPI(data)
+      navigate('/login', {
+        replace: true,
+      })
+    } catch (_) {
+      console.log('校验错误')
+    }
   }
 
   return (
@@ -44,7 +47,6 @@ const Register = () => {
                 autoComplete="off"
                 layout="vertical"
                 form={formRef}
-                onFinish={handleSubmit}
               >
                 <Form.Item
                   label="用户名"
@@ -91,18 +93,25 @@ const Register = () => {
                   >
                     <Input className={commonStyles['custom-input']} />
                   </Form.Item>
-                  <CustomBtn
-                    type="button"
-                    label="点击获取验证码"
+                  <Button
                     style={{
                       width: '150px',
+                      height: '48px',
                     }}
                     onClick={handleGetCode}
-                  />
+                  >
+                    点击获取验证码
+                  </Button>
                 </div>
-                <Form.Item>
-                  <CustomBtn type="submit" label="注册" />
-                </Form.Item>
+                <Button
+                  style={{
+                    width: '100%',
+                    height: '48px',
+                  }}
+                  onClick={handleSubmit}
+                >
+                  注册
+                </Button>
               </Form>
             </div>
             <div className={styles['navigate-to-login-box']}>

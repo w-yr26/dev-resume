@@ -8,7 +8,7 @@
   transition: transform 0.3s ease-in;
   box-sizing: border-box;
   border-right: 1px solid #dee0e3;
-  z-index: 2;
+  transform: translateX(348px);
 
   .chat-list-title {
     height: 40px;
@@ -26,14 +26,6 @@
     padding: 8px 12px;
     box-sizing: border-box;
   }
-}
-
-.expand-box {
-  transform: translateX(348px);
-}
-
-.shrink-box {
-  transform: translateX(-348px);
 }
 
 .bottom-chat {

@@ -1,0 +1,44 @@
+.info-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  height: 200px;
+  padding: 12px 8px;
+  box-sizing: border-box;
+
+  .advantages-box,
+  .dis-advantages-box {
+    height: 100%;
+    flex: 1;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    padding: 16px;
+    box-sizing: border-box;
+
+    ul li {
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      box-sizing: border-box;
+      max-width: 100%;
+      margin-left: 1em; /* 控制列表项缩进 */
+    }
+
+    p {
+      font-weight: 600;
+    }
+  }
+
+  .advantages-box {
+    background-color: #f7fef9;
+    border-color: #22c55e;
+    color: #22c55e;
+  }
+
+  .dis-advantages-box {
+    background-color: #fffbf6;
+    border-color: #f97316;
+    color: #f97316;
+  }
+}

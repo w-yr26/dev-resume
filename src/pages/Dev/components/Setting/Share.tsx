@@ -6,6 +6,7 @@ import JsonSVG from '@/assets/svg/dev/json.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 import styles from './index.module.scss'
 import {
+  Button,
   Checkbox,
   Col,
   ConfigProvider,
@@ -17,7 +18,6 @@ import {
   Select,
   Tooltip,
 } from 'antd'
-import CustomBtn from '@/components/CustomBtn'
 import { useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { getLinkListsAPI, postShareLinkAPI } from '@/apis/resume'
@@ -27,6 +27,7 @@ import type { linkItem, shareUserItem } from '@/types/resume'
 import LinkItem from './components/LinkItem'
 import DevModalFormItem from '@/components/DevModalFormItem'
 import { useElementPosition } from '@/hooks/useElementPosition'
+import DevTabs from '@/components/DevTabs'
 
 const durationOptions = [
   {
@@ -62,6 +63,17 @@ const countOptions = [
   },
 ]
 
+const tabsOptions = [
+  {
+    key: 'setting',
+    label: '分享设置',
+  },
+  {
+    key: 'history',
+    label: '分享历史',
+  },
+]
+
 const normalizeSeparators = (input: string) => {
   // 将全角逗号、分号替换为半角
   return input
@@ -78,7 +90,7 @@ const Share = () => {
   const [count, setCount] = useState(5)
   const [hour, setHour] = useState(4)
   const [linkList, setLinkList] = useState<linkItem[]>([])
-  const [activeTab, setActiveTab] = useState<'setting' | 'history'>('setting')
+  const [activeTab, setActiveTab] = useState(0)
   const [permissionArr, setPermissionArr] = useState<number[]>([1])
 
   const shareRef = useRef<HTMLDivElement>(null)
@@ -227,36 +239,21 @@ const Share = () => {
         title="分享设置"
         width={600}
         footer={[
-          activeTab === 'setting' ? (
-            <CustomBtn
-              key="create"
-              label="生成分享链接"
-              onClick={generatorShareLink}
-            />
+          activeTab === 0 ? (
+            <Button key="create" onClick={generatorShareLink}>
+              生成分享链接
+            </Button>
           ) : null,
         ]}
         open={isModalOpen}
         onCancel={() => resetState()}
       >
-        <div className={styles['tab-bar']}>
-          <div
-            className={`${styles['tab-item-box']} ${
-              styles[activeTab === 'setting' ? 'active-tab' : '']
-            }`}
-            onClick={() => setActiveTab('setting')}
-          >
-            分享设置
-          </div>
-          <div
-            className={`${styles['tab-item-box']} ${
-              styles[activeTab === 'history' ? 'active-tab' : '']
-            }`}
-            onClick={() => setActiveTab('history')}
-          >
-            分享历史
-          </div>
-        </div>
-        {activeTab === 'setting' ? (
+        <DevTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          options={tabsOptions}
+        />
+        {activeTab === 0 ? (
           <div className={styles['create-form-container']}>
             <div className={styles['raw-box']}>
               <DevModalFormItem

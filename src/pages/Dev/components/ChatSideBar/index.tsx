@@ -7,16 +7,12 @@ import { useUserStore } from '@/store'
 import ChatItem from './ChatItem'
 import dayjs from 'dayjs'
 import { v4 as uuidv4 } from 'uuid'
-import Icon from '@ant-design/icons'
-import ArrowLeftSVG from '@/assets/svg/dev/arrowLeft.svg?react'
 import ChatLayout from './ChatLayout'
 
 const ChatSideBar = ({
   resumeId,
-  sidebarOpened,
   currentText,
   selectedNodeKey,
-  setSidebarOpened,
   setCurrentText,
 }: sideBarType) => {
   const userName = useUserStore((state) => state.info.userName)
@@ -118,28 +114,10 @@ const ChatSideBar = ({
     }
   }
 
-  // 关闭评论列表，重置状态
-  const onCloseDrawer = () => {
-    setSidebarOpened(false)
-    setIsInputShow(true)
-  }
-
   return (
-    <div
-      className={`${styles['chat-side-container']} ${
-        sidebarOpened ? styles['expand-box'] : styles['shrink-box']
-      }`}
-    >
+    <div className={styles['chat-side-container']}>
       <div className={styles['chat-list-title']}>
         <div>评论({chatList.length})</div>
-        <div
-          style={{
-            cursor: 'pointer',
-          }}
-          onClick={onCloseDrawer}
-        >
-          <Icon component={ArrowLeftSVG} />
-        </div>
       </div>
       <div className={styles['chat-list-body']}>
         {chatList.length

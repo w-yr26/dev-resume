@@ -9,7 +9,6 @@ import BottomBar from './components/BottomBar'
 import Render from '../Render'
 import StyleEditor from './components/StyleEditor'
 import type { drawerMethods, ButtonPanelPosition } from '@/types/materials'
-import { useExportPDF } from '@/hooks/useExportPDF'
 import { message, Spin } from 'antd'
 import Icon from '@ant-design/icons'
 import commentSVG from '@/assets/svg/dev/comment.svg?react'
@@ -20,13 +19,25 @@ import type { layoutMapType, nodeType, templateListType } from '@/types/ui'
 import { getTemplatesAPI } from '@/apis/template'
 import InvalidHoc from './components/InvalidHoc'
 import AuthorizationHoc from './components/AuthorizationHoc'
+import QASideBar from './components/QASideBar'
+import {
+  calculateSHA256,
+  createLink2Download,
+  getAllStyleText,
+  handleDataSource,
+  sleep,
+} from '@/utils'
+import { BASE_URL } from '@/utils/request'
+import PDFModal from './components/PDFModal'
 
 const Dev = () => {
   const userId = useUserStore((state) => state.info.id)
+  const userToken = useUserStore((state) => state.info.token)
   const dataSource = useDevStore((state) => state.devSchema.dataSource)
   const setDataSource = useDevStore((state) => state.setDataSource)
   const setResumeId = useDevStore((state) => state.setResumeId)
   const setTemplateId = useDevStore((state) => state.setTemplateId)
+  const resetGlobalInfo = useDevStore((state) => state.resetGlobalInfo)
   const uiSchema = useUIStore((state) => state.uiSchema)
   const setUiSchema = useUIStore((state) => state.setUiSchema)
   const setPageKeyToStyle = useStyleStore((state) => state.setPageKeyToStyle)
@@ -57,11 +68,16 @@ const Dev = () => {
   const [temList, setTemList] = useState<templateListType[]>([])
   // 当前是否为阅读模式
   const [isReadMode, setIsReadMode] = useState(false)
+  // 导出pdf对话框
+  const [isModalOpen, setISModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState(0)
+  const [mouseMode, setMouseMode] = useState<'pan' | 'scale'>('pan')
   const startX = useRef(0)
   const startY = useRef(0)
   const startTranslateX = useRef(translateX)
   const startTranslateY = useRef(translateY)
   const params = useParams()
+
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
@@ -77,31 +93,9 @@ const Dev = () => {
         const {
           data: { templateList, diyTemplateList },
         } = await getTemplatesAPI(userId)
-        // const [
-        //   { data },
-        //   {
-        //     data: { templateList, diyTemplateList },
-        //   },
-        // ] = await Promise.all([
-        //   getResumeDetailsAPI(params.randomId),
-        //   getTemplatesAPI(userId),
-        // ])
         setTemList([...templateList, ...diyTemplateList])
-        // const { data } = await getResumeDetailsAPI(params.randomId)
-        setDataSource(data.content)
+        setDataSource(handleDataSource(data.content))
         setTemplateId(data.templateId)
-        // fetch('/test2.json')
-        //   .then((response) => {
-        //     if (!response.ok) {
-        //       throw new Error('Network response was not ok')
-        //     }
-        //     return response.json() // 如果是JSON文件
-        //   })
-        //   .then(async (data) => {
-        //     console.log(data) // 处理获取到的数据
-        //     setUiSchema(data)
-        //     await initGlobalStyle(data)
-        //   })
         const { code, temSchema } = await fetchUISchema(data.templateId, [
           ...templateList,
           ...diyTemplateList,
@@ -117,6 +111,10 @@ const Dev = () => {
     }
     setResumeId(params.randomId || 'unknow-randonId')
     getDetail()
+
+    return () => {
+      resetGlobalInfo()
+    }
   }, [])
 
   // 适配对应的uiSchema
@@ -183,8 +181,8 @@ const Dev = () => {
 
   // 重置缩放
   const resetWheel = () => {
-    if (wheel === 0.7) return
-    setWheel(0.7)
+    if (wheel === 0.5) return
+    setWheel(0.5)
   }
 
   const startDrag = (e: React.MouseEvent<Element>) => {
@@ -199,6 +197,19 @@ const Dev = () => {
   }
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    // 滚轮操作时为"平移"模式下不处理缩放，处理滚动
+    if (mouseMode === 'pan') {
+      // 根据滚轮方向调整 translateY（上下滚动）或 translateX（Shift + 滚轮左右滚动）
+      if (e.shiftKey) {
+        // Shift + 滚轮 → 水平移动
+        setTranslateX((prev) => prev + e.deltaY)
+      } else {
+        // 普通滚轮 → 垂直移动
+        setTranslateY((prev) => prev + e.deltaY)
+      }
+      return
+    }
+
     const zoomSpeed = 0.1
     // const oldWheel = wheel
     // 放大
@@ -262,35 +273,13 @@ const Dev = () => {
     drawerRef.current?.handleOpen()
   }
 
-  const { savePDF, isLoading } = useExportPDF(mainRefs, setWheel)
-
-  // 监听分页线
-  // useEffect(() => {
-  //   const observer = new ResizeObserver((entries) => {
-  //     entries.forEach((entry) => {
-  //       const { height } = entry.contentRect
-  //       const mmHeight = pxToMm(height)
-  //       if (mmHeight > 297) {
-  //         setLineShow(true)
-  //       } else {
-  //         setLineShow(false)
-  //       }
-  //     })
-  //   })
-
-  //   if (mainRef.current) {
-  //     observer.observe(mainRef.current)
-  //   }
-
-  //   return () => observer.disconnect()
-  // }, [])
+  const [isLoading, setIsLoading] = useState(false)
 
   const [hoveredEl, setHoveredEl] = useState<HTMLElement | null>(null)
   const [selectedEl, setSelectedEl] = useState<HTMLElement | null>(null)
   const [panelPos, setPanelPos] = useState<ButtonPanelPosition | null>(null)
   const [currentNodeKey, setCurrentNodeKey] = useState('')
   const [currentText, setCurrentText] = useState('')
-  const [sidebarOpened, setSidebarOpened] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
   // Hover 事件监听
   useEffect(() => {
@@ -405,135 +394,277 @@ const Dev = () => {
     []
   )
 
-  return (
-    <InvalidHoc token={token}>
-      <div className={styles['dev-container']}>
-        <AuthorizationHoc permission={3} isOrigin={isOrigin}>
-          <LeftMenu
-            iconClick={handleLeftScroll}
-            isLeftUnExpand={isLeftUnExpand}
-            setisLeftUnExpand={setisLeftUnExpand}
-          />
-          <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
-        </AuthorizationHoc>
+  // 浏览器打印
+  const iframePrint = async () => {
+    try {
+      const iframe = document.createElement('iframe')
+      iframe.style.position = 'absolute'
+      iframe.style.width = '0'
+      iframe.style.height = '0'
+      iframe.style.border = 'none'
+      iframe.style.left = '-9999px'
 
-        <main
-          className={`${styles['main-container']}
-        ${isLeftUnExpand && isRightUnExpand && styles['not-edit']}
-        `}
-        >
-          <div
-            className={styles['preview-container']}
-            onWheel={(e) => handleWheel(e)}
-            onMouseDown={(e) => startDrag(e)}
+      // 先添加到DOM再设置内容
+      document.body.appendChild(iframe)
+
+      await new Promise((resolve) => {
+        iframe.onload = resolve
+
+        // 设置空白文档触发load事件
+        iframe.srcdoc = '<!DOCTYPE html><html><head></head><body></body></html>'
+      })
+
+      const iframeDoc = iframe.contentDocument
+      if (!iframeDoc) throw new Error('无法访问iframe文档')
+
+      // 收集样式 - 考虑限制范围
+      const styles = Array.from(
+        document.querySelectorAll('style, link[rel="stylesheet"]')
+      )
+        .map((node) => node.outerHTML)
+        .join('\n')
+
+      // 处理打印内容
+      const elementsToPrint = mainRefs.current
+        ?.filter((el): el is HTMLDivElement => el !== null)
+        .map((el) => {
+          const existingStyle = el.getAttribute('style') || ''
+          el.setAttribute(
+            'style',
+            `${existingStyle}; page-break-after: always;`
+          )
+          return el.outerHTML
+        })
+        .join('')
+
+      const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print</title>
+          ${styles}
+          <style>
+            body { margin: 0; padding: 0; }
+            @page { size: auto; margin: 0; }
+          </style>
+        </head>
+        <body>
+          ${elementsToPrint}
+        </body>
+      </html>
+    `
+
+      iframeDoc.open()
+      iframeDoc.write(html)
+      iframeDoc.close()
+
+      await sleep() // 确保内容渲染完成
+
+      iframe.contentWindow?.focus()
+      iframe.contentWindow?.print()
+    } catch (error) {
+      console.error('打印出错:', error)
+    } finally {
+      // 延迟移除iframe以确保打印完成
+      const iframe = document.querySelector('iframe[style*="left: -9999px"]')
+      if (iframe && iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe)
+      }
+    }
+  }
+
+  // 生成打印目标的html交由无头浏览器
+  const generatorTargetHTMLStr = async () => {
+    const html = resumeRef.current?.outerHTML || ''
+    const styleText = await getAllStyleText()
+
+    return `
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+      ${styleText}
+    </head>
+    <body>
+      ${html}
+    </body>
+    </html>
+  `
+  }
+
+  // 无头浏览器打印
+  const headlessBrowserExportPDF = async () => {
+    try {
+      const html = await generatorTargetHTMLStr()
+      const hash = await calculateSHA256(html)
+      // 此处不再使用封装的request，因为此处接口返回的数据格式是特殊情况，而request中对返回的数据格式做了强校验
+      const response = await fetch(`${BASE_URL}/resume/pdf/export`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: userToken,
+        } as any,
+        body: JSON.stringify({
+          html: html,
+          resumeId: params.randomId!,
+          clientHash: hash,
+        }),
+      })
+      if (!response.ok) {
+        throw new Error('生成 PDF 失败')
+      }
+      const blob = await response.blob()
+      await createLink2Download(blob, params.randomId)
+    } catch (_) {
+      message.error('导出失败，请尝试使用其他方式')
+    }
+  }
+
+  const handleExportPDF = async () => {
+    setISModalOpen(false)
+    setIsLoading(true)
+    if (activeTab === 0) {
+      await headlessBrowserExportPDF()
+    } else if (activeTab === 1) {
+      await iframePrint()
+    }
+    setIsLoading(false)
+  }
+  return (
+    <>
+      <InvalidHoc token={token}>
+        <div className={styles['dev-container']}>
+          <AuthorizationHoc permission={3} isOrigin={isOrigin}>
+            <LeftMenu
+              iconClick={handleLeftScroll}
+              isLeftUnExpand={isLeftUnExpand}
+              setisLeftUnExpand={setisLeftUnExpand}
+            />
+            <Materials ref={leftScrollRef} isLeftUnExpand={isLeftUnExpand} />
+          </AuthorizationHoc>
+
+          <main
+            className={`${styles['main-container']} ${
+              isLeftUnExpand && isRightUnExpand ? styles['not-edit'] : ''
+            }`}
           >
             <div
-              className={styles['resume-container']}
-              style={{
-                transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
-                cursor: dragging ? 'grabbing' : isReadMode ? '' : 'grab',
-                gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
-              }}
-              ref={resumeRef}
+              className={`${styles['preview-container']} resume-target`}
+              onWheel={(e) => handleWheel(e)}
+              onMouseDown={(e) => startDrag(e)}
             >
-              <span className={styles['scale-tooltip-box']}>
-                缩放比例: {wheel.toFixed(2)}
-              </span>
-              {pageArr.map((page, index) => (
-                <div
-                  className={styles['preview-content']}
-                  key={page}
-                  ref={(el) => setMainRef(el, index)}
-                  style={{
-                    width: pageWidth,
-                    height: pageHeight,
-                  }}
-                >
-                  {uiSchema && !loading ? (
-                    <Render
-                      dataContext={dataSource}
-                      node={getPageUiSchema(page, uiSchema, layoutMap)}
-                      wheel={wheel}
-                    />
-                  ) : null}
-                </div>
-              ))}
-
-              {/* {lineShow && (
-                <div className={styles['page-line']}>
-                  <span>分页线</span>
-                </div>
-              )} */}
-              {isLoading ? (
-                <div className={styles['loading-box']}>
-                  <Spin />
-                </div>
-              ) : null}
+              <div
+                className={`${styles['resume-container']} resume-inner`}
+                style={{
+                  transform: `translate(-${translateX}px, -${translateY}px) scale(${wheel})`,
+                  cursor: isReadMode
+                    ? ''
+                    : mouseMode === 'pan'
+                    ? 'move'
+                    : dragging
+                    ? 'grabbing'
+                    : 'grab',
+                  gridTemplateColumns: `repeat(${pageArr.length} 1fr)`,
+                }}
+                ref={resumeRef}
+              >
+                <span className={`${styles['scale-tooltip-box']} resume-miss`}>
+                  缩放比例: {wheel.toFixed(2)}
+                </span>
+                {pageArr.map((page, index) => (
+                  <div
+                    className={`${styles['preview-content']} page-break`}
+                    key={page}
+                    ref={(el) => setMainRef(el, index)}
+                    style={{
+                      width: pageWidth,
+                      height: pageHeight,
+                    }}
+                  >
+                    {uiSchema && !loading ? (
+                      <Render
+                        dataContext={dataSource}
+                        node={getPageUiSchema(page, uiSchema, layoutMap)}
+                        wheel={wheel}
+                      />
+                    ) : null}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
 
-        <AuthorizationHoc permission={3} isOrigin={isOrigin}>
-          <Setting
-            ref={rightScrollRef}
-            isRightUnExpand={isRightUnExpand}
+          {isLoading ? (
+            <div className={styles['loading-box']}>
+              <Spin />
+            </div>
+          ) : null}
+
+          <AuthorizationHoc permission={3} isOrigin={isOrigin}>
+            <Setting
+              ref={rightScrollRef}
+              isRightUnExpand={isRightUnExpand}
+              isOrigin={isOrigin}
+              temList={temList}
+              fetchUISchema={fetchUISchema}
+            />
+            <RightMenu
+              iconClick={handleRightScroll}
+              isRightUnExpand={isRightUnExpand}
+              setisRightUnExpand={setisRightUnExpand}
+            />
+          </AuthorizationHoc>
+
+          <BottomBar
+            isReadMode={isReadMode}
             isOrigin={isOrigin}
-            temList={temList}
-            fetchUISchema={fetchUISchema}
-          />
-          <RightMenu
-            iconClick={handleRightScroll}
-            isRightUnExpand={isRightUnExpand}
+            mouseMode={mouseMode}
+            setMouseMode={setMouseMode}
+            setIsReadMode={setIsReadMode}
+            upWheel={upWheel}
+            reduceWheel={reduceWheel}
+            handleModeSwitch={handleModeSwitch}
+            resetWheel={resetWheel}
+            setisLeftUnExpand={setisLeftUnExpand}
             setisRightUnExpand={setisRightUnExpand}
+            savePDF={() => setISModalOpen(true)}
           />
-        </AuthorizationHoc>
 
-        <BottomBar
-          isReadMode={isReadMode}
-          isOrigin={isOrigin}
-          setIsReadMode={setIsReadMode}
-          upWheel={upWheel}
-          reduceWheel={reduceWheel}
-          handleModeSwitch={handleModeSwitch}
-          resetWheel={resetWheel}
-          setisLeftUnExpand={setisLeftUnExpand}
-          setisRightUnExpand={setisRightUnExpand}
-          savePDF={savePDF}
-        />
-        <StyleEditor ref={drawerRef} />
-        {panelPos && (
-          <div
-            ref={panelRef}
-            style={{
-              top: panelPos.top + 'px',
-              left: panelPos.left + 'px',
-            }}
-            className={styles['panel-box']}
-            onClick={() => setSidebarOpened(true)}
-          >
-            {/* 功能按钮面板 */}
-            <Icon component={commentSVG} />
-          </div>
-        )}
-        <ChatSideBar
-          resumeId={params.randomId!}
-          selectedNodeKey={currentNodeKey}
-          currentText={currentText}
-          sidebarOpened={sidebarOpened}
-          setSidebarOpened={setSidebarOpened}
-          setCurrentText={setCurrentText}
-        />
+          <StyleEditor ref={drawerRef} />
+          {panelPos && (
+            <div
+              ref={panelRef}
+              style={{
+                top: panelPos.top + 'px',
+                left: panelPos.left + 'px',
+              }}
+              className={styles['panel-box']}
+            >
+              {/* 功能按钮面板 */}
+              <Icon component={commentSVG} />
+            </div>
+          )}
+          {isReadMode ? (
+            <ChatSideBar
+              resumeId={params.randomId!}
+              selectedNodeKey={currentNodeKey}
+              currentText={currentText}
+              setCurrentText={setCurrentText}
+            />
+          ) : null}
 
-        {/* <AuthorizationHoc isOrigin={isOrigin} permission={2} type="test">
-          <div
-            className={styles['open-chat-tool-box']}
-            onClick={() => setSidebarOpened(true)}
-          >
-            <Icon component={commentSVG} />
-          </div>
-        </AuthorizationHoc> */}
-      </div>
-    </InvalidHoc>
+          {isReadMode ? <QASideBar /> : null}
+        </div>
+      </InvalidHoc>
+
+      {/* 选择下载选项的对话框 */}
+      <PDFModal
+        activeTab={activeTab}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setISModalOpen}
+        setActiveTab={setActiveTab}
+        handleExportPDF={handleExportPDF}
+      />
+    </>
   )
 }
 

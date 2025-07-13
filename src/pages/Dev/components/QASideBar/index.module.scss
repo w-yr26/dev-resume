@@ -1,0 +1,237 @@
+.qa-side-container {
+  position: absolute;
+  top: 0;
+  right: 48px;
+  height: 100%;
+  width: 300px;
+  background-color: #fafafa;
+  transition: transform 0.3s ease-in;
+  padding: 8px;
+  box-sizing: border-box;
+  border-left: 1px solid #dee0e3;
+
+  .qa-list-title {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dee0e3;
+    font-weight: 500;
+  }
+}
+
+.tooltip-card {
+  background: linear-gradient(to right, #faf5ff, #f0f9ff);
+  border: 1px solid #e9d5ff;
+  border-radius: 4px;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+  height: 120px;
+
+  .icon-box {
+    color: #6b21a8;
+  }
+
+  .text-container {
+    .title {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      font-weight: 500;
+      color: #581c87;
+    }
+
+    .description {
+      font-size: 0.75rem;
+      line-height: 1.5;
+      color: #6b21a8;
+    }
+  }
+}
+
+.tabs-header {
+  display: flex;
+  height: 40px;
+  width: 100%;
+  background-color: #f4f4f5;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  cursor: pointer;
+
+  .tab-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-radius: 4px;
+    color: #71717a;
+    font-size: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease,
+      font-weight 0.3s ease;
+  }
+
+  .active-item {
+    background-color: #fafafa;
+    color: #000;
+    font-weight: 500;
+  }
+}
+
+.ai-chat-box {
+  padding: 8px;
+  box-sizing: border-box;
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    height: 32px;
+    cursor: pointer;
+  }
+
+  .chat-content {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 280px);
+    font-size: 12px;
+    white-space: pre-wrap;
+    padding: 4px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    white-space: pre-wrap !important; /* 保留空格和换行 */
+
+    &::-webkit-scrollbar {
+      width: 8px; /* 滚动条宽度 */
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f0f0f0; /* 滚动条轨道颜色 */
+      border-radius: 4px; /* 圆角 */
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #bfbfbf; /* 滚动条颜色 */
+      border-radius: 4px; /* 圆角 */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #bfbfbf; /* 滚动条悬停时颜色 */
+    }
+  }
+}
+
+.finish-question-item {
+  padding: 12px;
+  font-size: 12px;
+  box-sizing: border-box;
+  color: #000;
+  border: 1px solid #dee0e3;
+  border-radius: 4px;
+}
+
+.history-list {
+  height: 500px;
+  white-space: pre-wrap !important;
+
+  .chat-item,
+  .preview-item {
+    border: 1px solid #dee0e3;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 0 0 8px;
+    transition: all 0.3s ease;
+  }
+
+  .chat-header,
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chat-item {
+    padding: 8px 16px;
+
+    .chat-header {
+      height: 24px;
+      color: #797f88;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .chat-body {
+      font-weight: 500;
+      font-size: 12px;
+      color: #000;
+      margin: 4px 0;
+    }
+  }
+
+  .preview-item {
+    padding: 4px;
+
+    .preview-header {
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+
+    .question-item {
+      margin-bottom: 8px;
+
+      .question-content-box {
+        font-size: 13px;
+        font-weight: 500;
+      }
+    }
+
+    .focus-points-list,
+    .follow-up-list {
+      margin-top: 8px;
+      font-size: 12px;
+      padding: 8px;
+      box-sizing: border-box;
+      border-left-width: 2px;
+      border-left-style: solid;
+
+      ul li {
+        white-space: normal;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+        max-width: 100%;
+        margin-left: 1em; /* 控制列表项缩进 */
+      }
+    }
+
+    .focus-points-list {
+      background-color: #eff6ff;
+      border-left-color: #bfdbfe;
+      color: #3e4ed8;
+
+      strong {
+        color: #3154b4;
+      }
+    }
+
+    .follow-up-list {
+      background-color: #fff7ed;
+      border-left-color: #fed7aa;
+      color: #c2410c;
+
+      strong {
+        color: #9a3412;
+      }
+    }
+  }
+}

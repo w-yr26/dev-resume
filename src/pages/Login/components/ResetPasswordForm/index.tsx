@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Form, Input, message } from 'antd'
-import CustomBtn from '@/components/CustomBtn'
+import { Button, Form, Input, message } from 'antd'
 import styles from '../../index.module.scss'
 import '@/pages/Register/custom.style.scss'
 
@@ -120,22 +119,28 @@ export const ResetPasswordForm = ({
             maxLength={6}
           />
         </Form.Item>
-        <CustomBtn
+        <Button
           disabled={isCountdown}
-          label={!isCountdown ? '获取验证码' : `${countdown}s 后重新获取`}
           style={{
             width: '120px',
+            height: '48px',
           }}
           onClick={handleSendCode}
-        />
+        >
+          {!isCountdown ? '获取验证码' : `${countdown}s 后重新获取`}
+        </Button>
       </div>
 
       <Form.Item>
-        <CustomBtn
-          label={isLoading ? '提交中...' : '确认修改'}
-          type="submit"
+        <Button
+          style={{
+            width: '100%',
+            height: '48px',
+          }}
           onClick={handleRevisePSD}
-        />
+        >
+          {isLoading ? '提交中...' : '确认修改'}
+        </Button>
       </Form.Item>
     </Form>
   )

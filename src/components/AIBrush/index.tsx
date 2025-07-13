@@ -8,6 +8,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './index.module.scss'
 import { FormInstance } from 'antd/lib'
 import { allKeyType } from '@/types/dev'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+import { BASE_URL } from '@/utils/request'
 
 type AIBrushPropType<
   T extends { id: string; aiDescription?: string; aiContent?: string }
@@ -31,12 +33,6 @@ const AIBrush = <
   const userId = useUserStore((state) => state.info.id)
   const token = useUserStore((state) => state.info.token)
   const resumeId = useDevStore((state) => state.resumeId)
-  // AI润色准备完毕
-  const [isPending, setIsPending] = useState(true)
-  // 润色中
-  const [isPolish, setIsPolish] = useState(false)
-  const [respText, setRespText] = useState('')
-  const brushRef = useRef<HTMLDivElement>(null)
 
   const aiChatRes = useMemo(() => {
     if (!infoList) return undefined
@@ -44,6 +40,12 @@ const AIBrush = <
     return infoItem?.aiDescription || infoItem?.aiContent
   }, [infoId, infoList])
 
+  // AI润色准备完毕
+  const [isPending, setIsPending] = useState(true)
+  // 润色中
+  const [isPolish, setIsPolish] = useState(false)
+  const [respText, setRespText] = useState(aiChatRes)
+  const brushRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (brushRef.current) {
       brushRef.current.scrollTop = brushRef.current.scrollHeight
@@ -66,52 +68,39 @@ const AIBrush = <
     const message = formRef.getFieldValue(fieldType)
     setIsPolish(true)
     setIsPending(true)
-    const response = await fetch(
-      'http://7b395403.r39.cpolar.top/resume/AI/stream',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token,
-        },
-        body: JSON.stringify({
-          message,
-          resumeId,
-          userId: Number(userId),
-          type: moduleType,
-        }),
-      }
-    )
-    setIsPending(false)
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    if (!response.body) return
-    // 获取可读流
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-
-    while (true) {
-      const { value } = await reader.read()
-
-      const chunk = decoder.decode(value)
-      // 解析事件字段(以换行符为分割)
-      const lines = chunk.split('\n').filter((i) => i)
-
-      for (const line of lines) {
-        if (line.startsWith('data:') && !line.includes('[DONE]')) {
-          const cleanData = line
-            .slice(5)
-            .trim()
-            .replace(/^"|"$/g, '')
-            .replace(/\\n/g, '\n')
-          await new Promise((resolve) => setTimeout(resolve, 50))
-          setRespText((prev) => prev + cleanData)
+    await fetchEventSource(`${BASE_URL}/resume/AI/stream`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        message,
+        resumeId,
+        userId: Number(userId),
+        type: moduleType,
+      }),
+      async onopen() {
+        setIsPending(false)
+      },
+      onmessage(ev) {
+        const rawData = ev.data
+        let parsedData
+        try {
+          parsedData = JSON.parse(rawData) // 去掉外层的引号，得到 "\n"
+        } catch (_) {
+          parsedData = rawData.replace(/"/g, '')
         }
-      }
-
-      if (chunk.includes('[DONE]')) break
-    }
+        const text = parsedData.replace(/\\n/g, '\n') // 将字符串 "\n" 转为换行符
+        setRespText((prev) => prev + text)
+      },
+      onerror(err) {
+        console.log('fetch err==', err)
+      },
+      onclose() {
+        setIsPolish(false)
+      },
+    })
     setIsPolish(false)
   }
 
@@ -123,19 +112,20 @@ const AIBrush = <
 
   const handleCopy = async () => {
     if (isPolish) return
-    await navigator.clipboard.writeText(respText)
+    await navigator.clipboard.writeText(respText || '')
   }
 
   const aiChatModal = () => (
     <div className={styles['ai-chat-modal']}>
-      {isPending ? <Spin tip="思考中" /> : null}
-      <div
-        className={styles['chat-content']}
-        style={{ whiteSpace: 'pre-wrap' }}
-        ref={brushRef}
-      >
-        {respText}
-      </div>
+      <Spin spinning={isPending}>
+        <div
+          className={styles['chat-content']}
+          style={{ whiteSpace: 'pre-wrap' }}
+          ref={brushRef}
+        >
+          {respText}
+        </div>
+      </Spin>
     </div>
   )
 

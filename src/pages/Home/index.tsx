@@ -9,7 +9,7 @@ import Icon from '@ant-design/icons'
 import AddSVG from '@/assets/svg/add.svg?react'
 import RandomSVG from '@/assets/svg/random.svg?react'
 
-import { Input, message, Modal, Tooltip } from 'antd'
+import { Button, Input, message, Modal, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import {
   delResumeAPI,
@@ -18,7 +18,6 @@ import {
   putUpdateNameAPI,
 } from '@/apis/resume'
 import type { resumeItem } from '@/types/resume'
-import CustomBtn from '@/components/CustomBtn'
 import { useNavigate } from 'react-router-dom'
 import WorkItem from '@/components/WorkItem'
 import DevModalFormItem from '@/components/DevModalFormItem'
@@ -191,14 +190,15 @@ const Home = () => {
           </>
         }
         footer={[
-          <CustomBtn
+          <Button
             key="create"
-            label={selectId ? '更新' : '创建'}
             style={{
               width: '80px',
             }}
             onClick={handleCreateResume}
-          />,
+          >
+            {selectId ? '更新' : '创建'}
+          </Button>,
         ]}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}

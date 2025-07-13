@@ -6,6 +6,7 @@ import { tokenizer } from '@/components/MdEditor/utils/tokens'
 import { buildAST } from '@/components/MdEditor/utils/ast'
 import { renderAST } from '@/components/MdEditor/utils/render'
 import { allKeyType } from '@/types/dev'
+import { isNotEmpty } from '@/utils'
 // import BlockWrapper from './BlockWrapper'
 interface RenderProps {
   node: nodeType | null
@@ -228,15 +229,21 @@ const Render = (props: RenderProps) => {
     // 如果处理的是时间，做一下特殊处理，去掉""
     if (bind === 'date') {
       val = val.replace(/"/g, '')
+    } else if (bind === 'gender') {
+      if (typeof val === 'number') {
+        val = val === 0 ? '男' : '女'
+      }
     }
+
     return (
       <div className={`${styles['field-box']}`} style={mergedStyle}>
-        {val ? (
+        {isNotEmpty(val) ? (
           <>
-            <div className={styles['label']}>
-              {keyToFieldLabel[bind]}
-              {keyToFieldLabel[bind] ? ': ' : null}
-            </div>
+            {/* 只有个人信息模块才需要标签名，通过userName判断当前是否为个人信息模块 */}
+            {dataContext.userName ? (
+              <div className={styles['label']}>{keyToFieldLabel[bind]}: </div>
+            ) : null}
+
             <div className={styles['value']}>{val}</div>
           </>
         ) : null}

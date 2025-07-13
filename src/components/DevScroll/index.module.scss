@@ -1,0 +1,23 @@
+.dev-scroll-container {
+  width: auto;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    width: 8px; /* 滚动条宽度 */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0; /* 滚动条轨道颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #bfbfbf; /* 滚动条颜色 */
+    border-radius: 4px; /* 圆角 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #bfbfbf; /* 滚动条悬停时颜色 */
+  }
+}

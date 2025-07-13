@@ -11,9 +11,8 @@ import { templateListType } from '@/types/ui'
 import { useEffect, useState } from 'react'
 import styles from '../Home/index.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { Input, Modal, Tooltip } from 'antd'
+import { Button, Input, Modal, Tooltip } from 'antd'
 import { v4 as uuidv4 } from 'uuid'
-import CustomBtn from '@/components/CustomBtn'
 import WorkItem from '@/components/WorkItem'
 import DevModalFormItem from '@/components/DevModalFormItem'
 
@@ -130,14 +129,16 @@ const Templates = () => {
           </>
         }
         footer={[
-          <CustomBtn
+          <Button
             key="create"
-            label={selectId ? '更新' : '创建'}
             style={{
+              height: '48px',
               width: '80px',
             }}
             onClick={handleClick}
-          />,
+          >
+            {selectId ? '更新' : '创建'}
+          </Button>,
         ]}
         open={isModalOpen}
         onCancel={resetState}

@@ -1,0 +1,30 @@
+.dev-tabs-header {
+  display: flex;
+  height: 40px;
+  width: 100%;
+  background-color: #f4f4f5;
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  margin: 4px 0;
+  cursor: pointer;
+
+  .dev-tab-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-radius: 4px;
+    color: #71717a;
+    font-size: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease,
+      font-weight 0.3s ease;
+  }
+
+  .dev-active-item {
+    background-color: #fafafa;
+    color: #000;
+    font-weight: 500;
+  }
+}

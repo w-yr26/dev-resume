@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 import Icon from '@ant-design/icons'
 import ResumeSvg from '@/assets/svg/resume.svg?react'
 // import SettingSVG from '@/assets/svg/setting.svg?react'
-import GridSVG from '@/assets/svg/grid.svg?react'
+// import GridSVG from '@/assets/svg/grid.svg?react'
 import { useUserStore } from '@/store'
 import { Avatar, Button, Popover } from 'antd'
 
@@ -13,11 +13,11 @@ const routeMenu = [
     name: '简历',
     icon: <Icon component={ResumeSvg} />,
   },
-  {
-    path: '/templates',
-    name: '模板集',
-    icon: <Icon component={GridSVG} />,
-  },
+  // {
+  //   path: '/templates',
+  //   name: '模板集',
+  //   icon: <Icon component={GridSVG} />,
+  // },
   // {
   //   path: '/setting',
   //   name: '设置',

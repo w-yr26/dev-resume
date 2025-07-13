@@ -30,8 +30,6 @@ const Layout = () => {
 
   const onDragEnd = (e: DropResult) => {
     const { destination, source } = e
-    console.log('destination', destination, 'source', source)
-
     // 1. 检查无效拖拽
     if (!destination) return
     if (
