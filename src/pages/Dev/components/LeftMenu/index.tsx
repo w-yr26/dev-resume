@@ -3,7 +3,7 @@ import UserSVG from '@/assets/svg/dev/user.svg?react'
 import EduSVG from '@/assets/svg/dev/edu.svg?react'
 import WorkSVG from '@/assets/svg/dev/work.svg?react'
 import ProjectSVG from '@/assets/svg/dev/project.svg?react'
-import AwardSVG from '@/assets/svg/dev/award.svg?react'
+// import AwardSVG from '@/assets/svg/dev/award.svg?react'
 import SkillSVG from '@/assets/svg/dev/skill.svg?react'
 // import HeartSVG from '@/assets/svg/dev/heart.svg?react'
 import extendSVG from '@/assets/svg/dev/extend.svg?react'
@@ -36,11 +36,11 @@ const iconMenu = [
     label: '项目经历',
     key: 'PROJECT_EXP',
   },
-  {
-    icon: <Icon component={AwardSVG} />,
-    label: '荣誉奖项',
-    key: 'AWARD_LIST',
-  },
+  // {
+  //   icon: <Icon component={AwardSVG} />,
+  //   label: '荣誉奖项',
+  //   key: 'AWARD_LIST',
+  // },
   {
     icon: <Icon component={SkillSVG} />,
     label: '技能特长',

@@ -59,9 +59,11 @@ const BaseInfo = () => {
 
   const handleUpload: UploadProps['customRequest'] = async (options) => {
     const file = options.file
+    console.log('file', file)
+
     const fd = new FormData()
     fd.append('file', file)
-    const { data: avatar } = await postUploadOneAPI(fd, userId)
+    const { data: avatar } = await postUploadOneAPI(fd, 'avatar')
 
     // 保存数据库
     await postModuleInfoAPI({
@@ -130,7 +132,7 @@ const BaseInfo = () => {
         >
           <CustomInput
             label="姓名"
-            placeholder="请输入您的姓名"
+            placeholder=""
             value={baseInfo?.userName}
             onChange={(e) => {
               handleFieldChange(e, 'userName')
@@ -147,7 +149,7 @@ const BaseInfo = () => {
         >
           <CustomInput
             label="性别"
-            placeholder="请输入您的性别"
+            placeholder=""
             value={baseInfo?.gender}
             onChange={(e) => {
               handleFieldChange(e, 'gender')

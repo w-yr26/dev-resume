@@ -75,11 +75,19 @@ export const postRefreshTokenAPI = (refreshToken: string) => {
 
 /**
  * 单文件上传
+ * category resume、avatar、template
  */
-export const postUploadOneAPI = (data: FormData, userId: string) => {
+export const postUploadOneAPI = (data: FormData, category: string) => {
   return request<string>(
-    `/user/common/uploadAvatar?userId=${userId}`,
+    `/user/common/upload?category=${category}`,
     'POST',
     data
   )
+}
+
+/**
+ * 删除文件
+ */
+export const delFileAPI = (url: string, category: string) => {
+  return request(`/user/common/delete?category=${category}&fileUrl=${url}`, 'DELETE')
 }

@@ -29,21 +29,21 @@ export const defaultInfoMap: Record<string, any> = {
     visible: true,
     label: '项目经历',
   },
-  AWARD_LIST: {
-    info: [],
-    visible: true,
-    label: '荣誉奖项',
-  },
+  // AWARD_LIST: {
+  //   info: [],
+  //   visible: true,
+  //   label: '荣誉奖项',
+  // },
   SKILL_LIST: {
     info: [],
     visible: true,
     label: '技能特长',
   },
-  HEART_LIST: {
-    info: [],
-    visible: true,
-    label: '兴趣爱好',
-  },
+  // HEART_LIST: {
+  //   info: [],
+  //   visible: true,
+  //   label: '兴趣爱好',
+  // },
 }
 
 const initialData: devInitType = {
@@ -116,7 +116,7 @@ const useDevStore = create<devState>()(
             }
           })
         },
-        immerBaseInfo: (newVal: string, key: string) =>
+        immerBaseInfo: (newVal, key) =>
           set(
             produce((state: devState) => {
               state.devSchema.dataSource.BASE_INFO.info = [

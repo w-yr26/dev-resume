@@ -12,6 +12,7 @@ export type HeaderType = {
   opMenu?: false
   children?: React.ReactNode
   isEdit?: boolean
+  toolTip?: string
   handleChange?: (val: string) => void
   handleBlur?: () => void
 }
@@ -175,7 +176,7 @@ export type devState = {
   setResumeId: (id: string) => void
   setTemplateId: (id: string) => void
   setDataSource: (dataSource: any) => void
-  immerBaseInfo: (newVal: string, key: string) => void
+  immerBaseInfo: (newVal: number | string, key: string) => void
   immerRichInfo: (newVal: string, key: 'SKILL_LIST' | 'HEART_LIST') => void
   immerVisible: (id: string, key: keyType) => void
   immerDel: (id: string, key: keyType) => void

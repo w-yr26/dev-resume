@@ -23,9 +23,10 @@ import { commandManager } from './command/commandManager'
 import { register } from './command'
 import NavBar from './components/NavBar'
 import html2canvas from 'html2canvas'
-import { getTemplateSchemaAPI, postTemplatesAPI } from '@/apis/template'
+import { getTemplateSchemaAPI } from '@/apis/template'
 import { useSearchParams } from 'react-router-dom'
 import RefsProvider from './components/RefsProvider'
+import { postUploadOneAPI } from '@/apis/user'
 
 const typeToComponentName: Record<uiType, string> = {
   container: '普通容器',
@@ -90,7 +91,7 @@ const Design = () => {
       }
       html2canvas(designRef.current, {
         useCORS: true, // 允许图片跨域，后续换掉
-        scale: window.devicePixelRatio * 2, // 这里可以设置清晰度(放大后锯齿的明显程度)
+        scale: window.devicePixelRatio * 0.5, // 这里可以设置清晰度(放大后锯齿的明显程度)
       })
         .then((canvas) => {
           canvas.toBlob(async (blob) => {
@@ -104,7 +105,7 @@ const Design = () => {
             const fd = new FormData()
             fd.append('file', file)
             try {
-              const { data } = await postTemplatesAPI(fd)
+              const { data } = await postUploadOneAPI(fd, 'template')
               resolve(data)
             } catch (_) {
               reject('快照上传失败')

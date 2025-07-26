@@ -8,6 +8,7 @@ import Loading from '@/pages/Loading'
 import App from '../App'
 import Layout from '@/pages/Layout'
 import Home from '../pages/Home'
+import AuthorizationHoc from '@/components/AuthorizationHoc'
 // import Setting from '@/pages/Setting'
 const Login = lazy(() => import('@/pages/Login'))
 const Register = lazy(() => import('@/pages/Register'))
@@ -19,7 +20,15 @@ const Dev = lazy(() => import('@/pages/Dev'))
 const routes = createRoutesFromElements(
   <Route path="/" element={<App />}>
     <Route path="/" element={<Layout />}>
-      <Route index element={<Home />}></Route>
+      <Route
+        index
+        element={
+          <AuthorizationHoc>
+            <Home />{' '}
+          </AuthorizationHoc>
+        }
+      />
+
       {/* <Route
         path="/templates"
         element={
@@ -33,16 +42,20 @@ const routes = createRoutesFromElements(
       path="/dev/:randomId"
       element={
         <Suspense fallback={<Loading />}>
-          <Dev />
+          <AuthorizationHoc>
+            <Dev />
+          </AuthorizationHoc>
         </Suspense>
       }
     ></Route>
     <Route
       path="/share/:randomId"
       element={
-        <Suspense fallback={<Loading />}>
-          <Dev />
-        </Suspense>
+        <AuthorizationHoc>
+          <Suspense fallback={<Loading />}>
+            <Dev />
+          </Suspense>
+        </AuthorizationHoc>
       }
     ></Route>
     <Route
