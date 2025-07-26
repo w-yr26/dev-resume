@@ -21,12 +21,10 @@ import type { resumeItem } from '@/types/resume'
 import { useNavigate } from 'react-router-dom'
 import WorkItem from '@/components/WorkItem'
 import DevModalFormItem from '@/components/DevModalFormItem'
-import { BASE_URL } from '@/utils/request'
 
 const Home = () => {
   const navigate = useNavigate()
   const userId = useUserStore((state) => state.info.id)
-  const token = useUserStore((state) => state.info.token)
   const [page] = useState(1)
   const [resumeList, setResumeList] = useState<resumeItem[]>([])
   const PAGE_SIZE = 10
@@ -34,31 +32,6 @@ const Home = () => {
   const [resumeTitle, setResumeTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [selectId, setSelectId] = useState('')
-
-  useEffect(() => {
-    fetch(`${BASE_URL}/resume/templates/getAll/${userId}`, {
-      headers: {
-        Authorization: token,
-        'X-Pre-Load': 'true',
-        'X-Max-Count': String(sessionStorage.getItem('preload_count') || 0),
-      },
-    })
-      .then((res) => {
-        if (res.status === 204) {
-          console.log('预加载成功，无需解析响应')
-          sessionStorage.setItem(
-            'preload_count',
-            String((Number(sessionStorage.getItem('preload_count')) || 0) + 1)
-          )
-          return // 直接结束，不进入下一个 .then()
-        }
-        return res.json()
-      })
-      .then((_) => {}) // 当前页面只是作为预请求数据而存在，并不需要消费该数据
-      .catch((_) => {
-        console.log('fetch err')
-      })
-  }, [])
 
   // 获取列表数据
   const getResumeList = useCallback(async () => {
